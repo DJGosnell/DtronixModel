@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Class="NorthwindDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="" Member="Customers">
+    <Type Name="Customers">
+      <Column Member="rowid" Type="System.Int64" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Member="CustomerID" Type="System.String" CanBeNull="false" />
+      <Column Member="CompanyName" Type="System.String" CanBeNull="false" />
+      <Column Member="ContactName" Type="System.String" CanBeNull="false" />
+      <Column Member="ContactTitle" Type="System.String" CanBeNull="false" />
+      <Column Member="Address" Type="System.String" CanBeNull="false" />
+      <Column Member="City" Type="System.String" CanBeNull="false" />
+      <Column Member="Region" Type="System.String" CanBeNull="false" />
+      <Column Member="PostalCode" Type="System.String" CanBeNull="false" />
+      <Column Member="Country" Type="System.String" CanBeNull="false" />
+      <Column Member="Phone" Type="System.String" CanBeNull="false" />
+      <Column Member="Fax" Type="System.String" CanBeNull="false" />
+    </Type>
+  </Table>
+</Database>
