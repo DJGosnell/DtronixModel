@@ -46,7 +46,5 @@ namespace DtxModel {
         public SqlStatement(Mode mode) {
             this.mode = mode;
         }
-
-        public 
     }
 }

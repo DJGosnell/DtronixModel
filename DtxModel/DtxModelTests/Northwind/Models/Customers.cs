@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
+using DtxModel;
 
 namespace DtxModelTests.Northwind.Models {
-    class Customers {
+    class Customers : IModel {
 
         private SQLiteConnection connection;
 
@@ -90,8 +91,45 @@ namespace DtxModelTests.Northwind.Models {
             this.connection = connection;
         }
 
-        public getBy
+        public SqlStatement select() {
+            return new SqlStatement(SqlStatement.Mode.Select, connection);
+        }
 
+		protected Customers readOne(System.Data.SqlClient.SqlDataReader reader) {
+			int length = reader.FieldCount;
+			for (int i = 0; i < length; i++) {
+				switch (reader.GetName(i)) {
+					case "rowid": _rowid = reader.GetInt64(i); break;
+					case "CustomerID": _CustomerID = reader.GetString(i); break;
+					case "CompanyName": _CompanyName = reader.GetString(i); break;
+					case "ContactName": _ContactName = reader.GetString(i); break;
+					case "Address": _Address = reader.GetString(i); break;
+					case "City": _City = reader.GetString(i); break;
+					case "Region": _Region = reader.GetString(i); break;
+					case "PostalCode": _PostalCode = reader.GetString(i); break;
+					case "Country": _Country = reader.GetString(i); break;
+					case "Phone": _Phone = reader.GetString(i); break;
+					case "Fax": _Fax = reader.GetString(i); break;
+					default:
+						break;
+				}
+			}
+			return this;
 
+		}
+
+		protected Customers[] readAll(System.Data.SqlClient.SqlDataReader reader) {
+
+			var rows = new List<Customers>();
+
+			while (reader.Read()) {
+				var row = new Customers(connection);
+				row.readOne(reader);
+				rows.Add(row);
+			}
+
+			return rows.ToArray();
+
+		}
     }
 }
