@@ -4,17 +4,16 @@ using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using DtxModel;
+using System.Data.SqlClient;
+using System.Data.Common;
+using System.Reflection;
 
 namespace DtxModelTests.Northwind.Models {
     class Customers : IModel {
-
-        private SQLiteConnection connection;
-
         private long _rowid;
 
         public long rowid {
             get { return _rowid; }
-            set { _rowid = value; }
         }
 
         private string _CustomerID;
@@ -87,15 +86,7 @@ namespace DtxModelTests.Northwind.Models {
             set { _Fax = value; }
         }
 
-        public Customers(SQLiteConnection connection) {
-            this.connection = connection;
-        }
-
-        public SqlStatement select() {
-            return new SqlStatement(SqlStatement.Mode.Select, connection);
-        }
-
-		protected Customers readOne(System.Data.SqlClient.SqlDataReader reader) {
+		public Customers(SqlDataReader reader) {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
@@ -114,22 +105,6 @@ namespace DtxModelTests.Northwind.Models {
 						break;
 				}
 			}
-			return this;
-
-		}
-
-		protected Customers[] readAll(System.Data.SqlClient.SqlDataReader reader) {
-
-			var rows = new List<Customers>();
-
-			while (reader.Read()) {
-				var row = new Customers(connection);
-				row.readOne(reader);
-				rows.Add(row);
-			}
-
-			return rows.ToArray();
-
-		}
+        }
     }
 }
