@@ -177,20 +177,19 @@ namespace DtxModelTests.Northwind.Models {
 			return changed;
 		}
 
-		public override Dictionary<string, object> getAllValues() {
-			var columns = new Dictionary<string, object>();
-			columns.Add("CustomerID", _CustomerID);
-			columns.Add("CompanyName", _CompanyName);
-			columns.Add("ContactName", _ContactName);
-			columns.Add("Address", _Address);
-			columns.Add("City", _City);
-			columns.Add("Region", _Region);
-			columns.Add("PostalCode", _PostalCode);
-			columns.Add("Country", _Country);
-			columns.Add("Phone", _Phone);
-			columns.Add("Fax", _Fax);
-
-			return columns;
+		public override object[] getAllValues() {
+			return new object[] {
+				_CustomerID,
+				_CompanyName,
+				_ContactName,
+				_Address,
+				_City,
+				_Region,
+				_PostalCode,
+				_Country,
+				_Phone,
+				_Fax
+			};
 		}
 
 		public override string[] getColumns() {

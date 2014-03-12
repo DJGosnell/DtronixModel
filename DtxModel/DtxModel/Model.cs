@@ -31,7 +31,7 @@ namespace DtxModel
 			return null;
 		}
 
-		public virtual Dictionary<string, object> getAllValues() {
+		public virtual object[] getAllValues() {
 			return null;
 		}
 

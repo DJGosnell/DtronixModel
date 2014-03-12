@@ -70,44 +70,46 @@ namespace DtxModel {
 			if (models == null || models.Length == 0) {
 				throw new ArgumentException("Model array is empty.");
 			}
-
-			int i = 0;
-			var sql = buildInsertStatement(table, models[0].getColumns());
+			var columns = models[0].getColumns();
+			var sql = buildInsertStatement(table, columns);
 
 			// Start a transaction to enable for fast bulk inserts.
-			var transaction = connection.BeginTransaction();
+			using (var transaction = connection.BeginTransaction()) {
 
-			try {
-				using (var command = connection.CreateCommand()) {
-					command.CommandText = sql;
+				try {
+					using (var command = connection.CreateCommand()) {
+						command.CommandText = sql;
 
-					// Loop through wach of the provided models.
-					foreach (var model in models) {
-						var values = model.getAllValues();
-						command.Parameters.Clear();
-						i = 0;
-
-						foreach (var param_value in values) {
+						// Create the parameters for bulk inerts.
+						for (int i = 0; i < columns.Length; i++) {
 							var parameter = command.CreateParameter();
-							parameter.ParameterName = "@v" + i++;
-							parameter.Value = param_value.Value;
-
+							parameter.ParameterName = "@v" + i;
 							command.Parameters.Add(parameter);
 						}
 
-						if (command.ExecuteNonQuery() != 1) {
-							throw new Exception("Unable to insert row");
+						// Loop through wach of the provided models.
+						foreach (var model in models) {
+							var values = model.getAllValues();
+
+							for (int i = 0; i < values.Length; i++) {
+								command.Parameters[i].Value = values[i];
+							}
+
+							if (command.ExecuteNonQuery() != 1) {
+								throw new Exception("Unable to insert row");
+							}
 						}
 					}
+				} catch (Exception e) {
+					// If we incountered an error, rollback the transaction.
+					transaction.Rollback();
+
+					throw e;
 				}
-			} catch (Exception e) {
-				// If we incountered an error, rollback the transaction.
-				transaction.Rollback();
-				throw e;
+
+				// Commit all inserts.
+				transaction.Commit();
 			}
-			
-			// Commit all inserts.
-			transaction.Commit();
 		}
 
 		/// <summary>
