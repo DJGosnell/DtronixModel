@@ -1,15 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 
 namespace DtxModelTests.Northwind.Models {
-	class NorthwindContext {
-		private CustomersTable _customers;
+	class NorthwindContext : IDisposable {
+		public DbConnection connection;
+		private Table<Customers> _customers;
 
-		public CustomersTable Customers {
-			get { return _customers; }
-			set { _customers = value; }
+		public Table<Customers> Customers {
+			get {
+				if (_customers == null) {
+					_customers = new Table<Customers>(connection, "Customers");
+				}
+
+				return _customers; 
+			}
+		}
+
+		public NorthwindContext(DbConnection connection) {
+			this.connection = connection;
+
+		}
+
+
+		public void Dispose(){
+
 		}
 
 	}

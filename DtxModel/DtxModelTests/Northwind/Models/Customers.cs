@@ -9,13 +9,7 @@ using System.Data.Common;
 using System.Reflection;
 
 namespace DtxModelTests.Northwind.Models {
-	class Customers {
-		private DbConnection connection;
-		private long _rowid;
-
-		public long rowid {
-			get { return _rowid; }
-		}
+	class Customers : Model {
 
 		private bool _CustomerIDChanged = false;
 
@@ -132,12 +126,10 @@ namespace DtxModelTests.Northwind.Models {
 
 		public Customers() : this(null, null) { }
 
-		public Customers(DbDataReader reader, DbConnection connection) {
+		public Customers(DbDataReader reader, DbConnection connection) : base(connection) {
 			if (reader == null) {
 				return;
 			}
-
-			this.connection = connection;
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
@@ -159,7 +151,7 @@ namespace DtxModelTests.Northwind.Models {
 			}
 		}
 
-		public Dictionary<string, object> getChanged() {
+		public override Dictionary<string, object> getChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_CustomerIDChanged)
 				changed.Add("CustomerID", _CustomerID);
@@ -183,6 +175,37 @@ namespace DtxModelTests.Northwind.Models {
 				changed.Add("Fax", _Fax);
 
 			return changed;
+		}
+
+		public override Dictionary<string, object> getAllValues() {
+			var columns = new Dictionary<string, object>();
+			columns.Add("CustomerID", _CustomerID);
+			columns.Add("CompanyName", _CompanyName);
+			columns.Add("ContactName", _ContactName);
+			columns.Add("Address", _Address);
+			columns.Add("City", _City);
+			columns.Add("Region", _Region);
+			columns.Add("PostalCode", _PostalCode);
+			columns.Add("Country", _Country);
+			columns.Add("Phone", _Phone);
+			columns.Add("Fax", _Fax);
+
+			return columns;
+		}
+
+		public override string[] getColumns() {
+			return new string[] {
+				"CustomerID",
+				"CompanyName",
+				"ContactName",
+				"Address",
+				"City",
+				"Region",
+				"PostalCode",
+				"Country",
+				"Phone",
+				"Fax",
+			};
 		}
 
 	}
