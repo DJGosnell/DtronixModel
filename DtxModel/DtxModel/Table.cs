@@ -6,7 +6,7 @@ using System.Text;
 using System.Data.Common;
 
 namespace DtxModelTests.Northwind.Models {
-	class Table<T> where T : Model {
+	public class Table<T> where T : Model {
 		private DbConnection connection;
 		protected readonly string table_name;
 

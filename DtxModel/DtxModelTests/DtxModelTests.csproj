@@ -53,10 +53,8 @@
   <ItemGroup>
     <Compile Include="Northwind\Models\Customers.cs" />
     <Compile Include="Northwind\Models\NorthwindContext.cs" />
-    <Compile Include="Northwind\SqlSelect.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

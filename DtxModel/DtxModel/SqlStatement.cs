@@ -48,10 +48,24 @@ namespace DtxModel {
 			this.mode = mode;
 		}
 
+		/// <summary>
+		/// Inserts a model into the database.
+		/// </summary>
+		/// <param name="table">Name of the table to insert these models into.</param>
+		/// <param name="models">Model to insert.</param>
 		public void insert(string table, Model models) {
 			insert(table, new Model[] { models });
 		}
 
+		/// <summary>
+		/// Insert multiple models into the database.
+		/// </summary>
+		/// <remarks>
+		/// This method by default wraps all inserts into a transaction.
+		/// If one of the inserts fails, then all of the inserts are rolled back.
+		/// </remarks>
+		/// <param name="table">Name of the table to insert these models into.</param>
+		/// <param name="models">Models to insert.</param>
 		public void insert(string table, Model[] models){
 			if (models == null || models.Length == 0) {
 				throw new ArgumentException("Model array is empty.");
@@ -60,58 +74,41 @@ namespace DtxModel {
 			int i = 0;
 			var sql = buildInsertStatement(table, models[0].getColumns());
 
-			using (var command = connection.CreateCommand()) {
-				
-				command.CommandText = sql;
+			// Start a transaction to enable for fast bulk inserts.
+			var transaction = connection.BeginTransaction();
 
-				foreach(var model in models){
-					var values = model.getAllValues();
-					command.Parameters.Clear();
-					i = 0;
+			try {
+				using (var command = connection.CreateCommand()) {
+					command.CommandText = sql;
 
-					foreach(var param_value in values){
-						var parameter = command.CreateParameter();
-						parameter.ParameterName = "@v" + i++;
-						parameter.Value = param_value.Value;
-					
-						command.Parameters.Add(parameter);
-					}
+					// Loop through wach of the provided models.
+					foreach (var model in models) {
+						var values = model.getAllValues();
+						command.Parameters.Clear();
+						i = 0;
 
-					if (command.ExecuteNonQuery() != 1) {
-						throw new Exception("Unable to insert row");
+						foreach (var param_value in values) {
+							var parameter = command.CreateParameter();
+							parameter.ParameterName = "@v" + i++;
+							parameter.Value = param_value.Value;
+
+							command.Parameters.Add(parameter);
+						}
+
+						if (command.ExecuteNonQuery() != 1) {
+							throw new Exception("Unable to insert row");
+						}
 					}
 				}
+			} catch (Exception e) {
+				// If we incountered an error, rollback the transaction.
+				transaction.Rollback();
+				throw e;
 			}
+			
+			// Commit all inserts.
+			transaction.Commit();
 		}
-
-		/*public long insert(string table, Model[] model) {
-
-
-			Dictionary<string, object> values = model[0].getAllValues();
-			var sql = buildInsertStatement(table, values);
-			long last_rowid = -1;
-
-			using (var command = connection.CreateCommand()) {
-				int i = 0;
-				command.CommandText = sql;
-
-				Dictionary<string, object> values = model.getAllValues();
-				foreach (var param_value in values) {
-					var parameter = command.CreateParameter();
-					parameter.ParameterName = "@v" + i++;
-					parameter.Value = param_value.Value;
-
-					command.Parameters.Add(parameter);
-				}
-				command.ExecuteNonQuery();
-
-				// Get the last added rowid.
-				command.CommandText = @"select last_insert_rowid()";
-				last_rowid = (long)command.ExecuteScalar();
-			}
-
-			return last_rowid;
-		}*/
 
 		/// <summary>
 		/// Builds the SQL insertion query.
