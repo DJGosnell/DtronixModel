@@ -18,7 +18,7 @@ namespace DtxModel {
 
 
 		public static SqlStatement Select () {
-			return new SqlStatement(Mode.Select, );
+			return new SqlStatement(Mode.Select);
 		}
 
 		public static SqlStatement Update {

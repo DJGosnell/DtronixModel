@@ -7,8 +7,5 @@ using System.Threading.Tasks;
 
 namespace DtxModel
 {
-	public interface IModel {
-		protected IModel readOne(SqlDataReader reader);
-		protected IModel[] readAll(SqlDataReader reader);
-	}
+
 }

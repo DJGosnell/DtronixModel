@@ -5,5 +5,6 @@ using System.Text;
 
 namespace DtxModelTests.Northwind.Models {
 	class CustomersTable {
+
 	}
 }

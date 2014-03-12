@@ -13,12 +13,12 @@ namespace DtxModelTests.Northwind {
             connection.Open();
 
             using (var command = connection.CreateCommand()) {
-                command.CommandText = "SELECT * FROM Customers";
+                command.CommandText = "SELECT rowid, * FROM Customers";
                 using (var reader = command.ExecuteReader()) {
                     var depth = reader.Depth;
-                    var list = new List<object>();
+					var list = new List<Customers>();
                     while (reader.Read()) {
-                        list.Add(reader.GetValues());
+                        list.Add(new Customers(reader, connection));
                     }
                 }
             }
