@@ -52,7 +52,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Northwind\Models\Customers.cs" />
-    <Compile Include="Northwind\Models\CustomersTable.cs" />
     <Compile Include="Northwind\Models\NorthwindContext.cs" />
     <Compile Include="Northwind\SqlSelect.cs" />
     <Compile Include="Program.cs" />
