@@ -5,10 +5,19 @@ using System.Text;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
+using System.Data.Linq;
+using System.Reflection;
 
 namespace DtxModel {
-	class MyExpressionVisitor : ExpressionVisitor {
+	class ExpressionToSql : ExpressionVisitor {
 		public StringBuilder sb = new StringBuilder();
+		private int parameter_index;
+		private DbCommand command;
+
+		public ExpressionToSql(DbCommand command) {
+			this.command = command;
+		}
+
 		protected override Expression VisitBinary(BinaryExpression node) {
 			sb.Append("(");
 
@@ -39,6 +48,14 @@ namespace DtxModel {
 					sb.Append(" && ");
 					break;
 
+				case ExpressionType.Or:
+					sb.Append(" | ");
+					break;
+
+				case ExpressionType.OrElse:
+					sb.Append(" || ");
+					break;
+
 				case ExpressionType.Add:
 					sb.Append(" + ");
 					break;
@@ -56,18 +73,45 @@ namespace DtxModel {
 		}
 
 		protected override Expression VisitMember(MemberExpression node) {
-			sb.Append(node.Member.ReflectedType.Name).Append(".").Append(node.Member.Name);
+			var s = this;
+			//sb.Append(node.Member.ReflectedType.Name).Append(".");
+			var atts = node.Member.GetCustomAttributes(typeof(System.Data.Linq.Mapping.ColumnAttribute), false);
+			if (atts.Length != 0) {
+				// This is just a column.  Add its name and continue.
+				sb.Append(((System.Data.Linq.Mapping.ColumnAttribute)atts[0]).Name);
+			} else {
+				/*// This is a field or property.  Get its value and bind it.
+				int param_index = parameter_index++;
+
+				sb.Append("@p").Append(param_index);
+
+				// Bind the parameter
+				var param = command.CreateParameter();
+				param.ParameterName = "@p" + param_index.ToString();
+
+				if (node.Expression is ConstantExpression) {
+					var inner = (ConstantExpression)node.Expression;
+					param.Value = (node.Member as FieldInfo).GetValue(inner.Value);
+				}
+
+				
+				//param.Value = n*/
+			}
+			
 			return node;
 		}
 
 		protected override Expression VisitConstant(ConstantExpression node) {
-			sb.Append(node.Value);
-			return node;
-		}
+			int param_index = parameter_index++;
+			sb.Append("@p").Append(param_index);
 
+			// Bind the parameter
+			var param = command.CreateParameter();
+			param.ParameterName = "@p" + param_index.ToString();
+			param.Value = node.Value;
 
-		protected override Expression VisitParameter(ParameterExpression node) {
-			sb.Append(node.Name);
+			command.Parameters.Add(param);
+
 			return node;
 		}
 	}
@@ -83,6 +127,7 @@ namespace DtxModel {
 		}
 
 		public DbConnection connection;
+		public DbCommand command;
 
 		public static SqlStatement<T> Select () {
 			return new SqlStatement<T>(Mode.Select);
@@ -114,16 +159,11 @@ namespace DtxModel {
 		public SqlStatement(Mode mode, DbConnection connection) {
 			this.connection = connection;
 			this.mode = mode;
+			command = connection.CreateCommand();
+
 		}
 
 		public SqlStatement<T> where(Expression<Func<T, bool>> expression){
-
-			Expression<Func<int, int, int, double>> someExpr = (x, y, z) => (x + y + z) / 3.0;
-			var myVisitor = new MyExpressionVisitor();
-
-			// visit the expression's Body instead
-			myVisitor.Visit(someExpr.Body);
-
 
 
 
@@ -136,7 +176,7 @@ namespace DtxModel {
 
 			Expression current_expression = expression.Body;
 
-			var expv = new MyExpressionVisitor();
+			var expv = new ExpressionToSql(command);
 			expv.Visit(expression);
 
 

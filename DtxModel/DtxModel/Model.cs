@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Linq.Mapping;
 
 namespace DtxModel
 {
@@ -16,6 +17,7 @@ namespace DtxModel
 
 		protected long _rowid;
 
+		[System.Data.Linq.Mapping.Column(Name = "CustomerID", Storage = "_rowid")]
 		public long rowid {
 			get { return _rowid; }
 		}

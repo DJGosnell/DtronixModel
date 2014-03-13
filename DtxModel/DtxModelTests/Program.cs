@@ -15,7 +15,7 @@ namespace DtxModelTests {
         }
 
 		static void insertTests() {
-			var connection = new SQLiteConnection(@"Data Source=C:\Users\mepengadmin\Source\Workspaces\DtronixModel\DtxModel\DtxModelTests\bin\Debug\Northwind/northwind.sqlite;Version=3;");
+			var connection = new SQLiteConnection(@"Data Source=Northwind/northwind.sqlite;Version=3;");
 			NorthwindContext.DefaultConnection = connection;
 			connection.Open();
 
@@ -38,6 +38,8 @@ namespace DtxModelTests {
 
 			}
 
+
+			
 			timeFunc("Startup inserts", () => {
 				using (var context = new NorthwindContext(connection)) {
 					context.Customers.insert(customers);
@@ -92,8 +94,10 @@ namespace DtxModelTests {
 				});
 			});*/
 
+			string this_name = "TestName";
+
 			using (var context = new NorthwindContext()) {
-				context.Customers.select().where(cust => cust.City == "Name" && cust.rowid >= 1245125);
+				context.Customers.select().where(cust => (cust.City == "Name" && cust.rowid >= 1245125) || cust.CompanyName == this_name || cust.rowid == customers[24].rowid);
 				context.Customers.insert(customers);
 			}
 

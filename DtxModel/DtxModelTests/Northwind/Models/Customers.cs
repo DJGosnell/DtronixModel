@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using DtxModel;
-using System.Data.SqlClient;
 using System.Data.Common;
 using System.Reflection;
 
 namespace DtxModelTests.Northwind.Models {
+
+	[System.Data.Linq.Mapping.Table(Name="Customers")]
 	class Customers : Model {
 
 		private bool _CustomerIDChanged = false;
 
 		private string _CustomerID;
 
+		[System.Data.Linq.Mapping.Column(Name="CustomerID", Storage="_CustomerID")]
 		public string CustomerID {
 			get { return _CustomerID; }
 			set {
@@ -27,6 +28,7 @@ namespace DtxModelTests.Northwind.Models {
 
 		private string _CompanyName;
 
+		[System.Data.Linq.Mapping.Column(Name = "CompanyName", Storage = "_CompanyName")]
 		public string CompanyName {
 			get { return _CompanyName; }
 			set {
@@ -39,6 +41,7 @@ namespace DtxModelTests.Northwind.Models {
 
 		private string _ContactName;
 
+		[System.Data.Linq.Mapping.Column(Name = "ContactName", Storage = "_ContactName")]
 		public string ContactName {
 			get { return _ContactName; }
 			set {
@@ -50,6 +53,7 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _AddressChanged = false;
 		private string _Address;
 
+		[System.Data.Linq.Mapping.Column(Name = "Address", Storage = "_Address")]
 		public string Address {
 			get { return _Address; }
 			set {
@@ -61,6 +65,7 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _CityChanged = false;
 		private string _City;
 
+		[System.Data.Linq.Mapping.Column(Name = "City", Storage = "_City")]
 		public string City {
 			get { return _City; }
 			set {
@@ -72,6 +77,7 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _RegionChanged = false;
 		private string _Region;
 
+		[System.Data.Linq.Mapping.Column(Name = "Region", Storage = "_Region")]
 		public string Region {
 			get { return _Region; }
 			set {
@@ -83,6 +89,7 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _PostalCodeChanged = false;
 		private string _PostalCode;
 
+		[System.Data.Linq.Mapping.Column(Name = "PostalCode", Storage = "_PostalCode")]
 		public string PostalCode {
 			get { return _PostalCode; }
 			set {
@@ -94,6 +101,7 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _CountryChanged = false;
 		private string _Country;
 
+		[System.Data.Linq.Mapping.Column(Name = "Country", Storage = "_Country")]
 		public string Country {
 			get { return _Country; }
 			set {
@@ -105,6 +113,7 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _PhoneChanged = false;
 		private string _Phone;
 
+		[System.Data.Linq.Mapping.Column(Name = "Phone", Storage = "_Phone")]
 		public string Phone {
 			get { return _Phone; }
 			set {
@@ -116,6 +125,7 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _FaxChanged = false;
 		private string _Fax;
 
+		[System.Data.Linq.Mapping.Column(Name = "Fax", Storage = "_Fax")]
 		public string Fax {
 			get { return _Fax; }
 			set {
