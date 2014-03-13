@@ -4,9 +4,77 @@ using System.Linq;
 using System.Text;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.Linq.Expressions;
 
 namespace DtxModel {
-	public class SqlStatement {
+	class MyExpressionVisitor : ExpressionVisitor {
+		public StringBuilder sb = new StringBuilder();
+		protected override Expression VisitBinary(BinaryExpression node) {
+			sb.Append("(");
+
+			this.Visit(node.Left);
+
+			switch (node.NodeType) {
+				case ExpressionType.GreaterThanOrEqual:
+					sb.Append(" >= ");
+					break;
+
+				case ExpressionType.LessThanOrEqual:
+					sb.Append(" <= ");
+					break;
+
+				case ExpressionType.GreaterThan:
+					sb.Append(" > ");
+					break;
+
+				case ExpressionType.LessThan:
+					sb.Append(" < ");
+					break;
+
+				case ExpressionType.Equal:
+					sb.Append(" == ");
+					break;
+
+				case ExpressionType.AndAlso:
+					sb.Append(" && ");
+					break;
+
+				case ExpressionType.Add:
+					sb.Append(" + ");
+					break;
+
+				case ExpressionType.Divide:
+					sb.Append(" / ");
+					break;
+			}
+
+			this.Visit(node.Right);
+
+			sb.Append(")");
+
+			return node;
+		}
+
+		protected override Expression VisitMember(MemberExpression node) {
+			sb.Append(node.Member.ReflectedType.Name).Append(".").Append(node.Member.Name);
+			return node;
+		}
+
+		protected override Expression VisitConstant(ConstantExpression node) {
+			sb.Append(node.Value);
+			return node;
+		}
+
+
+		protected override Expression VisitParameter(ParameterExpression node) {
+			sb.Append(node.Name);
+			return node;
+		}
+	}
+
+
+
+	public class SqlStatement<T> {
 		public enum Mode {
 			Select,
 			Insert,
@@ -16,25 +84,25 @@ namespace DtxModel {
 
 		public DbConnection connection;
 
-		public static SqlStatement Select () {
-			return new SqlStatement(Mode.Select);
+		public static SqlStatement<T> Select () {
+			return new SqlStatement<T>(Mode.Select);
 		}
 
-		public static SqlStatement Update {
+		public static SqlStatement<T> Update {
 			get {
-				return new SqlStatement(Mode.Update);
+				return new SqlStatement<T>(Mode.Update);
 			}
 		}
 
-		public static SqlStatement Insert {
+		public static SqlStatement<T> Insert {
 			get {
-				return new SqlStatement(Mode.Insert);
+				return new SqlStatement<T>(Mode.Insert);
 			}
 		}
         
-		public static SqlStatement Delete {
+		public static SqlStatement<T> Delete {
 			get {
-				return new SqlStatement(Mode.Delete);
+				return new SqlStatement<T>(Mode.Delete);
 			}
 		}
 
@@ -46,6 +114,35 @@ namespace DtxModel {
 		public SqlStatement(Mode mode, DbConnection connection) {
 			this.connection = connection;
 			this.mode = mode;
+		}
+
+		public SqlStatement<T> where(Expression<Func<T, bool>> expression){
+
+			Expression<Func<int, int, int, double>> someExpr = (x, y, z) => (x + y + z) / 3.0;
+			var myVisitor = new MyExpressionVisitor();
+
+			// visit the expression's Body instead
+			myVisitor.Visit(someExpr.Body);
+
+
+
+
+			StringBuilder sql = new StringBuilder();
+			/*ExpressionType.be
+
+			var ops = new Dictionary<ExpressionType, String>();
+        ops.Add(ExpressionType.Equal, "=");
+        ops.Add(ExpressionType.GreaterThan, ">");*/
+
+			Expression current_expression = expression.Body;
+
+			var expv = new MyExpressionVisitor();
+			expv.Visit(expression);
+
+
+			string test = "";
+
+			return this;
 		}
 
 		/// <summary>

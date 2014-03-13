@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExpressionExtensions.cs" />
     <Compile Include="Northwind\Models\Customers.cs" />
     <Compile Include="Northwind\Models\NorthwindContext.cs" />
     <Compile Include="Program.cs" />

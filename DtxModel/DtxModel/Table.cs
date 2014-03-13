@@ -11,26 +11,26 @@ namespace DtxModelTests.Northwind.Models {
 		protected readonly string table_name;
 
 
-		public SqlStatement select() {
-			return new SqlStatement(SqlStatement.Mode.Select, connection);
+		public SqlStatement<T> select() {
+			return new SqlStatement<T>(SqlStatement<T>.Mode.Select, connection);
 		}
 
 		public void insert(T model) {
-			new SqlStatement(SqlStatement.Mode.Insert, connection).insert(table_name, model);
+			new SqlStatement<T>(SqlStatement<T>.Mode.Insert, connection).insert(table_name, model);
 		}
 
 		public void insert(T[] model) {
-			new SqlStatement(SqlStatement.Mode.Insert, connection).insert(table_name, model);
+			new SqlStatement<T>(SqlStatement<T>.Mode.Insert, connection).insert(table_name, model);
 		}
 
 
 
-		public SqlStatement update() {
-			return new SqlStatement(SqlStatement.Mode.Update, connection);
+		public SqlStatement<T> update() {
+			return new SqlStatement<T>(SqlStatement<T>.Mode.Update, connection);
 		}
 
-		public SqlStatement delete() {
-			return new SqlStatement(SqlStatement.Mode.Delete, connection);
+		public SqlStatement<T> delete() {
+			return new SqlStatement<T>(SqlStatement<T>.Mode.Delete, connection);
 		}
 
 		public Table(DbConnection connection, string table_name) {

@@ -51,7 +51,7 @@ namespace DtxModelTests.Northwind.Models {
 
 			// We have to determine what type of connection this context is connecting to.
 			if (_default_connection is SQLiteConnection) {
-				this.connection = new SQLiteConnection(@"Data Source=C:\Users\mepengadmin\Source\Workspaces\DtronixModel\DtxModel\DtxModelTests\bin\Debug\Northwind/northwind.sqlite;Version=3;", true);
+				this.connection = new SQLiteConnection((SQLiteConnection)_default_connection);
 				if (this.connection.State == System.Data.ConnectionState.Closed) {
 					this.connection.Open();
 				}
