@@ -8,19 +8,18 @@ using System.Data.Common;
 namespace DtxModelTests.Northwind.Models {
 	public class Table<T> where T : Model {
 		private DbConnection connection;
-		protected readonly string table_name;
 
 
-		public SqlStatement<T> select() {
+		public SqlStatement<T> select(string select = "*, rowid") {
 			return new SqlStatement<T>(SqlStatement<T>.Mode.Select, connection);
 		}
 
 		public void insert(T model) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Insert, connection).insert(table_name, model);
+			new SqlStatement<T>(SqlStatement<T>.Mode.Insert, connection).insert(model);
 		}
 
 		public void insert(T[] model) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Insert, connection).insert(table_name, model);
+			new SqlStatement<T>(SqlStatement<T>.Mode.Insert, connection).insert(model);
 		}
 
 
@@ -35,7 +34,6 @@ namespace DtxModelTests.Northwind.Models {
 
 		public Table(DbConnection connection, string table_name) {
 			this.connection = connection;
-			this.table_name = table_name;
 		}
 	}
 }

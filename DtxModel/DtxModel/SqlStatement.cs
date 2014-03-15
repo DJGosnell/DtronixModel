@@ -7,116 +7,9 @@ using System.Data.SqlClient;
 using System.Linq.Expressions;
 using System.Data.Linq;
 using System.Reflection;
+using System.Data.Linq.Mapping;
 
 namespace DtxModel {
-	class ExpressionToSql : ExpressionVisitor {
-		public StringBuilder sb = new StringBuilder();
-		private int parameter_index;
-		private DbCommand command;
-
-		public ExpressionToSql(DbCommand command) {
-			this.command = command;
-		}
-
-		protected override Expression VisitBinary(BinaryExpression node) {
-			sb.Append("(");
-
-			this.Visit(node.Left);
-
-			switch (node.NodeType) {
-				case ExpressionType.GreaterThanOrEqual:
-					sb.Append(" >= ");
-					break;
-
-				case ExpressionType.LessThanOrEqual:
-					sb.Append(" <= ");
-					break;
-
-				case ExpressionType.GreaterThan:
-					sb.Append(" > ");
-					break;
-
-				case ExpressionType.LessThan:
-					sb.Append(" < ");
-					break;
-
-				case ExpressionType.Equal:
-					sb.Append(" == ");
-					break;
-
-				case ExpressionType.AndAlso:
-					sb.Append(" && ");
-					break;
-
-				case ExpressionType.Or:
-					sb.Append(" | ");
-					break;
-
-				case ExpressionType.OrElse:
-					sb.Append(" || ");
-					break;
-
-				case ExpressionType.Add:
-					sb.Append(" + ");
-					break;
-
-				case ExpressionType.Divide:
-					sb.Append(" / ");
-					break;
-			}
-
-			this.Visit(node.Right);
-
-			sb.Append(")");
-
-			return node;
-		}
-
-		protected override Expression VisitMember(MemberExpression node) {
-			var s = this;
-			//sb.Append(node.Member.ReflectedType.Name).Append(".");
-			var atts = node.Member.GetCustomAttributes(typeof(System.Data.Linq.Mapping.ColumnAttribute), false);
-			if (atts.Length != 0) {
-				// This is just a column.  Add its name and continue.
-				sb.Append(((System.Data.Linq.Mapping.ColumnAttribute)atts[0]).Name);
-			} else {
-				/*// This is a field or property.  Get its value and bind it.
-				int param_index = parameter_index++;
-
-				sb.Append("@p").Append(param_index);
-
-				// Bind the parameter
-				var param = command.CreateParameter();
-				param.ParameterName = "@p" + param_index.ToString();
-
-				if (node.Expression is ConstantExpression) {
-					var inner = (ConstantExpression)node.Expression;
-					param.Value = (node.Member as FieldInfo).GetValue(inner.Value);
-				}
-
-				
-				//param.Value = n*/
-			}
-			
-			return node;
-		}
-
-		protected override Expression VisitConstant(ConstantExpression node) {
-			int param_index = parameter_index++;
-			sb.Append("@p").Append(param_index);
-
-			// Bind the parameter
-			var param = command.CreateParameter();
-			param.ParameterName = "@p" + param_index.ToString();
-			param.Value = node.Value;
-
-			command.Parameters.Add(param);
-
-			return node;
-		}
-	}
-
-
 
 	public class SqlStatement<T> {
 		public enum Mode {
@@ -126,33 +19,21 @@ namespace DtxModel {
 			Delete
 		}
 
+
 		public DbConnection connection;
 		public DbCommand command;
 
-		public static SqlStatement<T> Select () {
-			return new SqlStatement<T>(Mode.Select);
-		}
-
-		public static SqlStatement<T> Update {
-			get {
-				return new SqlStatement<T>(Mode.Update);
-			}
-		}
-
-		public static SqlStatement<T> Insert {
-			get {
-				return new SqlStatement<T>(Mode.Insert);
-			}
-		}
-        
-		public static SqlStatement<T> Delete {
-			get {
-				return new SqlStatement<T>(Mode.Delete);
-			}
-		}
-
-
 		private Mode mode;
+		private int param_index = 0;
+
+		private string sql_select = "*, rowid";
+		private int sql_limit_start;
+		private int sql_limit_count;
+		private string sql_where;
+		private Dictionary<string, SortDirection> sql_order;
+		private List<string> sql_group;
+
+		//private 
 
 		public SqlStatement(Mode mode) : this(mode, null) { }
 
@@ -163,35 +44,106 @@ namespace DtxModel {
 
 		}
 
-		public SqlStatement<T> where(Expression<Func<T, bool>> expression){
+		public SqlStatement<T> where(string where, params object[] parameters){
+			if (mode == Mode.Insert) {
+				throw new InvalidOperationException("Can not use the WHERE method in INSERT mode.");
+			}
 
+			if (sql_where != null) {
+				throw new InvalidOperationException("The WHERE statement has already been defined.");
+			}
 
+			string[] sql_param_holder = new string[parameters.Length];
+			for (int i = 0; i < parameters.Length; i++) {
+				sql_param_holder[i] = bindParameter(parameters[i]);
+			}
 
-			StringBuilder sql = new StringBuilder();
-			/*ExpressionType.be
-
-			var ops = new Dictionary<ExpressionType, String>();
-        ops.Add(ExpressionType.Equal, "=");
-        ops.Add(ExpressionType.GreaterThan, ">");*/
-
-			Expression current_expression = expression.Body;
-
-			var expv = new ExpressionToSql(command);
-			expv.Visit(expression);
-
-
-			string test = "";
+			try {
+				sql_where = string.Format(where, sql_param_holder);
+			} catch (Exception e) {
+				throw new Exception("Invalid number of placement parameters for the WHERE statement.", e);
+			}
+			
 
 			return this;
+		}
+
+		public SqlStatement<T> limit(int start, int count) {
+			if (mode != Mode.Select) {
+				throw new InvalidOperationException("Can not use the LIMIT method except in SELECT mode.");
+			}
+
+			sql_limit_start = start;
+			sql_limit_count = count;
+
+			return this;
+		}
+
+		public SqlStatement<T> orderBy(string column, SortDirection direction) {
+			if (mode != Mode.Select) {
+				throw new InvalidOperationException("Can not use the ORDER BY method except in SELECT mode.");
+			}
+
+			if (sql_order == null) {
+				sql_order = new Dictionary<string, SortDirection>();
+			}
+
+			sql_order.Add(column, direction);
+
+			return this;
+		}
+
+		public SqlStatement<T> groupBy(string column) {
+			if (mode != Mode.Select) {
+				throw new InvalidOperationException("Can not use the GROUP BY method except in SELECT mode.");
+			}
+
+			if (sql_group == null) {
+				sql_group = new List<string>();
+			}
+
+			sql_group.Add(column);
+
+			return this;
+		}
+
+		private void buildSql(){
+			var sql = new StringBuilder();
+
+			switch (mode) {
+				case Mode.Select:
+					sql.Append("SELECT");
+					break;
+				case Mode.Insert:
+					break;
+				case Mode.Update:
+					sql.Append("UPDATE");
+					break;
+				case Mode.Delete:
+					sql.Append("DELETE");
+					break;
+				default:
+					break;
+			}
+				
+		}
+
+
+		private string bindParameter(object value){
+			string key = "@p" + param_index++;
+			var param = command.CreateParameter();
+			param.ParameterName = key;
+			param.Value = value;
+			command.Parameters.Add(param);
+			return key;
 		}
 
 		/// <summary>
 		/// Inserts a model into the database.
 		/// </summary>
-		/// <param name="table">Name of the table to insert these models into.</param>
 		/// <param name="models">Model to insert.</param>
-		public void insert(string table, Model models) {
-			insert(table, new Model[] { models });
+		public void insert(Model models) {
+			insert(new Model[] { models });
 		}
 
 		/// <summary>
@@ -201,14 +153,22 @@ namespace DtxModel {
 		/// This method by default wraps all inserts into a transaction.
 		/// If one of the inserts fails, then all of the inserts are rolled back.
 		/// </remarks>
-		/// <param name="table">Name of the table to insert these models into.</param>
 		/// <param name="models">Models to insert.</param>
-		public void insert(string table, Model[] models){
+		public void insert(Model[] models){
 			if (models == null || models.Length == 0) {
 				throw new ArgumentException("Model array is empty.");
 			}
 			var columns = models[0].getColumns();
-			var sql = buildInsertStatement(table, columns);
+
+			string table_name;
+
+			try {
+				table_name = AttributeCache<T, TableAttribute>.getAttribute().Name;
+			} catch (Exception) {
+				throw new Exception("Class passed does not have a TableAttribute");
+			}
+
+			var sql = buildInsertStatement(table_name, columns);
 
 			// Start a transaction to enable for fast bulk inserts.
 			using (var transaction = connection.BeginTransaction()) {

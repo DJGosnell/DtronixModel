@@ -97,7 +97,8 @@ namespace DtxModelTests {
 			string this_name = "TestName";
 
 			using (var context = new NorthwindContext()) {
-				context.Customers.select().where(cust => (cust.City == "Name" && cust.rowid >= 1245125) || cust.CompanyName == this_name || cust.rowid == customers[24].rowid);
+				//context.Customers.select().orderBy("Test", DtxModel.SortDirection.)
+				context.Customers.select().where("Customers.rowid == {0} {2} {1} {3} {4}", 25, 1561, 3626, 12512);//.where(cust => (cust.City == "Name" && cust.rowid >= 1245125) || cust.CompanyName == this_name || cust.rowid == customers[24].rowid);
 				context.Customers.insert(customers);
 			}
 
