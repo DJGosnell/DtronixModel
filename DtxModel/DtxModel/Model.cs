@@ -15,12 +15,6 @@ namespace DtxModel
 
 		protected DbConnection connection;
 
-		protected long _rowid;
-
-		[System.Data.Linq.Mapping.Column(Name = "CustomerID", Storage = "_rowid")]
-		public long rowid {
-			get { return _rowid; }
-		}
 
 		public Model() { }
 

@@ -11,6 +11,13 @@ namespace DtxModelTests.Northwind.Models {
 	[System.Data.Linq.Mapping.Table(Name="Customers")]
 	class Customers : Model {
 
+		protected long _rowid;
+
+		[System.Data.Linq.Mapping.Column(Name = "CustomerID", Storage = "_rowid", IsDbGenerated = true)]
+		public long rowid {
+			get { return _rowid; }
+		}
+
 		private bool _CustomerIDChanged = false;
 
 		private string _CustomerID;
