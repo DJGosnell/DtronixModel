@@ -136,7 +136,13 @@ namespace DtxModelTests.Northwind.Models {
 
 		public Customers() : this(null, null) { }
 
-		public Customers(DbDataReader reader, DbConnection connection) : base(connection) {
+		public Customers(DbDataReader reader, DbConnection connection) {
+			read(reader, connection);
+		}
+
+
+		public override void read(DbDataReader reader, DbConnection connection) {
+			this.connection = connection;
 			if (reader == null) {
 				return;
 			}

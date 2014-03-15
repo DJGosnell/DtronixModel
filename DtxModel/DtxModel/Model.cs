@@ -13,7 +13,7 @@ namespace DtxModel
 
 		public static readonly string[] columns = null;
 
-		private DbConnection connection;
+		protected DbConnection connection;
 
 		protected long _rowid;
 
@@ -22,12 +22,10 @@ namespace DtxModel
 			get { return _rowid; }
 		}
 
-		public Model() : this(null) { }
+		public Model() { }
 
 
-		public Model(DbConnection connection) {
-			this.connection = connection;
-		}
+		public virtual void read(DbDataReader reader, DbConnection connection) { }
 
 		public virtual Dictionary<string, object> getChangedValues() {
 			return null;

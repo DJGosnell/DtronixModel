@@ -34,7 +34,7 @@ namespace DtxModelTests.Northwind.Models {
 		public Table<Customers> Customers {
 			get {
 				if (_customers == null) {
-					_customers = new Table<Customers>(connection, "Customers");
+					_customers = new Table<Customers>(connection);
 				}
 
 				return _customers; 

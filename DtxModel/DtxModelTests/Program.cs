@@ -19,7 +19,7 @@ namespace DtxModelTests {
 			NorthwindContext.DefaultConnection = connection;
 			connection.Open();
 
-
+			/*
 			var customers = new Customers[100];
 			var rand = new Random();
 
@@ -44,7 +44,7 @@ namespace DtxModelTests {
 				using (var context = new NorthwindContext(connection)) {
 					context.Customers.insert(customers);
 				}
-			});
+			});*/
 
 			/*
 			timeFunc("Manual Normal Insert", 50, () => {
@@ -97,10 +97,28 @@ namespace DtxModelTests {
 			string this_name = "TestName";
 
 			using (var context = new NorthwindContext()) {
+				int i = 0;
+
+				timeFunc("Selects", 1000, () => {
+					var result = context.Customers.select().limit(50).executeFetch();
+					string v = "";
+				});
+
+
+
 				//context.Customers.select().orderBy("Test", DtxModel.SortDirection.)
-				context.Customers.select().where("Customers.rowid == {0} {2} {1} {3} {4}", 25, 1561, 3626, 12512);//.where(cust => (cust.City == "Name" && cust.rowid >= 1245125) || cust.CompanyName == this_name || cust.rowid == customers[24].rowid);
-				context.Customers.insert(customers);
+				//context.Customers.select().where("Customers.rowid == {0} {2} {1} {3}", 25, 1561, 3626, 12512);//.where(cust => (cust.City == "Name" && cust.rowid >= 1245125) || cust.CompanyName == this_name || cust.rowid == customers[24].rowid);
+				//context.Customers.insert(customers);
 			}
+
+
+			timeFunc("Selects in new contexts", 1000, () => {
+				using (var context = new NorthwindContext()) {
+					int i = 0;
+					var result = context.Customers.select().limit(50).executeFetch();
+					string v = "";
+				}
+			});
 
 
 			Console.ReadLine();

@@ -11,12 +11,19 @@ using System.Data.Linq.Mapping;
 
 namespace DtxModel {
 
-	public class SqlStatement<T> {
+	public class SqlStatement<T> where T : Model, new() {
 		public enum Mode {
 			Select,
 			Insert,
 			Update,
 			Delete
+		}
+
+		private bool _auto_close_command = true;
+
+		public bool AutoCloseCommand {
+			get { return _auto_close_command; }
+			set { _auto_close_command = value; }
 		}
 
 
@@ -26,12 +33,14 @@ namespace DtxModel {
 		private Mode mode;
 		private int param_index = 0;
 
+		private string table_name;
+
 		private string sql_select = "*, rowid";
-		private int sql_limit_start;
-		private int sql_limit_count;
+		private int sql_limit_start = -1;
+		private int sql_limit_count = -1;
 		private string sql_where;
-		private Dictionary<string, SortDirection> sql_order;
-		private List<string> sql_group;
+		private Dictionary<string, SortDirection> sql_orders;
+		private List<string> sql_groups;
 
 		//private 
 
@@ -41,6 +50,12 @@ namespace DtxModel {
 			this.connection = connection;
 			this.mode = mode;
 			command = connection.CreateCommand();
+
+			try {
+				table_name = AttributeCache<T, TableAttribute>.getAttribute().Name;
+			} catch (Exception) {
+				throw new Exception("Class passed does not have a TableAttribute");
+			}
 
 		}
 
@@ -68,7 +83,11 @@ namespace DtxModel {
 			return this;
 		}
 
-		public SqlStatement<T> limit(int start, int count) {
+		public SqlStatement<T> limit(int count) {
+			return limit(count, -1);
+		}
+
+		public SqlStatement<T> limit(int count, int start) {
 			if (mode != Mode.Select) {
 				throw new InvalidOperationException("Can not use the LIMIT method except in SELECT mode.");
 			}
@@ -84,11 +103,11 @@ namespace DtxModel {
 				throw new InvalidOperationException("Can not use the ORDER BY method except in SELECT mode.");
 			}
 
-			if (sql_order == null) {
-				sql_order = new Dictionary<string, SortDirection>();
+			if (sql_orders == null) {
+				sql_orders = new Dictionary<string, SortDirection>();
 			}
 
-			sql_order.Add(column, direction);
+			sql_orders.Add(column, direction);
 
 			return this;
 		}
@@ -98,13 +117,61 @@ namespace DtxModel {
 				throw new InvalidOperationException("Can not use the GROUP BY method except in SELECT mode.");
 			}
 
-			if (sql_group == null) {
-				sql_group = new List<string>();
+			if (sql_groups == null) {
+				sql_groups = new List<string>();
 			}
 
-			sql_group.Add(column);
+			sql_groups.Add(column);
 
 			return this;
+		}
+
+		public void execute() {
+			buildSql();
+			command.ExecuteNonQuery();
+
+			if (_auto_close_command) {
+				command.Dispose();
+			}
+		}
+
+		public T executeFetch() {
+			buildSql();
+			T model;
+
+			using(var reader = command.ExecuteReader()){
+				if (reader.Read() == false) {
+					return default(T);
+				}
+
+				model = new T();
+				model.read(reader, connection);
+			}
+
+			if (_auto_close_command) {
+				command.Dispose();
+			}
+
+			return model;
+		}
+
+		public T[] executeFetchAll() {
+			buildSql();
+
+			var results = new List<T>();
+			using (var reader = command.ExecuteReader()) {
+				while (reader.Read()) {
+					T model = new T();
+					model.read(reader, connection);
+					results.Add(model);
+				}
+			}
+
+			if (_auto_close_command) {
+				command.Dispose();
+			}
+
+			return results.ToArray();
 		}
 
 		private void buildSql(){
@@ -112,20 +179,65 @@ namespace DtxModel {
 
 			switch (mode) {
 				case Mode.Select:
-					sql.Append("SELECT");
+					sql.Append("SELECT ").AppendLine(sql_select);
+					sql.Append("FROM ").AppendLine(table_name);
 					break;
 				case Mode.Insert:
-					break;
+					throw new InvalidOperationException("Can not build an SQL query in the INSERT mode.");
 				case Mode.Update:
 					sql.Append("UPDATE");
 					break;
 				case Mode.Delete:
 					sql.Append("DELETE");
 					break;
-				default:
-					break;
 			}
+
+			// WHERE
+			if (mode != Mode.Insert && sql_where != null) {
+				sql.Append("WHERE ").AppendLine(sql_where);
+			}
+
+			// GROUP BY
+			if (mode == Mode.Select && sql_groups != null) {
+				sql.Append("GROUP BY ");
+				foreach (var group_column in sql_groups) {
+					sql.Append(group_column).Append(", ");
+				}
+				sql.Remove(sql.Length - 2, 2).AppendLine();
+			}
+
+			// ORDER BY
+			if (mode == Mode.Select && sql_orders != null) {
+				sql.Append("ORDER BY ");
+				foreach (var order_column in sql_orders.Keys) {
+					sql.Append(order_column);
+
+					switch (sql_orders[order_column]) {
+						case SortDirection.Ascending:
+							sql.Append(" ASC, ");
+							break;
+						case SortDirection.Descending:
+							sql.Append(" DESC, ");
+							break;
+					}
+				}
+
+				// Remove the trailing ", "
+				sql.Remove(sql.Length - 2, 2).AppendLine();
+			}
+
+			if (mode == Mode.Select && sql_limit_count != -1) {
+				sql.Append("LIMIT ");
+
+				if(sql_limit_start != -1){
+					sql.Append(sql_limit_start).Append(", ");
+				}
 				
+				sql.Append(sql_limit_count);
+				
+			}
+
+			command.CommandText = sql.ToString();
 		}
 
 
@@ -159,14 +271,6 @@ namespace DtxModel {
 				throw new ArgumentException("Model array is empty.");
 			}
 			var columns = models[0].getColumns();
-
-			string table_name;
-
-			try {
-				table_name = AttributeCache<T, TableAttribute>.getAttribute().Name;
-			} catch (Exception) {
-				throw new Exception("Class passed does not have a TableAttribute");
-			}
 
 			var sql = buildInsertStatement(table_name, columns);
 

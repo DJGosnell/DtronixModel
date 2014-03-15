@@ -5,8 +5,7 @@ using System.Text;
 
 namespace DtxModel {
 	public enum SortDirection {
-		None,
 		Ascending,
-		Descending,
+		Descending
 	}
 }

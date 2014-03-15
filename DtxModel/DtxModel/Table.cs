@@ -6,7 +6,7 @@ using System.Text;
 using System.Data.Common;
 
 namespace DtxModelTests.Northwind.Models {
-	public class Table<T> where T : Model {
+	public class Table<T> where T : Model, new() {
 		private DbConnection connection;
 
 
@@ -32,7 +32,7 @@ namespace DtxModelTests.Northwind.Models {
 			return new SqlStatement<T>(SqlStatement<T>.Mode.Delete, connection);
 		}
 
-		public Table(DbConnection connection, string table_name) {
+		public Table(DbConnection connection) {
 			this.connection = connection;
 		}
 	}
