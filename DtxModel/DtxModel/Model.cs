@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.Linq.Mapping;
 
 namespace DtxModel
 {
@@ -16,10 +16,21 @@ namespace DtxModel
 		protected DbConnection connection;
 
 
-		public Model() { }
+		public Model() {
+
+		}
 
 
-		public virtual void read(DbDataReader reader, DbConnection connection) { }
+		public virtual void internalRead<T>(DbDataReader reader, DbConnection connection) {
+
+			var columns = AttributeCache<T, ColumnAttribute>.getAttributes();
+			var dict = new Dictionary<string, FieldInfo>();
+			int length = reader.FieldCount;
+
+			foreach (var column in columns) {
+				dict.Add(column.Name, typeof(T).GetField(column.Storage, BindingFlags.NonPublic | BindingFlags.Instance));
+			}
+		}
 
 		public virtual Dictionary<string, object> getChangedValues() {
 			return null;
@@ -30,6 +41,8 @@ namespace DtxModel
 		}
 
 		public virtual string[] getColumns() {
+			
+
 			return null;
 		}
 	}

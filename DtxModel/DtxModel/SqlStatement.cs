@@ -5,9 +5,7 @@ using System.Text;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq.Expressions;
-using System.Data.Linq;
 using System.Reflection;
-using System.Data.Linq.Mapping;
 
 namespace DtxModel {
 
@@ -136,6 +134,10 @@ namespace DtxModel {
 		}
 
 		public T executeFetch() {
+			if (mode != Mode.Select) {
+				throw new InvalidOperationException("Can not fetch from the server when not in SELECT mode.");
+			}
+
 			buildSql();
 			T model;
 
@@ -156,6 +158,10 @@ namespace DtxModel {
 		}
 
 		public T[] executeFetchAll() {
+			if (mode != Mode.Select) {
+				throw new InvalidOperationException("Can not fetch from the server when not in SELECT mode.");
+			}
+
 			buildSql();
 
 			var results = new List<T>();

@@ -8,12 +8,22 @@ using System.Reflection;
 
 namespace DtxModelTests.Northwind.Models {
 
-	[System.Data.Linq.Mapping.Table(Name="Customers")]
+	[TableAttribute(Name = "Customers")]
+	[ColumnAttribute(Name = "rowid", Storage = "_rowid", IsDbGenerated = true)]
+	[ColumnAttribute(Name = "CustomerID", Storage = "_CustomerID")]
+	[ColumnAttribute(Name = "CompanyName", Storage = "_CompanyName")]
+	[ColumnAttribute(Name = "ContactName", Storage = "_ContactName")]
+	[ColumnAttribute(Name = "Address", Storage = "_Address")]
+	[ColumnAttribute(Name = "City", Storage = "_City")]
+	[ColumnAttribute(Name = "Region", Storage = "_Region")]
+	[ColumnAttribute(Name = "PostalCode", Storage = "_PostalCode")]
+	[ColumnAttribute(Name = "Fax", Storage = "_Fax")]
+	[ColumnAttribute(Name = "Phone", Storage = "_Phone")]
+	[ColumnAttribute(Name = "Country", Storage = "_Country")]
 	class Customers : Model {
 
 		protected long _rowid;
 
-		[System.Data.Linq.Mapping.Column(Name = "CustomerID", Storage = "_rowid", IsDbGenerated = true)]
 		public long rowid {
 			get { return _rowid; }
 		}
@@ -22,7 +32,6 @@ namespace DtxModelTests.Northwind.Models {
 
 		private string _CustomerID;
 
-		[System.Data.Linq.Mapping.Column(Name="CustomerID", Storage="_CustomerID")]
 		public string CustomerID {
 			get { return _CustomerID; }
 			set {
@@ -35,7 +44,6 @@ namespace DtxModelTests.Northwind.Models {
 
 		private string _CompanyName;
 
-		[System.Data.Linq.Mapping.Column(Name = "CompanyName", Storage = "_CompanyName")]
 		public string CompanyName {
 			get { return _CompanyName; }
 			set {
@@ -48,7 +56,6 @@ namespace DtxModelTests.Northwind.Models {
 
 		private string _ContactName;
 
-		[System.Data.Linq.Mapping.Column(Name = "ContactName", Storage = "_ContactName")]
 		public string ContactName {
 			get { return _ContactName; }
 			set {
@@ -60,7 +67,6 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _AddressChanged = false;
 		private string _Address;
 
-		[System.Data.Linq.Mapping.Column(Name = "Address", Storage = "_Address")]
 		public string Address {
 			get { return _Address; }
 			set {
@@ -72,7 +78,6 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _CityChanged = false;
 		private string _City;
 
-		[System.Data.Linq.Mapping.Column(Name = "City", Storage = "_City")]
 		public string City {
 			get { return _City; }
 			set {
@@ -84,7 +89,6 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _RegionChanged = false;
 		private string _Region;
 
-		[System.Data.Linq.Mapping.Column(Name = "Region", Storage = "_Region")]
 		public string Region {
 			get { return _Region; }
 			set {
@@ -96,7 +100,6 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _PostalCodeChanged = false;
 		private string _PostalCode;
 
-		[System.Data.Linq.Mapping.Column(Name = "PostalCode", Storage = "_PostalCode")]
 		public string PostalCode {
 			get { return _PostalCode; }
 			set {
@@ -108,7 +111,6 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _CountryChanged = false;
 		private string _Country;
 
-		[System.Data.Linq.Mapping.Column(Name = "Country", Storage = "_Country")]
 		public string Country {
 			get { return _Country; }
 			set {
@@ -120,7 +122,6 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _PhoneChanged = false;
 		private string _Phone;
 
-		[System.Data.Linq.Mapping.Column(Name = "Phone", Storage = "_Phone")]
 		public string Phone {
 			get { return _Phone; }
 			set {
@@ -132,7 +133,6 @@ namespace DtxModelTests.Northwind.Models {
 		private bool _FaxChanged = false;
 		private string _Fax;
 
-		[System.Data.Linq.Mapping.Column(Name = "Fax", Storage = "_Fax")]
 		public string Fax {
 			get { return _Fax; }
 			set {
@@ -149,6 +149,31 @@ namespace DtxModelTests.Northwind.Models {
 
 
 		public override void read(DbDataReader reader, DbConnection connection) {
+			if (reader == null) {
+				return;
+			}
+			string column_name;
+
+			for (int i = 0; i < length; i++) {
+				column_name = reader.GetName(i);
+
+				if(dict.ContainsKey(column_name) == false){ 
+					continue;
+				}
+
+				var val = reader.GetValue(i);
+
+				if (val == DBNull.Value) {
+					val = null;
+				}
+
+				dict[column_name].SetValue(this, val);
+			}
+		
+			
+		
+			/*
+
 			this.connection = connection;
 			if (reader == null) {
 				return;
@@ -171,10 +196,13 @@ namespace DtxModelTests.Northwind.Models {
 					default:
 						break;
 				}
-			}
+			}*/
 		}
 
 		public override Dictionary<string, object> getChangedValues() {
+			
+
+
 			var changed = new Dictionary<string, object>();
 			if (_CustomerIDChanged)
 				changed.Add("CustomerID", _CustomerID);
