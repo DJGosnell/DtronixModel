@@ -11,26 +11,27 @@ namespace DtxModel
 {
 	public class Model {
 
-		public static readonly string[] columns = null;
-
 		protected DbConnection connection;
-
+		protected List<string> changed_columns = new List<string>();
 
 		public Model() {
 
 		}
 
 
-		public virtual void internalRead<T>(DbDataReader reader, DbConnection connection) {
-
+		protected Dictionary<string, FieldInfo> getColumnFields<T>() {
 			var columns = AttributeCache<T, ColumnAttribute>.getAttributes();
 			var dict = new Dictionary<string, FieldInfo>();
-			int length = reader.FieldCount;
 
 			foreach (var column in columns) {
 				dict.Add(column.Name, typeof(T).GetField(column.Storage, BindingFlags.NonPublic | BindingFlags.Instance));
 			}
+
+			return dict;
 		}
+
+		public virtual void read(DbDataReader reader, DbConnection connection) { }
+
 
 		public virtual Dictionary<string, object> getChangedValues() {
 			return null;
