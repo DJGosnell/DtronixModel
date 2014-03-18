@@ -100,7 +100,7 @@ namespace DtxModelTests {
 				int i = 0;
 
 				timeFunc("Selects", 1000, () => {
-					var result = context.Customers.select().limit(50).executeFetch();
+					var result = context.Customers.select("rowid").limit(1000).executeFetchAll();
 					string v = "";
 				});
 
