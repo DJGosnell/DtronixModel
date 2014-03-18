@@ -99,8 +99,8 @@ namespace DtxModelTests {
 			using (var context = new NorthwindContext()) {
 				int i = 0;
 
-				timeFunc("Selects", 1000, () => {
-					var result = context.Customers.select("rowid").limit(1000).executeFetchAll();
+				timeFunc("Selects", 100, () => {
+					var result = context.Customers.select().limit(1000).executeFetchAll();
 					string v = "";
 				});
 
@@ -112,10 +112,10 @@ namespace DtxModelTests {
 			}
 
 
-			timeFunc("Selects in new contexts", 1000, () => {
+			timeFunc("Selects in new contexts", 100, () => {
 				using (var context = new NorthwindContext()) {
 					int i = 0;
-					var result = context.Customers.select().limit(50).executeFetch();
+					var result = context.Customers.select().limit(1000).executeFetchAll();
 					string v = "";
 				}
 			});

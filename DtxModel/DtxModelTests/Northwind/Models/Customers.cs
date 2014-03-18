@@ -22,191 +22,200 @@ namespace DtxModelTests.Northwind.Models {
 	[ColumnAttribute(Name = "Country", Storage = "_Country")]
 	class Customers : Model {
 
-		private static Dictionary<string, FieldInfo> column_fields;
-
-		private long _rowid;
+		protected long _rowid;
 
 		public long rowid {
 			get { return _rowid; }
 		}
 
-		private string _CustomerID;
+		private bool _CustomerIDChanged = false;
 
+		private string _CustomerID;
 		public string CustomerID {
 			get { return _CustomerID; }
 			set {
 				_CustomerID = value;
-				if (changed_columns.Contains("CustomerID") == false) {
-					changed_columns.Add("CustomerID");
-				}
+				_CustomerIDChanged = true;
 			}
 		}
 
+		private bool _CompanyNameChanged = false;
 		private string _CompanyName;
-
 		public string CompanyName {
 			get { return _CompanyName; }
 			set {
 				_CompanyName = value;
-				if (changed_columns.Contains("CompanyName") == false) {
-					changed_columns.Add("CompanyName");
-				}
+				_CompanyNameChanged = true;
 			}
 		}
 
+		private bool _ContactNameChanged = false;
 		private string _ContactName;
-
 		public string ContactName {
 			get { return _ContactName; }
 			set {
 				_ContactName = value;
-				if (changed_columns.Contains("ContactName") == false) {
-					changed_columns.Add("ContactName");
-				}
+				_ContactNameChanged = true;
 			}
 		}
 
+		private bool _AddressChanged = false;
 		private string _Address;
-
 		public string Address {
 			get { return _Address; }
 			set {
 				_Address = value;
-				if (changed_columns.Contains("Address") == false) {
-					changed_columns.Add("Address");
-				}
+				_AddressChanged = true;
 			}
 		}
 
+		private bool _CityChanged = false;
 		private string _City;
-
 		public string City {
 			get { return _City; }
 			set {
 				_City = value;
-				if (changed_columns.Contains("City") == false) {
-					changed_columns.Add("City");
-				}
+				_CityChanged = true;
 			}
 		}
 
+		private bool _RegionChanged = false;
 		private string _Region;
-
 		public string Region {
 			get { return _Region; }
 			set {
 				_Region = value;
-				if (changed_columns.Contains("Region") == false) {
-					changed_columns.Add("Region");
-				}
+				_RegionChanged = true;
 			}
 		}
 
+		private bool _PostalCodeChanged = false;
 		private string _PostalCode;
-
 		public string PostalCode {
 			get { return _PostalCode; }
 			set {
 				_PostalCode = value;
-				if (changed_columns.Contains("PostalCode") == false) {
-					changed_columns.Add("PostalCode");
-				}
+				_PostalCodeChanged = true;
 			}
 		}
 
+		private bool _CountryChanged = false;
 		private string _Country;
-
 		public string Country {
 			get { return _Country; }
 			set {
 				_Country = value;
-				if (changed_columns.Contains("Country") == false) {
-					changed_columns.Add("Country");
-				}
+				_CountryChanged = true;
 			}
 		}
 
+		private bool _PhoneChanged = false;
 		private string _Phone;
-
 		public string Phone {
 			get { return _Phone; }
 			set {
 				_Phone = value;
-				if (changed_columns.Contains("Phone") == false) {
-					changed_columns.Add("Phone");
-				}
+				_PhoneChanged = true;
 			}
 		}
 
+		private bool _FaxChanged = false;
 		private string _Fax;
-
 		public string Fax {
 			get { return _Fax; }
 			set {
 				_Fax = value;
-				if (changed_columns.Contains("Fax") == false) {
-					changed_columns.Add("Fax");
-				}
+				_FaxChanged = true;
 			}
 		}
 
 		public Customers() : this(null, null) { }
 
 		public Customers(DbDataReader reader, DbConnection connection) {
-			if (column_fields == null) {
-				column_fields = getColumnFields<Customers>();
-			}
-
 			read(reader, connection);
 		}
 
 
 		public override void read(DbDataReader reader, DbConnection connection) {
+			this.connection = connection;
 			if (reader == null) {
 				return;
 			}
-			string column_name;
+
 			int length = reader.FieldCount;
-
 			for (int i = 0; i < length; i++) {
-				column_name = reader.GetName(i);
-
-				if(column_fields.ContainsKey(column_name) == false){ 
-					continue;
-				}
-
-				var val = reader.GetValue(i);
-
-				// If the value is not null, set the field to the value.  If the value is DbNull, do nothing and use the default values.
-				if (Convert.IsDBNull(val) == false) {
-					column_fields[column_name].SetValue(this, val);
+				switch (reader.GetName(i)) {
+					case "rowid": _rowid = (long)reader.GetValue(i); break;
+					case "CustomerID": _CustomerID = reader.GetValue(i) as string; break;
+					case "CompanyName": _CompanyName = reader.GetValue(i) as string; break;
+					case "ContactName": _ContactName = reader.GetValue(i) as string; break;
+					case "Address": _Address = reader.GetValue(i) as string; break;
+					case "City": _City = reader.GetValue(i) as string; break;
+					case "Region": _Region = reader.GetValue(i) as string; break;
+					case "PostalCode": _PostalCode = reader.GetValue(i) as string; break;
+					case "Country": _Country = reader.GetValue(i) as string; break;
+					case "Phone": _Phone = reader.GetValue(i) as string; break;
+					case "Fax": _Fax = reader.GetValue(i) as string; break;
+					default:
+						break;
 				}
 			}
 		}
 
 		public override Dictionary<string, object> getChangedValues() {
-			var values = new Dictionary<string, object>();
-			foreach (var column in changed_columns) {
-				values.Add(column, column_fields[column].GetValue(this));
-			}
+			var changed = new Dictionary<string, object>();
+			if (_CustomerIDChanged)
+				changed.Add("CustomerID", _CustomerID);
+			if (_CompanyNameChanged)
+				changed.Add("CompanyName", _CompanyName);
+			if (_ContactNameChanged)
+				changed.Add("ContactName", _ContactName);
+			if (_AddressChanged)
+				changed.Add("Address", _Address);
+			if (_CityChanged)
+				changed.Add("City", _City);
+			if (_RegionChanged)
+				changed.Add("Region", _Region);
+			if (_PostalCodeChanged)
+				changed.Add("PostalCode", _PostalCode);
+			if (_CountryChanged)
+				changed.Add("Country", _Country);
+			if (_PhoneChanged)
+				changed.Add("Phone", _Phone);
+			if (_FaxChanged)
+				changed.Add("Fax", _Fax);
 
-			return values;
+			return changed;
 		}
 
-
 		public override object[] getAllValues() {
-			var values = new object[column_fields.Count];
-			var i = 0;
-
-			foreach (var fields in column_fields) {
-				values[i++] = fields.Value.GetValue(this);
-			}
-
-			return values;
+			return new object[] {
+				_CustomerID,
+				_CompanyName,
+				_ContactName,
+				_Address,
+				_City,
+				_Region,
+				_PostalCode,
+				_Country,
+				_Phone,
+				_Fax
+			};
 		}
 
 		public override string[] getColumns() {
-			return column_fields.Keys.ToArray();
+			return new string[] {
+				"CustomerID",
+				"CompanyName",
+				"ContactName",
+				"Address",
+				"City",
+				"Region",
+				"PostalCode",
+				"Country",
+				"Phone",
+				"Fax",
+			};
 		}
 
 	}
