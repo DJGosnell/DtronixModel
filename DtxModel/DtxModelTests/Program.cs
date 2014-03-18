@@ -15,9 +15,13 @@ namespace DtxModelTests {
         }
 
 		static void insertTests() {
-			var connection = new SQLiteConnection(@"Data Source=Northwind/northwind.sqlite;Version=3;");
-			NorthwindContext.DefaultConnection = connection;
-			connection.Open();
+			
+			
+			NorthwindContext.DefaultConnection = () => {
+				var connection = new SQLiteConnection(@"Data Source=Northwind/northwind.sqlite;Version=3;");
+				connection.Open();
+				return connection;
+			};
 
 			/*
 			var customers = new Customers[100];
@@ -97,11 +101,8 @@ namespace DtxModelTests {
 			string this_name = "TestName";
 
 			using (var context = new NorthwindContext()) {
-				int i = 0;
-
 				timeFunc("Selects", 100, () => {
-					var result = context.Customers.select().limit(1000).executeFetchAll();
-					string v = "";
+					var result = context.Customers.select("rowid, *").limit(1000).executeFetch();
 				});
 
 
@@ -112,13 +113,18 @@ namespace DtxModelTests {
 			}
 
 
+
 			timeFunc("Selects in new contexts", 100, () => {
 				using (var context = new NorthwindContext()) {
-					int i = 0;
 					var result = context.Customers.select().limit(1000).executeFetchAll();
-					string v = "";
+
+					result[25].Region = "This is my test";
+
+					context.Customers.update(result[25]);
+					//result[52]
 				}
 			});
+		
 
 
 			Console.ReadLine();

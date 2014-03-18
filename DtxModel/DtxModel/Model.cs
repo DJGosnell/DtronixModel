@@ -12,11 +12,8 @@ namespace DtxModel
 	public class Model {
 
 		protected DbConnection connection;
-		protected List<string> changed_columns = new List<string>();
 
-		public Model() {
-
-		}
+		public Model() { }
 
 		public virtual void read(DbDataReader reader, DbConnection connection) { }
 
@@ -30,8 +27,6 @@ namespace DtxModel
 		}
 
 		public virtual string[] getColumns() {
-			
-
 			return null;
 		}
 	}

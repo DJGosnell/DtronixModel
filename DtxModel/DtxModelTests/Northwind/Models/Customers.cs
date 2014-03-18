@@ -20,7 +20,7 @@ namespace DtxModelTests.Northwind.Models {
 	[ColumnAttribute(Name = "Fax", Storage = "_Fax")]
 	[ColumnAttribute(Name = "Phone", Storage = "_Phone")]
 	[ColumnAttribute(Name = "Country", Storage = "_Country")]
-	class Customers : Model {
+	public class Customers : Model {
 
 		private long _rowid;
 		public long rowid {

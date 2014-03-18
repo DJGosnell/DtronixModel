@@ -4,28 +4,18 @@ using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Data.SQLite;
+using DtxModel;
 
 namespace DtxModelTests.Northwind.Models {
-	class NorthwindContext : IDisposable {
-
-		/// <summary>
-		/// If true, the connection will be closed at this class destructor's call.
-		/// </summary>
-		private bool owned_connection;
-
-		/// <summary>
-		/// The connection that this context tables will use.
-		/// </summary>
-		public DbConnection connection;
-
-		private static DbConnection _default_connection = null;
+	public class NorthwindContext : Context {
+		private static Func<DbConnection> _default_connection = null;
 
 		/// <summary>
 		/// Set a default constructor to allow use of parameterless context calling.
 		/// </summary>
-		public static DbConnection DefaultConnection {
+		public static Func<DbConnection> DefaultConnection {
 			get { return _default_connection; }
-			set {_default_connection = value; }
+			set { _default_connection = value; }
 		}
 
 		
@@ -49,38 +39,19 @@ namespace DtxModelTests.Northwind.Models {
 				throw new Exception("No default connection has been specified for this type context.");
 			}
 
-			// We have to determine what type of connection this context is connecting to.
-			if (_default_connection is SQLiteConnection) {
-				this.connection = new SQLiteConnection((SQLiteConnection)_default_connection);
-				if (this.connection.State == System.Data.ConnectionState.Closed) {
-					this.connection.Open();
-				}
+			this.connection = _default_connection();
 
-				// Ensure that this new connection will be closed at the dispose call.
-				owned_connection = true;
+			if (this.connection == null) {
+				throw new InvalidOperationException("Default connection lambda does not return a valid connection.");
 			}
 
+			owned_connection = true;
 		}
 
 		/// <summary>
 		/// Create a new context of this database's type with a specific connection.
 		/// </summary>
 		/// <param name="connection">Existing open database connection to use.</param>
-		public NorthwindContext(DbConnection connection) {
-			this.connection = connection;
-			owned_connection = false;
-		}
-
-		/// <summary>
-		/// Releases any connection resources.
-		/// </summary>
-		public void Dispose(){
-			if (owned_connection) {
-				((SQLiteConnection)this.connection).Close();
-				((SQLiteConnection)this.connection).Dispose();
-				//GC.Collect();
-			}
-		}
-
+		public NorthwindContext(DbConnection connection) : base(connection) { }
 	}
 }

@@ -11,7 +11,7 @@ namespace DtxModelTests.Northwind.Models {
 
 
 		public SqlStatement<T> select(string select = "*, rowid") {
-			return new SqlStatement<T>(SqlStatement<T>.Mode.Select, connection);
+			return new SqlStatement<T>(SqlStatement<T>.Mode.Select, connection).select(select);
 		}
 
 		public void insert(T model) {
@@ -22,10 +22,8 @@ namespace DtxModelTests.Northwind.Models {
 			new SqlStatement<T>(SqlStatement<T>.Mode.Insert, connection).insert(model);
 		}
 
-
-
-		public SqlStatement<T> update() {
-			return new SqlStatement<T>(SqlStatement<T>.Mode.Update, connection);
+		public void update(T model) {
+			new SqlStatement<T>(SqlStatement<T>.Mode.Update, connection).update(model).execute();
 		}
 
 		public SqlStatement<T> delete() {
