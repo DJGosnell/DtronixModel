@@ -22,8 +22,7 @@ namespace DtxModelTests.Northwind.Models {
 	[ColumnAttribute(Name = "Country", Storage = "_Country")]
 	class Customers : Model {
 
-		protected long _rowid;
-
+		private long _rowid;
 		public long rowid {
 			get { return _rowid; }
 		}
@@ -156,8 +155,7 @@ namespace DtxModelTests.Northwind.Models {
 					case "Country": _Country = reader.GetValue(i) as string; break;
 					case "Phone": _Phone = reader.GetValue(i) as string; break;
 					case "Fax": _Fax = reader.GetValue(i) as string; break;
-					default:
-						break;
+					default: break;
 				}
 			}
 		}
@@ -190,6 +188,7 @@ namespace DtxModelTests.Northwind.Models {
 
 		public override object[] getAllValues() {
 			return new object[] {
+				_rowid,
 				_CustomerID,
 				_CompanyName,
 				_ContactName,
@@ -205,6 +204,7 @@ namespace DtxModelTests.Northwind.Models {
 
 		public override string[] getColumns() {
 			return new string[] {
+				"rowid",
 				"CustomerID",
 				"CompanyName",
 				"ContactName",

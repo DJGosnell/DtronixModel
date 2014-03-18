@@ -18,18 +18,6 @@ namespace DtxModel
 
 		}
 
-
-		protected Dictionary<string, FieldInfo> getColumnFields<T>() {
-			var columns = AttributeCache<T, ColumnAttribute>.getAttributes();
-			var dict = new Dictionary<string, FieldInfo>();
-
-			foreach (var column in columns) {
-				dict.Add(column.Name, typeof(T).GetField(column.Storage, BindingFlags.NonPublic | BindingFlags.Instance));
-			}
-
-			return dict;
-		}
-
 		public virtual void read(DbDataReader reader, DbConnection connection) { }
 
 
