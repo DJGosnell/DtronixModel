@@ -118,7 +118,7 @@ namespace DtxModelTests {
 				//context.Customers.insert(customers);
 			}*/
 
-			timeFunc("Manual Select",5, () => {
+			/*timeFunc("Manual Select", () => {
 				using (var context = new NorthwindContext()) {
 					List<object> rows = new List<object>();
 					context.queryRead("SELECT *, rowid FROM Customers", null, (reader) => {
@@ -131,15 +131,17 @@ namespace DtxModelTests {
 
 					//result[52]
 				}
-			});
+			});*/
 		
 
 
 
-			timeFunc("Selects in new contexts", 5, () => {
+			timeFunc("Selects in new contexts", () => {
 				using (var context = new NorthwindContext()) {
-					var results = context.Customers.select().executeFetchAll();
+					var results = context.Customers.select().where("rowid >= 100000").limit(50).executeFetchAll();
 
+
+					context.Customers.delete(results);
 					/*foreach (var row in results) {
 						row.Region = null;
 					}

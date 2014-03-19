@@ -39,7 +39,7 @@ namespace DtxModel {
 		private string sql_where;
 		private Dictionary<string, SortDirection> sql_orders;
 		private List<string> sql_groups;
-		private T[] sql_update_models;
+		private T[] sql_models;
 
 		//private 
 
@@ -128,16 +128,25 @@ namespace DtxModel {
 			return this;
 		}
 
-		public void update(T model) {
-			update(new T[] { model });
-		}
-
-		public void update(T[] model) {
+		public void update(T[] models) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
 
-			sql_update_models = model;
+			sql_models = models;
+			execute();
+			command.Dispose();
+		}
+
+
+		public void delete(T[] models) {
+			if (mode == Mode.Execute) {
+				throw new InvalidOperationException("Can not use all functions in Execute mode.");
+			}
+
+			where(models);
+
+			sql_models = models;
 			execute();
 		}
 
@@ -147,12 +156,32 @@ namespace DtxModel {
 		/// <param name="model">Model to provide the primary key for.</param>
 		/// <returns>Current statement for chaining.</returns>
 		public SqlStatement<T> where(T model) {
-			// Set the update by the primary key.
-			string primary_key;
-			object primary_key_value;
+			return where(new T[] { model });
+		}
 
-			model.getPrimaryKey(out primary_key, out primary_key_value);
-			where(primary_key + " == {0}", primary_key_value);
+		/// <summary>
+		/// Sets where to the provided models primary keys.
+		/// </summary>
+		/// <param name="models">Models to provide the primary key for.</param>
+		/// <returns>Current statement for chaining.</returns>
+		public SqlStatement<T> where(T[] models) {
+			// Set the update by the primary key.
+			if(models == null || models.Length == 0){
+				throw new ArgumentException("Models parameter can not be null or empty.");
+			}
+
+			// Get the primary key for the first parameter 
+			string pk_name = models[0].getPKName();
+
+			StringBuilder sql = new StringBuilder();
+			sql.Append(pk_name).Append(" IN(");
+
+			foreach(var model in models){
+				sql.Append(bindParameter(model.getPKValue())).Append(",");
+			}
+			sql.Remove(sql.Length - 1, 1).Append(")");
+
+			sql_where = sql.ToString();
 
 			return this;
 		}
@@ -174,16 +203,6 @@ namespace DtxModel {
 			sql_where = sqlBindParameters(where, parameters);
 
 			return this;
-		}
-
-		private void resetState() {
-			sql_groups = null;
-			sql_limit_count = -1;
-			sql_limit_start = -1;
-			sql_orders = null;
-			sql_select = null;
-			sql_where = null;
-			command.Parameters.Clear();
 		}
 
 		public SqlStatement<T> limit(int count) {
@@ -249,10 +268,9 @@ namespace DtxModel {
 			if (mode == Mode.Update) {
 				using (var transaction = connection.BeginTransaction()) {
 
-					for (int i = 0; i < sql_update_models.Length; i++) {
-						resetState();
-						where(sql_update_models[i]);
-						buildSql(sql_update_models[i]);
+					for (int i = 0; i < sql_models.Length; i++) {
+						where(sql_models[i]);
+						buildSql(sql_models[i]);
 
 						// Execute the update command.
 						command.ExecuteNonQuery();
@@ -356,7 +374,7 @@ namespace DtxModel {
 					sql.Remove(sql.Length - 2, 2).AppendLine();
 					break;
 				case Mode.Delete:
-					sql.Append("DELETE");
+					sql.Append("DELETE FROM ").AppendLine(table_name);
 					break;
 
 				case Mode.Execute:
@@ -431,14 +449,6 @@ namespace DtxModel {
 
 			command.Parameters.Add(param);
 			return key;
-		}
-
-		/// <summary>
-		/// Inserts a model into the database.
-		/// </summary>
-		/// <param name="models">Model to insert.</param>
-		public void insert(T models) {
-			insert(new T[] { models });
 		}
 
 		/// <summary>
@@ -528,5 +538,6 @@ namespace DtxModel {
 		public void Dispose() {
 			this.command.Dispose();
 		}
+
 	}
 }

@@ -216,10 +216,12 @@ namespace DtxModelTests.Northwind.Models {
 			};
 		}
 
-		public override void getPrimaryKey(out string name, out object value) {
-			name = "rowid";
-			value = _rowid;
+		public override string getPKName() {
+			return "rowid";
 		}
 
+		public override object getPKValue() {
+			return _rowid;
+		}
 	}
 }

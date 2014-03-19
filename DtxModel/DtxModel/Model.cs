@@ -31,8 +31,12 @@ namespace DtxModel {
 			return null;
 		}
 
-		public virtual void getPrimaryKey(out string name, out object value) {
-			value = name = null;
+		public virtual string getPKName() {
+			return null;
+		}
+
+		public virtual object getPKValue() {
+			return null;
 		}
 	}
 

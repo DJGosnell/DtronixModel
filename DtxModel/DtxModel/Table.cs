@@ -15,7 +15,7 @@ namespace DtxModelTests.Northwind.Models {
 		}
 
 		public void insert(T model) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Insert, connection).insert(model);
+			insert(new T[] { model });
 		}
 
 		public void insert(T[] model) {
@@ -23,15 +23,19 @@ namespace DtxModelTests.Northwind.Models {
 		}
 
 		public void update(T model) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Update, connection).update(model);
+			update(new T[] { model });
 		}
 
 		public void update(T[] model) {
 			new SqlStatement<T>(SqlStatement<T>.Mode.Update, connection).update(model);
 		}
 
-		public SqlStatement<T> delete() {
-			return new SqlStatement<T>(SqlStatement<T>.Mode.Delete, connection);
+		public void delete(T model) {
+			delete(new T[] { model });
+		}
+
+		public void delete(T[] models) {
+			new SqlStatement<T>(SqlStatement<T>.Mode.Delete, connection).delete(models);
 		}
 
 		public Table(DbConnection connection) {
