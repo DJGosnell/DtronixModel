@@ -29,6 +29,10 @@ namespace DtxModel
 		public virtual string[] getColumns() {
 			return null;
 		}
+
+		public virtual void getPrimaryKey(out string name, out object value) {
+			value = name = null;
+		}
 	}
 
 }

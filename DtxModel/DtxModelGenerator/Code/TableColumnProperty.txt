@@ -1,0 +1,11 @@
+﻿		private bool _{VAR_COLUMN_NAME}Changed = false;
+		private string _{VAR_COLUMN_NAME};
+
+		[System.Data.Linq.Mapping.Column(Name = "{VAR_COLUMN_NAME}", Storage = "_{VAR_COLUMN_NAME})]
+		public string {VAR_COLUMN_NAME} {
+			get { return _{VAR_COLUMN_NAME}; }
+			set {
+				_{VAR_COLUMN_NAME} = value;
+				_{VAR_COLUMN_NAME}Changed = true;
+			}
+		}

@@ -1,0 +1,73 @@
+﻿using System;
+using System.Data.Common;
+using System.Data.SQLite;
+using System.Collections.Generic;
+using DtxModel;
+
+namespace {VAR_NAMESPACE} {
+	class {VAR_DB_CLASS_NAME}Context : IDisposable {
+
+		/// <summary>
+		/// If true, the connection will be closed at this class destructor's call.
+		/// </summary>
+		private bool owned_connection;
+
+		/// <summary>
+		/// The connection that this context tables will use.
+		/// </summary>
+		public DbConnection connection;
+
+		private static DbConnection _default_connection = null;
+
+		/// <summary>
+		/// Set a default constructor to allow use of parameterless context calling.
+		/// </summary>
+		public static DbConnection DefaultConnection {
+			get { return _default_connection; }
+			set {_default_connection = value; }
+		}
+
+{VAR_CONTEXT_TABLE_PROPERTIES}
+
+		/// <summary>
+		/// Create a new context of this database's type.  Can only be used if a default connection is specified.
+		/// </summary>
+		public {VAR_DB_CLASS_NAME}Context() {
+			if (_default_connection == null) {
+				throw new Exception("No default connection has been specified for this type context.");
+			}
+
+			// We have to determine what type of connection this context is connecting to.
+			if (_default_connection is SQLiteConnection) {
+				this.connection = new SQLiteConnection((SQLiteConnection)_default_connection);
+				if (this.connection.State == System.Data.ConnectionState.Closed) {
+					this.connection.Open();
+				}
+
+				// Ensure that this new connection will be closed at the dispose call.
+				owned_connection = true;
+			}
+
+		}
+
+		/// <summary>
+		/// Create a new context of this database's type with a specific connection.
+		/// </summary>
+		/// <param name="connection">Existing open database connection to use.</param>
+		public {VAR_DB_CLASS_NAME}Context(DbConnection connection) {
+			this.connection = connection;
+			owned_connection = false;
+		}
+
+		/// <summary>
+		/// Releases any connection resources.
+		/// </summary>
+		public void Dispose(){
+			if (owned_connection) {
+				this.connection.Close();
+				this.connection.Dispose();
+			}
+		}
+
+	}
+}

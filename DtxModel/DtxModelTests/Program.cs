@@ -114,13 +114,17 @@ namespace DtxModelTests {
 
 
 
-			timeFunc("Selects in new contexts", 100, () => {
+			timeFunc("Selects in new contexts", () => {
 				using (var context = new NorthwindContext()) {
-					var result = context.Customers.select().limit(1000).executeFetchAll();
+					var results = context.Customers.select()
+						.where("ContactTitle IS NULL")
+						.limit(2000).executeFetchAll();
 
-					result[25].Region = "This is my test";
+					foreach (var row in results) {
+						row.Region = null;
+					}
 
-					context.Customers.update(result[25]);
+					context.Customers.update(results);
 					//result[52]
 				}
 			});

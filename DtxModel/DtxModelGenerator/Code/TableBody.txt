@@ -1,0 +1,178 @@
+﻿using System.Collections.Generic;
+using DtxModel;
+using System.Data.Common;
+
+namespace DtxModelTests.Northwind.Models {
+
+	[System.Data.Linq.Mapping.Table(Name="Customers")]
+	class Customers : Model {
+
+		protected long _rowid;
+
+		[System.Data.Linq.Mapping.Column(Name = "CustomerID", Storage = "_rowid", IsDbGenerated = true)]
+		public long rowid {
+			get { return _rowid; }
+		}
+
+		private bool _CustomerIDChanged = false;
+		private string _CustomerID;
+
+		[System.Data.Linq.Mapping.Column(Name="CustomerID", Storage="_CustomerID")]
+		public string CustomerID {
+			get { return _CustomerID; }
+			set {
+				_CustomerID = value;
+				_CustomerIDChanged = true;
+			}
+		}
+
+		private bool _CompanyNameChanged = false;
+
+		private string _CompanyName;
+
+		[System.Data.Linq.Mapping.Column(Name = "CompanyName", Storage = "_CompanyName")]
+		public string CompanyName {
+			get { return _CompanyName; }
+			set {
+				_CompanyName = value;
+				_CompanyNameChanged = true;
+			}
+		}
+
+		private bool _ContactNameChanged = false;
+
+		private string _ContactName;
+
+		[System.Data.Linq.Mapping.Column(Name = "ContactName", Storage = "_ContactName")]
+		public string ContactName {
+			get { return _ContactName; }
+			set {
+				_ContactName = value;
+				_ContactNameChanged = true;
+			}
+		}
+
+		private bool _AddressChanged = false;
+		private string _Address;
+
+		[System.Data.Linq.Mapping.Column(Name = "Address", Storage = "_Address")]
+		public string Address {
+			get { return _Address; }
+			set {
+				_Address = value;
+				_AddressChanged = true;
+			}
+		}
+
+		private bool _CityChanged = false;
+		private string _City;
+
+		[System.Data.Linq.Mapping.Column(Name = "City", Storage = "_City")]
+		public string City {
+			get { return _City; }
+			set {
+				_City = value;
+				_CityChanged = true;
+			}
+		}
+
+		private bool _RegionChanged = false;
+		private string _Region;
+
+		[System.Data.Linq.Mapping.Column(Name = "Region", Storage = "_Region")]
+		public string Region {
+			get { return _Region; }
+			set {
+				_Region = value;
+				_RegionChanged = true;
+			}
+		}
+
+		private bool _PostalCodeChanged = false;
+		private string _PostalCode;
+
+		[System.Data.Linq.Mapping.Column(Name = "PostalCode", Storage = "_PostalCode")]
+		public string PostalCode {
+			get { return _PostalCode; }
+			set {
+				_PostalCode = value;
+				_PostalCodeChanged = true;
+			}
+		}
+
+		private bool _CountryChanged = false;
+		private string _Country;
+
+		[System.Data.Linq.Mapping.Column(Name = "Country", Storage = "_Country")]
+		public string Country {
+			get { return _Country; }
+			set {
+				_Country = value;
+				_CountryChanged = true;
+			}
+		}
+
+		private bool _PhoneChanged = false;
+		private string _Phone;
+
+		[System.Data.Linq.Mapping.Column(Name = "Phone", Storage = "_Phone")]
+		public string Phone {
+			get { return _Phone; }
+			set {
+				_Phone = value;
+				_PhoneChanged = true;
+			}
+		}
+
+		private bool _FaxChanged = false;
+		private string _Fax;
+
+		[System.Data.Linq.Mapping.Column(Name = "Fax", Storage = "_Fax")]
+		public string Fax {
+			get { return _Fax; }
+			set {
+				_Fax = value;
+				_FaxChanged = true;
+			}
+		}
+
+		public {VAR_CLASS_TABLE_NAME}() : this(null, null) { }
+
+		public {VAR_CLASS_TABLE_NAME}(DbDataReader reader, DbConnection connection) {
+			read(reader, connection);
+		}
+
+
+		public override void read(DbDataReader reader, DbConnection connection) {
+			this.connection = connection;
+			if (reader == null) {
+				return;
+			}
+
+			int length = reader.FieldCount;
+			for (int i = 0; i < length; i++) {
+				switch (reader.GetName(i)) {
+{VAR_METHOD_READ_BODY}
+					default:
+						break;
+				}
+			}
+		}
+
+		public override Dictionary<string, object> getChangedValues() {
+			var changed = new Dictionary<string, object>();
+{VAR_METHOD_CHANGED_VALUES_BODY} 
+
+			return changed;
+		}
+
+		public override object[] getAllValues() {
+			return new object[] { {VAR_CLASS_COLUMN_VALUE_ARRAY} };
+		}
+
+		public override string[] getColumns() {
+			return new string[] { {VAR_COLUMN_STRING_ARRAY} };
+		}
+
+	}
+}

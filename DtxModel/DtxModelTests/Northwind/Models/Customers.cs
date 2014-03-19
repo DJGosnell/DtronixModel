@@ -9,7 +9,7 @@ using System.Reflection;
 namespace DtxModelTests.Northwind.Models {
 
 	[TableAttribute(Name = "Customers")]
-	[ColumnAttribute(Name = "rowid", Storage = "_rowid", IsDbGenerated = true)]
+	[ColumnAttribute(Name = "rowid", Storage = "_rowid", IsDbGenerated = true, IsPrimaryKey = true)]
 	[ColumnAttribute(Name = "CustomerID", Storage = "_CustomerID")]
 	[ColumnAttribute(Name = "CompanyName", Storage = "_CompanyName")]
 	[ColumnAttribute(Name = "ContactName", Storage = "_ContactName")]
@@ -216,6 +216,11 @@ namespace DtxModelTests.Northwind.Models {
 				"Phone",
 				"Fax",
 			};
+		}
+
+		public override void getPrimaryKey(out string name, out object value) {
+			name = "rowid";
+			value = _rowid;
 		}
 
 	}

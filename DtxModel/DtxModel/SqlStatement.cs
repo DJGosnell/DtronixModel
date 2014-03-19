@@ -29,7 +29,6 @@ namespace DtxModel {
 		public DbCommand command;
 
 		private Mode mode;
-		private int param_index = 0;
 
 		private string table_name;
 
@@ -66,6 +65,11 @@ namespace DtxModel {
 
 		public SqlStatement<T> update(T model) {
 			sql_update_models = new T[] { model };
+			return this;
+		}
+
+		public SqlStatement<T> update(T[] model) {
+			sql_update_models = model;
 			return this;
 		}
 
@@ -150,7 +154,7 @@ namespace DtxModel {
 						// Reset and prepare for the next update.
 						for (int p = 0; p < sql_update_parameters.Count; p++) {
 							// Remove all the update parameters to allow them to be re-created in the new SQL generation.
-							command.Parameters.Remove(sql_update_parameters[p]);
+							command.Parameters.Clear();
 						}
 
 						sql_update_parameters.Clear();
@@ -229,16 +233,22 @@ namespace DtxModel {
 				case Mode.Insert:
 					throw new InvalidOperationException("Can not build an SQL query in the INSERT mode.");
 				case Mode.Update:
-					if (sql_where == null) {
-						throw new InvalidOperationException("Where statement required for UPDATE mode.");
-					}
+					// Reset the where statements and any parameters.
+					sql_where = null;
+					command.Parameters.Clear();
 
-					sql.Append("UPDATE").AppendLine(table_name);
+					// Set the update by the primary key.
+					string primary_key;
+					object primary_key_value;
+					model.getPrimaryKey(out primary_key, out primary_key_value);
+					where(primary_key + " == {0}", primary_key_value);
+
+					sql.Append("UPDATE ").AppendLine(table_name);
 					sql.Append("SET ");
 
 					var changed_fields = model.getChangedValues();
 
-					// If there are no field to update, then do nothing.
+					// If there are no fields to update, then do nothing.
 					if (changed_fields.Count == 0) {
 						sql.Clear();
 					}
@@ -247,8 +257,7 @@ namespace DtxModel {
 						sql.Append(field.Key).Append(" = ").Append(bindParameter(field.Value, sql_update_parameters)).Append(", ");
 					}
 
-					sql.Remove(sql.Length, 2).AppendLine();
-
+					sql.Remove(sql.Length - 2, 2).AppendLine();
 					break;
 				case Mode.Delete:
 					sql.Append("DELETE");
@@ -312,7 +321,7 @@ namespace DtxModel {
 		/// <param name="value">Value to bind.</param>
 		/// <returns>Parameter name for the binding reference.</returns>
 		private string bindParameter(object value, List<DbParameter> parameter_list = null){
-			string key = "@p" + param_index++;
+			string key = "@p" + command.Parameters.Count;
 			var param = command.CreateParameter();
 			param.ParameterName = key;
 			param.Value = value;
