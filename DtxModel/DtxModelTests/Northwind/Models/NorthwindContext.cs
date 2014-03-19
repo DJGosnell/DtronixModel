@@ -48,6 +48,8 @@ namespace DtxModelTests.Northwind.Models {
 			owned_connection = true;
 		}
 
+
+
 		/// <summary>
 		/// Create a new context of this database's type with a specific connection.
 		/// </summary>

@@ -118,13 +118,16 @@ namespace DtxModelTests {
 				using (var context = new NorthwindContext()) {
 					var results = context.Customers.select()
 						.where("ContactTitle IS NULL")
-						.limit(2000).executeFetchAll();
+						.limit(500).executeFetchAll();
 
 					foreach (var row in results) {
 						row.Region = null;
 					}
-
+					var sw = Stopwatch.StartNew();
 					context.Customers.update(results);
+					sw.Stop();
+
+
 					//result[52]
 				}
 			});
