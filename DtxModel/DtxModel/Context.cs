@@ -20,7 +20,19 @@ namespace DtxModel {
 		/// <summary>
 		/// Create a new context of this database's type.  Can only be used if a default connection is specified.
 		/// </summary>
-		public Context() { }
+		public Context(Func<DbConnection> connection_callback) {
+			if (connection_callback == null) {
+				throw new Exception("No default connection has been specified for this type context.");
+			}
+
+			this.connection = connection_callback();
+
+			if (this.connection == null) {
+				throw new InvalidOperationException("Default connection lambda does not return a valid connection.");
+			}
+
+			owned_connection = true;
+		}
 
 		/// <summary>
 		/// Create a new context of this database's type with a specific connection.

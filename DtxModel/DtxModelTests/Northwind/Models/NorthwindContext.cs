@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
-using System.Data.SQLite;
 using DtxModel;
 
 namespace DtxModelTests.Northwind.Models {
@@ -34,19 +33,7 @@ namespace DtxModelTests.Northwind.Models {
 		/// <summary>
 		/// Create a new context of this database's type.  Can only be used if a default connection is specified.
 		/// </summary>
-		public NorthwindContext() {
-			if (_default_connection == null) {
-				throw new Exception("No default connection has been specified for this type context.");
-			}
-
-			this.connection = _default_connection();
-
-			if (this.connection == null) {
-				throw new InvalidOperationException("Default connection lambda does not return a valid connection.");
-			}
-
-			owned_connection = true;
-		}
+		public NorthwindContext() : base(_default_connection) { }
 
 
 		/// <summary>
