@@ -23,11 +23,11 @@ namespace DtxModelTests.Northwind.Models {
 		}
 
 		public void update(T model) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Update, connection).update(model).execute();
+			new SqlStatement<T>(SqlStatement<T>.Mode.Update, connection).update(model);
 		}
 
 		public void update(T[] model) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Update, connection).update(model).execute();
+			new SqlStatement<T>(SqlStatement<T>.Mode.Update, connection).update(model);
 		}
 
 		public SqlStatement<T> delete() {

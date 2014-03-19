@@ -63,14 +63,14 @@ namespace DtxModel {
 			return this;
 		}
 
-		public SqlStatement<T> update(T model) {
+		public void update(T model) {
 			sql_update_models = new T[] { model };
-			return this;
+			execute();
 		}
 
-		public SqlStatement<T> update(T[] model) {
+		public void update(T[] model) {
 			sql_update_models = model;
-			return this;
+			execute();
 		}
 
 
