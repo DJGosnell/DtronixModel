@@ -7,8 +7,9 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DtxModel
-{
+namespace DtxModel {
+
+	[TableAttribute(Name = null)]
 	public class Model {
 
 		protected DbConnection connection;

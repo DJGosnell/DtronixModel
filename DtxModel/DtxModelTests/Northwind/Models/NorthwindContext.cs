@@ -49,7 +49,6 @@ namespace DtxModelTests.Northwind.Models {
 		}
 
 
-
 		/// <summary>
 		/// Create a new context of this database's type with a specific connection.
 		/// </summary>

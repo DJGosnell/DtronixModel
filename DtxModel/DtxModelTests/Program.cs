@@ -23,8 +23,16 @@ namespace DtxModelTests {
 				return connection;
 			};
 
+			timeFunc("Startup select", () => {
+				using (var context = new NorthwindContext()) {
+					context.Customers.select().limit(1).executeFetchAll();
+				}
+			});
+
+
 			/*
-			var customers = new Customers[100];
+			
+			var customers = new Customers[100000];
 			var rand = new Random();
 
 			for (int i = 0; i < customers.Length; i++) {
@@ -45,7 +53,7 @@ namespace DtxModelTests {
 
 			
 			timeFunc("Startup inserts", () => {
-				using (var context = new NorthwindContext(connection)) {
+				using (var context = new NorthwindContext()) {
 					context.Customers.insert(customers);
 				}
 			});*/
@@ -97,9 +105,7 @@ namespace DtxModelTests {
 					}
 				});
 			});*/
-
-			string this_name = "TestName";
-
+			/*
 			using (var context = new NorthwindContext()) {
 				timeFunc("Selects", 100, () => {
 					var result = context.Customers.select("rowid, *").limit(1000).executeFetch();
@@ -110,22 +116,36 @@ namespace DtxModelTests {
 				//context.Customers.select().orderBy("Test", DtxModel.SortDirection.)
 				//context.Customers.select().where("Customers.rowid == {0} {2} {1} {3}", 25, 1561, 3626, 12512);//.where(cust => (cust.City == "Name" && cust.rowid >= 1245125) || cust.CompanyName == this_name || cust.rowid == customers[24].rowid);
 				//context.Customers.insert(customers);
-			}
+			}*/
 
-
-
-			timeFunc("Selects in new contexts", () => {
+			timeFunc("Manual Select",5, () => {
 				using (var context = new NorthwindContext()) {
-					var results = context.Customers.select()
-						.where("ContactTitle IS NULL")
-						.limit(500).executeFetchAll();
+					List<object> rows = new List<object>();
+					context.queryRead("SELECT *, rowid FROM Customers", null, (reader) => {
+						while(reader.Read()){
+							object[] values = new object[reader.FieldCount];
+							reader.GetValues(values);
+							rows.Add(values);
+						}
+					});
 
-					foreach (var row in results) {
+					//result[52]
+				}
+			});
+		
+
+
+
+			timeFunc("Selects in new contexts", 5, () => {
+				using (var context = new NorthwindContext()) {
+					var results = context.Customers.select().executeFetchAll();
+
+					/*foreach (var row in results) {
 						row.Region = null;
 					}
 					var sw = Stopwatch.StartNew();
 					context.Customers.update(results);
-					sw.Stop();
+					sw.Stop();*/
 
 
 					//result[52]

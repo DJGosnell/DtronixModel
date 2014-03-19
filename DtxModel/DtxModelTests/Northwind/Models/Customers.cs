@@ -188,7 +188,6 @@ namespace DtxModelTests.Northwind.Models {
 
 		public override object[] getAllValues() {
 			return new object[] {
-				_rowid,
 				_CustomerID,
 				_CompanyName,
 				_ContactName,
@@ -204,7 +203,6 @@ namespace DtxModelTests.Northwind.Models {
 
 		public override string[] getColumns() {
 			return new string[] {
-				"rowid",
 				"CustomerID",
 				"CompanyName",
 				"ContactName",

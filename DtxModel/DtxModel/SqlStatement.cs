@@ -65,35 +65,48 @@ namespace DtxModel {
 		/// <param name="sql">SQL to execute with parameters in string.format style.</param>
 		/// <param name="binding">Parameters to replace the string.format placeholders with.</param>
 		/// <returns>The number of rows affected.</returns>
-		public int executeSql(string sql, params object[] binding) {
-			return executeSql(sql, true, binding);
-		}
-
-		/// <summary>
-		/// Executes a string on the specified database.
-		/// </summary>
-		/// <param name="sql">SQL to execute with parameters in string.format style.</param>
-		/// <param name="close_command">If true, command will be disposed after execution.</param>
-		/// <param name="binding">Parameters to replace the string.format placeholders with.</param>
-		/// <returns>The number of rows affected.</returns>
-		public int executeSql(string sql, bool close_command, params object[] binding) {
+		public int query(string sql, params object[] binding) {
 			if (mode != Mode.Execute) {
 				throw new InvalidOperationException("Need to be in Execute mode to use this method.");
 			}
 			command.Parameters.Clear();
 			command.CommandText = sqlBindParameters(sql, binding);
 			int result = command.ExecuteNonQuery();
-
-			if (close_command) {
-				command.Dispose();
-			}
-
-			command.ExecuteReader().clo
+			
+			command.Dispose();
 
 			return result;
 		}
 
+		/// <summary>
+		/// Executes a string on the specified database and calls calls method with the reader.
+		/// Will close the command after execution.
+		/// </summary>
+		/// <param name="sql">SQL to execute with parameters in string.format style.</param>
+		/// <param name="binding">Parameters to replace the string.format placeholders with.</param>
+		/// <param name="on_read">Called when the query has been executed and reader created.</param>
+		/// <returns>The number of rows affected.</returns>
+		public void queryRead(string sql, object[] binding, Action<DbDataReader> on_read) {
+			if (mode != Mode.Execute) {
+				throw new InvalidOperationException("Need to be in Execute mode to use this method.");
+			}
+			command.Parameters.Clear();
+			command.CommandText = sqlBindParameters(sql, binding);
+
+			using (var reader = command.ExecuteReader()) {
+				on_read(reader);
+			}
+
+			command.Dispose();
+		}
+
+
+
 		private string sqlBindParameters(string sql, object[] binding){
+			if (binding == null) {
+				return sql;
+			}
+
 			string[] sql_param_holder = new string[binding.Length];
 			for (int i = 0; i < binding.Length; i++) {
 				sql_param_holder[i] = bindParameter(binding[i]);

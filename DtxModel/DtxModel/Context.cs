@@ -31,6 +31,30 @@ namespace DtxModel {
 			owned_connection = false;
 		}
 
+
+		/// <summary>
+		/// Executes a string on the specified database.
+		/// Will close the command after execution.
+		/// </summary>
+		/// <param name="sql">SQL to execute with parameters in string.format style.</param>
+		/// <param name="binding">Parameters to replace the string.format placeholders with.</param>
+		/// <returns>The number of rows affected.</returns>
+		public int query(string sql, params object[] binding) {
+			return new SqlStatement<Model>(SqlStatement<Model>.Mode.Execute, connection).query(sql, binding);
+		}
+
+		/// <summary>
+		/// Executes a string on the specified database and calls calls method with the reader.
+		/// Will close the command after execution.
+		/// </summary>
+		/// <param name="sql">SQL to execute with parameters in string.format style.</param>
+		/// <param name="binding">Parameters to replace the string.format placeholders with.</param>
+		/// <param name="on_read">Called when the query has been executed and reader created.</param>
+		/// <returns>The number of rows affected.</returns>
+		public void queryRead(string sql, object[] binding, Action<DbDataReader> on_read) {
+			new SqlStatement<Model>(SqlStatement<Model>.Mode.Execute, connection).queryRead(sql, binding, on_read);
+		}
+
 		/// <summary>
 		/// Releases any connection resources.
 		/// </summary>
