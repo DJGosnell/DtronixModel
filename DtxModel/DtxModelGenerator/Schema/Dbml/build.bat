@@ -1,1 +1,0 @@
-"C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\xsd.exe" DbmlSchema.xsd /classes /fields /namespace:DtxModelGen.Schema.Dbml
