@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtxModel", "DtxModel\DtxMod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtxModelTests", "DtxModelTests\DtxModelTests.csproj", "{6F5EF738-E845-45DE-9FC8-4BF9CDFA7C5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtxModelGen", "DtxModelGenerator\DtxModelGen.csproj", "{E6CAEF2F-E3F9-44C6-B6EC-0B2AC642462F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtxModelGen", "DtxModelGen\DtxModelGen.csproj", "{E6CAEF2F-E3F9-44C6-B6EC-0B2AC642462F}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -21,9 +21,9 @@ Global
 		SccProjectUniqueName2 = DtxModelTests\\DtxModelTests.csproj
 		SccProjectName2 = DtxModelTests
 		SccLocalPath2 = DtxModelTests
-		SccProjectUniqueName3 = DtxModelGenerator\\DtxModelGen.csproj
-		SccProjectName3 = DtxModelGenerator
-		SccLocalPath3 = DtxModelGenerator
+		SccProjectUniqueName3 = DtxModelGen\\DtxModelGen.csproj
+		SccProjectName3 = DtxModelGen
+		SccLocalPath3 = DtxModelGen
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
