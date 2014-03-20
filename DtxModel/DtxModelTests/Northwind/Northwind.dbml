@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Class="NorthwindDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Table Name="" Member="Customers">
+  <Table Name="Customers">
     <Type Name="Customers">
       <Column Name="rowid" Type="System.Int64" IsPrimaryKey="true" CanBeNull="false" />
       <Column Name="CustomerID" Type="System.String" CanBeNull="false" />
@@ -15,13 +15,13 @@
       <Column Name="Fax" Type="System.String" CanBeNull="false" />
     </Type>
   </Table>
-  <Table Name="" Member="Categories">
+  <Table Name="Categories">
     <Type Name="Categories">
-      <Column Member="rowid" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Member="CategoryID" Type="System.Int32" CanBeNull="false" />
-      <Column Member="CategoryName" Type="System.String" CanBeNull="false" />
-      <Column Member="Description" Type="System.String" CanBeNull="false" />
-      <Column Member="Picture" Type="System.Byte[]" CanBeNull="false" />
+      <Column Name="rowid" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CategoryID" Type="System.Int32" CanBeNull="false" />
+      <Column Name="CategoryName" Type="System.String" CanBeNull="false" />
+      <Column Name="Description" Type="System.String" CanBeNull="false" />
+      <Column Name="Picture" Type="System.Byte[]" CanBeNull="false" />
     </Type>
   </Table>
 </Database>
