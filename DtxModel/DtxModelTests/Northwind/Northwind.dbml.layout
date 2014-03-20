@@ -2,10 +2,16 @@
 <ordesignerObjectsDiagram dslVersion="1.0.0.0" absoluteBounds="0, 0, 11, 8.5" name="Northwind">
   <DataContextMoniker Name="/NorthwindDataContext" />
   <nestedChildShapes>
-    <classShape Id="826f347b-5d32-4141-bc49-c19261f45873" absoluteBounds="3.625, 2.125, 2, 3.1170068359374996">
+    <classShape Id="826f347b-5d32-4141-bc49-c19261f45873" absoluteBounds="3.25, 2.125, 2, 3.1170068359374996">
       <DataClassMoniker Name="/NorthwindDataContext/Customers" />
       <nestedChildShapes>
-        <elementListCompartment Id="2437fd21-745f-4c23-b6dd-c6b396ff8fa2" absoluteBounds="3.64, 2.585, 1.9700000000000002, 2.5570068359375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+        <elementListCompartment Id="2437fd21-745f-4c23-b6dd-c6b396ff8fa2" absoluteBounds="3.265, 2.585, 1.9700000000000002, 2.5570068359375" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
+      </nestedChildShapes>
+    </classShape>
+    <classShape Id="1fc7bbe9-e7b0-4887-88d6-624705d3e5c5" absoluteBounds="6, 2.25, 2, 1.7708968098958327">
+      <DataClassMoniker Name="/NorthwindDataContext/Categories" />
+      <nestedChildShapes>
+        <elementListCompartment Id="2b4e4f22-5dc3-4581-8f0d-5939138969d3" absoluteBounds="6.015, 2.71, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
   </nestedChildShapes>

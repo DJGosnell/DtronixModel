@@ -7,8 +7,8 @@
     <ProjectGuid>{E6CAEF2F-E3F9-44C6-B6EC-0B2AC642462F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DtxModelGenerator</RootNamespace>
-    <AssemblyName>DtxModelGenerator</AssemblyName>
+    <RootNamespace>DtxModelGen</RootNamespace>
+    <AssemblyName>DtxModelGen</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
@@ -37,6 +37,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine">
+      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net40\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,8 +49,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Code\ContextBodyClass.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ContextBodyClass.tt</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Schema\Dbml\DbmlSchema.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -55,12 +64,9 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>ContextBodyClass.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Code\ContextBody.txt" />
-    <Content Include="Code\ContextTableProperty.txt" />
-    <Content Include="Code\TableBody.txt" />
-    <Content Include="Code\TableColumnProperty.txt" />
+    <None Include="packages.config" />
+    <None Include="Schema\Dbml\build.bat" />
+    <None Include="Schema\Dbml\DbmlSchema.xsd" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

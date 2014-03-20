@@ -141,7 +141,7 @@ namespace DtxModelTests {
 					var results = context.Customers.select().where("rowid >= 100000").limit(50).executeFetchAll();
 
 
-					context.Customers.delete(results);
+					//context.Customers.delete(results);
 					/*foreach (var row in results) {
 						row.Region = null;
 					}

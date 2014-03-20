@@ -1,18 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Class="NorthwindDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="" Member="Customers">
     <Type Name="Customers">
-      <Column Member="rowid" Type="System.Int64" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Member="CustomerID" Type="System.String" CanBeNull="false" />
-      <Column Member="CompanyName" Type="System.String" CanBeNull="false" />
-      <Column Member="ContactName" Type="System.String" CanBeNull="false" />
-      <Column Member="ContactTitle" Type="System.String" CanBeNull="false" />
-      <Column Member="Address" Type="System.String" CanBeNull="false" />
-      <Column Member="City" Type="System.String" CanBeNull="false" />
-      <Column Member="Region" Type="System.String" CanBeNull="false" />
-      <Column Member="PostalCode" Type="System.String" CanBeNull="false" />
-      <Column Member="Country" Type="System.String" CanBeNull="false" />
-      <Column Member="Phone" Type="System.String" CanBeNull="false" />
-      <Column Member="Fax" Type="System.String" CanBeNull="false" />
+      <Column Name="rowid" Type="System.Int64" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CustomerID" Type="System.String" CanBeNull="false" />
+      <Column Name="CompanyName" Type="System.String" CanBeNull="false" />
+      <Column Name="ContactName" Type="System.String" CanBeNull="false" />
+      <Column Name="ContactTitle" Type="System.String" CanBeNull="false" />
+      <Column Name="Address" Type="System.String" CanBeNull="false" />
+      <Column Name="City" Type="System.String" CanBeNull="false" />
+      <Column Name="Region" Type="System.String" CanBeNull="false" />
+      <Column Name="PostalCode" Type="System.String" CanBeNull="false" />
+      <Column Name="Country" Type="System.String" CanBeNull="false" />
+      <Column Name="Phone" Type="System.String" CanBeNull="false" />
+      <Column Name="Fax" Type="System.String" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="" Member="Categories">
+    <Type Name="Categories">
+      <Column Member="rowid" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Member="CategoryID" Type="System.Int32" CanBeNull="false" />
+      <Column Member="CategoryName" Type="System.String" CanBeNull="false" />
+      <Column Member="Description" Type="System.String" CanBeNull="false" />
+      <Column Member="Picture" Type="System.Byte[]" CanBeNull="false" />
     </Type>
   </Table>
 </Database>
