@@ -7,8 +7,19 @@ using System.IO;
 
 namespace DtxModelGen {
 	class CommandOptions {
+		
+		private string _code_output;
+
 		[Option("code-outupt", Required = false, HelpText = "The C# file to output the generated code to.")]
-		public string CodeOutput { get; set; }
+		public string CodeOutput {
+			get {
+				if (_code_output == null) {
+					_code_output = Path.ChangeExtension(_dbml_input, "cs");
+				}
+				return _code_output; 
+			}
+			set { _code_output = value; }
+		}
 
 		[Option("code-type", Required = false, HelpText = "The type of C# code the generate.  Allowed values: DtxModel.")]
 		public string CodeType { get; set; }

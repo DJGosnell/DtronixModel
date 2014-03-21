@@ -54,11 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CodeGen\TableModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>TableModel.tt</DependentUpon>
-    </Compile>
+    <Compile Include="CodeGen\CodeGenerator.cs" />
+    <Compile Include="CodeGen\DatabaseContextGen.cs" />
     <Compile Include="CodeGen\TableModelGen.cs" />
     <Compile Include="CodeWriter.cs" />
     <Compile Include="CommandOptions.cs" />
@@ -83,10 +80,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="App.config" />
-    <None Include="CodeGen\TableModel.tt">
-      <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>TableModel.cs</LastGenOutput>
-    </None>
     <None Include="packages.config" />
     <None Include="Schema\Dbml\Build.bat" />
     <None Include="Schema\Dbml\DbmlSchema.xsd" />

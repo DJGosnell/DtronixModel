@@ -20,6 +20,9 @@ namespace DtxModelGen {
 			});
 			var parse_result = parser.ParseArguments(args, options);
 
+			if(options.CodeOutput == null){
+				
+			}
 
 			// Verify that the parsing was successful.
 			if (parse_result == false) {
@@ -37,14 +40,29 @@ namespace DtxModelGen {
 				//sql_writer.WriteTo(options.SqlOutput);
 			}
 
-			var code_writer = new TableModelGen();
-			code_writer.Transformer = new Sqlite.SqliteTypeTransformer();
+			var table_code_writer = new TableModelGen();
+			var database_code_writer = new DatabaseContextGen();
+			database_code_writer.DatabaseName = database;
+			database_code_writer.Ns = options.CodeNamespace;
 
-			foreach (var db_table in database.Table) {
-				code_writer.DbTable = db_table;
-				code_writer.Ns = options.CodeNamespace;
+			table_code_writer.Transformer = new Sqlite.SqliteTypeTransformer();
+			table_code_writer.Ns = options.CodeNamespace;
 
-				string output = code_writer.generate();
+			using (var fs = new FileStream(options.CodeOutput, FileMode.Create)) {
+				using (var sw = new StreamWriter(fs)) {
+					sw.Write(database_code_writer.generate());
+
+					foreach (var db_table in database.Table) {
+						table_code_writer.DbTable = db_table;
+						sw.Write(table_code_writer.generate());
+						
+					}
+
+					// Final closing namespace
+					sw.Write("}");
+					sw.Flush();
+					
+				}
 			}
 
 			
