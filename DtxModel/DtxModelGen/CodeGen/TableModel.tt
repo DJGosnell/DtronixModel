@@ -1,10 +1,19 @@
-﻿using System.Collections.Generic;
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ parameter type="DtxModelGen.Schema.Dbml.Table" name="db_table" #>
+<#@ parameter type="System.String" name="namespace" #>
+<#@ parameter type="DtxModelGen.TypeTransformer" name="type_transformer" #>
+
+using System.Collections.Generic;
 using DtxModel;
 using System.Data.Common;
 
-namespace DtxModelTests.Northwind.Models {
+namespace <#= namespace #> {
 
-	[TableAttribute(Name = "Customers")]
+	
 	[ColumnAttribute(Name = "rowid", Storage = "_rowid", IsDbGenerated = true, IsPrimaryKey = true)]
 	[ColumnAttribute(Name = "CustomerID", Storage = "_CustomerID")]
 	[ColumnAttribute(Name = "CompanyName", Storage = "_CompanyName")]
@@ -16,113 +25,36 @@ namespace DtxModelTests.Northwind.Models {
 	[ColumnAttribute(Name = "Fax", Storage = "_Fax")]
 	[ColumnAttribute(Name = "Phone", Storage = "_Phone")]
 	[ColumnAttribute(Name = "Country", Storage = "_Country")]
-	public class Customers : Model {
+	public class <#= db_table.Name #> : Model {
 
-		private long _rowid;
-		public long rowid {
-			get { return _rowid; }
-		}
+<# foreach(var item in db_table.Type.Items) { 
+	if(item is DtxModelGen.Schema.Dbml.Association){
+		continue;
+	}
+	bool read_only = false;
+	DtxModelGen.Schema.Dbml.Column column = item as DtxModelGen.Schema.Dbml.Column;
 
-		private bool _CustomerIDChanged = false;
+	if(column.IsDbGeneratedSpecified && column.IsDbGenerated) {
+		read_only = true;
+	}
 
-		private string _CustomerID;
-		public string CustomerID {
-			get { return _CustomerID; }
+	if(read_only == false) { #>
+		private bool _<#= column.Name #>Changed = false;
+<#	} #>
+		private <#= column.Type #> _<#= column.Name #>;
+
+		public <#= column.Type #> <#= column.Name #> {
+<#	if(read_only == false) { #>
+			get { return _<#= column.Name #>; }
+<#	} #>
 			set {
-				_CustomerID = value;
-				_CustomerIDChanged = true;
+				_<#= column.Name #> = value;
+				_<#= column.Name #>Changed = true;
 			}
 		}
+<# } #>
 
-		private bool _CompanyNameChanged = false;
-		private string _CompanyName;
-		public string CompanyName {
-			get { return _CompanyName; }
-			set {
-				_CompanyName = value;
-				_CompanyNameChanged = true;
-			}
-		}
 
-		private bool _ContactNameChanged = false;
-		private string _ContactName;
-		public string ContactName {
-			get { return _ContactName; }
-			set {
-				_ContactName = value;
-				_ContactNameChanged = true;
-			}
-		}
-
-		private bool _AddressChanged = false;
-		private string _Address;
-		public string Address {
-			get { return _Address; }
-			set {
-				_Address = value;
-				_AddressChanged = true;
-			}
-		}
-
-		private bool _CityChanged = false;
-		private string _City;
-		public string City {
-			get { return _City; }
-			set {
-				_City = value;
-				_CityChanged = true;
-			}
-		}
-
-		private bool _RegionChanged = false;
-		private string _Region;
-		public string Region {
-			get { return _Region; }
-			set {
-				_Region = value;
-				_RegionChanged = true;
-			}
-		}
-
-		private bool _PostalCodeChanged = false;
-		private string _PostalCode;
-		public string PostalCode {
-			get { return _PostalCode; }
-			set {
-				_PostalCode = value;
-				_PostalCodeChanged = true;
-			}
-		}
-
-		private bool _CountryChanged = false;
-		private string _Country;
-		public string Country {
-			get { return _Country; }
-			set {
-				_Country = value;
-				_CountryChanged = true;
-			}
-		}
-
-		private bool _PhoneChanged = false;
-		private string _Phone;
-		public string Phone {
-			get { return _Phone; }
-			set {
-				_Phone = value;
-				_PhoneChanged = true;
-			}
-		}
-
-		private bool _FaxChanged = false;
-		private string _Fax;
-		public string Fax {
-			get { return _Fax; }
-			set {
-				_Fax = value;
-				_FaxChanged = true;
-			}
-		}
 
 		public Customers() : this(null, null) { }
 

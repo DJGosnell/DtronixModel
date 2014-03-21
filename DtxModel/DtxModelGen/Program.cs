@@ -1,4 +1,5 @@
-﻿using DtxModelGen.Schema.Dbml;
+﻿using DtxModelGen.CodeGen;
+using DtxModelGen.Schema.Dbml;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -35,6 +36,18 @@ namespace DtxModelGen {
 				//var sql_writer = new SqlWriter(database);
 				//sql_writer.WriteTo(options.SqlOutput);
 			}
+
+			var code_writer = new TableModelGen();
+			code_writer.Transformer = new Sqlite.SqliteTypeTransformer();
+
+			foreach (var db_table in database.Table) {
+				code_writer.DbTable = db_table;
+				code_writer.Ns = options.CodeNamespace;
+
+				string output = code_writer.generate();
+			}
+
+			
 
 		}
 
