@@ -147,13 +147,13 @@ namespace DtxModelTests.Northwind {
 			}
 		}
 
-		private bool _PhoneChanged = false;
-		private System.String _Phone;
-		public System.String Phone {
-			get { return _Phone; }
+		private bool _phoneChanged = false;
+		private System.String _phone;
+		public System.String phone {
+			get { return _phone; }
 			set {
-				_Phone = value;
-				_PhoneChanged = true;
+				_phone = value;
+				_phoneChanged = true;
 			}
 		}
 
@@ -167,13 +167,13 @@ namespace DtxModelTests.Northwind {
 			}
 		}
 
-		private bool _Changed = false;
-		private System.Int64 _;
-		public System.Int64  {
-			get { return _; }
+		private bool _Categories_rowidChanged = false;
+		private System.Int64 _Categories_rowid;
+		public System.Int64 Categories_rowid {
+			get { return _Categories_rowid; }
 			set {
-				_ = value;
-				_Changed = true;
+				_Categories_rowid = value;
+				_Categories_rowidChanged = true;
 			}
 		}
 
@@ -200,9 +200,9 @@ namespace DtxModelTests.Northwind {
 					case "Region": _Region = reader.GetValue(i) as System.String; break;
 					case "PostalCode": _PostalCode = reader.GetValue(i) as System.String; break;
 					case "Country": _Country = reader.GetValue(i) as System.String; break;
-					case "Phone": _Phone = reader.GetValue(i) as System.String; break;
+					case "phone": _phone = reader.GetValue(i) as System.String; break;
 					case "Fax": _Fax = reader.GetValue(i) as System.String; break;
-					case "": _ = (System.Int64)reader.GetValue(i); break;
+					case "Categories_rowid": _Categories_rowid = (System.Int64)reader.GetValue(i); break;
 					default: break;
 				}
 			}
@@ -228,12 +228,12 @@ namespace DtxModelTests.Northwind {
 				changed.Add("PostalCode", _PostalCode);
 			if (_CountryChanged)
 				changed.Add("Country", _Country);
-			if (_PhoneChanged)
-				changed.Add("Phone", _Phone);
+			if (_phoneChanged)
+				changed.Add("phone", _phone);
 			if (_FaxChanged)
 				changed.Add("Fax", _Fax);
-			if (_Changed)
-				changed.Add("", _);
+			if (_Categories_rowidChanged)
+				changed.Add("Categories_rowid", _Categories_rowid);
 
 			return changed;
 		}
@@ -249,9 +249,9 @@ namespace DtxModelTests.Northwind {
 				_Region,
 				_PostalCode,
 				_Country,
-				_Phone,
+				_phone,
 				_Fax,
-				_,
+				_Categories_rowid,
 			};
 		}
 
@@ -266,9 +266,9 @@ namespace DtxModelTests.Northwind {
 				"Region",
 				"PostalCode",
 				"Country",
-				"Phone",
+				"phone",
 				"Fax",
-				"",
+				"Categories_rowid",
 			};
 		}
 

@@ -38,7 +38,7 @@ namespace DtxModelGen.CodeGen {
 			Column pk_column = null;
 
 			each<Column>(column => {
-				if (pk_column == null && column.IsPrimaryKeySpecified && column.IsPrimaryKey) {
+				if (pk_column == null && column.IsPrimaryKey) {
 					pk_column = column;
 				}
 			});
@@ -52,7 +52,7 @@ namespace DtxModelGen.CodeGen {
 			each<Column>(column => {
 				bool read_only = false;
 
-				if (column.IsDbGeneratedSpecified && column.IsDbGenerated) {
+				if (column.IsDbGenerated) {
 					read_only = true;
 				}
 
@@ -122,7 +122,7 @@ namespace DtxModelGen.CodeGen {
 						break;
 				}
 
-				code.write("case \"").write(column.Name).write("\": _").write(column.Name).write(" = ");
+				code.write("case \"").write(column.Name).write("\": _").write(column.Member).write(" = ");
 				if (hard_cast) {
 					code.write("(").write(column.Type).write(")reader.GetValue(i)");
 				} else {
@@ -143,7 +143,7 @@ namespace DtxModelGen.CodeGen {
 			code.writeLine("var changed = new Dictionary<string, object>();");
 			each<Column>(column => {
 				// Ignore primary keys.
-				if (column.IsPrimaryKeySpecified && column.IsPrimaryKey) {
+				if (column.IsPrimaryKey) {
 					return;
 				}
 				code.beginBlock("if (_").write(column.Name).writeLine("Changed)");
@@ -161,7 +161,7 @@ namespace DtxModelGen.CodeGen {
 
 			each<Column>(column => {
 				// Ignore primary keys.
-				if (column.IsPrimaryKeySpecified && column.IsPrimaryKey) {
+				if (column.IsPrimaryKey) {
 					return;
 				}
 				code.write("_").write(column.Name).writeLine(",");
@@ -177,7 +177,7 @@ namespace DtxModelGen.CodeGen {
 
 			each<Column>(column => {
 				// Ignore primary keys.
-				if (column.IsPrimaryKeySpecified && column.IsPrimaryKey) {
+				if (column.IsPrimaryKey) {
 					return;
 				}
 				code.write("\"").write(column.Name).writeLine("\",");

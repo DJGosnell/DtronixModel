@@ -40,6 +40,10 @@ namespace DtxModelGen {
 				//sql_writer.WriteTo(options.SqlOutput);
 			}
 
+			if (normalizeDatabase(database) == false) {
+				return;
+			}
+
 			var table_code_writer = new TableModelGen();
 			var database_code_writer = new DatabaseContextGen();
 			database_code_writer.DatabaseName = database;
@@ -69,15 +73,58 @@ namespace DtxModelGen {
 
 		}
 
+		private static bool normalizeDatabase(Database database) {
+			foreach (var table in database.Table) {
+				foreach (var item in table.Type.Items) {
+					if (item is Column) {
+						var column = item as Column;
+						var is_name_null = string.IsNullOrWhiteSpace(column.Name);
+						var is_member_null = string.IsNullOrWhiteSpace(column.Member);
+						// If the column name is empty, then assume that the database column name
+						// is the same as the member name and vice versa.
+						if (is_name_null) {
+							column.Name = column.Member;
+
+						} else if (is_member_null) {
+							column.Member = column.Name;
+
+						} else if (is_member_null && is_name_null) {
+							writeColor("Column on table " + table.Name + "Does not have a name or member.", ConsoleColor.Red);
+							return false;
+						}
+
+						// Default values.
+						if (column.IsReadOnlySpecified == false) {
+							column.IsReadOnly = false;
+						}
+
+						if (column.IsDbGeneratedSpecified == false) {
+							column.IsDbGenerated = false;
+						}
+
+						if (column.IsPrimaryKeySpecified == false) {
+							column.IsPrimaryKey = false;
+						}
+					}
+				}
+			}
+
+			return true;
+		}
+
 
 		public static void writeColor(string text, ConsoleColor color) {
+			var original_color = Console.ForegroundColor;
 			Console.ForegroundColor = color;
 			Console.Write(text);
+			Console.ForegroundColor = original_color;
 		}
 
 		public static void writeLineColor(string text, ConsoleColor color) {
-			writeColor(text, color);
-			Console.WriteLine();
+			var original_color = Console.ForegroundColor;
+			Console.ForegroundColor = color;
+			Console.WriteLine(text);
+			Console.ForegroundColor = original_color;
 		}
 	}
 }

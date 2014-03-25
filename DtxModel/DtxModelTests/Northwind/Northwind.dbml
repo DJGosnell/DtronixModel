@@ -11,9 +11,9 @@
       <Column Name="Region" Type="System.String" CanBeNull="false" />
       <Column Name="PostalCode" Type="System.String" CanBeNull="false" />
       <Column Name="Country" Type="System.String" CanBeNull="false" />
-      <Column Name="Phone" Type="System.String" CanBeNull="false" />
+      <Column Name="phone" Member="Phone" Type="System.String" CanBeNull="false" />
       <Column Name="Fax" Type="System.String" CanBeNull="false" />
-      <Column Member="Categories_rowid" Type="System.Int64" CanBeNull="false" />
+      <Column Name="" Member="Categories_rowid" Type="System.Int64" CanBeNull="false" />
       <Association Name="Customers_Categories" Member="Category" ThisKey="Categories_rowid" OtherKey="rowid" Type="Categories" />
     </Type>
   </Table>
