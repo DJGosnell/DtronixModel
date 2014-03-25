@@ -37,7 +37,7 @@ namespace DtxModelGen.CodeGen {
 
 			Column pk_column = null;
 
-			foreachColumn(column => {
+			each<Column>(column => {
 				if (pk_column == null && column.IsPrimaryKeySpecified && column.IsPrimaryKey) {
 					pk_column = column;
 				}
@@ -49,7 +49,7 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("public class ").write(_db_table.Name).writeLine(" : Model {");
 
 			// Table Properties;
-			foreachColumn(column => {
+			each<Column>(column => {
 				bool read_only = false;
 
 				if (column.IsDbGeneratedSpecified && column.IsDbGenerated) {
@@ -82,6 +82,12 @@ namespace DtxModelGen.CodeGen {
 				code.writeLine();
 			});
 
+			//Table associations
+			each<Association>(association => {
+				//association.
+
+			});
+
 			// Constructors
 			code.write("public ").write(_db_table.Name).writeLine("() : this(null, null) { }");
 			code.writeLine();
@@ -99,12 +105,18 @@ namespace DtxModelGen.CodeGen {
 			code.writeLine("int length = reader.FieldCount;");
 			code.beginBlock("for (int i = 0; i < length; i++) {").writeLine();
 			code.beginBlock("switch (reader.GetName(i)) {").writeLine();
-
 			// Read fields
-			foreachColumn(column => {
+			each<Column>(column => {
 				bool hard_cast = false;
 				switch (column.Type.ToLower()) {
+					case "system.int16":
+					case "system.int32":
 					case "system.int64":
+					case "system.uint16":
+					case "system.uint32":
+					case "system.uint64":
+					case "short":
+					case "int":
 					case "long":
 						hard_cast = true;
 						break;
@@ -129,7 +141,7 @@ namespace DtxModelGen.CodeGen {
 			// getChangedValues override
 			code.beginBlock("public override Dictionary<string, object> getChangedValues() {").writeLine();
 			code.writeLine("var changed = new Dictionary<string, object>();");
-			foreachColumn(column => {
+			each<Column>(column => {
 				// Ignore primary keys.
 				if (column.IsPrimaryKeySpecified && column.IsPrimaryKey) {
 					return;
@@ -147,7 +159,7 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("public override object[] getAllValues() {").writeLine();
 			code.beginBlock("return new object[] {").writeLine();
 
-			foreachColumn(column => {
+			each<Column>(column => {
 				// Ignore primary keys.
 				if (column.IsPrimaryKeySpecified && column.IsPrimaryKey) {
 					return;
@@ -163,7 +175,7 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("public override string[] getColumns() {").writeLine();
 			code.beginBlock("return new string[] {").writeLine();
 
-			foreachColumn(column => {
+			each<Column>(column => {
 				// Ignore primary keys.
 				if (column.IsPrimaryKeySpecified && column.IsPrimaryKey) {
 					return;
@@ -183,7 +195,7 @@ namespace DtxModelGen.CodeGen {
 				code.writeLine();
 
 				// getPKValue
-				code.beginBlock("public override string getPKValue() {").writeLine();
+				code.beginBlock("public override ").write(pk_column.Type).write(" getPKValue() {").writeLine();
 				code.write("return _").write(pk_column.Name).writeLine(";");
 				code.endBlock("}").writeLine();
 				code.writeLine();
@@ -194,10 +206,10 @@ namespace DtxModelGen.CodeGen {
 			return code.ToString();
 		}
 
-		private void foreachColumn(Action<Column> method) {
+		private void each<T>(Action<T> method) where T : class {
 			foreach (var item in _db_table.Type.Items) {
-				if (item is DtxModelGen.Schema.Dbml.Column) {
-					method(item as Column);
+				if (item is T) {
+					method(item as T);
 				}
 			}
 		}

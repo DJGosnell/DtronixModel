@@ -51,8 +51,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Northwind\Models\Customers.cs" />
-    <Compile Include="Northwind\Models\NorthwindContext.cs" />
+    <None Include="Northwind\Models\Customers.cs" />
+    <None Include="Northwind\Models\NorthwindContext.cs" />
+    <Compile Include="Northwind\Northwind.cs">
+      <DependentUpon>Northwind.dbml</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

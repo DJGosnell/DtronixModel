@@ -1,5 +1,4 @@
-﻿using DtxModelTests.Northwind.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Diagnostics;
@@ -7,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DtxModelTests.Northwind;
 
 namespace DtxModelTests {
     class Program {
@@ -138,7 +138,7 @@ namespace DtxModelTests {
 
 			timeFunc("Selects in new contexts", () => {
 				using (var context = new NorthwindContext()) {
-					var results = context.Customers.select().where("rowid >= 100000").limit(50).executeFetchAll();
+					var results = context.Customers.select().whereIn("rowid", new int[] { 1, 2, 5, 6 });
 
 
 					//context.Customers.delete(results);

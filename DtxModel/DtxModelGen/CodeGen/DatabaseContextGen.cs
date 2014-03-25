@@ -50,7 +50,7 @@ namespace DtxModelGen.CodeGen {
 			foreach (var table in _database.Table) {
 				code.write("private Table<").write(table.Name).write("> _").write(table.Name).writeLine(";");
 				code.writeLine();
-				code.beginBlock("private Table<").write(table.Name).write("> ").write(table.Name).writeLine(" {");
+				code.beginBlock("public Table<").write(table.Name).write("> ").write(table.Name).writeLine(" {");
 				code.beginBlock("get {").writeLine();
 				code.beginBlock("if(_").write(table.Name).writeLine(" == null) {");
 				code.write("_").write(table.Name).write(" = new Table<").write(table.Name).writeLine(">(connection);");
@@ -66,14 +66,14 @@ namespace DtxModelGen.CodeGen {
 			code.writeLine("/// <summary>");
 			code.writeLine("/// Create a new context of this database's type.  Can only be used if a default connection is specified.");
 			code.writeLine("/// </summary>");
-			code.write("public ").write(_database).writeLine("Context() : base(_default_connection) { }");
+			code.write("public ").write(_database.Class).writeLine("() : base(_default_connection) { }");
 			code.writeLine();
 
 			code.writeLine("/// <summary>");
 			code.writeLine("/// Create a new context of this database's type with a specific connection.");
 			code.writeLine("/// </summary>");
 			code.writeLine("/// <param name=\"connection\">Existing open database connection to use.</param>");
-			code.write("public ").write(_database).writeLine("Context(DbConnection connection) : base(connection) { }");
+			code.write("public ").write(_database.Class).writeLine("(DbConnection connection) : base(connection) { }");
 			code.endBlock("}").writeLine();
 
 			return code.ToString();

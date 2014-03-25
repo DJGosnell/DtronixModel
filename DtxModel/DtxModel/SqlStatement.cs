@@ -150,6 +150,26 @@ namespace DtxModel {
 			execute();
 		}
 
+		public SqlStatement<T> whereIn(string column, params object[] values) {
+			validateWhere();
+
+			if (string.IsNullOrWhiteSpace(column)) {
+				throw new ArgumentException("Column parameter can not be empty.");
+			}
+
+			StringBuilder sql = new StringBuilder();
+			sql.Append(column).Append(" IN(");
+
+			foreach (var value in values) {
+				sql.Append(bindParameter(value)).Append(",");
+			}
+			sql.Remove(sql.Length - 1, 1).Append(")");
+
+			sql_where = sql.ToString();
+
+			return this;
+		}
+
 		/// <summary>
 		/// Sets where to the provided model's primary key.
 		/// </summary>
@@ -165,6 +185,8 @@ namespace DtxModel {
 		/// <param name="models">Models to provide the primary key for.</param>
 		/// <returns>Current statement for chaining.</returns>
 		public SqlStatement<T> where(T[] models) {
+			validateWhere();
+
 			// Set the update by the primary key.
 			if(models == null || models.Length == 0){
 				throw new ArgumentException("Models parameter can not be null or empty.");
@@ -188,6 +210,14 @@ namespace DtxModel {
 
 
 		public SqlStatement<T> where(string where, params object[] parameters) {
+			validateWhere();
+
+			sql_where = sqlBindParameters(where, parameters);
+
+			return this;
+		}
+
+		private void validateWhere() {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -199,10 +229,6 @@ namespace DtxModel {
 			if (sql_where != null) {
 				throw new InvalidOperationException("The WHERE statement has already been defined.");
 			}
-
-			sql_where = sqlBindParameters(where, parameters);
-
-			return this;
 		}
 
 		public SqlStatement<T> limit(int count) {

@@ -13,6 +13,8 @@
       <Column Name="Country" Type="System.String" CanBeNull="false" />
       <Column Name="Phone" Type="System.String" CanBeNull="false" />
       <Column Name="Fax" Type="System.String" CanBeNull="false" />
+      <Column Member="Categories_rowid" Type="System.Int64" CanBeNull="false" />
+      <Association Name="Customers_Categories" Member="Category" ThisKey="Categories_rowid" OtherKey="rowid" Type="Categories" />
     </Type>
   </Table>
   <Table Name="Categories">
@@ -22,6 +24,7 @@
       <Column Name="CategoryName" Type="System.String" CanBeNull="false" />
       <Column Name="Description" Type="System.String" CanBeNull="false" />
       <Column Name="Picture" Type="System.Byte[]" CanBeNull="false" />
+      <Association Name="Customers_Categories" Member="Customers" ThisKey="rowid" OtherKey="Categories_rowid" Type="Customers" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>

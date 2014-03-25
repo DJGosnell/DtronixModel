@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Data.Common;
 
-namespace DtxModelTests.Northwind.Models {
+namespace DtxModel {
 	public class Table<T> where T : Model, new() {
 		private DbConnection connection;
 
