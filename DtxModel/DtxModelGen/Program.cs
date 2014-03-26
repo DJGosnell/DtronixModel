@@ -78,11 +78,20 @@ namespace DtxModelGen {
 			Dictionary<string, Association> associations = new Dictionary<string, Association>();
 	
 			foreach (var table in database.Table) {
+
+				// Member / Name.
+				if (string.IsNullOrWhiteSpace(table.Name) && string.IsNullOrWhiteSpace(table.Member) == false) {
+					table.Name = table.Member;
+				}
+
 				foreach (var item in table.Type.Items) {
 					if (item is Column) {
 						var column = item as Column;
 						var is_name_null = string.IsNullOrWhiteSpace(column.Name);
 						var is_member_null = string.IsNullOrWhiteSpace(column.Member);
+
+						column.Table = table;
+
 						// If the column name is empty, then assume that the database column name
 						// is the same as the member name and vice versa.
 						if (is_name_null) {
@@ -111,18 +120,46 @@ namespace DtxModelGen {
 
 					}else if (item is Association) {
 						var association = item as Association;
-
 						association.Table = table;
+
 						// Determine if we already have this association in the list
 						if (associations.ContainsKey(association.Name)) {
 							var other = associations[association.Name];
+							
 							if (other.IsForeignKeySpecified && other.IsForeignKey) {
+								// This is the child table
 								other.ParentAssociation = association;
 								association.ChildAssociation = other;
 							}else {
+								// This is the parent association.
 								other.ChildAssociation = association;
 								association.ParentAssociation = other;
 							}
+
+							// Get the colums for the associations.
+							Column this_column = null;
+							Column other_column = null;
+
+							// Get the association's corrisponding columns
+							Utilities.each<Column>(association.Table.Type.Items, assoc_col => {
+								if (assoc_col.Member == association.ThisKey) {
+									this_column = assoc_col;
+									return false;
+								}
+								return true;
+							});
+
+							Utilities.each<Column>(other.Table.Type.Items, assoc_col => {
+								if (assoc_col.Member == association.OtherKey) {
+									other_column = assoc_col;
+									return false;
+								}
+								return true;
+							});
+
+							association.OtherKeyColumn = other.ThisKeyColumn = other_column;
+							association.ThisKeyColumn = other.OtherKeyColumn = this_column;
+
 							associations.Remove(association.Name);
 
 						} else {

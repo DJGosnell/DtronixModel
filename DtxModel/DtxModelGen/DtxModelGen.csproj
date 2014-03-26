@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="Sqlite\SqliteTypeTransformer.cs" />
     <Compile Include="TypeTransformerType.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\DtxModelTests\Northwind\Northwind.dbml">

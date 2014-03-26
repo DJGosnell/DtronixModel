@@ -105,22 +105,30 @@ namespace DtxModelGen.CodeGen {
 				code.beginBlock("public ").write(field_type).write(" ").write(association.Member).writeLine(" {");
 				code.beginBlock("get {").writeLine();
 				code.beginBlock("if(_").write(association.Member).writeLine(" == null){ ");
+				code.beginBlock("try {").writeLine("");
 				code.write("_").write(association.Member).write(" = ((").write(_database.Class).write(")context).")
-					.write(association.Type).write(".select().whereIn(\"").write(association.OtherKey).write("\", ").write(association.ThisKey).write(").executeFetch");
+					.write(association.Type).write(".select().whereIn(\"").write(association.OtherKeyColumn.Name).write("\", _").write(association.ThisKey).write(").executeFetch");
 
 				if (association.ParentAssociation != null && association.ParentAssociation.Cardinality == Cardinality.Many) {
 					code.writeLine("All();");
 				} else {
 					code.writeLine("();");
 				}
-
-				code.endBlock("}").writeLine();
+				code.endBlock("} catch {").beginBlock("").writeLine();
+				code.writeLine("//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.");
+				code.write("_").write(association.Member).writeLine(" = null;");
+				code.endBlock("}").writeLine(); // Try/Catch
+				code.endBlock("}").writeLine(); // If
 				code.write("return _").write(association.Member).writeLine(";");
-				code.endBlock("}").writeLine();
-				code.endBlock("}").writeLine();
+				code.endBlock("}").writeLine(); // Get
+				code.endBlock("}").writeLine(); // Property
 				code.writeLine();
 			});
-
+			/*
+			 * } catch (Exception e ) {
+				throw new InvalidOperationException("SQL operations are not allowed outside of the Database Context.", e);
+			}
+			 * */
 
 			// Constructors
 			code.write("public ").write(_db_table.Name).writeLine("() : this(null, null) { }");
@@ -138,7 +146,6 @@ namespace DtxModelGen.CodeGen {
 			code.writeLine();
 			code.writeLine("int length = reader.FieldCount;");
 			code.beginBlock("for (int i = 0; i < length; i++) {").writeLine();
-			code.writeLine("object value = reader.GetValue(i);");
 			code.beginBlock("switch (reader.GetName(i)) {").writeLine();
 			// Read fields
 
@@ -158,6 +165,11 @@ namespace DtxModelGen.CodeGen {
 					case "system.char":
 					case "char":
 						get_value_type = "GetChar";
+						break;
+
+					case "system.datetime":
+					case "datetime":
+						get_value_type = "GetDateTime";
 						break;
 
 					case "system.decimal":
@@ -195,6 +207,8 @@ namespace DtxModelGen.CodeGen {
 					case "system.uint64":
 						throw new NotImplementedException("Unsigned inttegers are not handled at this time.");
 				}
+
+				
 
 				code.write("case \"").write(column.Name).write("\": _").write(column.Member).write(" = ");
 				if (get_value_type != null) {

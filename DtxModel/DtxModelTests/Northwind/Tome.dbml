@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database ContextNamespace="DtxModelTests.Tome" Class="TomeContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="" Member="Volumes">
+    <Type Name="Volumes">
+      <Column Name="rowid" AutoSync="Never" Type="System.Int32" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="number" Storage="_Number" Type="System.Int32" CanBeNull="false" />
+      <Column Name="description" Storage="_Description" Type="System.String" CanBeNull="false" IsDelayLoaded="true" />
+      <Column Name="Manga_rowid" Storage="_MangaRowid" Type="System.Int32" CanBeNull="false" />
+      <Association Name="Volumes_Pages" Member="Pages" ThisKey="rowid" OtherKey="Volumes_rowid" Type="Pages" />
+      <Association Name="Manga_Volumes" Member="Manga" Storage="_MangaModel" ThisKey="Manga_rowid" OtherKey="rowid" Type="Manga" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="Manga">
+    <Type Name="Manga">
+      <Column Name="rowid" AutoSync="Never" Type="System.Int32" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="status_enum" Member="StatusEnum" Storage="_Status" Type="System.Int32" CanBeNull="false" />
+      <Column Name="last_updated" Member="LastUpdated" Type="System.DateTime" CanBeNull="false" />
+      <Column Name="total_volumes_released" Member="TotalVolumesReleased" Type="System.Int32" CanBeNull="false" />
+      <Column Name="manga_updates_id" Member="MangaUpdatesId" Type="System.Int32" CanBeNull="false" />
+      <Column Name="year_released" Member="YearReleased" Type="System.Int32" CanBeNull="false" />
+      <Column Name="description" Member="Description" Type="System.String" CanBeNull="false" />
+      <Association Name="Manga_Volumes" Member="VolumesModels" ThisKey="rowid" OtherKey="Manga_rowid" Type="Volumes" />
+      <Association Name="Manga_MangaGenres" Member="MangaGenres" ThisKey="rowid" OtherKey="MangaRowid" Type="MangaGenres" />
+      <Association Name="Manga_MangaCategories" Member="MangaCategories" ThisKey="rowid" OtherKey="MangaRowid" Type="MangaCategories" />
+      <Association Name="Manga_MangaPeople" Member="MangaPeople" ThisKey="rowid" OtherKey="MangaRowid" Type="MangaPeople" />
+      <Association Name="Manga_MangaTitles" Member="MangaTitles" ThisKey="rowid" OtherKey="MangaRowid" Type="MangaTitles" Cardinality="One" />
+    </Type>
+  </Table>
+  <Table Name="" Member="Tags">
+    <Type Name="Tags">
+      <Column Name="rowid" AutoSync="Never" Type="System.Int32" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="value" Member="Value" Storage="_Tag" Type="System.String" CanBeNull="false" />
+      <Association Name="PageTags_Tags" Member="PageTags" ThisKey="rowid" OtherKey="TagsRowid" Type="PageTags" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="PageTags">
+    <Type Name="PageTags">
+      <Column Name="rowid" AutoSync="Never" Type="System.Int32" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Pages_rowid" Member="PagesRowid" Type="System.Int32" CanBeNull="false" />
+      <Column Name="Tags_rowid" Member="TagsRowid" Type="System.Int32" CanBeNull="false" />
+      <Association Name="PageTags_Tags" Member="Tags" ThisKey="TagsRowid" OtherKey="rowid" Type="Tags" Cardinality="One" />
+      <Association Name="Pages_PageTags" Member="Pages" ThisKey="PagesRowid" OtherKey="rowid" Type="Pages" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="Pages">
+    <Type Name="Pages">
+      <Column Name="rowid" AutoSync="Never" Type="System.Int32" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Files_rowid" Storage="_FilesRowid" Type="System.Int32" CanBeNull="false" />
+      <Column Name="Volumes_rowid" Storage="_VolumesRowid" Type="System.Int32" CanBeNull="false" />
+      <Association Name="Pages_PageTags" Member="PageTags" ThisKey="rowid" OtherKey="PagesRowid" Type="PageTags" />
+      <Association Name="Volumes_Pages" Member="Volume" Storage="_Volumes" ThisKey="Volumes_rowid" OtherKey="rowid" Type="Volumes" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="Genres">
+    <Type Name="Genres">
+      <Column Name="rowid" AutoSync="Never" Type="System.Int32" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="value" Storage="_Value" Type="System.String" CanBeNull="false" />
+      <Association Name="MangaGenres_Genres" Member="MangaGenres" ThisKey="rowid" OtherKey="GenresRowid" Type="MangaGenres" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="MangaGenres">
+    <Type Name="MangaGenres">
+      <Column Name="rowid" AutoSync="Never" Type="System.Int32" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Manga_rowid" Member="MangaRowid" Storage="_PagesRowid" Type="System.Int32" CanBeNull="false" />
+      <Column Name="Genres_rowid" Member="GenresRowid" Storage="_TagsRowid" Type="System.Int32" CanBeNull="false" />
+      <Association Name="MangaGenres_Genres" Member="Genres" ThisKey="GenresRowid" OtherKey="rowid" Type="Genres" />
+      <Association Name="Manga_MangaGenres" Member="Manga" ThisKey="MangaRowid" OtherKey="rowid" Type="Manga" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="Categories">
+    <Type Name="Categories">
+      <Column Name="rowid" AutoSync="Never" Type="System.Int32" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="value" Storage="_Value" Type="System.String" CanBeNull="false" />
+      <Association Name="MangaCategories_Categories" Member="MangaCategories" ThisKey="rowid" OtherKey="CategoriesRowid" Type="MangaCategories" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="MangaCategories">
+    <Type Name="MangaCategories">
+      <Column Name="rowid" AutoSync="Never" Type="System.Int32" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Manga_rowid" Member="MangaRowid" Storage="_PagesRowid" Type="System.Int32" CanBeNull="false" />
+      <Column Name="Categories_rowid" Member="CategoriesRowid" Storage="_TagsRowid" Type="System.Int32" CanBeNull="false" />
+      <Association Name="MangaCategories_Categories" Member="Categories" ThisKey="CategoriesRowid" OtherKey="rowid" Type="Categories" />
+      <Association Name="Manga_MangaCategories" Member="Manga" ThisKey="MangaRowid" OtherKey="rowid" Type="Manga" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="People">
+    <Type Name="People">
+      <Column Name="rowid" AutoSync="Never" Type="System.Int32" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="first_name" Member="Name" Storage="_Value" Type="System.String" CanBeNull="false" />
+      <Association Name="MangaPeople_People" Member="MangaPeople" ThisKey="rowid" OtherKey="PeopleRowid" Type="MangaPeople" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="MangaPeople">
+    <Type Name="MangaPeople">
+      <Column Name="rowid" AutoSync="Never" Type="System.Int32" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="People_rowid" Member="PeopleRowid" Storage="_PagesRowid" Type="System.Int32" CanBeNull="false" />
+      <Column Name="Manga_rowid" Member="MangaRowid" Storage="_TagsRowid" Type="System.Int32" CanBeNull="false" />
+      <Column Name="is_artist" Member="IsArtist" Type="System.Boolean" CanBeNull="false" />
+      <Column Name="is_author" Member="IsAuthor" Type="System.Boolean" CanBeNull="false" />
+      <Association Name="MangaPeople_People" Member="People" ThisKey="PeopleRowid" OtherKey="rowid" Type="People" />
+      <Association Name="Manga_MangaPeople" Member="Manga" ThisKey="MangaRowid" OtherKey="rowid" Type="Manga" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="" Member="MangaTitles">
+    <Type Name="MangaTitles">
+      <Column Name="rowid" AutoSync="Never" Type="System.Int32" IsReadOnly="true" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Manga_rowid" Member="MangaRowid" Storage="_TagsRowid" Type="System.Int32" CanBeNull="false" />
+      <Column Name="name" Member="Value" Type="System.String" CanBeNull="false" />
+      <Column Name="is_primary" Member="IsPrimary" Type="System.Boolean" CanBeNull="false" />
+      <Association Name="Manga_MangaTitles" Member="Manga" ThisKey="MangaRowid" OtherKey="rowid" Type="Manga" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

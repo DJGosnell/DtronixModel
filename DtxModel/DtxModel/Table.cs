@@ -11,7 +11,11 @@ namespace DtxModel {
 
 
 		public SqlStatement<T> select(string select = "rowid, *") {
-			return new SqlStatement<T>(SqlStatement<T>.Mode.Select, context).select(select);
+			try {
+				return new SqlStatement<T>(SqlStatement<T>.Mode.Select, context).select(select);
+			} catch (Exception e) {
+				throw new InvalidOperationException("SQL operations are not allowed outside of the Database Context.", e);
+			}
 		}
 
 		public void insert(T model) {
@@ -19,7 +23,11 @@ namespace DtxModel {
 		}
 
 		public void insert(T[] model) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Insert, context).insert(model);
+			try {
+				new SqlStatement<T>(SqlStatement<T>.Mode.Insert, context).insert(model);
+			} catch (Exception e) {
+				throw new InvalidOperationException("SQL operations are not allowed outside of the Database Context.", e);
+			}
 		}
 
 		public void update(T model) {
@@ -27,7 +35,11 @@ namespace DtxModel {
 		}
 
 		public void update(T[] model) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Update, context).update(model);
+			try {
+				new SqlStatement<T>(SqlStatement<T>.Mode.Update, context).update(model);
+			} catch (Exception e) {
+				throw new InvalidOperationException("SQL operations are not allowed outside of the Database Context.", e);
+			}
 		}
 
 		public void delete(T model) {
@@ -35,7 +47,11 @@ namespace DtxModel {
 		}
 
 		public void delete(T[] models) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Delete, context).delete(models);
+			try {
+				new SqlStatement<T>(SqlStatement<T>.Mode.Delete, context).delete(models);
+			} catch (Exception e) {
+				throw new InvalidOperationException("SQL operations are not allowed outside of the Database Context.", e);
+			}
 		}
 
 		public Table(Context context) {

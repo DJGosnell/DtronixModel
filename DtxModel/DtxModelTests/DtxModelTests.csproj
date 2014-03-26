@@ -54,6 +54,9 @@
     <Compile Include="Northwind\Northwind.cs">
       <DependentUpon>Northwind.dbml</DependentUpon>
     </Compile>
+    <Compile Include="Northwind\Tome.cs">
+      <DependentUpon>Tome.dbml</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -67,6 +70,12 @@
     </None>
     <None Include="Northwind\northwind.sqlite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Northwind\Tome.dbml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Northwind\Tome.dbml.layout">
+      <DependentUpon>Tome.dbml</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>

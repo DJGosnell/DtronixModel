@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DtxModelTests.Northwind;
+using DtxModelTests.Tome;
 
 namespace DtxModelTests {
     class Program {
@@ -14,8 +15,15 @@ namespace DtxModelTests {
 			insertTests();
         }
 
+		static Process proc = Process.GetCurrentProcess();
+
 		static void insertTests() {
-			
+
+			TomeContext.DefaultConnection = () => {
+				var connection = new SQLiteConnection(@"Data Source=C:\Users\mepengadmin\Desktop\Tome.db;Version=3;");
+				connection.Open();
+				return connection;
+			};
 			
 			NorthwindContext.DefaultConnection = () => {
 				var connection = new SQLiteConnection(@"Data Source=Northwind/northwind.sqlite;Version=3;");
@@ -28,6 +36,11 @@ namespace DtxModelTests {
 					context.Customers.select().limit(1).executeFetchAll();
 				}
 			});
+
+			using (var context = new TomeContext()) {
+				var result = context.Manga.select().executeFetch();
+				var r = result.MangaTitles;
+			}
 
 
 			/*
@@ -133,13 +146,30 @@ namespace DtxModelTests {
 					//result[52]
 				}
 			});*/
-		
 
 
-
-			timeFunc("Selects in new contexts", 100, () => {
+			timeFunc("Manual Select", () => {
 				using (var context = new NorthwindContext()) {
-					var results = context.Customers.select().executeFetchAll();
+					List<object> rows = new List<object>();
+					context.queryRead("SELECT *, rowid FROM Customers LIMIT 1000", null, (reader) => {
+						while(reader.Read()){
+							object[] values = new object[reader.FieldCount];
+							reader.GetValues(values);
+							rows.Add(values);
+						}
+					});
+
+					//result[52]
+				}
+			});
+
+			Customers[] custs = new Customers[] {};
+
+			timeFunc("Selects in new contexts", () => {
+				using (var context = new NorthwindContext()) {
+					custs = context.Customers.select().limit(1000).executeFetchAll();
+					//var test = results.Customers;
+					/*var results = context.Customers.select().limit(1000, 2526).executeFetchAll();*/
 					/*foreach (var result in results) {
 						var test = result.Category;
 					}*/
@@ -156,6 +186,13 @@ namespace DtxModelTests {
 					//result[52]
 				}
 			});
+
+			foreach (var cus in custs) {
+				var test = cus.Category;
+			}
+		
+
+
 
 			
 		
@@ -188,13 +225,16 @@ namespace DtxModelTests {
 			if (text != null) {
 				Console.Write(text + "...");
 			}
+			proc.Refresh();
+			long start_memory = proc.PrivateMemorySize64;
+
 			var sw = Stopwatch.StartNew();
-
 			action();
-
 			sw.Stop();
+
 			if (text != null) {
-				Console.WriteLine(" Total Time " + sw.ElapsedMilliseconds + "ms.");
+				proc.Refresh();
+				Console.WriteLine(" Total Time " + sw.ElapsedMilliseconds + "ms.  Total Bytes Used: " + (proc.PrivateMemorySize64 - start_memory).ToString());
 			}
 			return sw.ElapsedMilliseconds;
 		}

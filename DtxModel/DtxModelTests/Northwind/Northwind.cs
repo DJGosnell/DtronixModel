@@ -181,7 +181,12 @@ namespace DtxModelTests.Northwind {
 		public Categories Category {
 			get {
 				if(_Category == null){ 
-					_Category = ((NorthwindContext)context).Categories.select().whereIn("CategoryID", Categories_rowid).executeFetch();
+					try {
+						_Category = ((NorthwindContext)context).Categories.select().whereIn("CategoryID", Categories_rowid).executeFetch();
+					} catch {
+						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+						_Category = null;
+					}
 				}
 				return _Category;
 			}
@@ -334,7 +339,12 @@ namespace DtxModelTests.Northwind {
 		public Customers[] Customers {
 			get {
 				if(_Customers == null){ 
-					_Customers = ((NorthwindContext)context).Customers.select().whereIn("Categories_rowid", CategoryID).executeFetchAll();
+					try {
+						_Customers = ((NorthwindContext)context).Customers.select().whereIn("Categories_rowid", CategoryID).executeFetchAll();
+					} catch {
+						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+						_Customers = null;
+					}
 				}
 				return _Customers;
 			}

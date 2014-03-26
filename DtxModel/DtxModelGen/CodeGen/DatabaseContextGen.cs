@@ -32,7 +32,7 @@ namespace DtxModelGen.CodeGen {
 			code.writeLine("using System.Collections.Generic;");
 			code.writeLine("using DtxModel;");
 			code.writeLine();
-			code.beginBlock("namespace ").write(_ns).writeLine(" {");
+			code.beginBlock("namespace ").write(_database.ContextNamespace).writeLine(" {");
 			code.writeLine();
 			code.beginBlock("public class ").write(_database.Class).writeLine(" : Context {");
 			code.writeLine("private static Func<DbConnection> _default_connection = null;");
@@ -56,7 +56,7 @@ namespace DtxModelGen.CodeGen {
 				code.write("_").write(table.Name).write(" = new Table<").write(table.Name).writeLine(">(this);");
 				code.endBlock("}").writeLine();
 				code.writeLine();
-				code.write("return _").write(table.Name).write(";");
+				code.write("return _").write(table.Name).writeLine(";");
 				code.endBlock("}").writeLine();
 				code.endBlock("}").writeLine();
 				code.writeLine();
