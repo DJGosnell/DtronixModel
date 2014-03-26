@@ -21,7 +21,7 @@ namespace DtxModelTests.Northwind {
 		public Table<Customers> Customers {
 			get {
 				if(_Customers == null) {
-					_Customers = new Table<Customers>(connection);
+					_Customers = new Table<Customers>(this);
 				}
 
 				return _Customers;}
@@ -32,7 +32,7 @@ namespace DtxModelTests.Northwind {
 		public Table<Categories> Categories {
 			get {
 				if(_Categories == null) {
-					_Categories = new Table<Categories>(connection);
+					_Categories = new Table<Categories>(this);
 				}
 
 				return _Categories;}
@@ -147,13 +147,13 @@ namespace DtxModelTests.Northwind {
 			}
 		}
 
-		private bool _phoneChanged = false;
-		private System.String _phone;
-		public System.String phone {
-			get { return _phone; }
+		private bool _PhoneChanged = false;
+		private System.String _Phone;
+		public System.String Phone {
+			get { return _Phone; }
 			set {
-				_phone = value;
-				_phoneChanged = true;
+				_Phone = value;
+				_PhoneChanged = true;
 			}
 		}
 
@@ -177,14 +177,24 @@ namespace DtxModelTests.Northwind {
 			}
 		}
 
-		public Customers() : this(null, null) { }
-
-		public Customers(DbDataReader reader, DbConnection connection) {
-			read(reader, connection);
+		private Categories _Category;
+		public Categories Category {
+			get {
+				if(_Category == null){ 
+					Category = ((NorthwindContext)context).Categories.select().whereIn("rowid", Categories_rowid).executeFetch();
+				}
+				return _Category;
+			}
 		}
 
-		public override void read(DbDataReader reader, DbConnection connection) {
-			this.connection = connection;
+		public Customers() : this(null, null) { }
+
+		public Customers(DbDataReader reader, Context context) {
+			read(reader, context);
+		}
+
+		public override void read(DbDataReader reader, Context context) {
+			this.context = context;
 			if (reader == null) { return; }
 
 			int length = reader.FieldCount;
@@ -200,7 +210,7 @@ namespace DtxModelTests.Northwind {
 					case "Region": _Region = reader.GetValue(i) as System.String; break;
 					case "PostalCode": _PostalCode = reader.GetValue(i) as System.String; break;
 					case "Country": _Country = reader.GetValue(i) as System.String; break;
-					case "phone": _phone = reader.GetValue(i) as System.String; break;
+					case "Phone": _Phone = reader.GetValue(i) as System.String; break;
 					case "Fax": _Fax = reader.GetValue(i) as System.String; break;
 					case "Categories_rowid": _Categories_rowid = (System.Int64)reader.GetValue(i); break;
 					default: break;
@@ -228,8 +238,8 @@ namespace DtxModelTests.Northwind {
 				changed.Add("PostalCode", _PostalCode);
 			if (_CountryChanged)
 				changed.Add("Country", _Country);
-			if (_phoneChanged)
-				changed.Add("phone", _phone);
+			if (_PhoneChanged)
+				changed.Add("Phone", _Phone);
 			if (_FaxChanged)
 				changed.Add("Fax", _Fax);
 			if (_Categories_rowidChanged)
@@ -249,7 +259,7 @@ namespace DtxModelTests.Northwind {
 				_Region,
 				_PostalCode,
 				_Country,
-				_phone,
+				_Phone,
 				_Fax,
 				_Categories_rowid,
 			};
@@ -266,7 +276,7 @@ namespace DtxModelTests.Northwind {
 				"Region",
 				"PostalCode",
 				"Country",
-				"phone",
+				"Phone",
 				"Fax",
 				"Categories_rowid",
 			};
@@ -276,7 +286,7 @@ namespace DtxModelTests.Northwind {
 			return "rowid";
 		}
 
-		public override System.Int64 getPKValue() {
+		public override object getPKValue() {
 			return _rowid;
 		}
 
@@ -329,14 +339,24 @@ namespace DtxModelTests.Northwind {
 			}
 		}
 
-		public Categories() : this(null, null) { }
-
-		public Categories(DbDataReader reader, DbConnection connection) {
-			read(reader, connection);
+		private Customers _Customers;
+		public Customers Customers {
+			get {
+				if(_Customers == null){ 
+					Customers = ((NorthwindContext)context).Customers.select().whereIn("Categories_rowid", rowid).executeFetch();
+				}
+				return _Customers;
+			}
 		}
 
-		public override void read(DbDataReader reader, DbConnection connection) {
-			this.connection = connection;
+		public Categories() : this(null, null) { }
+
+		public Categories(DbDataReader reader, Context context) {
+			read(reader, context);
+		}
+
+		public override void read(DbDataReader reader, Context context) {
+			this.context = context;
 			if (reader == null) { return; }
 
 			int length = reader.FieldCount;
@@ -388,7 +408,7 @@ namespace DtxModelTests.Northwind {
 			return "rowid";
 		}
 
-		public override System.Int64 getPKValue() {
+		public override object getPKValue() {
 			return _rowid;
 		}
 

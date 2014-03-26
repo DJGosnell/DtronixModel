@@ -1,29 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Class="NorthwindContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="Customers">
     <Type Name="Customers">
-      <Column Name="rowid" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="CustomerID" Type="System.String" CanBeNull="false" />
-      <Column Name="CompanyName" Type="System.String" CanBeNull="false" />
-      <Column Name="ContactName" Type="System.String" CanBeNull="false" />
-      <Column Name="ContactTitle" Type="System.String" CanBeNull="false" />
-      <Column Name="Address" Type="System.String" CanBeNull="false" />
-      <Column Name="City" Type="System.String" CanBeNull="false" />
-      <Column Name="Region" Type="System.String" CanBeNull="false" />
-      <Column Name="PostalCode" Type="System.String" CanBeNull="false" />
-      <Column Name="Country" Type="System.String" CanBeNull="false" />
-      <Column Name="phone" Member="Phone" Type="System.String" CanBeNull="false" />
-      <Column Name="Fax" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="rowid" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="" Member="CustomerID" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="CompanyName" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="ContactName" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="ContactTitle" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="Address" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="City" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="Region" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="PostalCode" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="Country" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="Phone" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="Fax" Type="System.String" CanBeNull="false" />
       <Column Name="" Member="Categories_rowid" Type="System.Int64" CanBeNull="false" />
-      <Association Name="Customers_Categories" Member="Category" ThisKey="Categories_rowid" OtherKey="rowid" Type="Categories" />
+      <Association Name="Customers_Categories" Member="Category" ThisKey="Categories_rowid" OtherKey="rowid" Type="Categories" Cardinality="One" />
     </Type>
   </Table>
   <Table Name="Categories">
     <Type Name="Categories">
-      <Column Name="rowid" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="CategoryID" Type="System.Int32" CanBeNull="false" />
-      <Column Name="CategoryName" Type="System.String" CanBeNull="false" />
-      <Column Name="Description" Type="System.String" CanBeNull="false" />
-      <Column Name="Picture" Type="System.Byte[]" CanBeNull="false" />
+      <Column Name="" Member="rowid" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="" Member="CategoryID" Type="System.Int32" CanBeNull="false" />
+      <Column Name="" Member="CategoryName" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="Description" Type="System.String" CanBeNull="false" />
+      <Column Name="" Member="Picture" Type="System.Byte[]" CanBeNull="false" />
       <Association Name="Customers_Categories" Member="Customers" ThisKey="rowid" OtherKey="Categories_rowid" Type="Customers" IsForeignKey="true" />
     </Type>
   </Table>

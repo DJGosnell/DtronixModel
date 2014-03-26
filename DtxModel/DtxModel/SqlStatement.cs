@@ -26,7 +26,7 @@ namespace DtxModel {
 		}
 
 
-		public DbConnection connection;
+		public Context context;
 		public DbCommand command;
 
 		private Mode mode;
@@ -45,10 +45,10 @@ namespace DtxModel {
 
 		//public SqlStatement(Mode mode) : this(mode, null) { }
 
-		public SqlStatement(Mode mode, DbConnection connection) {
-			this.connection = connection;
+		public SqlStatement(Mode mode, Context context) {
+			this.context = context;
 			this.mode = mode;
-			command = connection.CreateCommand();
+			command = context.connection.CreateCommand();
 
 			try {
 				table_name = AttributeCache<T, TableAttribute>.getAttribute().Name;
@@ -292,7 +292,7 @@ namespace DtxModel {
 			}
 
 			if (mode == Mode.Update) {
-				using (var transaction = connection.BeginTransaction()) {
+				using (var transaction = context.connection.BeginTransaction()) {
 
 					for (int i = 0; i < sql_models.Length; i++) {
 						where(sql_models[i]);
@@ -335,7 +335,7 @@ namespace DtxModel {
 				}
 
 				model = new T();
-				model.read(reader, connection);
+				model.read(reader, context);
 			}
 
 			if (_auto_close_command) {
@@ -360,7 +360,7 @@ namespace DtxModel {
 			using (var reader = command.ExecuteReader()) {
 				while (reader.Read()) {
 					T model = new T();
-					model.read(reader, connection);
+					model.read(reader, context);
 					results.Add(model);
 				}
 			}
@@ -523,7 +523,7 @@ namespace DtxModel {
 
 
 			// Start a transaction to enable for fast bulk inserts.
-			using (var transaction = connection.BeginTransaction()) {
+			using (var transaction = context.connection.BeginTransaction()) {
 
 				try {
 

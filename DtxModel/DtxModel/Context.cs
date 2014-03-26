@@ -52,7 +52,7 @@ namespace DtxModel {
 		/// <param name="binding">Parameters to replace the string.format placeholders with.</param>
 		/// <returns>The number of rows affected.</returns>
 		public int query(string sql, params object[] binding) {
-			return new SqlStatement<Model>(SqlStatement<Model>.Mode.Execute, connection).query(sql, binding);
+			return new SqlStatement<Model>(SqlStatement<Model>.Mode.Execute, this).query(sql, binding);
 		}
 
 		/// <summary>
@@ -64,7 +64,7 @@ namespace DtxModel {
 		/// <param name="on_read">Called when the query has been executed and reader created.</param>
 		/// <returns>The number of rows affected.</returns>
 		public void queryRead(string sql, object[] binding, Action<DbDataReader> on_read) {
-			new SqlStatement<Model>(SqlStatement<Model>.Mode.Execute, connection).queryRead(sql, binding, on_read);
+			new SqlStatement<Model>(SqlStatement<Model>.Mode.Execute, this).queryRead(sql, binding, on_read);
 		}
 
 		/// <summary>

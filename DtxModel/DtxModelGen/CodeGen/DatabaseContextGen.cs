@@ -53,7 +53,7 @@ namespace DtxModelGen.CodeGen {
 				code.beginBlock("public Table<").write(table.Name).write("> ").write(table.Name).writeLine(" {");
 				code.beginBlock("get {").writeLine();
 				code.beginBlock("if(_").write(table.Name).writeLine(" == null) {");
-				code.write("_").write(table.Name).write(" = new Table<").write(table.Name).writeLine(">(connection);");
+				code.write("_").write(table.Name).write(" = new Table<").write(table.Name).writeLine(">(this);");
 				code.endBlock("}").writeLine();
 				code.writeLine();
 				code.write("return _").write(table.Name).write(";");

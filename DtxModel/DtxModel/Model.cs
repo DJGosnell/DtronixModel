@@ -12,12 +12,13 @@ namespace DtxModel {
 	[TableAttribute(Name = null)]
 	public class Model {
 
-		protected DbConnection connection;
+		protected Context context;
 
 		public Model() { }
 
-		public virtual void read(DbDataReader reader, DbConnection connection) { }
-
+		public virtual void read(DbDataReader reader, Context context) {
+			this.context = context;
+		}
 
 		public virtual Dictionary<string, object> getChangedValues() {
 			return null;

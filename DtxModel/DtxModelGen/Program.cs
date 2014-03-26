@@ -51,6 +51,7 @@ namespace DtxModelGen {
 
 			table_code_writer.Transformer = new Sqlite.SqliteTypeTransformer();
 			table_code_writer.Ns = options.CodeNamespace;
+			table_code_writer.Database = database;
 
 			using (var fs = new FileStream(options.CodeOutput, FileMode.Create)) {
 				using (var sw = new StreamWriter(fs)) {
@@ -104,6 +105,20 @@ namespace DtxModelGen {
 
 						if (column.IsPrimaryKeySpecified == false) {
 							column.IsPrimaryKey = false;
+						}
+
+					}else if (item is Association) {
+						var association = item as Association;
+
+						if (association.IsForeignKeySpecified == false) {
+							association.IsForeignKey = false;
+						}
+	
+						if (association.CardinalitySpecified == false && association.IsForeignKey == false) {
+							association.Cardinality = Cardinality.Many;
+							association.Type += "[]";
+						} else {
+							association.Cardinality = Cardinality.One;
 						}
 					}
 				}

@@ -138,8 +138,12 @@ namespace DtxModelTests {
 
 			timeFunc("Selects in new contexts", () => {
 				using (var context = new NorthwindContext()) {
-					var results = context.Customers.select().whereIn("rowid", new int[] { 1, 2, 5, 6 });
+					var results = context.Customers.select().whereIn("rowid", new object[] { 1, 2, 5, 6 }).executeFetchAll();
 
+
+					foreach (var result in results) {
+						var test = result.Category;
+					}
 
 					//context.Customers.delete(results);
 					/*foreach (var row in results) {
@@ -153,6 +157,8 @@ namespace DtxModelTests {
 					//result[52]
 				}
 			});
+
+			
 		
 
 

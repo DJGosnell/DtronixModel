@@ -7,11 +7,11 @@ using System.Data.Common;
 
 namespace DtxModel {
 	public class Table<T> where T : Model, new() {
-		private DbConnection connection;
+		private Context context;
 
 
 		public SqlStatement<T> select(string select = "*, rowid") {
-			return new SqlStatement<T>(SqlStatement<T>.Mode.Select, connection).select(select);
+			return new SqlStatement<T>(SqlStatement<T>.Mode.Select, context).select(select);
 		}
 
 		public void insert(T model) {
@@ -19,7 +19,7 @@ namespace DtxModel {
 		}
 
 		public void insert(T[] model) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Insert, connection).insert(model);
+			new SqlStatement<T>(SqlStatement<T>.Mode.Insert, context).insert(model);
 		}
 
 		public void update(T model) {
@@ -27,7 +27,7 @@ namespace DtxModel {
 		}
 
 		public void update(T[] model) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Update, connection).update(model);
+			new SqlStatement<T>(SqlStatement<T>.Mode.Update, context).update(model);
 		}
 
 		public void delete(T model) {
@@ -35,11 +35,11 @@ namespace DtxModel {
 		}
 
 		public void delete(T[] models) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Delete, connection).delete(models);
+			new SqlStatement<T>(SqlStatement<T>.Mode.Delete, context).delete(models);
 		}
 
-		public Table(DbConnection connection) {
-			this.connection = connection;
+		public Table(Context context) {
+			this.context = context;
 		}
 	}
 }
