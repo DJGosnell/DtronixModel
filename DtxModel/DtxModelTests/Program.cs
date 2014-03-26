@@ -45,7 +45,8 @@ namespace DtxModelTests {
 					Fax = rand.Next(600000).ToString(),
 					Phone = rand.Next(600000).ToString(),
 					PostalCode = rand.Next(600000).ToString(),
-					Region = rand.Next(600000).ToString()
+					Region = rand.Next(600000).ToString(),
+					Categories_rowid = 4
 				};
 
 			}
@@ -136,14 +137,12 @@ namespace DtxModelTests {
 
 
 
-			timeFunc("Selects in new contexts", () => {
+			timeFunc("Selects in new contexts", 100, () => {
 				using (var context = new NorthwindContext()) {
-					var results = context.Customers.select().whereIn("rowid", new object[] { 1, 2, 5, 6 }).executeFetchAll();
-
-
-					foreach (var result in results) {
+					var results = context.Customers.select().executeFetchAll();
+					/*foreach (var result in results) {
 						var test = result.Category;
-					}
+					}*/
 
 					//context.Customers.delete(results);
 					/*foreach (var row in results) {

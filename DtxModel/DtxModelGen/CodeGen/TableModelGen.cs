@@ -94,21 +94,21 @@ namespace DtxModelGen.CodeGen {
 			each<Association>(association => {
 
 				string field_type = association.Type;
-				if (association.Cardinality == Cardinality.Many) {
+				if (association.ParentAssociation != null && association.ParentAssociation.Cardinality == Cardinality.Many) {
 					field_type += "[]";
 				}
 
 				// Caching Field Value
 				code.write("private ").write(field_type).write(" _").write(association.Member).writeLine(";");
 
-				// Property
+				// Association Property
 				code.beginBlock("public ").write(field_type).write(" ").write(association.Member).writeLine(" {");
 				code.beginBlock("get {").writeLine();
 				code.beginBlock("if(_").write(association.Member).writeLine(" == null){ ");
 				code.write("_").write(association.Member).write(" = ((").write(_database.Class).write(")context).")
 					.write(association.Type).write(".select().whereIn(\"").write(association.OtherKey).write("\", ").write(association.ThisKey).write(").executeFetch");
 
-				if (association.Cardinality == Cardinality.Many) {
+				if (association.ParentAssociation != null && association.ParentAssociation.Cardinality == Cardinality.Many) {
 					code.writeLine("All();");
 				} else {
 					code.writeLine("();");
@@ -138,27 +138,68 @@ namespace DtxModelGen.CodeGen {
 			code.writeLine();
 			code.writeLine("int length = reader.FieldCount;");
 			code.beginBlock("for (int i = 0; i < length; i++) {").writeLine();
+			code.writeLine("object value = reader.GetValue(i);");
 			code.beginBlock("switch (reader.GetName(i)) {").writeLine();
 			// Read fields
+
 			each<Column>(column => {
-				bool hard_cast = false;
+				string get_value_type = null;
 				switch (column.Type.ToLower()) {
+					case "system.boolean":
+					case "bool":
+						get_value_type = "GetBoolean";
+						break;
+
+					case "system.byte":
+					case "byte":
+						get_value_type = "GetByte";
+						break;
+
+					case "system.char":
+					case "char":
+						get_value_type = "GetChar";
+						break;
+
+					case "system.decimal":
+					case "decimal":
+						get_value_type = "GetDouble";
+						break;
+
+					case "system.double":
+					case "double":
+						get_value_type = "GetDouble";
+						break;
+
+					case "system.float":
+					case "single":
+						get_value_type = "GetFloat";
+						break;
+
 					case "system.int16":
+					case "short":
+						get_value_type = "GetInt16";
+						break;
+
 					case "system.int32":
+					case "int":
+						get_value_type = "GetInt32";
+						break;
+
 					case "system.int64":
+					case "long":
+						get_value_type = "GetInt64";
+						break;
+
 					case "system.uint16":
 					case "system.uint32":
 					case "system.uint64":
-					case "short":
-					case "int":
-					case "long":
-						hard_cast = true;
-						break;
+						throw new NotImplementedException("Unsigned inttegers are not handled at this time.");
 				}
 
 				code.write("case \"").write(column.Name).write("\": _").write(column.Member).write(" = ");
-				if (hard_cast) {
-					code.write("(").write(column.Type).write(")reader.GetValue(i)");
+				if (get_value_type != null) {
+
+					code.write("(reader.IsDBNull(i)) ? default(").write(column.Type).write(") : ").write("reader.").write(get_value_type).write("(i)");
 				} else {
 					code.write("reader.GetValue(i) as ").write(column.Type);
 				}

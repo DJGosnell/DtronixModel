@@ -10,7 +10,7 @@ namespace DtxModel {
 		private Context context;
 
 
-		public SqlStatement<T> select(string select = "*, rowid") {
+		public SqlStatement<T> select(string select = "rowid, *") {
 			return new SqlStatement<T>(SqlStatement<T>.Mode.Select, context).select(select);
 		}
 

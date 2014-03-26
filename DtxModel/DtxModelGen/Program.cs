@@ -75,6 +75,8 @@ namespace DtxModelGen {
 		}
 
 		private static bool normalizeDatabase(Database database) {
+			Dictionary<string, Association> associations = new Dictionary<string, Association>();
+	
 			foreach (var table in database.Table) {
 				foreach (var item in table.Type.Items) {
 					if (item is Column) {
@@ -110,13 +112,30 @@ namespace DtxModelGen {
 					}else if (item is Association) {
 						var association = item as Association;
 
+						association.Table = table;
+						// Determine if we already have this association in the list
+						if (associations.ContainsKey(association.Name)) {
+							var other = associations[association.Name];
+							if (other.IsForeignKeySpecified && other.IsForeignKey) {
+								other.ParentAssociation = association;
+								association.ChildAssociation = other;
+							}else {
+								other.ChildAssociation = association;
+								association.ParentAssociation = other;
+							}
+							associations.Remove(association.Name);
+
+						} else {
+							// Add the association to the list for later.
+							associations.Add(association.Name, association);
+						}
+
 						if (association.IsForeignKeySpecified == false) {
 							association.IsForeignKey = false;
 						}
 	
 						if (association.CardinalitySpecified == false && association.IsForeignKey == false) {
 							association.Cardinality = Cardinality.Many;
-							association.Type += "[]";
 						} else {
 							association.Cardinality = Cardinality.One;
 						}

@@ -181,7 +181,7 @@ namespace DtxModelTests.Northwind {
 		public Categories Category {
 			get {
 				if(_Category == null){ 
-					Category = ((NorthwindContext)context).Categories.select().whereIn("rowid", Categories_rowid).executeFetch();
+					_Category = ((NorthwindContext)context).Categories.select().whereIn("CategoryID", Categories_rowid).executeFetch();
 				}
 				return _Category;
 			}
@@ -199,8 +199,9 @@ namespace DtxModelTests.Northwind {
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
+				object value = reader.GetValue(i);
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (System.Int64)reader.GetValue(i); break;
+					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int64) : reader.GetInt64(i); break;
 					case "CustomerID": _CustomerID = reader.GetValue(i) as System.String; break;
 					case "CompanyName": _CompanyName = reader.GetValue(i) as System.String; break;
 					case "ContactName": _ContactName = reader.GetValue(i) as System.String; break;
@@ -212,7 +213,7 @@ namespace DtxModelTests.Northwind {
 					case "Country": _Country = reader.GetValue(i) as System.String; break;
 					case "Phone": _Phone = reader.GetValue(i) as System.String; break;
 					case "Fax": _Fax = reader.GetValue(i) as System.String; break;
-					case "Categories_rowid": _Categories_rowid = (System.Int64)reader.GetValue(i); break;
+					case "Categories_rowid": _Categories_rowid = (reader.IsDBNull(i)) ? default(System.Int64) : reader.GetInt64(i); break;
 					default: break;
 				}
 			}
@@ -294,19 +295,9 @@ namespace DtxModelTests.Northwind {
 
 	[TableAttribute(Name = "Categories")]
 	public class Categories : Model {
-		private System.Int64 _rowid;
-		public System.Int64 rowid {
-			get { return _rowid; }
-		}
-
-		private bool _CategoryIDChanged = false;
-		private System.Int32 _CategoryID;
-		public System.Int32 CategoryID {
+		private System.Int64 _CategoryID;
+		public System.Int64 CategoryID {
 			get { return _CategoryID; }
-			set {
-				_CategoryID = value;
-				_CategoryIDChanged = true;
-			}
 		}
 
 		private bool _CategoryNameChanged = false;
@@ -339,11 +330,11 @@ namespace DtxModelTests.Northwind {
 			}
 		}
 
-		private Customers _Customers;
-		public Customers Customers {
+		private Customers[] _Customers;
+		public Customers[] Customers {
 			get {
 				if(_Customers == null){ 
-					Customers = ((NorthwindContext)context).Customers.select().whereIn("Categories_rowid", rowid).executeFetch();
+					_Customers = ((NorthwindContext)context).Customers.select().whereIn("Categories_rowid", CategoryID).executeFetchAll();
 				}
 				return _Customers;
 			}
@@ -361,9 +352,9 @@ namespace DtxModelTests.Northwind {
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
+				object value = reader.GetValue(i);
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (System.Int64)reader.GetValue(i); break;
-					case "CategoryID": _CategoryID = (System.Int32)reader.GetValue(i); break;
+					case "CategoryID": _CategoryID = (reader.IsDBNull(i)) ? default(System.Int64) : reader.GetInt64(i); break;
 					case "CategoryName": _CategoryName = reader.GetValue(i) as System.String; break;
 					case "Description": _Description = reader.GetValue(i) as System.String; break;
 					case "Picture": _Picture = reader.GetValue(i) as System.Byte[]; break;
@@ -374,8 +365,6 @@ namespace DtxModelTests.Northwind {
 
 		public override Dictionary<string, object> getChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_CategoryIDChanged)
-				changed.Add("CategoryID", _CategoryID);
 			if (_CategoryNameChanged)
 				changed.Add("CategoryName", _CategoryName);
 			if (_DescriptionChanged)
@@ -388,7 +377,6 @@ namespace DtxModelTests.Northwind {
 
 		public override object[] getAllValues() {
 			return new object[] {
-				_CategoryID,
 				_CategoryName,
 				_Description,
 				_Picture,
@@ -397,7 +385,6 @@ namespace DtxModelTests.Northwind {
 
 		public override string[] getColumns() {
 			return new string[] {
-				"CategoryID",
 				"CategoryName",
 				"Description",
 				"Picture",
@@ -405,11 +392,11 @@ namespace DtxModelTests.Northwind {
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "CategoryID";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _CategoryID;
 		}
 
 	}
