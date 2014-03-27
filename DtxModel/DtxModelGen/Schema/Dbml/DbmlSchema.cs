@@ -32,6 +32,10 @@ namespace DtxModelGen.Schema.Dbml {
         public Table[] Table;
         
         /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("View")]
+        public View[] View;
+        
+        /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Function")]
         public Function[] Function;
         
@@ -545,6 +549,14 @@ namespace DtxModelGen.Schema.Dbml {
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool AutoSyncSpecified;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public bool Indexed;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool IndexedSpecified;
     }
     
     /// <remarks/>
@@ -774,6 +786,42 @@ namespace DtxModelGen.Schema.Dbml {
         
         /// <remarks/>
         Abstract,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
+    public partial class View {
+        
+        /// <remarks/>
+        public Type Type;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Name;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Member;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public AccessModifier AccessModifier;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool AccessModifierSpecified;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public MemberModifier Modifier;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool ModifierSpecified;
     }
     
     /// <remarks/>

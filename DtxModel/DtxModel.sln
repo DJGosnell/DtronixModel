@@ -9,9 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtxModelTests", "DtxModelTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtxModelGen", "DtxModelGen\DtxModelGen.csproj", "{F98C3A85-C1C8-40AC-B507-C7DE891560ED}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtxModeler", "DtxModeler\DtxModeler.csproj", "{F379FCAF-9830-4E3E-AF66-2B52422885A3}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://djgosnell.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -24,6 +26,9 @@ Global
 		SccProjectUniqueName3 = DtxModelGen\\DtxModelGen.csproj
 		SccProjectName3 = DtxModelGen
 		SccLocalPath3 = DtxModelGen
+		SccProjectUniqueName4 = DtxModeler\\DtxModeler.csproj
+		SccProjectName4 = DtxModeler
+		SccLocalPath4 = DtxModeler
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,6 +47,10 @@ Global
 		{F98C3A85-C1C8-40AC-B507-C7DE891560ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F98C3A85-C1C8-40AC-B507-C7DE891560ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F98C3A85-C1C8-40AC-B507-C7DE891560ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F379FCAF-9830-4E3E-AF66-2B52422885A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F379FCAF-9830-4E3E-AF66-2B52422885A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F379FCAF-9830-4E3E-AF66-2B52422885A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F379FCAF-9830-4E3E-AF66-2B52422885A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
