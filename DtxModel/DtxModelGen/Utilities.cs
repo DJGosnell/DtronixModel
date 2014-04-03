@@ -14,5 +14,13 @@ namespace DtxModelGen {
 				}
 			}
 		}
+
+		public static void each<T>(object[] values, Action<T> callback) {
+			foreach (var value in values) {
+				if (value is T) {
+					callback((T)value);
+				}
+			}
+		}
 	}
 }

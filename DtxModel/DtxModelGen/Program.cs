@@ -44,23 +44,27 @@ namespace DtxModelGen {
 				return;
 			}
 
-			var table_code_writer = new TableModelGen();
-			var database_code_writer = new DatabaseContextGen();
-			database_code_writer.DatabaseName = database;
-			database_code_writer.Ns = options.CodeNamespace;
+			var table_code_writer = new TableModelGen(database);
+			var database_code_writer = new DatabaseContextGen(database);
+			var type_transformer = new Sqlite.SqliteTypeTransformer();
 
-			table_code_writer.Transformer = new Sqlite.SqliteTypeTransformer();
-			table_code_writer.Ns = options.CodeNamespace;
-			table_code_writer.Database = database;
+			if (options.SqlOutput != null) {
+				var sql_code_writer = new SqlDatabaseGen(database, type_transformer);
+
+				using (var fs = new FileStream(options.SqlOutput, FileMode.Create)) {
+					using (var sw = new StreamWriter(fs)) {
+						sw.Write(sql_code_writer.generate());
+						sw.Flush();
+					}
+				}
+			}
 
 			using (var fs = new FileStream(options.CodeOutput, FileMode.Create)) {
 				using (var sw = new StreamWriter(fs)) {
 					sw.Write(database_code_writer.generate());
 
 					foreach (var db_table in database.Table) {
-						table_code_writer.DbTable = db_table;
-						sw.Write(table_code_writer.generate());
-						
+						sw.Write(table_code_writer.generate(db_table));
 					}
 
 					// Final closing namespace
@@ -106,7 +110,7 @@ namespace DtxModelGen {
 						}
 
 						// Default values.
-						if (column.IsReadOnlySpecified == false) {
+						/*if (column.IsReadOnlySpecified == false) {
 							column.IsReadOnly = false;
 						}
 
@@ -116,7 +120,7 @@ namespace DtxModelGen {
 
 						if (column.IsPrimaryKeySpecified == false) {
 							column.IsPrimaryKey = false;
-						}
+						}*/
 
 					}else if (item is Association) {
 						var association = item as Association;
@@ -167,9 +171,10 @@ namespace DtxModelGen {
 							associations.Add(association.Name, association);
 						}
 
+						/*
 						if (association.IsForeignKeySpecified == false) {
 							association.IsForeignKey = false;
-						}
+						}*/
 	
 						if (association.CardinalitySpecified == false && association.IsForeignKey == false) {
 							association.Cardinality = Cardinality.Many;

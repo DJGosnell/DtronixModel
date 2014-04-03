@@ -6,46 +6,15 @@ using DtxModelGen.Schema.Dbml;
 
 namespace DtxModelGen.CodeGen {
 	class TableModelGen : CodeGenerator {
-		private Table _db_table;
 
-		public Table DbTable {
-			get { return _db_table; }
-			set { _db_table = value; }
-		}
+		public TableModelGen(Database database) : base(database) { }
 
-		private Database _database;
-
-		public Database Database {
-			get { return _database; }
-			set { _database = value; }
-		}
-
-
-		private string _ns;
-
-		public string Ns {
-			get { return _ns; }
-			set { _ns = value; }
-		}
-
-		private TypeTransformer _type_transformer;
-
-		public TypeTransformer Transformer {
-			get { return _type_transformer; }
-			set { _type_transformer = value; }
-		}
-
-
-		public TableModelGen() {
-		}
-
-
-		public string generate() {
+		public string generate(Table db_table) {
 			code.clear();
 
 			Column pk_column = null;
 
-			each<Column>(column => {
+			Utilities.each<Column>(db_table.Type.Items, column => {
 				if (pk_column == null && column.IsPrimaryKey) {
 					pk_column = column;
 				}
@@ -53,11 +22,11 @@ namespace DtxModelGen.CodeGen {
 
 			code.beginBlock("").writeLine();
 			// Attributes
-			code.write("[TableAttribute(Name = \"").write(_db_table.Name).writeLine("\")]");
-			code.beginBlock("public class ").write(_db_table.Name).writeLine(" : Model {");
+			code.write("[TableAttribute(Name = \"").write(db_table.Name).writeLine("\")]");
+			code.beginBlock("public class ").write(db_table.Name).writeLine(" : Model {");
 
 			// Table Properties;
-			each<Column>(column => {
+			Utilities.each<Column>(db_table.Type.Items, column => {
 				bool read_only = false;
 
 				if (column.IsDbGenerated) {
@@ -91,7 +60,7 @@ namespace DtxModelGen.CodeGen {
 			});
 
 			// Table Associations;
-			each<Association>(association => {
+			Utilities.each<Association>(db_table.Type.Items, association => {
 
 				string field_type = association.Type;
 				if (association.ParentAssociation != null && association.ParentAssociation.Cardinality == Cardinality.Many) {
@@ -106,7 +75,7 @@ namespace DtxModelGen.CodeGen {
 				code.beginBlock("get {").writeLine();
 				code.beginBlock("if(_").write(association.Member).writeLine(" == null){ ");
 				code.beginBlock("try {").writeLine("");
-				code.write("_").write(association.Member).write(" = ((").write(_database.Class).write(")context).")
+				code.write("_").write(association.Member).write(" = ((").write(database.Class).write(")context).")
 					.write(association.Type).write(".select().whereIn(\"").write(association.OtherKeyColumn.Name).write("\", _").write(association.ThisKey).write(").executeFetch");
 
 				if (association.ParentAssociation != null && association.ParentAssociation.Cardinality == Cardinality.Many) {
@@ -131,10 +100,10 @@ namespace DtxModelGen.CodeGen {
 			 * */
 
 			// Constructors
-			code.write("public ").write(_db_table.Name).writeLine("() : this(null, null) { }");
+			code.write("public ").write(db_table.Name).writeLine("() : this(null, null) { }");
 			code.writeLine();
 
-			code.beginBlock("public ").write(_db_table.Name).writeLine("(DbDataReader reader, Context context) {");
+			code.beginBlock("public ").write(db_table.Name).writeLine("(DbDataReader reader, Context context) {");
 			code.writeLine("read(reader, context);");
 			code.endBlock("}").writeLine();
 			code.writeLine();
@@ -149,7 +118,7 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("switch (reader.GetName(i)) {").writeLine();
 			// Read fields
 
-			each<Column>(column => {
+			Utilities.each<Column>(db_table.Type.Items, column => {
 				string get_value_type = null;
 				switch (column.Type.ToLower()) {
 					case "system.boolean":
@@ -208,7 +177,7 @@ namespace DtxModelGen.CodeGen {
 						throw new NotImplementedException("Unsigned inttegers are not handled at this time.");
 				}
 
-				
+
 
 				code.write("case \"").write(column.Name).write("\": _").write(column.Member).write(" = ");
 				if (get_value_type != null) {
@@ -230,7 +199,7 @@ namespace DtxModelGen.CodeGen {
 			// getChangedValues override
 			code.beginBlock("public override Dictionary<string, object> getChangedValues() {").writeLine();
 			code.writeLine("var changed = new Dictionary<string, object>();");
-			each<Column>(column => {
+			Utilities.each<Column>(db_table.Type.Items, column => {
 				// Ignore primary keys.
 				if (column.IsPrimaryKey) {
 					return;
@@ -248,7 +217,7 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("public override object[] getAllValues() {").writeLine();
 			code.beginBlock("return new object[] {").writeLine();
 
-			each<Column>(column => {
+			Utilities.each<Column>(db_table.Type.Items, column => {
 				// Ignore primary keys.
 				if (column.IsPrimaryKey) {
 					return;
@@ -264,7 +233,7 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("public override string[] getColumns() {").writeLine();
 			code.beginBlock("return new string[] {").writeLine();
 
-			each<Column>(column => {
+			Utilities.each<Column>(db_table.Type.Items, column => {
 				// Ignore primary keys.
 				if (column.IsPrimaryKey) {
 					return;
@@ -293,14 +262,6 @@ namespace DtxModelGen.CodeGen {
 			code.endBlock("}").writeLine();
 
 			return code.ToString();
-		}
-
-		private void each<T>(Action<T> method) where T : class {
-			foreach (var item in _db_table.Type.Items) {
-				if (item is T) {
-					method(item as T);
-				}
-			}
 		}
 	}
 }

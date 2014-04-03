@@ -6,23 +6,9 @@ using DtxModelGen.Schema.Dbml;
 
 namespace DtxModelGen.CodeGen {
 	class DatabaseContextGen : CodeGenerator {
-		private string _ns;
 
-		public string Ns {
-			get { return _ns; }
-			set { _ns = value; }
+		public DatabaseContextGen(Database database) : base(database) {
 		}
-
-		private Database _database;
-
-		public Database DatabaseName {
-			get { return _database; }
-			set { _database = value; }
-		}
-
-
-		
-
 
 		public string generate() {
 			code.clear();
@@ -32,9 +18,9 @@ namespace DtxModelGen.CodeGen {
 			code.writeLine("using System.Collections.Generic;");
 			code.writeLine("using DtxModel;");
 			code.writeLine();
-			code.beginBlock("namespace ").write(_database.ContextNamespace).writeLine(" {");
+			code.beginBlock("namespace ").write(database.ContextNamespace).writeLine(" {");
 			code.writeLine();
-			code.beginBlock("public class ").write(_database.Class).writeLine(" : Context {");
+			code.beginBlock("public class ").write(database.Class).writeLine(" : Context {");
 			code.writeLine("private static Func<DbConnection> _default_connection = null;");
 			code.writeLine();
 			code.writeLine("/// <summary>");
@@ -47,7 +33,7 @@ namespace DtxModelGen.CodeGen {
 			code.writeLine();
 
 			// Table properties.
-			foreach (var table in _database.Table) {
+			foreach (var table in database.Table) {
 				code.write("private Table<").write(table.Name).write("> _").write(table.Name).writeLine(";");
 				code.writeLine();
 				code.beginBlock("public Table<").write(table.Name).write("> ").write(table.Name).writeLine(" {");
@@ -66,14 +52,14 @@ namespace DtxModelGen.CodeGen {
 			code.writeLine("/// <summary>");
 			code.writeLine("/// Create a new context of this database's type.  Can only be used if a default connection is specified.");
 			code.writeLine("/// </summary>");
-			code.write("public ").write(_database.Class).writeLine("() : base(_default_connection) { }");
+			code.write("public ").write(database.Class).writeLine("() : base(_default_connection) { }");
 			code.writeLine();
 
 			code.writeLine("/// <summary>");
 			code.writeLine("/// Create a new context of this database's type with a specific connection.");
 			code.writeLine("/// </summary>");
 			code.writeLine("/// <param name=\"connection\">Existing open database connection to use.</param>");
-			code.write("public ").write(_database.Class).writeLine("(DbConnection connection) : base(connection) { }");
+			code.write("public ").write(database.Class).writeLine("(DbConnection connection) : base(connection) { }");
 			code.endBlock("}").writeLine();
 
 			return code.ToString();

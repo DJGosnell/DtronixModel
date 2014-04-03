@@ -174,9 +174,9 @@ namespace DtxModelTests.Tome {
 
 	[TableAttribute(Name = "Volumes")]
 	public class Volumes : Model {
-		private System.Int32 _rowid;
-		public System.Int32 rowid {
-			get { return _rowid; }
+		private System.Int32 _id;
+		public System.Int32 id {
+			get { return _id; }
 		}
 
 		private bool _numberChanged = false;
@@ -199,13 +199,13 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		private bool _Manga_rowidChanged = false;
-		private System.Int32 _Manga_rowid;
-		public System.Int32 Manga_rowid {
-			get { return _Manga_rowid; }
+		private bool _Manga_idChanged = false;
+		private System.Int32 _Manga_id;
+		public System.Int32 Manga_id {
+			get { return _Manga_id; }
 			set {
-				_Manga_rowid = value;
-				_Manga_rowidChanged = true;
+				_Manga_id = value;
+				_Manga_idChanged = true;
 			}
 		}
 
@@ -214,7 +214,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Pages == null){ 
 					try {
-						_Pages = ((TomeContext)context).Pages.select().whereIn("Volumes_rowid", _rowid).executeFetch();
+						_Pages = ((TomeContext)context).Pages.select().whereIn("Volumes_id", _id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Pages = null;
@@ -229,7 +229,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Manga == null){ 
 					try {
-						_Manga = ((TomeContext)context).Manga.select().whereIn("rowid", _Manga_rowid).executeFetchAll();
+						_Manga = ((TomeContext)context).Manga.select().whereIn("id", _Manga_id).executeFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Manga = null;
@@ -252,10 +252,10 @@ namespace DtxModelTests.Tome {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "id": _id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
 					case "number": _number = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
 					case "description": _description = reader.GetValue(i) as System.String; break;
-					case "Manga_rowid": _Manga_rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "Manga_id": _Manga_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
 					default: break;
 				}
 			}
@@ -267,8 +267,8 @@ namespace DtxModelTests.Tome {
 				changed.Add("number", _number);
 			if (_descriptionChanged)
 				changed.Add("description", _description);
-			if (_Manga_rowidChanged)
-				changed.Add("Manga_rowid", _Manga_rowid);
+			if (_Manga_idChanged)
+				changed.Add("Manga_id", _Manga_id);
 
 			return changed;
 		}
@@ -277,7 +277,7 @@ namespace DtxModelTests.Tome {
 			return new object[] {
 				_number,
 				_description,
-				_Manga_rowid,
+				_Manga_id,
 			};
 		}
 
@@ -285,84 +285,84 @@ namespace DtxModelTests.Tome {
 			return new string[] {
 				"number",
 				"description",
-				"Manga_rowid",
+				"Manga_id",
 			};
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "id";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _id;
 		}
 
 	}
 
 	[TableAttribute(Name = "Manga")]
 	public class Manga : Model {
-		private System.Int32 _rowid;
-		public System.Int32 rowid {
-			get { return _rowid; }
+		private System.Int32 _id;
+		public System.Int32 id {
+			get { return _id; }
 		}
 
-		private bool _StatusEnumChanged = false;
-		private System.Int32 _StatusEnum;
-		public System.Int32 StatusEnum {
-			get { return _StatusEnum; }
+		private bool _status_enumChanged = false;
+		private System.Int32 _status_enum;
+		public System.Int32 status_enum {
+			get { return _status_enum; }
 			set {
-				_StatusEnum = value;
-				_StatusEnumChanged = true;
+				_status_enum = value;
+				_status_enumChanged = true;
 			}
 		}
 
-		private bool _LastUpdatedChanged = false;
-		private System.DateTime _LastUpdated;
-		public System.DateTime LastUpdated {
-			get { return _LastUpdated; }
+		private bool _last_updatedChanged = false;
+		private System.DateTime _last_updated;
+		public System.DateTime last_updated {
+			get { return _last_updated; }
 			set {
-				_LastUpdated = value;
-				_LastUpdatedChanged = true;
+				_last_updated = value;
+				_last_updatedChanged = true;
 			}
 		}
 
-		private bool _TotalVolumesReleasedChanged = false;
-		private System.Int32 _TotalVolumesReleased;
-		public System.Int32 TotalVolumesReleased {
-			get { return _TotalVolumesReleased; }
+		private bool _total_volumes_releasedChanged = false;
+		private System.Int32 _total_volumes_released;
+		public System.Int32 total_volumes_released {
+			get { return _total_volumes_released; }
 			set {
-				_TotalVolumesReleased = value;
-				_TotalVolumesReleasedChanged = true;
+				_total_volumes_released = value;
+				_total_volumes_releasedChanged = true;
 			}
 		}
 
-		private bool _MangaUpdatesIdChanged = false;
-		private System.Int32 _MangaUpdatesId;
-		public System.Int32 MangaUpdatesId {
-			get { return _MangaUpdatesId; }
+		private bool _manga_updates_idChanged = false;
+		private System.Int32 _manga_updates_id;
+		public System.Int32 manga_updates_id {
+			get { return _manga_updates_id; }
 			set {
-				_MangaUpdatesId = value;
-				_MangaUpdatesIdChanged = true;
+				_manga_updates_id = value;
+				_manga_updates_idChanged = true;
 			}
 		}
 
-		private bool _YearReleasedChanged = false;
-		private System.Int32 _YearReleased;
-		public System.Int32 YearReleased {
-			get { return _YearReleased; }
+		private bool _year_releasedChanged = false;
+		private System.Int32 _year_released;
+		public System.Int32 year_released {
+			get { return _year_released; }
 			set {
-				_YearReleased = value;
-				_YearReleasedChanged = true;
+				_year_released = value;
+				_year_releasedChanged = true;
 			}
 		}
 
-		private bool _DescriptionChanged = false;
-		private System.String _Description;
-		public System.String Description {
-			get { return _Description; }
+		private bool _descriptionChanged = false;
+		private System.String _description;
+		public System.String description {
+			get { return _description; }
 			set {
-				_Description = value;
-				_DescriptionChanged = true;
+				_description = value;
+				_descriptionChanged = true;
 			}
 		}
 
@@ -371,7 +371,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_VolumesModels == null){ 
 					try {
-						_VolumesModels = ((TomeContext)context).Volumes.select().whereIn("Manga_rowid", _rowid).executeFetch();
+						_VolumesModels = ((TomeContext)context).Volumes.select().whereIn("Manga_id", _id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_VolumesModels = null;
@@ -386,7 +386,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaGenres == null){ 
 					try {
-						_MangaGenres = ((TomeContext)context).MangaGenres.select().whereIn("Manga_rowid", _rowid).executeFetch();
+						_MangaGenres = ((TomeContext)context).MangaGenres.select().whereIn("Manga_id", _id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaGenres = null;
@@ -401,7 +401,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaCategories == null){ 
 					try {
-						_MangaCategories = ((TomeContext)context).MangaCategories.select().whereIn("Manga_rowid", _rowid).executeFetch();
+						_MangaCategories = ((TomeContext)context).MangaCategories.select().whereIn("Manga_id", _id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaCategories = null;
@@ -416,7 +416,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaPeople == null){ 
 					try {
-						_MangaPeople = ((TomeContext)context).MangaPeople.select().whereIn("Manga_rowid", _rowid).executeFetch();
+						_MangaPeople = ((TomeContext)context).MangaPeople.select().whereIn("Manga_id", _id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaPeople = null;
@@ -431,7 +431,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaTitles == null){ 
 					try {
-						_MangaTitles = ((TomeContext)context).MangaTitles.select().whereIn("Manga_rowid", _rowid).executeFetch();
+						_MangaTitles = ((TomeContext)context).MangaTitles.select().whereIn("Manga_id", _id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaTitles = null;
@@ -454,13 +454,13 @@ namespace DtxModelTests.Tome {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "status_enum": _StatusEnum = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "last_updated": _LastUpdated = (reader.IsDBNull(i)) ? default(System.DateTime) : reader.GetDateTime(i); break;
-					case "total_volumes_released": _TotalVolumesReleased = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "manga_updates_id": _MangaUpdatesId = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "year_released": _YearReleased = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "description": _Description = reader.GetValue(i) as System.String; break;
+					case "id": _id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "status_enum": _status_enum = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "last_updated": _last_updated = (reader.IsDBNull(i)) ? default(System.DateTime) : reader.GetDateTime(i); break;
+					case "total_volumes_released": _total_volumes_released = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "manga_updates_id": _manga_updates_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "year_released": _year_released = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "description": _description = reader.GetValue(i) as System.String; break;
 					default: break;
 				}
 			}
@@ -468,30 +468,30 @@ namespace DtxModelTests.Tome {
 
 		public override Dictionary<string, object> getChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_StatusEnumChanged)
-				changed.Add("status_enum", _StatusEnum);
-			if (_LastUpdatedChanged)
-				changed.Add("last_updated", _LastUpdated);
-			if (_TotalVolumesReleasedChanged)
-				changed.Add("total_volumes_released", _TotalVolumesReleased);
-			if (_MangaUpdatesIdChanged)
-				changed.Add("manga_updates_id", _MangaUpdatesId);
-			if (_YearReleasedChanged)
-				changed.Add("year_released", _YearReleased);
-			if (_DescriptionChanged)
-				changed.Add("description", _Description);
+			if (_status_enumChanged)
+				changed.Add("status_enum", _status_enum);
+			if (_last_updatedChanged)
+				changed.Add("last_updated", _last_updated);
+			if (_total_volumes_releasedChanged)
+				changed.Add("total_volumes_released", _total_volumes_released);
+			if (_manga_updates_idChanged)
+				changed.Add("manga_updates_id", _manga_updates_id);
+			if (_year_releasedChanged)
+				changed.Add("year_released", _year_released);
+			if (_descriptionChanged)
+				changed.Add("description", _description);
 
 			return changed;
 		}
 
 		public override object[] getAllValues() {
 			return new object[] {
-				_StatusEnum,
-				_LastUpdated,
-				_TotalVolumesReleased,
-				_MangaUpdatesId,
-				_YearReleased,
-				_Description,
+				_status_enum,
+				_last_updated,
+				_total_volumes_released,
+				_manga_updates_id,
+				_year_released,
+				_description,
 			};
 		}
 
@@ -507,29 +507,29 @@ namespace DtxModelTests.Tome {
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "id";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _id;
 		}
 
 	}
 
 	[TableAttribute(Name = "Tags")]
 	public class Tags : Model {
-		private System.Int32 _rowid;
-		public System.Int32 rowid {
-			get { return _rowid; }
+		private System.Int32 _id;
+		public System.Int32 id {
+			get { return _id; }
 		}
 
-		private bool _ValueChanged = false;
-		private System.String _Value;
-		public System.String Value {
-			get { return _Value; }
+		private bool _valueChanged = false;
+		private System.String _value;
+		public System.String value {
+			get { return _value; }
 			set {
-				_Value = value;
-				_ValueChanged = true;
+				_value = value;
+				_valueChanged = true;
 			}
 		}
 
@@ -538,7 +538,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_PageTags == null){ 
 					try {
-						_PageTags = ((TomeContext)context).PageTags.select().whereIn("Tags_rowid", _rowid).executeFetch();
+						_PageTags = ((TomeContext)context).PageTags.select().whereIn("Tags_id", _id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_PageTags = null;
@@ -561,8 +561,8 @@ namespace DtxModelTests.Tome {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "value": _Value = reader.GetValue(i) as System.String; break;
+					case "id": _id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "value": _value = reader.GetValue(i) as System.String; break;
 					default: break;
 				}
 			}
@@ -570,15 +570,15 @@ namespace DtxModelTests.Tome {
 
 		public override Dictionary<string, object> getChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_ValueChanged)
-				changed.Add("value", _Value);
+			if (_valueChanged)
+				changed.Add("value", _value);
 
 			return changed;
 		}
 
 		public override object[] getAllValues() {
 			return new object[] {
-				_Value,
+				_value,
 			};
 		}
 
@@ -589,39 +589,39 @@ namespace DtxModelTests.Tome {
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "id";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _id;
 		}
 
 	}
 
 	[TableAttribute(Name = "PageTags")]
 	public class PageTags : Model {
-		private System.Int32 _rowid;
-		public System.Int32 rowid {
-			get { return _rowid; }
+		private System.Int32 _id;
+		public System.Int32 id {
+			get { return _id; }
 		}
 
-		private bool _PagesRowidChanged = false;
-		private System.Int32 _PagesRowid;
-		public System.Int32 PagesRowid {
-			get { return _PagesRowid; }
+		private bool _Pages_idChanged = false;
+		private System.Int32 _Pages_id;
+		public System.Int32 Pages_id {
+			get { return _Pages_id; }
 			set {
-				_PagesRowid = value;
-				_PagesRowidChanged = true;
+				_Pages_id = value;
+				_Pages_idChanged = true;
 			}
 		}
 
-		private bool _TagsRowidChanged = false;
-		private System.Int32 _TagsRowid;
-		public System.Int32 TagsRowid {
-			get { return _TagsRowid; }
+		private bool _Tags_idChanged = false;
+		private System.Int32 _Tags_id;
+		public System.Int32 Tags_id {
+			get { return _Tags_id; }
 			set {
-				_TagsRowid = value;
-				_TagsRowidChanged = true;
+				_Tags_id = value;
+				_Tags_idChanged = true;
 			}
 		}
 
@@ -630,7 +630,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Tags == null){ 
 					try {
-						_Tags = ((TomeContext)context).Tags.select().whereIn("rowid", _TagsRowid).executeFetch();
+						_Tags = ((TomeContext)context).Tags.select().whereIn("id", _Tags_id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Tags = null;
@@ -645,7 +645,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Pages == null){ 
 					try {
-						_Pages = ((TomeContext)context).Pages.select().whereIn("rowid", _PagesRowid).executeFetchAll();
+						_Pages = ((TomeContext)context).Pages.select().whereIn("id", _Pages_id).executeFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Pages = null;
@@ -668,9 +668,9 @@ namespace DtxModelTests.Tome {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "Pages_rowid": _PagesRowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "Tags_rowid": _TagsRowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "id": _id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "Pages_id": _Pages_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "Tags_id": _Tags_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
 					default: break;
 				}
 			}
@@ -678,62 +678,62 @@ namespace DtxModelTests.Tome {
 
 		public override Dictionary<string, object> getChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_PagesRowidChanged)
-				changed.Add("Pages_rowid", _PagesRowid);
-			if (_TagsRowidChanged)
-				changed.Add("Tags_rowid", _TagsRowid);
+			if (_Pages_idChanged)
+				changed.Add("Pages_id", _Pages_id);
+			if (_Tags_idChanged)
+				changed.Add("Tags_id", _Tags_id);
 
 			return changed;
 		}
 
 		public override object[] getAllValues() {
 			return new object[] {
-				_PagesRowid,
-				_TagsRowid,
+				_Pages_id,
+				_Tags_id,
 			};
 		}
 
 		public override string[] getColumns() {
 			return new string[] {
-				"Pages_rowid",
-				"Tags_rowid",
+				"Pages_id",
+				"Tags_id",
 			};
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "id";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _id;
 		}
 
 	}
 
 	[TableAttribute(Name = "Pages")]
 	public class Pages : Model {
-		private System.Int32 _rowid;
-		public System.Int32 rowid {
-			get { return _rowid; }
+		private System.Int32 _id;
+		public System.Int32 id {
+			get { return _id; }
 		}
 
-		private bool _Files_rowidChanged = false;
-		private System.Int32 _Files_rowid;
-		public System.Int32 Files_rowid {
-			get { return _Files_rowid; }
+		private bool _Files_idChanged = false;
+		private System.Int32 _Files_id;
+		public System.Int32 Files_id {
+			get { return _Files_id; }
 			set {
-				_Files_rowid = value;
-				_Files_rowidChanged = true;
+				_Files_id = value;
+				_Files_idChanged = true;
 			}
 		}
 
-		private bool _Volumes_rowidChanged = false;
-		private System.Int32 _Volumes_rowid;
-		public System.Int32 Volumes_rowid {
-			get { return _Volumes_rowid; }
+		private bool _Volumes_idChanged = false;
+		private System.Int32 _Volumes_id;
+		public System.Int32 Volumes_id {
+			get { return _Volumes_id; }
 			set {
-				_Volumes_rowid = value;
-				_Volumes_rowidChanged = true;
+				_Volumes_id = value;
+				_Volumes_idChanged = true;
 			}
 		}
 
@@ -742,7 +742,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_PageTags == null){ 
 					try {
-						_PageTags = ((TomeContext)context).PageTags.select().whereIn("Pages_rowid", _rowid).executeFetch();
+						_PageTags = ((TomeContext)context).PageTags.select().whereIn("Pages_id", _id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_PageTags = null;
@@ -757,7 +757,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Volume == null){ 
 					try {
-						_Volume = ((TomeContext)context).Volumes.select().whereIn("rowid", _Volumes_rowid).executeFetchAll();
+						_Volume = ((TomeContext)context).Volumes.select().whereIn("id", _Volumes_id).executeFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Volume = null;
@@ -780,9 +780,9 @@ namespace DtxModelTests.Tome {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "Files_rowid": _Files_rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "Volumes_rowid": _Volumes_rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "id": _id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "Files_id": _Files_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "Volumes_id": _Volumes_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
 					default: break;
 				}
 			}
@@ -790,43 +790,43 @@ namespace DtxModelTests.Tome {
 
 		public override Dictionary<string, object> getChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_Files_rowidChanged)
-				changed.Add("Files_rowid", _Files_rowid);
-			if (_Volumes_rowidChanged)
-				changed.Add("Volumes_rowid", _Volumes_rowid);
+			if (_Files_idChanged)
+				changed.Add("Files_id", _Files_id);
+			if (_Volumes_idChanged)
+				changed.Add("Volumes_id", _Volumes_id);
 
 			return changed;
 		}
 
 		public override object[] getAllValues() {
 			return new object[] {
-				_Files_rowid,
-				_Volumes_rowid,
+				_Files_id,
+				_Volumes_id,
 			};
 		}
 
 		public override string[] getColumns() {
 			return new string[] {
-				"Files_rowid",
-				"Volumes_rowid",
+				"Files_id",
+				"Volumes_id",
 			};
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "id";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _id;
 		}
 
 	}
 
 	[TableAttribute(Name = "Genres")]
 	public class Genres : Model {
-		private System.Int32 _rowid;
-		public System.Int32 rowid {
-			get { return _rowid; }
+		private System.Int32 _id;
+		public System.Int32 id {
+			get { return _id; }
 		}
 
 		private bool _valueChanged = false;
@@ -844,7 +844,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaGenres == null){ 
 					try {
-						_MangaGenres = ((TomeContext)context).MangaGenres.select().whereIn("Genres_rowid", _rowid).executeFetchAll();
+						_MangaGenres = ((TomeContext)context).MangaGenres.select().whereIn("Genres_id", _id).executeFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaGenres = null;
@@ -867,7 +867,7 @@ namespace DtxModelTests.Tome {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "id": _id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
 					case "value": _value = reader.GetValue(i) as System.String; break;
 					default: break;
 				}
@@ -895,39 +895,39 @@ namespace DtxModelTests.Tome {
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "id";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _id;
 		}
 
 	}
 
 	[TableAttribute(Name = "MangaGenres")]
 	public class MangaGenres : Model {
-		private System.Int32 _rowid;
-		public System.Int32 rowid {
-			get { return _rowid; }
+		private System.Int32 _Id;
+		public System.Int32 Id {
+			get { return _Id; }
 		}
 
-		private bool _MangaRowidChanged = false;
-		private System.Int32 _MangaRowid;
-		public System.Int32 MangaRowid {
-			get { return _MangaRowid; }
+		private bool _Manga_idChanged = false;
+		private System.Int32 _Manga_id;
+		public System.Int32 Manga_id {
+			get { return _Manga_id; }
 			set {
-				_MangaRowid = value;
-				_MangaRowidChanged = true;
+				_Manga_id = value;
+				_Manga_idChanged = true;
 			}
 		}
 
-		private bool _GenresRowidChanged = false;
-		private System.Int32 _GenresRowid;
-		public System.Int32 GenresRowid {
-			get { return _GenresRowid; }
+		private bool _Genres_idChanged = false;
+		private System.Int32 _Genres_id;
+		public System.Int32 Genres_id {
+			get { return _Genres_id; }
 			set {
-				_GenresRowid = value;
-				_GenresRowidChanged = true;
+				_Genres_id = value;
+				_Genres_idChanged = true;
 			}
 		}
 
@@ -936,7 +936,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Genres == null){ 
 					try {
-						_Genres = ((TomeContext)context).Genres.select().whereIn("rowid", _GenresRowid).executeFetch();
+						_Genres = ((TomeContext)context).Genres.select().whereIn("id", _Genres_id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Genres = null;
@@ -951,7 +951,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Manga == null){ 
 					try {
-						_Manga = ((TomeContext)context).Manga.select().whereIn("rowid", _MangaRowid).executeFetchAll();
+						_Manga = ((TomeContext)context).Manga.select().whereIn("id", _Manga_id).executeFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Manga = null;
@@ -974,9 +974,9 @@ namespace DtxModelTests.Tome {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "Manga_rowid": _MangaRowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "Genres_rowid": _GenresRowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "Id": _Id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "Manga_id": _Manga_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "Genres_id": _Genres_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
 					default: break;
 				}
 			}
@@ -984,43 +984,43 @@ namespace DtxModelTests.Tome {
 
 		public override Dictionary<string, object> getChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_MangaRowidChanged)
-				changed.Add("Manga_rowid", _MangaRowid);
-			if (_GenresRowidChanged)
-				changed.Add("Genres_rowid", _GenresRowid);
+			if (_Manga_idChanged)
+				changed.Add("Manga_id", _Manga_id);
+			if (_Genres_idChanged)
+				changed.Add("Genres_id", _Genres_id);
 
 			return changed;
 		}
 
 		public override object[] getAllValues() {
 			return new object[] {
-				_MangaRowid,
-				_GenresRowid,
+				_Manga_id,
+				_Genres_id,
 			};
 		}
 
 		public override string[] getColumns() {
 			return new string[] {
-				"Manga_rowid",
-				"Genres_rowid",
+				"Manga_id",
+				"Genres_id",
 			};
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "Id";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _Id;
 		}
 
 	}
 
 	[TableAttribute(Name = "Categories")]
 	public class Categories : Model {
-		private System.Int32 _rowid;
-		public System.Int32 rowid {
-			get { return _rowid; }
+		private System.Int32 _id;
+		public System.Int32 id {
+			get { return _id; }
 		}
 
 		private bool _valueChanged = false;
@@ -1038,7 +1038,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaCategories == null){ 
 					try {
-						_MangaCategories = ((TomeContext)context).MangaCategories.select().whereIn("Categories_rowid", _rowid).executeFetchAll();
+						_MangaCategories = ((TomeContext)context).MangaCategories.select().whereIn("Categories_id", _id).executeFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaCategories = null;
@@ -1061,7 +1061,7 @@ namespace DtxModelTests.Tome {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "id": _id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
 					case "value": _value = reader.GetValue(i) as System.String; break;
 					default: break;
 				}
@@ -1089,39 +1089,39 @@ namespace DtxModelTests.Tome {
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "id";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _id;
 		}
 
 	}
 
 	[TableAttribute(Name = "MangaCategories")]
 	public class MangaCategories : Model {
-		private System.Int32 _rowid;
-		public System.Int32 rowid {
-			get { return _rowid; }
+		private System.Int32 _id;
+		public System.Int32 id {
+			get { return _id; }
 		}
 
-		private bool _MangaRowidChanged = false;
-		private System.Int32 _MangaRowid;
-		public System.Int32 MangaRowid {
-			get { return _MangaRowid; }
+		private bool _Manga_idChanged = false;
+		private System.Int32 _Manga_id;
+		public System.Int32 Manga_id {
+			get { return _Manga_id; }
 			set {
-				_MangaRowid = value;
-				_MangaRowidChanged = true;
+				_Manga_id = value;
+				_Manga_idChanged = true;
 			}
 		}
 
-		private bool _CategoriesRowidChanged = false;
-		private System.Int32 _CategoriesRowid;
-		public System.Int32 CategoriesRowid {
-			get { return _CategoriesRowid; }
+		private bool _Categories_idChanged = false;
+		private System.Int32 _Categories_id;
+		public System.Int32 Categories_id {
+			get { return _Categories_id; }
 			set {
-				_CategoriesRowid = value;
-				_CategoriesRowidChanged = true;
+				_Categories_id = value;
+				_Categories_idChanged = true;
 			}
 		}
 
@@ -1130,7 +1130,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Categories == null){ 
 					try {
-						_Categories = ((TomeContext)context).Categories.select().whereIn("rowid", _CategoriesRowid).executeFetch();
+						_Categories = ((TomeContext)context).Categories.select().whereIn("id", _Categories_id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Categories = null;
@@ -1145,7 +1145,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Manga == null){ 
 					try {
-						_Manga = ((TomeContext)context).Manga.select().whereIn("rowid", _MangaRowid).executeFetchAll();
+						_Manga = ((TomeContext)context).Manga.select().whereIn("id", _Manga_id).executeFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Manga = null;
@@ -1168,9 +1168,9 @@ namespace DtxModelTests.Tome {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "Manga_rowid": _MangaRowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "Categories_rowid": _CategoriesRowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "id": _id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "Manga_id": _Manga_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "Categories_id": _Categories_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
 					default: break;
 				}
 			}
@@ -1178,52 +1178,52 @@ namespace DtxModelTests.Tome {
 
 		public override Dictionary<string, object> getChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_MangaRowidChanged)
-				changed.Add("Manga_rowid", _MangaRowid);
-			if (_CategoriesRowidChanged)
-				changed.Add("Categories_rowid", _CategoriesRowid);
+			if (_Manga_idChanged)
+				changed.Add("Manga_id", _Manga_id);
+			if (_Categories_idChanged)
+				changed.Add("Categories_id", _Categories_id);
 
 			return changed;
 		}
 
 		public override object[] getAllValues() {
 			return new object[] {
-				_MangaRowid,
-				_CategoriesRowid,
+				_Manga_id,
+				_Categories_id,
 			};
 		}
 
 		public override string[] getColumns() {
 			return new string[] {
-				"Manga_rowid",
-				"Categories_rowid",
+				"Manga_id",
+				"Categories_id",
 			};
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "id";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _id;
 		}
 
 	}
 
 	[TableAttribute(Name = "People")]
 	public class People : Model {
-		private System.Int32 _rowid;
-		public System.Int32 rowid {
-			get { return _rowid; }
+		private System.Int32 _id;
+		public System.Int32 id {
+			get { return _id; }
 		}
 
-		private bool _NameChanged = false;
-		private System.String _Name;
-		public System.String Name {
-			get { return _Name; }
+		private bool _nameChanged = false;
+		private System.String _name;
+		public System.String name {
+			get { return _name; }
 			set {
-				_Name = value;
-				_NameChanged = true;
+				_name = value;
+				_nameChanged = true;
 			}
 		}
 
@@ -1232,7 +1232,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaPeople == null){ 
 					try {
-						_MangaPeople = ((TomeContext)context).MangaPeople.select().whereIn("People_rowid", _rowid).executeFetchAll();
+						_MangaPeople = ((TomeContext)context).MangaPeople.select().whereIn("People_id", _id).executeFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaPeople = null;
@@ -1255,8 +1255,8 @@ namespace DtxModelTests.Tome {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "first_name": _Name = reader.GetValue(i) as System.String; break;
+					case "id": _id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "name": _name = reader.GetValue(i) as System.String; break;
 					default: break;
 				}
 			}
@@ -1264,78 +1264,78 @@ namespace DtxModelTests.Tome {
 
 		public override Dictionary<string, object> getChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_NameChanged)
-				changed.Add("first_name", _Name);
+			if (_nameChanged)
+				changed.Add("name", _name);
 
 			return changed;
 		}
 
 		public override object[] getAllValues() {
 			return new object[] {
-				_Name,
+				_name,
 			};
 		}
 
 		public override string[] getColumns() {
 			return new string[] {
-				"first_name",
+				"name",
 			};
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "id";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _id;
 		}
 
 	}
 
 	[TableAttribute(Name = "MangaPeople")]
 	public class MangaPeople : Model {
-		private System.Int32 _rowid;
-		public System.Int32 rowid {
-			get { return _rowid; }
+		private System.Int32 _id;
+		public System.Int32 id {
+			get { return _id; }
 		}
 
-		private bool _PeopleRowidChanged = false;
-		private System.Int32 _PeopleRowid;
-		public System.Int32 PeopleRowid {
-			get { return _PeopleRowid; }
+		private bool _People_idChanged = false;
+		private System.Int32 _People_id;
+		public System.Int32 People_id {
+			get { return _People_id; }
 			set {
-				_PeopleRowid = value;
-				_PeopleRowidChanged = true;
+				_People_id = value;
+				_People_idChanged = true;
 			}
 		}
 
-		private bool _MangaRowidChanged = false;
-		private System.Int32 _MangaRowid;
-		public System.Int32 MangaRowid {
-			get { return _MangaRowid; }
+		private bool _Manga_idChanged = false;
+		private System.Int32 _Manga_id;
+		public System.Int32 Manga_id {
+			get { return _Manga_id; }
 			set {
-				_MangaRowid = value;
-				_MangaRowidChanged = true;
+				_Manga_id = value;
+				_Manga_idChanged = true;
 			}
 		}
 
-		private bool _IsArtistChanged = false;
-		private System.Boolean _IsArtist;
-		public System.Boolean IsArtist {
-			get { return _IsArtist; }
+		private bool _is_artistChanged = false;
+		private System.Boolean _is_artist;
+		public System.Boolean is_artist {
+			get { return _is_artist; }
 			set {
-				_IsArtist = value;
-				_IsArtistChanged = true;
+				_is_artist = value;
+				_is_artistChanged = true;
 			}
 		}
 
-		private bool _IsAuthorChanged = false;
-		private System.Boolean _IsAuthor;
-		public System.Boolean IsAuthor {
-			get { return _IsAuthor; }
+		private bool _is_authorChanged = false;
+		private System.Boolean _is_author;
+		public System.Boolean is_author {
+			get { return _is_author; }
 			set {
-				_IsAuthor = value;
-				_IsAuthorChanged = true;
+				_is_author = value;
+				_is_authorChanged = true;
 			}
 		}
 
@@ -1344,7 +1344,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_People == null){ 
 					try {
-						_People = ((TomeContext)context).People.select().whereIn("rowid", _PeopleRowid).executeFetch();
+						_People = ((TomeContext)context).People.select().whereIn("id", _People_id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_People = null;
@@ -1359,7 +1359,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Manga == null){ 
 					try {
-						_Manga = ((TomeContext)context).Manga.select().whereIn("rowid", _MangaRowid).executeFetchAll();
+						_Manga = ((TomeContext)context).Manga.select().whereIn("id", _Manga_id).executeFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Manga = null;
@@ -1382,11 +1382,11 @@ namespace DtxModelTests.Tome {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "People_rowid": _PeopleRowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "Manga_rowid": _MangaRowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "is_artist": _IsArtist = (reader.IsDBNull(i)) ? default(System.Boolean) : reader.GetBoolean(i); break;
-					case "is_author": _IsAuthor = (reader.IsDBNull(i)) ? default(System.Boolean) : reader.GetBoolean(i); break;
+					case "id": _id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "People_id": _People_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "Manga_id": _Manga_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "is_artist": _is_artist = (reader.IsDBNull(i)) ? default(System.Boolean) : reader.GetBoolean(i); break;
+					case "is_author": _is_author = (reader.IsDBNull(i)) ? default(System.Boolean) : reader.GetBoolean(i); break;
 					default: break;
 				}
 			}
@@ -1394,80 +1394,80 @@ namespace DtxModelTests.Tome {
 
 		public override Dictionary<string, object> getChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_PeopleRowidChanged)
-				changed.Add("People_rowid", _PeopleRowid);
-			if (_MangaRowidChanged)
-				changed.Add("Manga_rowid", _MangaRowid);
-			if (_IsArtistChanged)
-				changed.Add("is_artist", _IsArtist);
-			if (_IsAuthorChanged)
-				changed.Add("is_author", _IsAuthor);
+			if (_People_idChanged)
+				changed.Add("People_id", _People_id);
+			if (_Manga_idChanged)
+				changed.Add("Manga_id", _Manga_id);
+			if (_is_artistChanged)
+				changed.Add("is_artist", _is_artist);
+			if (_is_authorChanged)
+				changed.Add("is_author", _is_author);
 
 			return changed;
 		}
 
 		public override object[] getAllValues() {
 			return new object[] {
-				_PeopleRowid,
-				_MangaRowid,
-				_IsArtist,
-				_IsAuthor,
+				_People_id,
+				_Manga_id,
+				_is_artist,
+				_is_author,
 			};
 		}
 
 		public override string[] getColumns() {
 			return new string[] {
-				"People_rowid",
-				"Manga_rowid",
+				"People_id",
+				"Manga_id",
 				"is_artist",
 				"is_author",
 			};
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "id";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _id;
 		}
 
 	}
 
 	[TableAttribute(Name = "MangaTitles")]
 	public class MangaTitles : Model {
-		private System.Int32 _rowid;
-		public System.Int32 rowid {
-			get { return _rowid; }
+		private System.Int32 _id;
+		public System.Int32 id {
+			get { return _id; }
 		}
 
-		private bool _MangaRowidChanged = false;
-		private System.Int32 _MangaRowid;
-		public System.Int32 MangaRowid {
-			get { return _MangaRowid; }
+		private bool _Manga_idChanged = false;
+		private System.Int32 _Manga_id;
+		public System.Int32 Manga_id {
+			get { return _Manga_id; }
 			set {
-				_MangaRowid = value;
-				_MangaRowidChanged = true;
+				_Manga_id = value;
+				_Manga_idChanged = true;
 			}
 		}
 
-		private bool _ValueChanged = false;
-		private System.String _Value;
-		public System.String Value {
-			get { return _Value; }
+		private bool _valueChanged = false;
+		private System.String _value;
+		public System.String value {
+			get { return _value; }
 			set {
-				_Value = value;
-				_ValueChanged = true;
+				_value = value;
+				_valueChanged = true;
 			}
 		}
 
-		private bool _IsPrimaryChanged = false;
-		private System.Boolean _IsPrimary;
-		public System.Boolean IsPrimary {
-			get { return _IsPrimary; }
+		private bool _is_primaryChanged = false;
+		private System.Boolean _is_primary;
+		public System.Boolean is_primary {
+			get { return _is_primary; }
 			set {
-				_IsPrimary = value;
-				_IsPrimaryChanged = true;
+				_is_primary = value;
+				_is_primaryChanged = true;
 			}
 		}
 
@@ -1476,7 +1476,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Manga == null){ 
 					try {
-						_Manga = ((TomeContext)context).Manga.select().whereIn("rowid", _MangaRowid).executeFetch();
+						_Manga = ((TomeContext)context).Manga.select().whereIn("id", _Manga_id).executeFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Manga = null;
@@ -1499,10 +1499,10 @@ namespace DtxModelTests.Tome {
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
-					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "Manga_rowid": _MangaRowid = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
-					case "name": _Value = reader.GetValue(i) as System.String; break;
-					case "is_primary": _IsPrimary = (reader.IsDBNull(i)) ? default(System.Boolean) : reader.GetBoolean(i); break;
+					case "id": _id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "Manga_id": _Manga_id = (reader.IsDBNull(i)) ? default(System.Int32) : reader.GetInt32(i); break;
+					case "value": _value = reader.GetValue(i) as System.String; break;
+					case "is_primary": _is_primary = (reader.IsDBNull(i)) ? default(System.Boolean) : reader.GetBoolean(i); break;
 					default: break;
 				}
 			}
@@ -1510,38 +1510,38 @@ namespace DtxModelTests.Tome {
 
 		public override Dictionary<string, object> getChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_MangaRowidChanged)
-				changed.Add("Manga_rowid", _MangaRowid);
-			if (_ValueChanged)
-				changed.Add("name", _Value);
-			if (_IsPrimaryChanged)
-				changed.Add("is_primary", _IsPrimary);
+			if (_Manga_idChanged)
+				changed.Add("Manga_id", _Manga_id);
+			if (_valueChanged)
+				changed.Add("value", _value);
+			if (_is_primaryChanged)
+				changed.Add("is_primary", _is_primary);
 
 			return changed;
 		}
 
 		public override object[] getAllValues() {
 			return new object[] {
-				_MangaRowid,
-				_Value,
-				_IsPrimary,
+				_Manga_id,
+				_value,
+				_is_primary,
 			};
 		}
 
 		public override string[] getColumns() {
 			return new string[] {
-				"Manga_rowid",
-				"name",
+				"Manga_id",
+				"value",
 				"is_primary",
 			};
 		}
 
 		public override string getPKName() {
-			return "rowid";
+			return "id";
 		}
 
 		public override object getPKValue() {
-			return _rowid;
+			return _id;
 		}
 
 	}

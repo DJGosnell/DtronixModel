@@ -51,6 +51,22 @@ namespace DtxModelGen {
 			return this;
 		}
 
+		/// <summary>
+		/// Removes a certian number of characters from the end of the string ignoring new lines.
+		/// </summary>
+		/// <param name="length">Number of characters to remove.</param>
+		/// <returns></returns>
+		public CodeWriter removeLength(int length) {
+			int start_pos = code.Length;
+			if (fresh_line) {
+				start_pos -= Environment.NewLine.Length;
+			}
+
+			code.Remove(start_pos - length, length);
+
+			return this;
+		}
+
 		private void indent() {
 			if (fresh_line) {
 				code.Append(new string('\t', indent_level));
@@ -58,9 +74,18 @@ namespace DtxModelGen {
 			}
 		}
 
+
+
 		public override string ToString() {
 			return code.ToString();
 		}
+
+		public CodeWriter remove(int start_index, int length) {
+			code.Remove(start_index, length);
+			return this;
+		}
+
+		// public 
 
 		public void clear() {
 			indent_level = 0;

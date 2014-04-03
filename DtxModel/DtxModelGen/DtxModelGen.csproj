@@ -56,7 +56,7 @@
   <ItemGroup>
     <Compile Include="CodeGen\CodeGenerator.cs" />
     <Compile Include="CodeGen\DatabaseContextGen.cs" />
-    <Compile Include="CodeGen\Sqlite\SqlTableGen.cs" />
+    <Compile Include="CodeGen\SqlDatabaseGen.cs" />
     <Compile Include="CodeGen\TableModelGen.cs" />
     <Compile Include="CodeWriter.cs" />
     <Compile Include="CommandOptions.cs" />
@@ -90,7 +90,9 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="CodeGen\Sqlite\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)packages\System.Data.SQLite.Core.1.0.92.0\content\net40\*.*" "$(TargetDir)*.*" /Y /I /E</PreBuildEvent>
