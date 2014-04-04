@@ -288,6 +288,7 @@ namespace DtxModelGen.Schema.Dbml {
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Association", typeof(Association))]
         [System.Xml.Serialization.XmlElementAttribute("Column", typeof(Column))]
+        [System.Xml.Serialization.XmlElementAttribute("Index", typeof(Index))]
         public object[] Items;
         
         /// <remarks/>
@@ -631,6 +632,48 @@ namespace DtxModelGen.Schema.Dbml {
         
         /// <remarks/>
         Default,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
+    public partial class Index {
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("IndexColumn")]
+        public IndexColumn[] IndexColumn;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Name;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public bool Unique;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool UniqueSpecified;
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
+    public partial class IndexColumn {
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Name;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Direction;
     }
     
     /// <remarks/>

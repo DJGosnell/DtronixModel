@@ -29,4 +29,11 @@ namespace DtxModelGen.Schema.Dbml {
 		[XmlIgnore]
 		public Table Table;
 	}
+
+	public partial class Index {
+
+		/// <remarks/>
+		[XmlIgnore]
+		public Table Table;
+	}
 }

@@ -10,28 +10,46 @@ namespace DtxModelGen.Sqlite {
 	public class SqliteDbmlGenerator {
 		private SQLiteConnection connection;
 		private TypeTransformer type_transformer;
+		private Database database;
 
 		public SqliteDbmlGenerator(string connection_string, TypeTransformer type_transformer) {
 			connection = new SQLiteConnection(connection_string);
 			connection.Open();
 			this.type_transformer = type_transformer;
+			database = new Database();
 		}
 
 		public Database generateDatabase() {
-			var database = new Database();
 			database.Name = Path.ChangeExtension(connection.DataSource, "");
 			database.Table = getTables();
+			var table_items = new List<object>();
 
 			foreach (var table in database.Table) {
-				var columns = getTableColumns(table.Name);
+				table_items.Clear();
+
+				getTableColumns(table_items, table.Name);
+				getIndexes(table_items, table.Name);
+
 				table.Type = new Schema.Dbml.Type() {
 					Name = table.Name
 				};
-				table.Type.Items = columns;
+
+				table.Type.Items = table_items.ToArray();
+				
 			}
 
-
+			//CREATE UNIQUE INDEX "main"."Test" ON "MangaTitles" ("Manga_id" ASC)
 			return database;
+		}
+
+		private Table getTableByName(string name) {
+			foreach (var table in database.Table) {
+				if (table.Name == name) {
+					return table;
+				}
+			}
+
+			return null;
 		}
 
 		public Table[] getTables() {
@@ -55,12 +73,60 @@ namespace DtxModelGen.Sqlite {
 			return tables.ToArray();
 		}
 
-		public Column[] getTableColumns(string table) {
+		public void getIndexes(List<object> items_list, string table_name) {
+			List<Index> indexes = new List<Index>();
+			using (var command = connection.CreateCommand()) {
+				command.CommandText = "SELECT name, tbl_name FROM sqlite_master WHERE type = 'index' AND tbl_name = @TableName";
+				command.Parameters.AddWithValue("@TableName", table_name);
+
+				using (var reader = command.ExecuteReader()) {
+					while (reader.Read()) {
+						var index = new Index() {
+							Name = reader.GetString(0),
+							Table = getTableByName(table_name)
+						};
+
+						indexes.Add(index);
+					}
+				}
+			}
+
+			if (indexes.Count == 0) {
+				return;
+			}
+
+			using (var command = connection.CreateCommand()) {
+				command.CommandText = "PRAGMA index_info ( @IndexName )";
+				var columns = new List<IndexColumn>();
+
+				foreach (var index in indexes) {
+					columns.Clear();
+					command.Parameters.Clear();
+					command.Parameters.AddWithValue("@IndexName", index.Name);
+
+					using (var reader = command.ExecuteReader()) {
+						while (reader.Read()) {
+							columns.Add(new IndexColumn() {
+								Name = reader["name"].ToString()
+							});
+						}
+					}
+
+					index.IndexColumn = columns.ToArray();
+				}
+
+				items_list.AddRange(indexes);
+			}
+		}
+
+		public void getTableColumns(List<object> items_list, string table) {
 
 			List<Column> columns = new List<Column>();
 			using (var command = connection.CreateCommand()) {
 				command.CommandText = "PRAGMA table_info(" + table + ")";
 				using (var reader = command.ExecuteReader()) {
+
+					
 					while (reader.Read()) {
 						var typ = reader["type"].ToString();
 						object vals = reader.GetValues();
@@ -86,7 +152,7 @@ namespace DtxModelGen.Sqlite {
 				}
 			}
 
-			return columns.ToArray();
+			items_list.AddRange(columns);
 		}
 	}
 }
