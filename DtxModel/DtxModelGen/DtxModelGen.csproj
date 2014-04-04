@@ -37,9 +37,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandLine">
-      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net40\CommandLine.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
@@ -60,6 +57,7 @@
     <Compile Include="CodeGen\TableModelGen.cs" />
     <Compile Include="CodeWriter.cs" />
     <Compile Include="CommandOptions.cs" />
+    <Compile Include="OptionAttribute.cs" />
     <Compile Include="TypeTransformer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,16 +69,6 @@
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\DtxModelTests\Northwind\Northwind.dbml">
-      <Link>Northwind.dbml</Link>
-      <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\DtxModelTests\Northwind\Northwind.dbml.layout">
-      <Link>Northwind.dbml.layout</Link>
-      <DependentUpon>Northwind.dbml</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="Schema\Dbml\Build.bat" />

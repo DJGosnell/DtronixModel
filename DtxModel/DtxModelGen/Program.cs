@@ -12,44 +12,50 @@ namespace DtxModelGen {
 	class Program {
 		static void Main(string[] args) {
 
-			var options = new CommandOptions();
-			Database database = null;
 
-			var parser = new CommandLine.Parser((CommandLine.ParserSettings settings) => {
-				settings.HelpWriter = Console.Out;
-			});
-			var parse_result = parser.ParseArguments(args, options);
+			var options = new CommandOptions(args);
+			Database input_database = null;
 
-			if(options.CodeOutput == null){
-				
-			}
 
 			// Verify that the parsing was successful.
-			if (parse_result == false) {
-				writeColor("Invalid input parameters.", ConsoleColor.Red);
+			if (options.ParseSuccess == false) {
+				writeLineColor("Invalid input parameters.", ConsoleColor.Red);
 				return;
 			}
 
-			using (FileStream stream = new FileStream(options.DbmlInput, FileMode.Open)) {
-				var serializer = new XmlSerializer(typeof(Database));
-				database = (Database)serializer.Deserialize(stream);
+			switch (options.InputType) {
+				case "dbml" :
+					try {
+						using (FileStream stream = new FileStream(options.Input, FileMode.Open)) {
+							var serializer = new XmlSerializer(typeof(Database));
+							input_database = (Database)serializer.Deserialize(stream);
+						}
+					} catch (Exception) {
+						writeLineColor("Could not open input DBML file at '" + options.Input + "'.", ConsoleColor.Red);
+						return;
+					}
+					break;
 			}
+
+
+			if (normalizeDatabase(input_database) == false) {
+				writeLineColor("Could not normalize input database.", ConsoleColor.Red);
+				return;
+			}
+
+
 
 			if (options.SqlOutput != null) {
 				//var sql_writer = new SqlWriter(database);
 				//sql_writer.WriteTo(options.SqlOutput);
 			}
 
-			if (normalizeDatabase(database) == false) {
-				return;
-			}
-
-			var table_code_writer = new TableModelGen(database);
-			var database_code_writer = new DatabaseContextGen(database);
+			var table_code_writer = new TableModelGen(input_database);
+			var database_code_writer = new DatabaseContextGen(input_database);
 			var type_transformer = new Sqlite.SqliteTypeTransformer();
 
 			if (options.SqlOutput != null) {
-				var sql_code_writer = new SqlDatabaseGen(database, type_transformer);
+				var sql_code_writer = new SqlDatabaseGen(input_database, type_transformer);
 
 				using (var fs = new FileStream(options.SqlOutput, FileMode.Create)) {
 					using (var sw = new StreamWriter(fs)) {
@@ -63,7 +69,7 @@ namespace DtxModelGen {
 				using (var sw = new StreamWriter(fs)) {
 					sw.Write(database_code_writer.generate());
 
-					foreach (var db_table in database.Table) {
+					foreach (var db_table in input_database.Table) {
 						sw.Write(table_code_writer.generate(db_table));
 					}
 
@@ -105,7 +111,7 @@ namespace DtxModelGen {
 							column.Member = column.Name;
 
 						} else if (is_member_null && is_name_null) {
-							writeColor("Column on table " + table.Name + "Does not have a name or member.", ConsoleColor.Red);
+							writeLineColor("Column on table " + table.Name + "Does not have a name or member.", ConsoleColor.Red);
 							return false;
 						}
 
@@ -201,6 +207,7 @@ namespace DtxModelGen {
 			Console.ForegroundColor = color;
 			Console.WriteLine(text);
 			Console.ForegroundColor = original_color;
+			Console.Read();
 		}
 	}
 }
