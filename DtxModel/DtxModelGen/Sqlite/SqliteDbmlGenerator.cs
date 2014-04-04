@@ -96,13 +96,13 @@ namespace DtxModelGen.Sqlite {
 			}
 
 			using (var command = connection.CreateCommand()) {
-				command.CommandText = "PRAGMA index_info ( @IndexName )";
+				
 				var columns = new List<IndexColumn>();
 
 				foreach (var index in indexes) {
 					columns.Clear();
-					command.Parameters.Clear();
-					command.Parameters.AddWithValue("@IndexName", index.Name);
+					// Using a parameter here instead of a hard value seems to cause SQL syntax errors...
+					command.CommandText = "PRAGMA index_info ( " + index.Name + " )";
 
 					using (var reader = command.ExecuteReader()) {
 						while (reader.Read()) {
