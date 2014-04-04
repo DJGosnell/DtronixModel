@@ -60,6 +60,7 @@
     <Compile Include="OptionAttribute.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Schema\Dbml\DbmlSchema.Relations.cs" />
+    <Compile Include="Sqlite\SqliteDbmlGenerator.cs" />
     <Compile Include="TypeTransformer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

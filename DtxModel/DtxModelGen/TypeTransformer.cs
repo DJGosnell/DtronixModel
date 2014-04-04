@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 namespace DtxModelGen {
-	class TypeTransformer {
+	public class TypeTransformer {
 
 		protected TypeTransformerType[] types;
 

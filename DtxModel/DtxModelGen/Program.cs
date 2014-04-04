@@ -1,5 +1,6 @@
 ﻿using DtxModelGen.CodeGen;
 using DtxModelGen.Schema.Dbml;
+using DtxModelGen.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,12 +16,17 @@ namespace DtxModelGen {
 
 			var options = new ModelGenOptions(args);
 			Database input_database = null;
+			TypeTransformer type_transformer = null;
 
 
 			// Verify that the parsing was successful.
 			if (options.ParseSuccess == false) {
 				writeLineColor("Invalid input parameters.", ConsoleColor.Red);
 				return;
+			}
+
+			if (options.DbClass.ToLower() == "sqlite") {
+				type_transformer = new Sqlite.SqliteTypeTransformer();
 			}
 
 			if (options.InputType == "dbml") {
@@ -37,6 +43,10 @@ namespace DtxModelGen {
 				if (options.DbClass == null) {
 					writeLineColor("Required 'db-class' attribute not selected.", ConsoleColor.Red);
 				}
+
+				var generator = new SqliteDbmlGenerator(options.Input, type_transformer);
+
+				input_database = generator.generateDatabase();
 			}
 
 
@@ -46,7 +56,7 @@ namespace DtxModelGen {
 				return;
 			}
 
-			var type_transformer = new Sqlite.SqliteTypeTransformer();
+			
 
 			// Output SQL file if required.
 			if (options.SqlOutput != null) {
