@@ -58,6 +58,8 @@
     <Compile Include="CodeWriter.cs" />
     <Compile Include="CommandOptions.cs" />
     <Compile Include="OptionAttribute.cs" />
+    <Compile Include="Options.cs" />
+    <Compile Include="Schema\Dbml\DbmlSchema.Relations.cs" />
     <Compile Include="TypeTransformer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

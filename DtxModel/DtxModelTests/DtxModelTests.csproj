@@ -77,6 +77,9 @@
     <None Include="Northwind\Tome.dbml.layout">
       <DependentUpon>Tome.dbml</DependentUpon>
     </None>
+    <None Include="Northwind\Tome2.dbml.layout">
+      <DependentUpon>Tome2.dbml</DependentUpon>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

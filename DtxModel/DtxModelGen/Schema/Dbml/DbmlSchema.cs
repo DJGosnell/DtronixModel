@@ -344,21 +344,6 @@ namespace DtxModelGen.Schema.Dbml {
     public partial class Association {
         
         /// <remarks/>
-        public Association ChildAssociation;
-        
-        /// <remarks/>
-        public Association ParentAssociation;
-        
-        /// <remarks/>
-        public Column OtherKeyColumn;
-        
-        /// <remarks/>
-        public Column ThisKeyColumn;
-        
-        /// <remarks/>
-        public Table Table;
-        
-        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name;
         
@@ -430,13 +415,64 @@ namespace DtxModelGen.Schema.Dbml {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
     [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
+    public enum AccessModifier {
+        
+        /// <remarks/>
+        Public,
+        
+        /// <remarks/>
+        Internal,
+        
+        /// <remarks/>
+        Protected,
+        
+        /// <remarks/>
+        ProtectedInternal,
+        
+        /// <remarks/>
+        Private,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
+    public enum MemberModifier {
+        
+        /// <remarks/>
+        Virtual,
+        
+        /// <remarks/>
+        Override,
+        
+        /// <remarks/>
+        New,
+        
+        /// <remarks/>
+        NewVirtual,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
+    public enum Cardinality {
+        
+        /// <remarks/>
+        One,
+        
+        /// <remarks/>
+        Many,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
+    [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
     public partial class Column {
-        
-        /// <remarks/>
-        public Table Table;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -562,22 +598,64 @@ namespace DtxModelGen.Schema.Dbml {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
     [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
+    public enum UpdateCheck {
+        
+        /// <remarks/>
+        Always,
+        
+        /// <remarks/>
+        Never,
+        
+        /// <remarks/>
+        WhenChanged,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
+    public enum AutoSync {
+        
+        /// <remarks/>
+        Never,
+        
+        /// <remarks/>
+        OnInsert,
+        
+        /// <remarks/>
+        OnUpdate,
+        
+        /// <remarks/>
+        Always,
+        
+        /// <remarks/>
+        Default,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
+    public enum ClassModifier {
+        
+        /// <remarks/>
+        Sealed,
+        
+        /// <remarks/>
+        Abstract,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
+    [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
-    public partial class Table {
+    public partial class View {
         
         /// <remarks/>
         public Type Type;
-        
-        /// <remarks/>
-        public TableFunction InsertFunction;
-        
-        /// <remarks/>
-        public TableFunction UpdateFunction;
-        
-        /// <remarks/>
-        public TableFunction DeleteFunction;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -610,26 +688,11 @@ namespace DtxModelGen.Schema.Dbml {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
-    public partial class TableFunction {
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Argument")]
-        public TableFunctionParameter[] Argument;
-        
-        /// <remarks/>
-        public TableFunctionReturn Return;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType="IDREF")]
-        public string FunctionId;
+    public partial class TableFunctionReturn {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public AccessModifier AccessModifier;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool AccessModifierSpecified;
+        public string Member;
     }
     
     /// <remarks/>
@@ -676,116 +739,26 @@ namespace DtxModelGen.Schema.Dbml {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
-    public partial class TableFunctionReturn {
+    public partial class TableFunction {
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Argument")]
+        public TableFunctionParameter[] Argument;
+        
+        /// <remarks/>
+        public TableFunctionReturn Return;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="IDREF")]
+        public string FunctionId;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Member;
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
-    public enum AccessModifier {
+        public AccessModifier AccessModifier;
         
         /// <remarks/>
-        Public,
-        
-        /// <remarks/>
-        Internal,
-        
-        /// <remarks/>
-        Protected,
-        
-        /// <remarks/>
-        ProtectedInternal,
-        
-        /// <remarks/>
-        Private,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
-    public enum MemberModifier {
-        
-        /// <remarks/>
-        Virtual,
-        
-        /// <remarks/>
-        Override,
-        
-        /// <remarks/>
-        New,
-        
-        /// <remarks/>
-        NewVirtual,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
-    public enum UpdateCheck {
-        
-        /// <remarks/>
-        Always,
-        
-        /// <remarks/>
-        Never,
-        
-        /// <remarks/>
-        WhenChanged,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
-    public enum AutoSync {
-        
-        /// <remarks/>
-        Never,
-        
-        /// <remarks/>
-        OnInsert,
-        
-        /// <remarks/>
-        OnUpdate,
-        
-        /// <remarks/>
-        Always,
-        
-        /// <remarks/>
-        Default,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
-    public enum Cardinality {
-        
-        /// <remarks/>
-        One,
-        
-        /// <remarks/>
-        Many,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
-    public enum ClassModifier {
-        
-        /// <remarks/>
-        Sealed,
-        
-        /// <remarks/>
-        Abstract,
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool AccessModifierSpecified;
     }
     
     /// <remarks/>
@@ -794,10 +767,19 @@ namespace DtxModelGen.Schema.Dbml {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.microsoft.com/linqtosql/dbml/2007")]
-    public partial class View {
+    public partial class Table {
         
         /// <remarks/>
         public Type Type;
+        
+        /// <remarks/>
+        public TableFunction InsertFunction;
+        
+        /// <remarks/>
+        public TableFunction UpdateFunction;
+        
+        /// <remarks/>
+        public TableFunction DeleteFunction;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]

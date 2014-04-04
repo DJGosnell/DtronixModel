@@ -13,7 +13,7 @@ namespace DtxModelGen {
 		static void Main(string[] args) {
 
 
-			var options = new CommandOptions(args);
+			var options = new ModelGenOptions(args);
 			Database input_database = null;
 
 
@@ -23,37 +23,32 @@ namespace DtxModelGen {
 				return;
 			}
 
-			switch (options.InputType) {
-				case "dbml" :
-					try {
-						using (FileStream stream = new FileStream(options.Input, FileMode.Open)) {
-							var serializer = new XmlSerializer(typeof(Database));
-							input_database = (Database)serializer.Deserialize(stream);
-						}
-					} catch (Exception) {
-						writeLineColor("Could not open input DBML file at '" + options.Input + "'.", ConsoleColor.Red);
-						return;
+			if (options.InputType == "dbml") {
+				try {
+					using (FileStream stream = new FileStream(options.Input, FileMode.Open)) {
+						var serializer = new XmlSerializer(typeof(Database));
+						input_database = (Database)serializer.Deserialize(stream);
 					}
-					break;
+				} catch (Exception) {
+					writeLineColor("Could not open input DBML file at '" + options.Input + "'.", ConsoleColor.Red);
+					return;
+				}
+			} else if (options.InputType == "database") {
+				if (options.DbClass == null) {
+					writeLineColor("Required 'db-class' attribute not selected.", ConsoleColor.Red);
+				}
 			}
 
 
+			// Clean up the DBML
 			if (normalizeDatabase(input_database) == false) {
 				writeLineColor("Could not normalize input database.", ConsoleColor.Red);
 				return;
 			}
 
-
-
-			if (options.SqlOutput != null) {
-				//var sql_writer = new SqlWriter(database);
-				//sql_writer.WriteTo(options.SqlOutput);
-			}
-
-			var table_code_writer = new TableModelGen(input_database);
-			var database_code_writer = new DatabaseContextGen(input_database);
 			var type_transformer = new Sqlite.SqliteTypeTransformer();
 
+			// Output SQL file if required.
 			if (options.SqlOutput != null) {
 				var sql_code_writer = new SqlDatabaseGen(input_database, type_transformer);
 
@@ -65,23 +60,36 @@ namespace DtxModelGen {
 				}
 			}
 
-			using (var fs = new FileStream(options.CodeOutput, FileMode.Create)) {
-				using (var sw = new StreamWriter(fs)) {
-					sw.Write(database_code_writer.generate());
+			// Output code if required.
+			if (options.CodeOutput != null) {
+				var table_code_writer = new TableModelGen(input_database);
+				var database_code_writer = new DatabaseContextGen(input_database);
 
-					foreach (var db_table in input_database.Table) {
-						sw.Write(table_code_writer.generate(db_table));
+				// Output code file if required.
+				using (var fs = new FileStream(options.CodeOutput, FileMode.Create)) {
+					using (var sw = new StreamWriter(fs)) {
+						sw.Write(database_code_writer.generate());
+
+						foreach (var db_table in input_database.Table) {
+							sw.Write(table_code_writer.generate(db_table));
+						}
+
+						// Final closing namespace
+						sw.Write("}");
+						sw.Flush();
+
 					}
-
-					// Final closing namespace
-					sw.Write("}");
-					sw.Flush();
-					
 				}
 			}
 
-			
-
+			// Output DBML if required.
+			if (options.DbmlOutput != null) {
+				// Output code file if required.
+				using (var fs = new FileStream(options.DbmlOutput, FileMode.Create)) {
+					var serializer = new XmlSerializer(typeof(Database));
+					serializer.Serialize(fs, input_database);
+				}
+			}
 		}
 
 		private static bool normalizeDatabase(Database database) {
