@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using DtxModelGen.Schema.Dbml;
+using DtxModelGen.Schema.Ddl;
 
 namespace DtxModelGen.CodeGen {
 	class DatabaseContextGen : CodeGenerator {

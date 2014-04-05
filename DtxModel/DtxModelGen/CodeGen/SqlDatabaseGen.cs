@@ -1,4 +1,4 @@
-﻿using DtxModelGen.Schema.Dbml;
+﻿using DtxModelGen.Schema.Ddl;
 using System;
 using System.Collections.Generic;
 using System.Linq;

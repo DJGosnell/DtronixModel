@@ -59,14 +59,14 @@
     <Compile Include="CommandOptions.cs" />
     <Compile Include="OptionAttribute.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="Schema\Dbml\DbmlSchema.Relations.cs" />
+    <Compile Include="Schema\Ddl\DdlSchema.cs">
+      <DependentUpon>DdlSchema.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Schema\Ddl\DdlSchema.Relations.cs" />
     <Compile Include="Sqlite\SqliteDbmlGenerator.cs" />
     <Compile Include="TypeTransformer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Schema\Dbml\DbmlSchema.cs">
-      <DependentUpon>DbmlSchema.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Sqlite\SqliteTypeTransformer.cs" />
     <Compile Include="TypeTransformerType.cs" />
     <Compile Include="Utilities.cs" />
@@ -74,8 +74,8 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-    <None Include="Schema\Dbml\Build.bat" />
-    <None Include="Schema\Dbml\DbmlSchema.xsd" />
+    <None Include="Schema\Ddl\Build.bat" />
+    <None Include="Schema\Ddl\DdlSchema.xsd" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />

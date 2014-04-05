@@ -62,12 +62,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="..\DtxModelGen\Schema\Dbml\DbmlSchema.cs">
-      <Link>Schema\Ddbml\DbmlSchema.cs</Link>
-    </Compile>
-    <Compile Include="..\DtxModelGen\Schema\Dbml\DbmlSchema.Relations.cs">
-      <Link>Schema\Ddbml\DbmlSchema.Relations.cs</Link>
-    </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -115,6 +109,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Xaml\Images\delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Schema\Ddbml\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

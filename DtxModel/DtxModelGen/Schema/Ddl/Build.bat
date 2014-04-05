@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\xsd.exe" /namespace:DtxModelGen.Schema.Ddl /classes /fields DdlSchema.xsd
