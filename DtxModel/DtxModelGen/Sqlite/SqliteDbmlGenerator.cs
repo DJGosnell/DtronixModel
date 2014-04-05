@@ -1,4 +1,4 @@
-﻿using DtxModelGen.Schema.Ddl;
+﻿using DtxModel.Ddl;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -30,7 +30,7 @@ namespace DtxModelGen.Sqlite {
 				getTableColumns(table_items, table.Name);
 				getIndexes(table_items, table.Name);
 
-				table.Type = new Schema.Ddl.Type() {
+				table.Type = new DtxModel.Ddl.Type() {
 					Name = table.Name
 				};
 

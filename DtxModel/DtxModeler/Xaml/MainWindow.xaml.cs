@@ -25,7 +25,7 @@ namespace DtxModeler {
 		}
 
 		private void Window_Loaded(object sender, RoutedEventArgs e) {
-			e.
+			//e.
 		}
 
 	}

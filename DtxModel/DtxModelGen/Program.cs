@@ -1,5 +1,5 @@
 ﻿using DtxModelGen.CodeGen;
-using DtxModelGen.Schema.Ddl;
+using DtxModel.Ddl;
 using DtxModelGen.Sqlite;
 using System;
 using System.Collections.Generic;

@@ -110,7 +110,12 @@
   <ItemGroup>
     <Resource Include="Xaml\Images\delete.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DtxModel\DtxModel.csproj">
+      <Project>{49a79bd4-9166-4bb2-bd7f-e0747b643166}</Project>
+      <Name>DtxModel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

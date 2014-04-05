@@ -58,7 +58,7 @@
 					<Image Width="32" Height="32" Margin="2,4,0,4" Source="Images/document_empty.png"/>
 				</MenuItem.Icon>
 			</MenuItem>
-			<MenuItem Padding="0">
+			<MenuItem Padding="0" Command="Open">
 				<MenuItem.Icon>
 					<Image Width="32" Height="32" Margin="2,4,0,4" Source="Images/folder.png" HorizontalAlignment="Right"/>
 				</MenuItem.Icon>
