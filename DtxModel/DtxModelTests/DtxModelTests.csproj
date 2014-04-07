@@ -52,30 +52,30 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Northwind\Northwind.cs">
-      <DependentUpon>Northwind.dbml</DependentUpon>
+      <DependentUpon>Northwind.ddl</DependentUpon>
     </Compile>
     <Compile Include="Northwind\Tome.cs">
-      <DependentUpon>Tome.dbml</DependentUpon>
+      <DependentUpon>Tome.ddl</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Northwind\Northwind.dbml">
+    <None Include="Northwind\Northwind.ddl">
       <SubType>Designer</SubType>
     </None>
     <None Include="Northwind\Northwind.dbml.layout">
-      <DependentUpon>Northwind.dbml</DependentUpon>
+      <DependentUpon>Northwind.ddl</DependentUpon>
     </None>
     <None Include="Northwind\northwind.sqlite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Northwind\Tome.dbml">
+    <None Include="Northwind\Tome.ddl">
       <SubType>Designer</SubType>
     </None>
     <None Include="Northwind\Tome.dbml.layout">
-      <DependentUpon>Tome.dbml</DependentUpon>
+      <DependentUpon>Tome.ddl</DependentUpon>
     </None>
     <None Include="Northwind\Tome2.dbml.layout">
       <DependentUpon>Tome2.dbml</DependentUpon>
