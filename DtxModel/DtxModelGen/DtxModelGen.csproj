@@ -59,7 +59,7 @@
     <Compile Include="CommandOptions.cs" />
     <Compile Include="OptionAttribute.cs" />
     <Compile Include="Options.cs" />
-    <Compile Include="Sqlite\SqliteDbmlGenerator.cs" />
+    <Compile Include="Sqlite\SqliteDdlGenerator.cs" />
     <Compile Include="TypeTransformer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

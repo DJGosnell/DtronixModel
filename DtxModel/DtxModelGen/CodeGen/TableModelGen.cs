@@ -14,7 +14,7 @@ namespace DtxModelGen.CodeGen {
 
 			Column pk_column = null;
 
-			foreach (var column in db_table.Columns) {
+			foreach (var column in db_table.Column) {
 				if (pk_column == null && column.IsPrimaryKey) {
 					pk_column = column;
 				}
@@ -27,7 +27,7 @@ namespace DtxModelGen.CodeGen {
 
 			// Table Properties;
 			
-			foreach(var column in db_table.Columns) {
+			foreach(var column in db_table.Column) {
 				bool read_only = false;
 
 				if (column.IsDbGenerated) {
@@ -61,7 +61,7 @@ namespace DtxModelGen.CodeGen {
 			}
 
 			// Table Associations;
-			foreach (var association in db_table.Associations ?? new Association[0]) {
+			foreach (var association in db_table.Association ?? new Association[0]) {
 
 				string field_type = association.Type;
 				if (association.ParentAssociation != null && association.ParentAssociation.Cardinality == Cardinality.Many) {
@@ -119,7 +119,7 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("switch (reader.GetName(i)) {").writeLine();
 			// Read fields
 
-			foreach (var column in db_table.Columns) {
+			foreach (var column in db_table.Column) {
 				string get_value_type = null;
 				switch (column.Type.ToLower()) {
 					case "system.boolean":
@@ -201,7 +201,7 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("public override Dictionary<string, object> getChangedValues() {").writeLine();
 			code.writeLine("var changed = new Dictionary<string, object>();");
 
-			foreach (var column in db_table.Columns) {
+			foreach (var column in db_table.Column) {
 				// Ignore primary keys.
 				if (column.IsPrimaryKey) {
 					continue;
@@ -220,7 +220,7 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("public override object[] getAllValues() {").writeLine();
 			code.beginBlock("return new object[] {").writeLine();
 
-			foreach (var column in db_table.Columns) {
+			foreach (var column in db_table.Column) {
 				// Ignore primary keys.
 				if (column.IsPrimaryKey) {
 					continue;
@@ -236,7 +236,7 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("public override string[] getColumns() {").writeLine();
 			code.beginBlock("return new string[] {").writeLine();
 
-			foreach (var column in db_table.Columns) {
+			foreach (var column in db_table.Column) {
 				// Ignore primary keys.
 				if (column.IsPrimaryKey) {
 					continue;

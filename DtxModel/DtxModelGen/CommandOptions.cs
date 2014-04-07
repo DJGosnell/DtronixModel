@@ -24,13 +24,13 @@ namespace DtxModelGen {
 		[OptionAttribute("sql-outupt", Required = false)]
 		public string SqlOutput { get; set; }
 
-		[OptionAttribute("dbml-outupt", Required = false)]
-		public string DbmlOutput { get; set; }
+		[OptionAttribute("ddl-outupt", Required = false)]
+		public string DdlOutput { get; set; }
 
 		[OptionAttribute("input", Required = true, HelpText = "The input that the generator will be working off of.")]
 		public string Input { get; set; }
 
-		[OptionAttribute("input-type", Required = true, HelpText = "Allowed Values: dbml|sql(TBD)|database")]
+		[OptionAttribute("input-type", Required = true, HelpText = "Allowed Values: ddl|sql(TBD)|database")]
 		public string InputType { get; set; }
 
 		[OptionAttribute("db-class", Required = false, HelpText = "Allowed Values: SQLiteConnection")]

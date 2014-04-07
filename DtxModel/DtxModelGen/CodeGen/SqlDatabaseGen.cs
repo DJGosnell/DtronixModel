@@ -14,11 +14,11 @@ namespace DtxModelGen.CodeGen {
 		public string generate() {
 			code.clear();
 
-			foreach (var table in database.Tables) {
+			foreach (var table in database.Table) {
 				code.beginBlock("CREATE TABLE ").write(table.Name).writeLine(" (");
 
 				// Columns
-				foreach (var column in table.Columns) {
+				foreach (var column in table.Column) {
 					string net_type = type_transformer.netToDbType(column.Type);
 
 					code.write(column.Name).write(" ").write(net_type).write(" ");
@@ -44,7 +44,7 @@ namespace DtxModelGen.CodeGen {
 
 				// Indexes
 				
-				foreach (var column in table.Columns) {
+				foreach (var column in table.Column) {
 					if (column.DbType != null && column.DbType.Contains("IDX")) {
 						code.write("CREATE INDEX IF NOT EXISTS IDX_").write(table.Name).write("_").write(column.Name)
 							.write(" ON ").write(table.Name).write(" (").write(column.Name).writeLine(");");

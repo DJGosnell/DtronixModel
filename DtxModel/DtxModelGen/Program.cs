@@ -29,14 +29,14 @@ namespace DtxModelGen {
 				type_transformer = new Sqlite.SqliteTypeTransformer();
 			}
 
-			if (options.InputType == "dbml") {
+			if (options.InputType == "ddl") {
 				try {
 					using (FileStream stream = new FileStream(options.Input, FileMode.Open)) {
 						var serializer = new XmlSerializer(typeof(Database));
 						input_database = (Database)serializer.Deserialize(stream);
 					}
 				} catch (Exception) {
-					writeLineColor("Could not open input DBML file at '" + options.Input + "'.", ConsoleColor.Red);
+					writeLineColor("Could not open input DDL file at '" + options.Input + "'.", ConsoleColor.Red);
 					return;
 				}
 			} else if (options.InputType == "database") {
@@ -44,13 +44,13 @@ namespace DtxModelGen {
 					writeLineColor("Required 'db-class' attribute not selected.", ConsoleColor.Red);
 				}
 
-				var generator = new SqliteDbmlGenerator(options.Input, type_transformer);
+				var generator = new SqliteDdlGenerator(options.Input, type_transformer);
 
 				input_database = generator.generateDatabase();
 			}
 
 
-			// Clean up the DBML
+			// Clean up the DDL
 			if (normalizeDatabase(input_database) == false) {
 				writeLineColor("Could not normalize input database.", ConsoleColor.Red);
 				return;
@@ -80,7 +80,7 @@ namespace DtxModelGen {
 					using (var sw = new StreamWriter(fs)) {
 						sw.Write(database_code_writer.generate());
 
-						foreach (var db_table in input_database.Tables) {
+						foreach (var db_table in input_database.Table) {
 							sw.Write(table_code_writer.generate(db_table));
 						}
 
@@ -92,10 +92,10 @@ namespace DtxModelGen {
 				}
 			}
 
-			// Output DBML if required.
-			if (options.DbmlOutput != null) {
+			// Output Ddl if required.
+			if (options.DdlOutput != null) {
 				// Output code file if required.
-				using (var fs = new FileStream(options.DbmlOutput, FileMode.Create)) {
+				using (var fs = new FileStream(options.DdlOutput, FileMode.Create)) {
 					var serializer = new XmlSerializer(typeof(Database));
 					serializer.Serialize(fs, input_database);
 				}
@@ -105,14 +105,14 @@ namespace DtxModelGen {
 		private static bool normalizeDatabase(Database database) {
 			Dictionary<string, Association> associations = new Dictionary<string, Association>();
 
-			foreach (var table in database.Tables) {
+			foreach (var table in database.Table) {
 
 				// Member / Name.
 				if (string.IsNullOrWhiteSpace(table.Name) && string.IsNullOrWhiteSpace(table.Member) == false) {
 					table.Name = table.Member;
 				}
 
-				foreach (var column in table.Columns) {
+				foreach (var column in table.Column) {
 					var is_name_null = string.IsNullOrWhiteSpace(column.Name);
 					var is_member_null = string.IsNullOrWhiteSpace(column.Member);
 
@@ -146,7 +146,7 @@ namespace DtxModelGen {
 				}
 
 
-				foreach (var association in table.Associations ?? new Association[0]) {
+				foreach (var association in table.Association ?? new Association[0]) {
 					association.Table = table;
 
 					// Determine if we already have this association in the list
@@ -168,14 +168,14 @@ namespace DtxModelGen {
 						Column other_column = null;
 
 						// Get the association's corrisponding columns
-						foreach (var assoc_col in association.Table.Columns) {
+						foreach (var assoc_col in association.Table.Column) {
 							if (assoc_col.Member == association.ThisKey) {
 								this_column = assoc_col;
 								break;
 							}
 						}
 
-						foreach (var assoc_col in other.Table.Columns) {
+						foreach (var assoc_col in other.Table.Column) {
 							if (assoc_col.Member == association.OtherKey) {
 								other_column = assoc_col;
 								break;

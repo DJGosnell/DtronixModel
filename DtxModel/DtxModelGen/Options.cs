@@ -49,7 +49,7 @@ namespace DtxModelGen {
 						if (properties.ContainsKey(key)) {
 							setProperty(key, arg);
 						} else {
-							Console.WriteLine("Argument '" + arg + "' does not have a matching property.");
+							Console.WriteLine("Argument '" + key + "' does not have a matching property.");
 							ParseSuccess = false;
 						}
 					}

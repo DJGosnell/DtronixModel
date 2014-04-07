@@ -24,16 +24,16 @@ namespace DtxModel.Ddl {
     public partial class Database {
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Tables")]
-        public Table[] Tables;
+        [System.Xml.Serialization.XmlElementAttribute("Table")]
+        public Table[] Table;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Views")]
-        public View[] Views;
+        [System.Xml.Serialization.XmlElementAttribute("View")]
+        public View[] View;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Functions")]
-        public Function[] Functions;
+        [System.Xml.Serialization.XmlElementAttribute("Function")]
+        public Function[] Function;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -88,16 +88,16 @@ namespace DtxModel.Ddl {
     public partial class Table {
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Columns")]
-        public Column[] Columns;
+        [System.Xml.Serialization.XmlElementAttribute("Column")]
+        public Column[] Column;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Associations")]
-        public Association[] Associations;
+        [System.Xml.Serialization.XmlElementAttribute("Association")]
+        public Association[] Association;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Indexes")]
-        public Index[] Indexes;
+        [System.Xml.Serialization.XmlElementAttribute("Index")]
+        public Index[] Index;
         
         /// <remarks/>
         public TableFunction InsertFunction;
@@ -423,7 +423,7 @@ namespace DtxModel.Ddl {
     public partial class View {
         
         /// <remarks/>
-        public Column Columns;
+        public Column Column;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]

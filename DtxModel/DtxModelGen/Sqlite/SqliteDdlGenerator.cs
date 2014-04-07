@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 
 namespace DtxModelGen.Sqlite {
-	public class SqliteDbmlGenerator {
+	public class SqliteDdlGenerator {
 		private SQLiteConnection connection;
 		private TypeTransformer type_transformer;
 		private Database database;
 
-		public SqliteDbmlGenerator(string connection_string, TypeTransformer type_transformer) {
+		public SqliteDdlGenerator(string connection_string, TypeTransformer type_transformer) {
 			connection = new SQLiteConnection(connection_string);
 			connection.Open();
 			this.type_transformer = type_transformer;
@@ -20,12 +20,12 @@ namespace DtxModelGen.Sqlite {
 		}
 
 		public Database generateDatabase() {
-			database.Name = Path.ChangeExtension(connection.DataSource, "");
-			database.Tables = getTables();
-			foreach (var table in database.Tables) {
+			database.Name = Path.GetFileNameWithoutExtension(connection.DataSource);
+			database.Table = getTables();
+			foreach (var table in database.Table) {
 
-				table.Columns = getTableColumns(table.Name);
-				table.Indexes = getIndexes(table.Name);
+				table.Column = getTableColumns(table.Name);
+				table.Index = getIndexes(table.Name);
 			}
 
 			//CREATE UNIQUE INDEX "main"."Test" ON "MangaTitles" ("Manga_id" ASC)
@@ -33,7 +33,7 @@ namespace DtxModelGen.Sqlite {
 		}
 
 		private Table getTableByName(string name) {
-			foreach (var table in database.Tables) {
+			foreach (var table in database.Table) {
 				if (table.Name == name) {
 					return table;
 				}
@@ -133,8 +133,8 @@ namespace DtxModelGen.Sqlite {
 						};
 
 						if (column.IsPrimaryKey && column.DbType.ToLower() == "integer") {
-							column.IsDbGenerated = true;
-							column.IsDbGeneratedSpecified = true;
+							column.IsPrimaryKey = true;
+							column.IsPrimaryKeySpecified = true;
 						}
 
 						columns.Add(column);

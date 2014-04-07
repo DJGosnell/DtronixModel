@@ -33,7 +33,7 @@ namespace DtxModelGen.CodeGen {
 			code.writeLine();
 
 			// Table properties.
-			foreach (var table in database.Tables) {
+			foreach (var table in database.Table) {
 				code.write("private Table<").write(table.Name).write("> _").write(table.Name).writeLine(";");
 				code.writeLine();
 				code.beginBlock("public Table<").write(table.Name).write("> ").write(table.Name).writeLine(" {");
