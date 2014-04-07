@@ -14,11 +14,11 @@ namespace DtxModelGen.CodeGen {
 		public string generate() {
 			code.clear();
 
-			foreach (var table in database.Table) {
+			foreach (var table in database.Tables) {
 				code.beginBlock("CREATE TABLE ").write(table.Name).writeLine(" (");
 
 				// Columns
-				Utilities.each<Column>(table.Type.Items, column => {
+				foreach (var column in table.Columns) {
 					string net_type = type_transformer.netToDbType(column.Type);
 
 					code.write(column.Name).write(" ").write(net_type).write(" ");
@@ -36,20 +36,21 @@ namespace DtxModelGen.CodeGen {
 					}
 
 					code.writeLine(",");
-				});
+				}
 
 				code.removeLength(1);
 
 				code.endBlock(");").writeLine().writeLine();
 
 				// Indexes
-				Utilities.each<Column>(table.Type.Items, column => {
+				
+				foreach (var column in table.Columns) {
 					if (column.DbType != null && column.DbType.Contains("IDX")) {
 						code.write("CREATE INDEX IF NOT EXISTS IDX_").write(table.Name).write("_").write(column.Name)
 							.write(" ON ").write(table.Name).write(" (").write(column.Name).writeLine(");");
 					}
 
-				});
+				}
 
 				code.writeLine().writeLine();
 			}

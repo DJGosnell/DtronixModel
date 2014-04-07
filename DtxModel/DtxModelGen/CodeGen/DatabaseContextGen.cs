@@ -20,7 +20,7 @@ namespace DtxModelGen.CodeGen {
 			code.writeLine();
 			code.beginBlock("namespace ").write(database.ContextNamespace).writeLine(" {");
 			code.writeLine();
-			code.beginBlock("public class ").write(database.Class).writeLine(" : Context {");
+			code.beginBlock("public partial class ").write(database.Class).writeLine(" : Context {");
 			code.writeLine("private static Func<DbConnection> _default_connection = null;");
 			code.writeLine();
 			code.writeLine("/// <summary>");
@@ -33,7 +33,7 @@ namespace DtxModelGen.CodeGen {
 			code.writeLine();
 
 			// Table properties.
-			foreach (var table in database.Table) {
+			foreach (var table in database.Tables) {
 				code.write("private Table<").write(table.Name).write("> _").write(table.Name).writeLine(";");
 				code.writeLine();
 				code.beginBlock("public Table<").write(table.Name).write("> ").write(table.Name).writeLine(" {");

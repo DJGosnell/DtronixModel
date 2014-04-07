@@ -14,19 +14,20 @@ namespace DtxModelGen.CodeGen {
 
 			Column pk_column = null;
 
-			Utilities.each<Column>(db_table.Type.Items, column => {
+			foreach (var column in db_table.Columns) {
 				if (pk_column == null && column.IsPrimaryKey) {
 					pk_column = column;
 				}
-			});
+			}
 
 			code.beginBlock("").writeLine();
 			// Attributes
 			code.write("[TableAttribute(Name = \"").write(db_table.Name).writeLine("\")]");
-			code.beginBlock("public class ").write(db_table.Name).writeLine(" : Model {");
+			code.beginBlock("public partial class ").write(db_table.Name).writeLine(" : Model {");
 
 			// Table Properties;
-			Utilities.each<Column>(db_table.Type.Items, column => {
+			
+			foreach(var column in db_table.Columns) {
 				bool read_only = false;
 
 				if (column.IsDbGenerated) {
@@ -57,10 +58,10 @@ namespace DtxModelGen.CodeGen {
 				code.endBlock("}").writeLine();
 
 				code.writeLine();
-			});
+			}
 
 			// Table Associations;
-			Utilities.each<Association>(db_table.Type.Items, association => {
+			foreach (var association in db_table.Associations ?? new Association[0]) {
 
 				string field_type = association.Type;
 				if (association.ParentAssociation != null && association.ParentAssociation.Cardinality == Cardinality.Many) {
@@ -92,7 +93,7 @@ namespace DtxModelGen.CodeGen {
 				code.endBlock("}").writeLine(); // Get
 				code.endBlock("}").writeLine(); // Property
 				code.writeLine();
-			});
+			}
 			/*
 			 * } catch (Exception e ) {
 				throw new InvalidOperationException("SQL operations are not allowed outside of the Database Context.", e);
@@ -118,7 +119,7 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("switch (reader.GetName(i)) {").writeLine();
 			// Read fields
 
-			Utilities.each<Column>(db_table.Type.Items, column => {
+			foreach (var column in db_table.Columns) {
 				string get_value_type = null;
 				switch (column.Type.ToLower()) {
 					case "system.boolean":
@@ -188,7 +189,7 @@ namespace DtxModelGen.CodeGen {
 				}
 				code.writeLine("; break;");
 
-			});
+			}
 
 			code.writeLine("default: break;");
 			code.endBlock("}").writeLine();
@@ -199,14 +200,16 @@ namespace DtxModelGen.CodeGen {
 			// getChangedValues override
 			code.beginBlock("public override Dictionary<string, object> getChangedValues() {").writeLine();
 			code.writeLine("var changed = new Dictionary<string, object>();");
-			Utilities.each<Column>(db_table.Type.Items, column => {
+
+			foreach (var column in db_table.Columns) {
 				// Ignore primary keys.
 				if (column.IsPrimaryKey) {
-					return;
+					continue;
 				}
 				code.beginBlock("if (_").write(column.Member).writeLine("Changed)");
 				code.write("changed.Add(\"").write(column.Name).write("\", _").write(column.Member).endBlock(");").writeLine();
-			});
+			}
+
 			code.writeLine();
 			code.writeLine("return changed;");
 
@@ -217,13 +220,13 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("public override object[] getAllValues() {").writeLine();
 			code.beginBlock("return new object[] {").writeLine();
 
-			Utilities.each<Column>(db_table.Type.Items, column => {
+			foreach (var column in db_table.Columns) {
 				// Ignore primary keys.
 				if (column.IsPrimaryKey) {
-					return;
+					continue;
 				}
 				code.write("_").write(column.Member).writeLine(",");
-			});
+			}
 
 			code.endBlock("};").writeLine();
 			code.endBlock("}").writeLine();
@@ -233,13 +236,13 @@ namespace DtxModelGen.CodeGen {
 			code.beginBlock("public override string[] getColumns() {").writeLine();
 			code.beginBlock("return new string[] {").writeLine();
 
-			Utilities.each<Column>(db_table.Type.Items, column => {
+			foreach (var column in db_table.Columns) {
 				// Ignore primary keys.
 				if (column.IsPrimaryKey) {
-					return;
+					continue;
 				}
 				code.write("\"").write(column.Name).writeLine("\",");
-			});
+			}
 
 			code.endBlock("};").writeLine();
 			code.endBlock("}").writeLine();

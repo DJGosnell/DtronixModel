@@ -88,7 +88,8 @@ namespace DtxModel.Ddl {
     public partial class Table {
         
         /// <remarks/>
-        public Column Columns;
+        [System.Xml.Serialization.XmlElementAttribute("Columns")]
+        public Column[] Columns;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Associations")]

@@ -21,21 +21,11 @@ namespace DtxModelGen.Sqlite {
 
 		public Database generateDatabase() {
 			database.Name = Path.ChangeExtension(connection.DataSource, "");
-			database.Table = getTables();
-			var table_items = new List<object>();
+			database.Tables = getTables();
+			foreach (var table in database.Tables) {
 
-			foreach (var table in database.Table) {
-				table_items.Clear();
-
-				getTableColumns(table_items, table.Name);
-				getIndexes(table_items, table.Name);
-
-				table.Type = new DtxModel.Ddl.Type() {
-					Name = table.Name
-				};
-
-				table.Type.Items = table_items.ToArray();
-				
+				table.Columns = getTableColumns(table.Name);
+				table.Indexes = getIndexes(table.Name);
 			}
 
 			//CREATE UNIQUE INDEX "main"."Test" ON "MangaTitles" ("Manga_id" ASC)
@@ -43,7 +33,7 @@ namespace DtxModelGen.Sqlite {
 		}
 
 		private Table getTableByName(string name) {
-			foreach (var table in database.Table) {
+			foreach (var table in database.Tables) {
 				if (table.Name == name) {
 					return table;
 				}
@@ -73,7 +63,7 @@ namespace DtxModelGen.Sqlite {
 			return tables.ToArray();
 		}
 
-		public void getIndexes(List<object> items_list, string table_name) {
+		public Index[] getIndexes(string table_name) {
 			List<Index> indexes = new List<Index>();
 			using (var command = connection.CreateCommand()) {
 				command.CommandText = "SELECT name, tbl_name FROM sqlite_master WHERE type = 'index' AND tbl_name = @TableName";
@@ -92,7 +82,7 @@ namespace DtxModelGen.Sqlite {
 			}
 
 			if (indexes.Count == 0) {
-				return;
+				return null;
 			}
 
 			using (var command = connection.CreateCommand()) {
@@ -115,11 +105,11 @@ namespace DtxModelGen.Sqlite {
 					index.IndexColumn = columns.ToArray();
 				}
 
-				items_list.AddRange(indexes);
+				return indexes.ToArray();
 			}
 		}
 
-		public void getTableColumns(List<object> items_list, string table) {
+		public Column[] getTableColumns(string table) {
 
 			List<Column> columns = new List<Column>();
 			using (var command = connection.CreateCommand()) {
@@ -152,7 +142,7 @@ namespace DtxModelGen.Sqlite {
 				}
 			}
 
-			items_list.AddRange(columns);
+			return columns.ToArray();
 		}
 	}
 }

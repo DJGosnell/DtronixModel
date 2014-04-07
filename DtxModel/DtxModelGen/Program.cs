@@ -80,7 +80,7 @@ namespace DtxModelGen {
 					using (var sw = new StreamWriter(fs)) {
 						sw.Write(database_code_writer.generate());
 
-						foreach (var db_table in input_database.Table) {
+						foreach (var db_table in input_database.Tables) {
 							sw.Write(table_code_writer.generate(db_table));
 						}
 
@@ -104,112 +104,110 @@ namespace DtxModelGen {
 
 		private static bool normalizeDatabase(Database database) {
 			Dictionary<string, Association> associations = new Dictionary<string, Association>();
-	
-			foreach (var table in database.Table) {
+
+			foreach (var table in database.Tables) {
 
 				// Member / Name.
 				if (string.IsNullOrWhiteSpace(table.Name) && string.IsNullOrWhiteSpace(table.Member) == false) {
 					table.Name = table.Member;
 				}
 
-				foreach (var item in table.Type.Items) {
-					if (item is Column) {
-						var column = item as Column;
-						var is_name_null = string.IsNullOrWhiteSpace(column.Name);
-						var is_member_null = string.IsNullOrWhiteSpace(column.Member);
+				foreach (var column in table.Columns) {
+					var is_name_null = string.IsNullOrWhiteSpace(column.Name);
+					var is_member_null = string.IsNullOrWhiteSpace(column.Member);
 
-						column.Table = table;
+					column.Table = table;
 
-						// If the column name is empty, then assume that the database column name
-						// is the same as the member name and vice versa.
-						if (is_name_null) {
-							column.Name = column.Member;
+					// If the column name is empty, then assume that the database column name
+					// is the same as the member name and vice versa.
+					if (is_name_null) {
+						column.Name = column.Member;
 
-						} else if (is_member_null) {
-							column.Member = column.Name;
+					} else if (is_member_null) {
+						column.Member = column.Name;
 
-						} else if (is_member_null && is_name_null) {
-							writeLineColor("Column on table " + table.Name + "Does not have a name or member.", ConsoleColor.Red);
-							return false;
+					} else if (is_member_null && is_name_null) {
+						writeLineColor("Column on table " + table.Name + "Does not have a name or member.", ConsoleColor.Red);
+						return false;
+					}
+
+					// Default values.
+					/*if (column.IsReadOnlySpecified == false) {
+						column.IsReadOnly = false;
+					}
+
+					if (column.IsDbGeneratedSpecified == false) {
+						column.IsDbGenerated = false;
+					}
+
+					if (column.IsPrimaryKeySpecified == false) {
+						column.IsPrimaryKey = false;
+					}*/
+				}
+
+
+				foreach (var association in table.Associations ?? new Association[0]) {
+					association.Table = table;
+
+					// Determine if we already have this association in the list
+					if (associations.ContainsKey(association.Name)) {
+						var other = associations[association.Name];
+
+						if (other.IsForeignKeySpecified && other.IsForeignKey) {
+							// This is the child table
+							other.ParentAssociation = association;
+							association.ChildAssociation = other;
+						} else {
+							// This is the parent association.
+							other.ChildAssociation = association;
+							association.ParentAssociation = other;
 						}
 
-						// Default values.
-						/*if (column.IsReadOnlySpecified == false) {
-							column.IsReadOnly = false;
-						}
+						// Get the colums for the associations.
+						Column this_column = null;
+						Column other_column = null;
 
-						if (column.IsDbGeneratedSpecified == false) {
-							column.IsDbGenerated = false;
-						}
-
-						if (column.IsPrimaryKeySpecified == false) {
-							column.IsPrimaryKey = false;
-						}*/
-
-					}else if (item is Association) {
-						var association = item as Association;
-						association.Table = table;
-
-						// Determine if we already have this association in the list
-						if (associations.ContainsKey(association.Name)) {
-							var other = associations[association.Name];
-							
-							if (other.IsForeignKeySpecified && other.IsForeignKey) {
-								// This is the child table
-								other.ParentAssociation = association;
-								association.ChildAssociation = other;
-							}else {
-								// This is the parent association.
-								other.ChildAssociation = association;
-								association.ParentAssociation = other;
+						// Get the association's corrisponding columns
+						foreach (var assoc_col in association.Table.Columns) {
+							if (assoc_col.Member == association.ThisKey) {
+								this_column = assoc_col;
+								break;
 							}
-
-							// Get the colums for the associations.
-							Column this_column = null;
-							Column other_column = null;
-
-							// Get the association's corrisponding columns
-							Utilities.each<Column>(association.Table.Type.Items, assoc_col => {
-								if (assoc_col.Member == association.ThisKey) {
-									this_column = assoc_col;
-									return false;
-								}
-								return true;
-							});
-
-							Utilities.each<Column>(other.Table.Type.Items, assoc_col => {
-								if (assoc_col.Member == association.OtherKey) {
-									other_column = assoc_col;
-									return false;
-								}
-								return true;
-							});
-
-							association.OtherKeyColumn = other.ThisKeyColumn = other_column;
-							association.ThisKeyColumn = other.OtherKeyColumn = this_column;
-
-							associations.Remove(association.Name);
-
-						} else {
-							// Add the association to the list for later.
-							associations.Add(association.Name, association);
 						}
 
-						/*
-						if (association.IsForeignKeySpecified == false) {
-							association.IsForeignKey = false;
-						}*/
-	
-						if (association.CardinalitySpecified == false && association.IsForeignKey == false) {
-							association.Cardinality = Cardinality.Many;
-						} else {
-							association.Cardinality = Cardinality.One;
+						foreach (var assoc_col in other.Table.Columns) {
+							if (assoc_col.Member == association.OtherKey) {
+								other_column = assoc_col;
+								break;
+							}
 						}
+
+						association.OtherKeyColumn = other.ThisKeyColumn = other_column;
+						association.ThisKeyColumn = other.OtherKeyColumn = this_column;
+
+						associations.Remove(association.Name);
+
+					} else {
+						// Add the association to the list for later.
+						associations.Add(association.Name, association);
+					}
+
+					/*
+					if (association.IsForeignKeySpecified == false) {
+						association.IsForeignKey = false;
+					}*/
+
+					if (association.CardinalitySpecified == false && association.IsForeignKey == false) {
+						association.Cardinality = Cardinality.Many;
+					} else {
+						association.Cardinality = Cardinality.One;
 					}
 				}
 			}
 
+
 			return true;
+
 		}
 
 
