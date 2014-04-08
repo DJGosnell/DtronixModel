@@ -16,8 +16,32 @@ using Microsoft.Win32;
 using DtxModel.Ddl;
 using System.Xml.Serialization;
 using System.Threading;
+using System.Collections.ObjectModel;
 
-namespace DtxModeler {
+namespace DtxModeler.Xaml {
+
+
+	public class Conference {
+		public Conference(string name) {
+			Name = name;
+			Teams = new ObservableCollection<Team>();
+		}
+
+		public string Name { get; private set; }
+		public ObservableCollection<Team> Teams { get; private set; }
+	}
+
+	public class Team {
+		public Team(string name) {
+			Name = name;
+			Players = new ObservableCollection<string>();
+		}
+
+		public string Name { get; private set; }
+		public ObservableCollection<string> Players { get; private set; }
+	}
+
+
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
@@ -26,6 +50,7 @@ namespace DtxModeler {
 		private Database ddl;
 
 		public MainWindow() {
+			InitializeComponent();
 		}
 
 		public void openDdl() {
@@ -60,7 +85,49 @@ namespace DtxModeler {
 		}
 
 		private void refreshDdl() {
-			_treDatabaseLayout.DataContext = ddl;
+
+
+			var western = new Conference("Western") {
+				Teams =
+                {
+                    new Team("Club Deportivo Chivas USA"),
+                    new Team("Colorado Rapids"),
+                    new Team("FC Dallas"),
+                    new Team("Houston Dynamo"),
+                    new Team("Los Angeles Galaxy"),
+                    new Team("Real Salt Lake"),
+                    new Team("San Jose Earthquakes"),
+                    new Team("Seattle Sounders FC") { Players = { "Osvaldo Alonso", "Evan Brown" }},
+                    new Team("Portland 2011"),
+                    new Team("Vancouver 2011")
+                }
+			};
+
+			var eastern = new Conference("Eastern") {
+				Teams =
+                {
+                    new Team("Chicago Fire"),
+                    new Team("Columbus Crew"),
+                    new Team("D.C. United"),
+                    new Team("Kansas City Wizards"),
+                    new Team("New York Red Bulls"),
+                    new Team("New England Revolution"),
+                    new Team("Toronto FC"),
+                    new Team("Philadelphia Union 2010")
+                }
+			};
+
+			var league = new Collection<Conference>() { western, eastern };
+
+
+			_treDatabaseLayout.DataContext = new {
+				//WesternConference = western,
+				//EasternConference = eastern,
+				League = league,
+				DataB = ddl.Table
+			};
+
+			//_treDatabaseLayout.DataContext = ddl;
 			/*var root = new TreeViewItem() {
 				Header = ddl.Name
 			};
