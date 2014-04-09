@@ -1,10 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
 namespace DtxModel.Ddl {
+	public partial class Table {
+
+		[XmlIgnore]
+		private ObservableCollection<Column> _ColumnCollection;
+		[XmlIgnore]
+		public ObservableCollection<Column> ColumnCollection {
+			get {
+				if (_ColumnCollection == null) {
+					_ColumnCollection = new ObservableCollection<Column>();
+					_ColumnCollection.Add(this.Column[0]);
+				}
+				return _ColumnCollection;
+
+			}
+		}
+	}
+
+
+
 	public partial class Association {
 
 		[XmlIgnore]
@@ -37,3 +57,4 @@ namespace DtxModel.Ddl {
 		public Table Table;
 	}
 }
+
