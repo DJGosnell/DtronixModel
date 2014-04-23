@@ -14,8 +14,7 @@ namespace DtxModel.Ddl {
 		public ObservableCollection<Column> ColumnCollection {
 			get {
 				if (_ColumnCollection == null) {
-					_ColumnCollection = new ObservableCollection<Column>();
-					_ColumnCollection.Add(this.Column[0]);
+					_ColumnCollection = new ObservableCollection<Column>(this.columnField);
 				}
 				return _ColumnCollection;
 

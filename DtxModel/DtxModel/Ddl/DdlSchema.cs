@@ -23,61 +23,187 @@ namespace DtxModel.Ddl {
     [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
     public partial class Database {
         
+        private Table[] tableField;
+        
+        private View[] viewField;
+        
+        private Function[] functionField;
+        
+        private string nameField;
+        
+        private string entityNamespaceField;
+        
+        private string contextNamespaceField;
+        
+        private string classField;
+        
+        private AccessModifier accessModifierField;
+        
+        private bool accessModifierFieldSpecified;
+        
+        private ClassModifier modifierField;
+        
+        private bool modifierFieldSpecified;
+        
+        private string baseTypeField;
+        
+        private string providerField;
+        
+        private string entityBaseField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Table")]
-        public Table[] Table;
+        public Table[] Table {
+            get {
+                return this.tableField;
+            }
+            set {
+                this.tableField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("View")]
-        public View[] View;
+        public View[] View {
+            get {
+                return this.viewField;
+            }
+            set {
+                this.viewField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Function")]
-        public Function[] Function;
+        public Function[] Function {
+            get {
+                return this.functionField;
+            }
+            set {
+                this.functionField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name;
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string EntityNamespace;
+        public string EntityNamespace {
+            get {
+                return this.entityNamespaceField;
+            }
+            set {
+                this.entityNamespaceField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ContextNamespace;
+        public string ContextNamespace {
+            get {
+                return this.contextNamespaceField;
+            }
+            set {
+                this.contextNamespaceField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Class;
+        public string Class {
+            get {
+                return this.classField;
+            }
+            set {
+                this.classField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public AccessModifier AccessModifier;
+        public AccessModifier AccessModifier {
+            get {
+                return this.accessModifierField;
+            }
+            set {
+                this.accessModifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool AccessModifierSpecified;
+        public bool AccessModifierSpecified {
+            get {
+                return this.accessModifierFieldSpecified;
+            }
+            set {
+                this.accessModifierFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public ClassModifier Modifier;
+        public ClassModifier Modifier {
+            get {
+                return this.modifierField;
+            }
+            set {
+                this.modifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ModifierSpecified;
+        public bool ModifierSpecified {
+            get {
+                return this.modifierFieldSpecified;
+            }
+            set {
+                this.modifierFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string BaseType;
+        public string BaseType {
+            get {
+                return this.baseTypeField;
+            }
+            set {
+                this.baseTypeField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Provider;
+        public string Provider {
+            get {
+                return this.providerField;
+            }
+            set {
+                this.providerField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string EntityBase;
+        public string EntityBase {
+            get {
+                return this.entityBaseField;
+            }
+            set {
+                this.entityBaseField = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -87,50 +213,158 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class Table {
         
+        private Column[] columnField;
+        
+        private Association[] associationField;
+        
+        private Index[] indexField;
+        
+        private TableFunction insertFunctionField;
+        
+        private TableFunction updateFunctionField;
+        
+        private TableFunction deleteFunctionField;
+        
+        private string nameField;
+        
+        private string memberField;
+        
+        private AccessModifier accessModifierField;
+        
+        private bool accessModifierFieldSpecified;
+        
+        private MemberModifier modifierField;
+        
+        private bool modifierFieldSpecified;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Column")]
-        public Column[] Column;
+        public Column[] Column {
+            get {
+                return this.columnField;
+            }
+            set {
+                this.columnField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Association")]
-        public Association[] Association;
+        public Association[] Association {
+            get {
+                return this.associationField;
+            }
+            set {
+                this.associationField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Index")]
-        public Index[] Index;
+        public Index[] Index {
+            get {
+                return this.indexField;
+            }
+            set {
+                this.indexField = value;
+            }
+        }
         
         /// <remarks/>
-        public TableFunction InsertFunction;
+        public TableFunction InsertFunction {
+            get {
+                return this.insertFunctionField;
+            }
+            set {
+                this.insertFunctionField = value;
+            }
+        }
         
         /// <remarks/>
-        public TableFunction UpdateFunction;
+        public TableFunction UpdateFunction {
+            get {
+                return this.updateFunctionField;
+            }
+            set {
+                this.updateFunctionField = value;
+            }
+        }
         
         /// <remarks/>
-        public TableFunction DeleteFunction;
+        public TableFunction DeleteFunction {
+            get {
+                return this.deleteFunctionField;
+            }
+            set {
+                this.deleteFunctionField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name;
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Member;
+        public string Member {
+            get {
+                return this.memberField;
+            }
+            set {
+                this.memberField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public AccessModifier AccessModifier;
+        public AccessModifier AccessModifier {
+            get {
+                return this.accessModifierField;
+            }
+            set {
+                this.accessModifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool AccessModifierSpecified;
+        public bool AccessModifierSpecified {
+            get {
+                return this.accessModifierFieldSpecified;
+            }
+            set {
+                this.accessModifierFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public MemberModifier Modifier;
+        public MemberModifier Modifier {
+            get {
+                return this.modifierField;
+            }
+            set {
+                this.modifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ModifierSpecified;
+        public bool ModifierSpecified {
+            get {
+                return this.modifierFieldSpecified;
+            }
+            set {
+                this.modifierFieldSpecified = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -140,117 +374,369 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class Column {
         
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name;
+        private string nameField;
+        
+        private string memberField;
+        
+        private string storageField;
+        
+        private AccessModifier accessModifierField;
+        
+        private bool accessModifierFieldSpecified;
+        
+        private MemberModifier modifierField;
+        
+        private bool modifierFieldSpecified;
+        
+        private string typeField;
+        
+        private string dbTypeField;
+        
+        private bool isReadOnlyField;
+        
+        private bool isReadOnlyFieldSpecified;
+        
+        private bool isPrimaryKeyField;
+        
+        private bool isPrimaryKeyFieldSpecified;
+        
+        private bool isAutoIncrementField;
+        
+        private bool isAutoIncrementFieldSpecified;
+        
+        private bool isDbGeneratedField;
+        
+        private bool isDbGeneratedFieldSpecified;
+        
+        private bool canBeNullField;
+        
+        private bool canBeNullFieldSpecified;
+        
+        private bool isDiscriminatorField;
+        
+        private bool isDiscriminatorFieldSpecified;
+        
+        private string expressionField;
+        
+        private bool isVersionField;
+        
+        private bool isVersionFieldSpecified;
+        
+        private bool isDelayLoadedField;
+        
+        private bool isDelayLoadedFieldSpecified;
+        
+        private bool indexedField;
+        
+        private bool indexedFieldSpecified;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Member;
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Storage;
+        public string Member {
+            get {
+                return this.memberField;
+            }
+            set {
+                this.memberField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public AccessModifier AccessModifier;
+        public string Storage {
+            get {
+                return this.storageField;
+            }
+            set {
+                this.storageField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public AccessModifier AccessModifier {
+            get {
+                return this.accessModifierField;
+            }
+            set {
+                this.accessModifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool AccessModifierSpecified;
+        public bool AccessModifierSpecified {
+            get {
+                return this.accessModifierFieldSpecified;
+            }
+            set {
+                this.accessModifierFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public MemberModifier Modifier;
+        public MemberModifier Modifier {
+            get {
+                return this.modifierField;
+            }
+            set {
+                this.modifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ModifierSpecified;
+        public bool ModifierSpecified {
+            get {
+                return this.modifierFieldSpecified;
+            }
+            set {
+                this.modifierFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Type;
+        public string Type {
+            get {
+                return this.typeField;
+            }
+            set {
+                this.typeField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string DbType;
+        public string DbType {
+            get {
+                return this.dbTypeField;
+            }
+            set {
+                this.dbTypeField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool IsReadOnly;
+        public bool IsReadOnly {
+            get {
+                return this.isReadOnlyField;
+            }
+            set {
+                this.isReadOnlyField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsReadOnlySpecified;
+        public bool IsReadOnlySpecified {
+            get {
+                return this.isReadOnlyFieldSpecified;
+            }
+            set {
+                this.isReadOnlyFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool IsPrimaryKey;
+        public bool IsPrimaryKey {
+            get {
+                return this.isPrimaryKeyField;
+            }
+            set {
+                this.isPrimaryKeyField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsPrimaryKeySpecified;
+        public bool IsPrimaryKeySpecified {
+            get {
+                return this.isPrimaryKeyFieldSpecified;
+            }
+            set {
+                this.isPrimaryKeyFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool IsAutoIncrement;
+        public bool IsAutoIncrement {
+            get {
+                return this.isAutoIncrementField;
+            }
+            set {
+                this.isAutoIncrementField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsAutoIncrementSpecified;
+        public bool IsAutoIncrementSpecified {
+            get {
+                return this.isAutoIncrementFieldSpecified;
+            }
+            set {
+                this.isAutoIncrementFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool IsDbGenerated;
+        public bool IsDbGenerated {
+            get {
+                return this.isDbGeneratedField;
+            }
+            set {
+                this.isDbGeneratedField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsDbGeneratedSpecified;
+        public bool IsDbGeneratedSpecified {
+            get {
+                return this.isDbGeneratedFieldSpecified;
+            }
+            set {
+                this.isDbGeneratedFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool CanBeNull;
+        public bool CanBeNull {
+            get {
+                return this.canBeNullField;
+            }
+            set {
+                this.canBeNullField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool CanBeNullSpecified;
+        public bool CanBeNullSpecified {
+            get {
+                return this.canBeNullFieldSpecified;
+            }
+            set {
+                this.canBeNullFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool IsDiscriminator;
+        public bool IsDiscriminator {
+            get {
+                return this.isDiscriminatorField;
+            }
+            set {
+                this.isDiscriminatorField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsDiscriminatorSpecified;
+        public bool IsDiscriminatorSpecified {
+            get {
+                return this.isDiscriminatorFieldSpecified;
+            }
+            set {
+                this.isDiscriminatorFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Expression;
+        public string Expression {
+            get {
+                return this.expressionField;
+            }
+            set {
+                this.expressionField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool IsVersion;
+        public bool IsVersion {
+            get {
+                return this.isVersionField;
+            }
+            set {
+                this.isVersionField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsVersionSpecified;
+        public bool IsVersionSpecified {
+            get {
+                return this.isVersionFieldSpecified;
+            }
+            set {
+                this.isVersionFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool IsDelayLoaded;
+        public bool IsDelayLoaded {
+            get {
+                return this.isDelayLoadedField;
+            }
+            set {
+                this.isDelayLoadedField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsDelayLoadedSpecified;
+        public bool IsDelayLoadedSpecified {
+            get {
+                return this.isDelayLoadedFieldSpecified;
+            }
+            set {
+                this.isDelayLoadedFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool Indexed;
+        public bool Indexed {
+            get {
+                return this.indexedField;
+            }
+            set {
+                this.indexedField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IndexedSpecified;
+        public bool IndexedSpecified {
+            get {
+                return this.indexedFieldSpecified;
+            }
+            set {
+                this.indexedFieldSpecified = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -299,13 +785,31 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class Return {
         
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Type;
+        private string typeField;
+        
+        private string dbTypeField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string DbType;
+        public string Type {
+            get {
+                return this.typeField;
+            }
+            set {
+                this.typeField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string DbType {
+            get {
+                return this.dbTypeField;
+            }
+            set {
+                this.dbTypeField = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -315,29 +819,83 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class Parameter {
         
+        private string nameField;
+        
+        private string parameter1Field;
+        
+        private string typeField;
+        
+        private string dbTypeField;
+        
+        private ParameterDirection directionField;
+        
+        private bool directionFieldSpecified;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name;
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute("Parameter")]
-        public string Parameter1;
+        public string Parameter1 {
+            get {
+                return this.parameter1Field;
+            }
+            set {
+                this.parameter1Field = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Type;
+        public string Type {
+            get {
+                return this.typeField;
+            }
+            set {
+                this.typeField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string DbType;
+        public string DbType {
+            get {
+                return this.dbTypeField;
+            }
+            set {
+                this.dbTypeField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public ParameterDirection Direction;
+        public ParameterDirection Direction {
+            get {
+                return this.directionField;
+            }
+            set {
+                this.directionField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool DirectionSpecified;
+        public bool DirectionSpecified {
+            get {
+                return this.directionFieldSpecified;
+            }
+            set {
+                this.directionFieldSpecified = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -362,57 +920,174 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class Function {
         
+        private Parameter[] parameterField;
+        
+        private Return itemField;
+        
+        private string nameField;
+        
+        private string idField;
+        
+        private string methodField;
+        
+        private AccessModifier accessModifierField;
+        
+        private bool accessModifierFieldSpecified;
+        
+        private MemberModifier modifierField;
+        
+        private bool modifierFieldSpecified;
+        
+        private bool hasMultipleResultsField;
+        
+        private bool hasMultipleResultsFieldSpecified;
+        
+        private bool isComposableField;
+        
+        private bool isComposableFieldSpecified;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Parameter")]
-        public Parameter[] Parameter;
+        public Parameter[] Parameter {
+            get {
+                return this.parameterField;
+            }
+            set {
+                this.parameterField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Return")]
-        public Return Item;
+        public Return Item {
+            get {
+                return this.itemField;
+            }
+            set {
+                this.itemField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name;
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute(DataType="ID")]
-        public string Id;
+        public string Id {
+            get {
+                return this.idField;
+            }
+            set {
+                this.idField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Method;
+        public string Method {
+            get {
+                return this.methodField;
+            }
+            set {
+                this.methodField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public AccessModifier AccessModifier;
+        public AccessModifier AccessModifier {
+            get {
+                return this.accessModifierField;
+            }
+            set {
+                this.accessModifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool AccessModifierSpecified;
+        public bool AccessModifierSpecified {
+            get {
+                return this.accessModifierFieldSpecified;
+            }
+            set {
+                this.accessModifierFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public MemberModifier Modifier;
+        public MemberModifier Modifier {
+            get {
+                return this.modifierField;
+            }
+            set {
+                this.modifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ModifierSpecified;
+        public bool ModifierSpecified {
+            get {
+                return this.modifierFieldSpecified;
+            }
+            set {
+                this.modifierFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool HasMultipleResults;
+        public bool HasMultipleResults {
+            get {
+                return this.hasMultipleResultsField;
+            }
+            set {
+                this.hasMultipleResultsField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool HasMultipleResultsSpecified;
+        public bool HasMultipleResultsSpecified {
+            get {
+                return this.hasMultipleResultsFieldSpecified;
+            }
+            set {
+                this.hasMultipleResultsFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool IsComposable;
+        public bool IsComposable {
+            get {
+                return this.isComposableField;
+            }
+            set {
+                this.isComposableField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsComposableSpecified;
+        public bool IsComposableSpecified {
+            get {
+                return this.isComposableFieldSpecified;
+            }
+            set {
+                this.isComposableFieldSpecified = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -422,32 +1097,95 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class View {
         
+        private Column columnField;
+        
+        private string nameField;
+        
+        private string memberField;
+        
+        private AccessModifier accessModifierField;
+        
+        private bool accessModifierFieldSpecified;
+        
+        private MemberModifier modifierField;
+        
+        private bool modifierFieldSpecified;
+        
         /// <remarks/>
-        public Column Column;
+        public Column Column {
+            get {
+                return this.columnField;
+            }
+            set {
+                this.columnField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name;
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Member;
+        public string Member {
+            get {
+                return this.memberField;
+            }
+            set {
+                this.memberField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public AccessModifier AccessModifier;
+        public AccessModifier AccessModifier {
+            get {
+                return this.accessModifierField;
+            }
+            set {
+                this.accessModifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool AccessModifierSpecified;
+        public bool AccessModifierSpecified {
+            get {
+                return this.accessModifierFieldSpecified;
+            }
+            set {
+                this.accessModifierFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public MemberModifier Modifier;
+        public MemberModifier Modifier {
+            get {
+                return this.modifierField;
+            }
+            set {
+                this.modifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ModifierSpecified;
+        public bool ModifierSpecified {
+            get {
+                return this.modifierFieldSpecified;
+            }
+            set {
+                this.modifierFieldSpecified = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -457,9 +1195,18 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class TableFunctionReturn {
         
+        private string memberField;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Member;
+        public string Member {
+            get {
+                return this.memberField;
+            }
+            set {
+                this.memberField = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -469,13 +1216,31 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class TableFunctionParameter {
         
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Parameter;
+        private string parameterField;
+        
+        private string memberField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Member;
+        public string Parameter {
+            get {
+                return this.parameterField;
+            }
+            set {
+                this.parameterField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Member {
+            get {
+                return this.memberField;
+            }
+            set {
+                this.memberField = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -485,24 +1250,69 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class TableFunction {
         
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Argument")]
-        public TableFunctionParameter[] Argument;
+        private TableFunctionParameter[] argumentField;
+        
+        private TableFunctionReturn returnField;
+        
+        private string functionIdField;
+        
+        private AccessModifier accessModifierField;
+        
+        private bool accessModifierFieldSpecified;
         
         /// <remarks/>
-        public TableFunctionReturn Return;
+        [System.Xml.Serialization.XmlElementAttribute("Argument")]
+        public TableFunctionParameter[] Argument {
+            get {
+                return this.argumentField;
+            }
+            set {
+                this.argumentField = value;
+            }
+        }
+        
+        /// <remarks/>
+        public TableFunctionReturn Return {
+            get {
+                return this.returnField;
+            }
+            set {
+                this.returnField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute(DataType="IDREF")]
-        public string FunctionId;
+        public string FunctionId {
+            get {
+                return this.functionIdField;
+            }
+            set {
+                this.functionIdField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public AccessModifier AccessModifier;
+        public AccessModifier AccessModifier {
+            get {
+                return this.accessModifierField;
+            }
+            set {
+                this.accessModifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool AccessModifierSpecified;
+        public bool AccessModifierSpecified {
+            get {
+                return this.accessModifierFieldSpecified;
+            }
+            set {
+                this.accessModifierFieldSpecified = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -512,13 +1322,31 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class IndexColumn {
         
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name;
+        private string nameField;
+        
+        private string directionField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Direction;
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Direction {
+            get {
+                return this.directionField;
+            }
+            set {
+                this.directionField = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -528,21 +1356,57 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class Index {
         
+        private IndexColumn[] indexColumnField;
+        
+        private string nameField;
+        
+        private bool uniqueField;
+        
+        private bool uniqueFieldSpecified;
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("IndexColumn")]
-        public IndexColumn[] IndexColumn;
+        public IndexColumn[] IndexColumn {
+            get {
+                return this.indexColumnField;
+            }
+            set {
+                this.indexColumnField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name;
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool Unique;
+        public bool Unique {
+            get {
+                return this.uniqueField;
+            }
+            set {
+                this.uniqueField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool UniqueSpecified;
+        public bool UniqueSpecified {
+            get {
+                return this.uniqueFieldSpecified;
+            }
+            set {
+                this.uniqueFieldSpecified = value;
+            }
+        }
     }
     
     /// <remarks/>
@@ -552,73 +1416,226 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class Association {
         
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name;
+        private string nameField;
+        
+        private string memberField;
+        
+        private string storageField;
+        
+        private AccessModifier accessModifierField;
+        
+        private bool accessModifierFieldSpecified;
+        
+        private MemberModifier modifierField;
+        
+        private bool modifierFieldSpecified;
+        
+        private string typeField;
+        
+        private string thisKeyField;
+        
+        private string otherKeyField;
+        
+        private bool isForeignKeyField;
+        
+        private bool isForeignKeyFieldSpecified;
+        
+        private Cardinality cardinalityField;
+        
+        private bool cardinalityFieldSpecified;
+        
+        private string deleteRuleField;
+        
+        private bool deleteOnNullField;
+        
+        private bool deleteOnNullFieldSpecified;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Member;
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Storage;
+        public string Member {
+            get {
+                return this.memberField;
+            }
+            set {
+                this.memberField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public AccessModifier AccessModifier;
+        public string Storage {
+            get {
+                return this.storageField;
+            }
+            set {
+                this.storageField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public AccessModifier AccessModifier {
+            get {
+                return this.accessModifierField;
+            }
+            set {
+                this.accessModifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool AccessModifierSpecified;
+        public bool AccessModifierSpecified {
+            get {
+                return this.accessModifierFieldSpecified;
+            }
+            set {
+                this.accessModifierFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public MemberModifier Modifier;
+        public MemberModifier Modifier {
+            get {
+                return this.modifierField;
+            }
+            set {
+                this.modifierField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ModifierSpecified;
+        public bool ModifierSpecified {
+            get {
+                return this.modifierFieldSpecified;
+            }
+            set {
+                this.modifierFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Type;
+        public string Type {
+            get {
+                return this.typeField;
+            }
+            set {
+                this.typeField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ThisKey;
+        public string ThisKey {
+            get {
+                return this.thisKeyField;
+            }
+            set {
+                this.thisKeyField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string OtherKey;
+        public string OtherKey {
+            get {
+                return this.otherKeyField;
+            }
+            set {
+                this.otherKeyField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool IsForeignKey;
+        public bool IsForeignKey {
+            get {
+                return this.isForeignKeyField;
+            }
+            set {
+                this.isForeignKeyField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsForeignKeySpecified;
+        public bool IsForeignKeySpecified {
+            get {
+                return this.isForeignKeyFieldSpecified;
+            }
+            set {
+                this.isForeignKeyFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public Cardinality Cardinality;
+        public Cardinality Cardinality {
+            get {
+                return this.cardinalityField;
+            }
+            set {
+                this.cardinalityField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool CardinalitySpecified;
+        public bool CardinalitySpecified {
+            get {
+                return this.cardinalityFieldSpecified;
+            }
+            set {
+                this.cardinalityFieldSpecified = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string DeleteRule;
+        public string DeleteRule {
+            get {
+                return this.deleteRuleField;
+            }
+            set {
+                this.deleteRuleField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool DeleteOnNull;
+        public bool DeleteOnNull {
+            get {
+                return this.deleteOnNullField;
+            }
+            set {
+                this.deleteOnNullField = value;
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool DeleteOnNullSpecified;
+        public bool DeleteOnNullSpecified {
+            get {
+                return this.deleteOnNullFieldSpecified;
+            }
+            set {
+                this.deleteOnNullFieldSpecified = value;
+            }
+        }
     }
     
     /// <remarks/>
