@@ -30,6 +30,7 @@ namespace DtxModeler.Xaml {
 
 		public MainWindow() {
 			InitializeComponent();
+			_treDatabaseLayout.UseLayoutRounding = true;
 		}
 
 		public void openDdl() {
@@ -64,7 +65,58 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void refreshDdl() {
-			_treDatabaseLayout.ItemsSource = new ObservableCollection<DtxModel.Ddl.Table>(ddl.Table);
+			var root = new TreeViewItem();
+			root.Header = "Test";
+			string image_database = "pack://application:,,,/Xaml/Images/database.png";
+			string image_table = "pack://application:,,,/Xaml/Images/table.png";
+			string image_view = "pack://application:,,,/Xaml/Images/table.png";
+			string image_function = "pack://application:,,,/Xaml/Images/plugin.png";
+
+
+			_treDatabaseLayout.Items.Clear();
+
+			var db_root = createTreeViewItem(ddl.Name, image_database);
+			db_root.IsExpanded = true;
+
+			foreach (var table in ddl.Table) {
+				db_root.Items.Add(createTreeViewItem(table.Name, image_table));
+			}
+
+			_treDatabaseLayout.Items.Add(db_root);
+
+
+			//_treDatabaseLayout.Items.Add()
+
+
+			/*_treDatabaseLayout.DataContext = new {
+				Tables = new ObservableCollection<DtxModel.Ddl.Table>(ddl.Table)
+			};*/
+		}
+
+		private TreeViewItem createTreeViewItem(string value, string image_path) {
+			TreeViewItem item = new TreeViewItem();
+
+			StackPanel stack = new StackPanel();
+			stack.Orientation = Orientation.Horizontal;
+
+			// create Image
+			Image image = new Image();
+			image.Source = new BitmapImage(new Uri(image_path));
+			//RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
+			//RenderOptions.SetEdgeMode(image, EdgeMode.Aliased);
+			
+
+			TextBlock text = new TextBlock();
+			text.Text = value;
+			text.TextWrapping = TextWrapping.Wrap;
+			text.Padding = new Thickness(2, 2, 5, 2);
+
+			stack.Children.Add(image);
+			stack.Children.Add(text);
+
+			item.Header = stack;
+
+			return item;
 		}
 
 		private void MenuItem_Click(object sender, RoutedEventArgs e) {
