@@ -1097,7 +1097,7 @@ namespace DtxModel.Ddl {
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     public partial class View {
         
-        private Column columnField;
+        private Column[] columnField;
         
         private string nameField;
         
@@ -1112,7 +1112,8 @@ namespace DtxModel.Ddl {
         private bool modifierFieldSpecified;
         
         /// <remarks/>
-        public Column Column {
+        [System.Xml.Serialization.XmlElementAttribute("Column")]
+        public Column[] Column {
             get {
                 return this.columnField;
             }

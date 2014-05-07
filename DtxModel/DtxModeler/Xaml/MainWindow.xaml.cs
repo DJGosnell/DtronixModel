@@ -27,6 +27,7 @@ namespace DtxModeler.Xaml {
 		private Database ddl;
 
 		private DtxModel.Ddl.Table selected_table;
+		private Column selected_column;
 
 		public MainWindow() {
 			InitializeComponent();
@@ -79,7 +80,9 @@ namespace DtxModeler.Xaml {
 			db_root.IsExpanded = true;
 
 			foreach (var table in ddl.Table) {
-				db_root.Items.Add(createTreeViewItem(table.Name, image_table));
+				var tree_table = createTreeViewItem(table.Name, image_table);
+				tree_table.Tag = table;
+				db_root.Items.Add(tree_table);
 			}
 
 			_treDatabaseLayout.Items.Add(db_root);
@@ -95,6 +98,7 @@ namespace DtxModeler.Xaml {
 
 		private TreeViewItem createTreeViewItem(string value, string image_path) {
 			TreeViewItem item = new TreeViewItem();
+			
 
 			StackPanel stack = new StackPanel();
 			stack.Orientation = Orientation.Horizontal;
@@ -131,9 +135,46 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void _treDatabaseLayout_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
-			if (e.NewValue is DtxModel.Ddl.Table) {
-				selected_table = (DtxModel.Ddl.Table)e.NewValue;
+			var selected_item = _treDatabaseLayout.SelectedItem as TreeViewItem;
+			if ((selected_item != null) && (selected_item.Tag is DtxModel.Ddl.Table)) {
+				selected_table = selected_item.Tag as DtxModel.Ddl.Table;
 			}
+
+			refreshCurrentTable();
+		}
+
+		private void refreshCurrentTable() {
+			if (selected_table == null) {
+				return;
+			}
+
+			_tabTable.IsSelected = true;
+			_dagColumnDefinitions.ItemsSource = selected_table.Column;
+		}
+
+		private void _dagColumnDefinitions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+			if (e.AddedItems.Count == 0) {
+				return;
+			}
+
+			var column = e.AddedItems[0] as Column;
+
+			if (column != null) {
+				selected_column = column;
+				refreshCurrentColumn();
+			}
+		}
+
+		private void refreshCurrentColumn() {
+			if (selected_column == null) {
+				return;
+			}
+
+			_txtColumnType.Text = selected_column.Type;
+			_cmbColumnNullable.SelectedIndex = (selected_column.CanBeNull) ? 1 : 0;
+			_txtColumnName.Text = selected_column.Name;
+			_txtColumnDefaultValue.Text = "";
+
 		}
 
 	}

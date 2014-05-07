@@ -8,18 +8,6 @@ using System.Xml.Serialization;
 namespace DtxModel.Ddl {
 	public partial class Table {
 
-		[XmlIgnore]
-		private ObservableCollection<Column> _ColumnCollection;
-		[XmlIgnore]
-		public ObservableCollection<Column> ColumnCollection {
-			get {
-				if (_ColumnCollection == null) {
-					_ColumnCollection = new ObservableCollection<Column>(this.columnField);
-				}
-				return _ColumnCollection;
-
-			}
-		}
 	}
 
 
