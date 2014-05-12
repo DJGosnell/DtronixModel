@@ -24,10 +24,16 @@ namespace DtxModeler.Xaml {
 	/// </summary>
 	public partial class MainWindow : Window {
 
-		private Database ddl;
+		private Database current_ddl;
+		private TreeViewItem current_ddl_root;
+
+		private List<Database> server_databases = new List<Database>();
+		private List<TreeViewItem> server_databases_roots = new List<TreeViewItem>();
+		
 
 		private DtxModeler.Ddl.Table selected_table;
 		private Column selected_column;
+		
 
 		public MainWindow() {
 			InitializeComponent();
@@ -50,7 +56,7 @@ namespace DtxModeler.Xaml {
 			ThreadPool.QueueUserWorkItem(o => { 
 				using (var ddl_stream = dialog.OpenFile()) {
 					try {
-						ddl = (Database)serializer.Deserialize(ddl_stream);
+						current_ddl = (Database)serializer.Deserialize(ddl_stream);
 					} catch (Exception) {
 						this.Dispatcher.BeginInvoke(new Action(() => {
 							MessageBox.Show("Unable to load selected Ddl file.");
@@ -70,30 +76,34 @@ namespace DtxModeler.Xaml {
 			root.Header = "Test";
 			string image_database = "pack://application:,,,/Xaml/Images/database.png";
 			string image_table = "pack://application:,,,/Xaml/Images/table.png";
-			string image_view = "pack://application:,,,/Xaml/Images/table.png";
-			string image_function = "pack://application:,,,/Xaml/Images/plugin.png";
 
+			_treDatabaseLayout.Items.Remove(current_ddl_root);
 
-			_treDatabaseLayout.Items.Clear();
-
-			var db_root = createTreeViewItem(ddl.Name, image_database);
+			var db_root = createTreeViewItem(current_ddl.Name, image_database);
 			db_root.IsExpanded = true;
 
-			foreach (var table in ddl.Table) {
+			foreach (var table in current_ddl.Table) {
 				var tree_table = createTreeViewItem(table.Name, image_table);
 				tree_table.Tag = table;
 				db_root.Items.Add(tree_table);
 			}
 
 			_treDatabaseLayout.Items.Add(db_root);
+			current_ddl_root = db_root;
+		}
 
+		private void refreshServers() {
+			string image_database_connect = "pack://application:,,,/Xaml/Images/database_connect.png";
 
-			//_treDatabaseLayout.Items.Add()
+			foreach (var database_root in server_databases_roots) {
+				_treDatabaseLayout.Items.Remove(database_root);
+			}
 
+			foreach (var server in current_ddl.Modeler.DbConnection) {
+				var server_tree = createTreeViewItem(server.Name, image_database_connect);
 
-			/*_treDatabaseLayout.DataContext = new {
-				Tables = new ObservableCollection<DtxModeler.Ddl.Table>(ddl.Table)
-			};*/
+			}
+
 		}
 
 		private TreeViewItem createTreeViewItem(string value, string image_path) {
@@ -130,9 +140,19 @@ namespace DtxModeler.Xaml {
 			//e.
 		}
 
-		private void _miOpen_Click(object sender, RoutedEventArgs e) {
+		private void Open_Click(object sender, RoutedEventArgs e) {
 			openDdl();
 		}
+
+		private void Save_Click(object sender, RoutedEventArgs e) {
+			saveDdl();
+		}
+
+
+		public void saveDdl() {
+
+		}
+
 
 		private void _treDatabaseLayout_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
 			var selected_item = _treDatabaseLayout.SelectedItem as TreeViewItem;

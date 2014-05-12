@@ -108,7 +108,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="Ddl\Build.bat" />
@@ -122,12 +122,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Xaml\Images\folder.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Xaml\Images\document_empty.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Xaml\Images\add.png" />
@@ -156,9 +150,27 @@
   <ItemGroup>
     <Folder Include="Generator\CodeGen\Sqlite\" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\database_connect.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\database_add.png" />
+    <Resource Include="Xaml\Images\database_delete.png" />
+    <Resource Include="Xaml\Images\database_error.png" />
+    <Resource Include="Xaml\Images\database_refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\cut.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\page_copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\page_paste.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>$(SolutionDir)packages\System.Data.SQLite.Core.1.0.92.0\content\net40\*.*" "$(TargetDir)*.*" /Y /I /E</PreBuildEvent>
+    <PreBuildEvent>xcopy "$(SolutionDir)packages\System.Data.SQLite.Core.1.0.92.0\content\net40\*.*" "$(TargetDir)*.*" /Y /I /E</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

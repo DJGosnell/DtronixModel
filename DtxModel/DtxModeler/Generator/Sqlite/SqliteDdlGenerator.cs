@@ -19,7 +19,7 @@ namespace DtxModeler.Generator.Sqlite {
 			database = new Database();
 		}
 
-		public Database generateDatabase() {
+		public Database generateDdl() {
 			database.Name = Path.GetFileNameWithoutExtension(connection.DataSource);
 			database.Table = getTables();
 			foreach (var table in database.Table) {

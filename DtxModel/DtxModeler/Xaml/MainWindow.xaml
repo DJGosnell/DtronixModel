@@ -20,6 +20,37 @@
 				<RowDefinition/>
 			</Grid.RowDefinitions>
 			<TreeView x:Name="_treDatabaseLayout" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0,1,1,1" Grid.RowSpan="1" Grid.Row="1" SelectedItemChanged="_treDatabaseLayout_SelectedItemChanged">
+				<TreeView.ContextMenu>
+					<ContextMenu>
+						<MenuItem Header="Add Server">
+							<MenuItem.Icon>
+								<Image Source="Images/database_add.png" />
+							</MenuItem.Icon>
+						</MenuItem>
+						<MenuItem Header="Remove Server">
+							<MenuItem.Icon>
+								<Image Source="Images/database_delete.png" />
+							</MenuItem.Icon>
+						</MenuItem>
+						<Separator/>
+						<MenuItem Header="Cut">
+							<MenuItem.Icon>
+								<Image Source="Images/cut.png" />
+							</MenuItem.Icon>
+						</MenuItem>
+						<MenuItem Header="Copy">
+							<MenuItem.Icon>
+								<Image Source="Images/page_copy.png" />
+							</MenuItem.Icon>
+						</MenuItem>
+						<MenuItem Header="Paste">
+							<MenuItem.Icon>
+								<Image Source="Images/page_paste.png" />
+							</MenuItem.Icon>
+						</MenuItem>
+					</ContextMenu>
+				</TreeView.ContextMenu>
+			
 			</TreeView>
 			<TextBox HorizontalAlignment="Stretch" Height="23" TextWrapping="NoWrap" Text="Filter" VerticalAlignment="Top" BorderThickness="0,1,1,1"/>
 		</Grid>
@@ -36,13 +67,12 @@
 			</Menu.Background>
 			<MenuItem Header="_File" Height="21" VerticalAlignment="Top">
 				<MenuItem Header="_New"/>
-				<MenuItem x:Name="_miOpen" Header="_Open" Click="_miOpen_Click"/>
+				<MenuItem Header="_Open" Click="Open_Click"/>
+				<MenuItem Header="_Save" Click="Save_Click"/>
 				<Separator/>
 				<MenuItem Header="E_xit"/>
 			</MenuItem>
-		</Menu>
-
-		<StatusBar HorizontalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Stretch"/>
+		</Menu>		
 		<TabControl x:Name="_tbcDatabaseView" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,0,0" BorderThickness="1" Grid.ColumnSpan="1">
 			<TabItem x:Name="_tabTable" Header="Table">
 				<Grid>
@@ -71,22 +101,23 @@
 							</DataGrid.Columns>
 							<DataGrid.ContextMenu>
 								<ContextMenu>
-									<MenuItem Command="Cut">
+									<MenuItem Header="Cut">
 										<MenuItem.Icon>
-											<Image/>
+											<Image Source="Images/cut.png" />
 										</MenuItem.Icon>
 									</MenuItem>
-									<MenuItem Command="Copy">
+									<MenuItem Header="Copy">
 										<MenuItem.Icon>
-											<Image/>
+											<Image Source="Images/page_copy.png" />
 										</MenuItem.Icon>
 									</MenuItem>
-									<MenuItem Command="Paste">
+									<MenuItem Header="Paste">
 										<MenuItem.Icon>
-											<Image />
+											<Image Source="Images/page_paste.png" />
 										</MenuItem.Icon>
 									</MenuItem>
 								</ContextMenu>
+
 							</DataGrid.ContextMenu>
 						</DataGrid>
 					</GroupBox>
@@ -108,10 +139,11 @@
 			<TabItem x:Name="_tabColumnProperties" Header="Column" Height="23" VerticalAlignment="Top" Margin="-2,1,-2,-1" IsEnabled="False">
 				<Grid x:Name="_grdColumnProperties" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsEnabled="False">
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="80"/>
+						<ColumnDefinition Width="95"/>
 						<ColumnDefinition MinWidth="100"/>
 					</Grid.ColumnDefinitions>
 					<Grid.RowDefinitions>
+						<RowDefinition Height="30"/>
 						<RowDefinition Height="30"/>
 						<RowDefinition Height="30"/>
 						<RowDefinition Height="30"/>
@@ -138,12 +170,15 @@
 					<TextBlock Grid.Row="5" Grid.Column="0" HorizontalAlignment="Stretch" TextWrapping="NoWrap" Text="Primary Key" VerticalAlignment="Center" Padding="5,0,0,0" Height="16" Margin="0,7" Grid.ColumnSpan="2"/>
 					<CheckBox x:Name="_chkColumnPrimaryKey" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,8" Height="14"/>
 
-					<Grid Grid.Column="1" Grid.Row="6" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+					<TextBlock Grid.Row="6" Grid.Column="0" HorizontalAlignment="Stretch" TextWrapping="NoWrap" Text="Auto Increment" VerticalAlignment="Center" Padding="5,0,0,0" Height="16" Margin="0,7" Grid.ColumnSpan="2"/>
+					<CheckBox x:Name="_chkColumnAutoIncrement" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,8" Height="14"/>
+
+					<Grid Grid.Column="1" Grid.Row="7" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Height="25">
 						<Grid.ColumnDefinitions>
 							<ColumnDefinition/>
 							<ColumnDefinition Width="48"/>
 							<ColumnDefinition Width="60"/>
-							
+
 						</Grid.ColumnDefinitions>
 						<Grid.RowDefinitions>
 							<RowDefinition Height="25"/>
@@ -157,5 +192,6 @@
 			</TabItem>
 
 		</TabControl>
+		<StatusBar HorizontalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Stretch"/>
 	</Grid>
 </Window>

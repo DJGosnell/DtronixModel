@@ -46,7 +46,7 @@ namespace DtxModeler.Generator {
 
 				var generator = new SqliteDdlGenerator(options.Input, type_transformer);
 
-				input_database = generator.generateDatabase();
+				input_database = generator.generateDdl();
 			}
 
 
