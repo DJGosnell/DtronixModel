@@ -227,6 +227,8 @@ namespace DtxModel.Ddl {
         
         private string nameField;
         
+        private string descriptionField;
+        
         private string memberField;
         
         private AccessModifier accessModifierField;
@@ -313,6 +315,17 @@ namespace DtxModel.Ddl {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Member {
             get {
                 return this.memberField;
@@ -376,6 +389,8 @@ namespace DtxModel.Ddl {
         
         private string nameField;
         
+        private string descriptionField;
+        
         private string memberField;
         
         private string storageField;
@@ -408,9 +423,9 @@ namespace DtxModel.Ddl {
         
         private bool isDbGeneratedFieldSpecified;
         
-        private bool canBeNullField;
+        private bool nullableField;
         
-        private bool canBeNullFieldSpecified;
+        private bool nullableFieldSpecified;
         
         private bool isDiscriminatorField;
         
@@ -438,6 +453,17 @@ namespace DtxModel.Ddl {
             }
             set {
                 this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
             }
         }
         
@@ -619,23 +645,23 @@ namespace DtxModel.Ddl {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool CanBeNull {
+        public bool Nullable {
             get {
-                return this.canBeNullField;
+                return this.nullableField;
             }
             set {
-                this.canBeNullField = value;
+                this.nullableField = value;
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool CanBeNullSpecified {
+        public bool NullableSpecified {
             get {
-                return this.canBeNullFieldSpecified;
+                return this.nullableFieldSpecified;
             }
             set {
-                this.canBeNullFieldSpecified = value;
+                this.nullableFieldSpecified = value;
             }
         }
         
@@ -1101,6 +1127,8 @@ namespace DtxModel.Ddl {
         
         private string nameField;
         
+        private string descriptionField;
+        
         private string memberField;
         
         private AccessModifier accessModifierField;
@@ -1130,6 +1158,17 @@ namespace DtxModel.Ddl {
             }
             set {
                 this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
             }
         }
         
@@ -1361,6 +1400,8 @@ namespace DtxModel.Ddl {
         
         private string nameField;
         
+        private string descriptionField;
+        
         private bool uniqueField;
         
         private bool uniqueFieldSpecified;
@@ -1384,6 +1425,17 @@ namespace DtxModel.Ddl {
             }
             set {
                 this.nameField = value;
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
             }
         }
         

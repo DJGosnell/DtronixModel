@@ -166,15 +166,45 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void refreshCurrentColumn() {
+			_tabColumnProperties.IsEnabled = _grdColumnProperties.IsEnabled = true;
+
 			if (selected_column == null) {
+				_txtColumnName.Text = _txtColumnDbType.Text = "";
+				_cmbColumnNetType.SelectedIndex = -1;
+				_chkColumnNullable.IsChecked = _chkColumnPrimaryKey.IsChecked = false;
 				return;
 			}
 
-			_txtColumnType.Text = selected_column.Type;
-			_cmbColumnNullable.SelectedIndex = (selected_column.CanBeNull) ? 1 : 0;
 			_txtColumnName.Text = selected_column.Name;
-			_txtColumnDefaultValue.Text = "";
+			_txtColumnType.Text = selected_column.Type;
+			_txtColumnDbType.Text = selected_column.DbType;
+			_chkColumnNullable.IsChecked = selected_column.Nullable;
+			
+			// ToDo: Default Value
 
+			_chkColumnPrimaryKey.IsChecked = selected_column.IsPrimaryKey;
+			
+
+		}
+
+		private void _btnColumnCancel_Click(object sender, RoutedEventArgs e) {
+			selected_column = null;
+			refreshCurrentColumn();
+			_dagColumnDefinitions.UnselectAll();
+			_tabColumnProperties.IsEnabled = _grdColumnProperties.IsEnabled = false;
+		}
+
+		private void _btnColumnSave_Click(object sender, RoutedEventArgs e) {
+			selected_column.Name = _txtColumnName.Text;
+			selected_column.Type = _txtColumnType.Text;
+			selected_column.DbType = _txtColumnDbType.Text;
+			selected_column.Nullable = _chkColumnNullable.IsChecked.Value;
+
+			
+			
+			selected_column.IsPrimaryKey = _chkColumnPrimaryKey.IsChecked.Value;
+
+			_dagColumnDefinitions.Items.Refresh();
 		}
 
 	}
