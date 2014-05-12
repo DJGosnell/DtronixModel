@@ -1,4 +1,4 @@
-﻿using DtxModel.Ddl;
+﻿using DtxModeler.Ddl;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -126,8 +126,8 @@ namespace DtxModeler.Generator.Sqlite {
 							Name = reader["name"].ToString(),
 							IsPrimaryKey = Convert.ToBoolean(reader["pk"]),
 							IsPrimaryKeySpecified = true,
-							CanBeNull = !Convert.ToBoolean(reader["notnull"]),
-							CanBeNullSpecified = true,
+							Nullable = !Convert.ToBoolean(reader["notnull"]),
+							NullableSpecified = true,
 							DbType = reader["type"].ToString(),
 							Type = type_transformer.dbToNetType(reader["type"].ToString()),
 						};

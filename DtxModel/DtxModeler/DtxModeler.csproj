@@ -41,6 +41,10 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite, Version=1.0.92.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.92.0\lib\net40\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -66,6 +70,24 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Ddl\DdlSchema.cs">
+      <DependentUpon>DdlSchema.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Ddl\DdlSchema.Relations.cs" />
+    <Compile Include="Generator\CodeGen\CodeGenerator.cs" />
+    <Compile Include="Generator\CodeGen\DatabaseContextGen.cs" />
+    <Compile Include="Generator\CodeGen\SqlDatabaseGen.cs" />
+    <Compile Include="Generator\CodeGen\TableModelGen.cs" />
+    <Compile Include="Generator\CodeWriter.cs" />
+    <Compile Include="Generator\CommandOptions.cs" />
+    <Compile Include="Generator\OptionAttribute.cs" />
+    <Compile Include="Generator\Options.cs" />
+    <Compile Include="Generator\Program.cs" />
+    <Compile Include="Generator\Sqlite\SqliteDdlGenerator.cs" />
+    <Compile Include="Generator\Sqlite\SqliteTypeTransformer.cs" />
+    <Compile Include="Generator\TypeTransformer.cs" />
+    <Compile Include="Generator\TypeTransformerType.cs" />
+    <Compile Include="Generator\Utilities.cs" />
     <Compile Include="Xaml\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -89,6 +111,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Ddl\Build.bat" />
+    <None Include="Ddl\DdlSchema.xsd" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -128,7 +153,13 @@
   <ItemGroup>
     <Resource Include="Xaml\Images\table_chart.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Generator\CodeGen\Sqlite\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>$(SolutionDir)packages\System.Data.SQLite.Core.1.0.92.0\content\net40\*.*" "$(TargetDir)*.*" /Y /I /E</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

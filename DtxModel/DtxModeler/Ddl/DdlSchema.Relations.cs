@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace DtxModel.Ddl {
+namespace DtxModeler.Ddl {
 	public partial class Table {
 
 	}

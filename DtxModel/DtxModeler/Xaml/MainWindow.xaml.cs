@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.Win32;
-using DtxModel.Ddl;
+using DtxModeler.Ddl;
 using System.Xml.Serialization;
 using System.Threading;
 using System.Collections.ObjectModel;
@@ -26,7 +26,7 @@ namespace DtxModeler.Xaml {
 
 		private Database ddl;
 
-		private DtxModel.Ddl.Table selected_table;
+		private DtxModeler.Ddl.Table selected_table;
 		private Column selected_column;
 
 		public MainWindow() {
@@ -92,7 +92,7 @@ namespace DtxModeler.Xaml {
 
 
 			/*_treDatabaseLayout.DataContext = new {
-				Tables = new ObservableCollection<DtxModel.Ddl.Table>(ddl.Table)
+				Tables = new ObservableCollection<DtxModeler.Ddl.Table>(ddl.Table)
 			};*/
 		}
 
@@ -136,8 +136,8 @@ namespace DtxModeler.Xaml {
 
 		private void _treDatabaseLayout_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
 			var selected_item = _treDatabaseLayout.SelectedItem as TreeViewItem;
-			if ((selected_item != null) && (selected_item.Tag is DtxModel.Ddl.Table)) {
-				selected_table = selected_item.Tag as DtxModel.Ddl.Table;
+			if ((selected_item != null) && (selected_item.Tag is DtxModeler.Ddl.Table)) {
+				selected_table = selected_item.Tag as DtxModeler.Ddl.Table;
 			}
 
 			refreshCurrentTable();
@@ -176,7 +176,7 @@ namespace DtxModeler.Xaml {
 			}
 
 			_txtColumnName.Text = selected_column.Name;
-			_txtColumnType.Text = selected_column.Type;
+			//_txtColumnType.Text = selected_column.Type;
 			_txtColumnDbType.Text = selected_column.DbType;
 			_chkColumnNullable.IsChecked = selected_column.Nullable;
 			
@@ -196,7 +196,7 @@ namespace DtxModeler.Xaml {
 
 		private void _btnColumnSave_Click(object sender, RoutedEventArgs e) {
 			selected_column.Name = _txtColumnName.Text;
-			selected_column.Type = _txtColumnType.Text;
+			//selected_column.Type = _txtColumnType.Text;
 			selected_column.DbType = _txtColumnDbType.Text;
 			selected_column.Nullable = _chkColumnNullable.IsChecked.Value;
 

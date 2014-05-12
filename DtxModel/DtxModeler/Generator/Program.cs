@@ -1,5 +1,5 @@
 ﻿using DtxModeler.Generator.CodeGen;
-using DtxModel.Ddl;
+using DtxModeler.Ddl;
 using DtxModeler.Generator.Sqlite;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Xml.Serialization;
 
 namespace DtxModeler.Generator {
 	class Program {
-		static void Main(string[] args) {
+		static void Mainold(string[] args) {
 
 
 			var options = new ModelGenOptions(args);

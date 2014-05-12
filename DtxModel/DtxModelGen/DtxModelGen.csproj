@@ -7,7 +7,7 @@
     <ProjectGuid>{F98C3A85-C1C8-40AC-B507-C7DE891560ED}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DtxModelGen</RootNamespace>
+    <RootNamespace>DtxModeler.Generator</RootNamespace>
     <AssemblyName>DtxModelGen</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

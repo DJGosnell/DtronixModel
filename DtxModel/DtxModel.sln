@@ -7,13 +7,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtxModel", "DtxModel\DtxMod
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtxModelTests", "DtxModelTests\DtxModelTests.csproj", "{6F5EF738-E845-45DE-9FC8-4BF9CDFA7C5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtxModelGen", "DtxModelGen\DtxModelGen.csproj", "{F98C3A85-C1C8-40AC-B507-C7DE891560ED}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtxModeler", "DtxModeler\DtxModeler.csproj", "{E4BEDE87-1F27-4381-84C8-F25FCE389560}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 5
+		SccNumberOfProjects = 4
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://djgosnell.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -23,12 +21,9 @@ Global
 		SccProjectUniqueName2 = DtxModelTests\\DtxModelTests.csproj
 		SccProjectName2 = DtxModelTests
 		SccLocalPath2 = DtxModelTests
-		SccProjectUniqueName3 = DtxModelGen\\DtxModelGen.csproj
-		SccProjectName3 = DtxModelGen
-		SccLocalPath3 = DtxModelGen
-		SccProjectUniqueName4 = DtxModeler\\DtxModeler.csproj
-		SccProjectName4 = DtxModeler
-		SccLocalPath4 = DtxModeler
+		SccProjectUniqueName3 = DtxModeler\\DtxModeler.csproj
+		SccProjectName3 = DtxModeler
+		SccLocalPath3 = DtxModeler
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,10 +38,6 @@ Global
 		{6F5EF738-E845-45DE-9FC8-4BF9CDFA7C5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F5EF738-E845-45DE-9FC8-4BF9CDFA7C5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F5EF738-E845-45DE-9FC8-4BF9CDFA7C5B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F98C3A85-C1C8-40AC-B507-C7DE891560ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F98C3A85-C1C8-40AC-B507-C7DE891560ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F98C3A85-C1C8-40AC-B507-C7DE891560ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F98C3A85-C1C8-40AC-B507-C7DE891560ED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E4BEDE87-1F27-4381-84C8-F25FCE389560}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E4BEDE87-1F27-4381-84C8-F25FCE389560}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E4BEDE87-1F27-4381-84C8-F25FCE389560}.Release|Any CPU.ActiveCfg = Release|Any CPU

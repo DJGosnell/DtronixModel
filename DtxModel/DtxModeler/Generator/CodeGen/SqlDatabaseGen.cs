@@ -1,4 +1,4 @@
-﻿using DtxModel.Ddl;
+﻿using DtxModeler.Ddl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +23,7 @@ namespace DtxModeler.Generator.CodeGen {
 
 					code.write(column.Name).write(" ").write(net_type).write(" ");
 
-					if(column.CanBeNull == false) {
+					if(column.Nullable == false) {
 						code.write("NOT NULL ");
 					}
 
