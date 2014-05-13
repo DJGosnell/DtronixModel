@@ -227,5 +227,9 @@ namespace DtxModeler.Xaml {
 			_dagColumnDefinitions.Items.Refresh();
 		}
 
+		private void AddServer_Click(object sender, RoutedEventArgs e) {
+
+		}
+
 	}
 }

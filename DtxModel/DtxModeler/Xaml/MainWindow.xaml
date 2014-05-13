@@ -22,7 +22,7 @@
 			<TreeView x:Name="_treDatabaseLayout" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0,1,1,1" Grid.RowSpan="1" Grid.Row="1" SelectedItemChanged="_treDatabaseLayout_SelectedItemChanged">
 				<TreeView.ContextMenu>
 					<ContextMenu>
-						<MenuItem Header="Add Server">
+						<MenuItem Header="Add Server" Click="AddServer_Click">
 							<MenuItem.Icon>
 								<Image Source="Images/database_add.png" />
 							</MenuItem.Icon>
