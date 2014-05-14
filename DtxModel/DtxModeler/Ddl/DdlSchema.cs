@@ -23,20 +23,20 @@ namespace DtxModeler.Ddl {
     [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
     public partial class Modeler {
         
-        private DbConnection[] dbConnectionField;
+        private ServerConnection[] serverConnectionField;
         
         private System.DateTime modifiedField;
         
         private bool modifiedFieldSpecified;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("DbConnection")]
-        public DbConnection[] DbConnection {
+        [System.Xml.Serialization.XmlElementAttribute("ServerConnection")]
+        public ServerConnection[] ServerConnection {
             get {
-                return this.dbConnectionField;
+                return this.serverConnectionField;
             }
             set {
-                this.dbConnectionField = value;
+                this.serverConnectionField = value;
             }
         }
         
@@ -68,7 +68,7 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class DbConnection {
+    public partial class ServerConnection {
         
         private string nameField;
         

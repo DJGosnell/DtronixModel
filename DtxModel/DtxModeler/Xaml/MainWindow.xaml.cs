@@ -99,7 +99,7 @@ namespace DtxModeler.Xaml {
 				_treDatabaseLayout.Items.Remove(database_root);
 			}
 
-			foreach (var server in current_ddl.Modeler.DbConnection) {
+			foreach (var server in current_ddl.Modeler.ServerConnection) {
 				var server_tree = createTreeViewItem(server.Name, image_database_connect);
 
 			}

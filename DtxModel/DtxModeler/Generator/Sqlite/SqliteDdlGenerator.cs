@@ -7,19 +7,16 @@ using System.Linq;
 using System.Text;
 
 namespace DtxModeler.Generator.Sqlite {
-	public class SqliteDdlGenerator {
-		private SQLiteConnection connection;
-		private TypeTransformer type_transformer;
-		private Database database;
+	public class SqliteDdlGenerator : DdlGenerator {
 
-		public SqliteDdlGenerator(string connection_string, TypeTransformer type_transformer) {
+
+		public SqliteDdlGenerator(string connection_string) : base(null, new SqliteTypeTransformer()) {
 			connection = new SQLiteConnection(connection_string);
 			connection.Open();
 			this.type_transformer = type_transformer;
-			database = new Database();
 		}
 
-		public Database generateDdl() {
+		public override Database generateDdl() {
 			database.Name = Path.GetFileNameWithoutExtension(connection.DataSource);
 			database.Table = getTables();
 			foreach (var table in database.Table) {
@@ -32,17 +29,7 @@ namespace DtxModeler.Generator.Sqlite {
 			return database;
 		}
 
-		private Table getTableByName(string name) {
-			foreach (var table in database.Table) {
-				if (table.Name == name) {
-					return table;
-				}
-			}
-
-			return null;
-		}
-
-		public Table[] getTables() {
+		public override Table[] getTables() {
 			List<Table> tables = new List<Table>();
 			using (var command = connection.CreateCommand()) {
 				command.CommandText = "SELECT tbl_name FROM sqlite_master WHERE type = 'table'";
@@ -63,11 +50,11 @@ namespace DtxModeler.Generator.Sqlite {
 			return tables.ToArray();
 		}
 
-		public Index[] getIndexes(string table_name) {
+		public override Index[] getIndexes(string table_name) {
 			List<Index> indexes = new List<Index>();
 			using (var command = connection.CreateCommand()) {
 				command.CommandText = "SELECT name, tbl_name FROM sqlite_master WHERE type = 'index' AND tbl_name = @TableName";
-				command.Parameters.AddWithValue("@TableName", table_name);
+				Utilities.addDbParameter(command, "@TableName", table_name);
 
 				using (var reader = command.ExecuteReader()) {
 					while (reader.Read()) {
@@ -109,7 +96,7 @@ namespace DtxModeler.Generator.Sqlite {
 			}
 		}
 
-		public Column[] getTableColumns(string table) {
+		public override Column[] getTableColumns(string table) {
 
 			List<Column> columns = new List<Column>();
 			using (var command = connection.CreateCommand()) {
@@ -119,7 +106,6 @@ namespace DtxModeler.Generator.Sqlite {
 					
 					while (reader.Read()) {
 						var typ = reader["type"].ToString();
-						object vals = reader.GetValues();
 
 						var column = new Column() {
 							Member = reader["name"].ToString(),

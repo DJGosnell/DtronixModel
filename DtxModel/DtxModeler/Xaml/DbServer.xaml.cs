@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DtxModeler.Generator;
+using DtxModeler.Generator.Sqlite;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +18,12 @@ namespace DtxModeler.Xaml {
 	/// Interaction logic for DbServer.xaml
 	/// </summary>
 	public partial class DbServer : Window {
+		private enum DbProvider : int {
+			Sqlite = 0,
+			MySQL = 1
+		}
+
+
 		public DbServer() {
 			InitializeComponent();
 		}
@@ -33,7 +41,31 @@ namespace DtxModeler.Xaml {
 			_txtServer.Text = server_file.FileName;
 		}
 
+		private string generateConnectionString() {
+			var sb = new StringBuilder();
+
+			return sb.ToString();
+
+
+		}
+
 		private void Test_Click(object sender, RoutedEventArgs e) {
+			var connection_string = generateConnectionString();
+			DdlGenerator generator = null;
+
+			switch ((DbProvider)_cmbProvider.SelectedIndex) {
+				case DbProvider.Sqlite:
+					generator = new SqliteDdlGenerator(connection_string);
+					break;
+				case DbProvider.MySQL:
+
+					break;
+				default:
+					break;
+			}
+
+			var ddl = generator.generateDdl();
+
 
 		}
 
@@ -46,12 +78,16 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void _cmbProvider_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-			string value = ((ComboBoxItem)_cmbProvider.SelectedValue).Content.ToString().ToLower();
-			if (value == "mysql") {
-				_txtPassword.IsEnabled = _txtPassword.IsEnabled = true;
-			} else if (value == "sqlite") {
-				_txtPassword.IsEnabled = true;
-				_txtPassword.IsEnabled = false;
+			switch ((DbProvider)_cmbProvider.SelectedIndex) {
+				case DbProvider.Sqlite:
+					_txtPassword.IsEnabled = true;
+					_txtPassword.IsEnabled = false;
+					break;
+				case DbProvider.MySQL:
+					_txtPassword.IsEnabled = _txtPassword.IsEnabled = true;
+					break;
+				default:
+					break;
 			}
 		}
 	}

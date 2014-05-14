@@ -1,26 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 
 namespace DtxModeler.Generator {
 	class Utilities {
-		public static void each<T>(object[] values, Func<T, bool> callback) {
-			foreach (var value in values){
-				if(value is T){
-					if (callback((T)value) == false) {
-						return;
-					} 
-				}
-			}
-		}
 
-		public static void each<T>(object[] values, Action<T> callback) {
-			foreach (var value in values) {
-				if (value is T) {
-					callback((T)value);
-				}
-			}
+		public static void addDbParameter(DbCommand command, string name, object value) {
+			var param = command.CreateParameter();
+			param.ParameterName = name;
+			param.Value = value;
+			command.Parameters.Add(param);
 		}
 	}
 }
