@@ -22,15 +22,17 @@
 		<TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Name" VerticalAlignment="Center" Grid.Row="0" TextAlignment="Right" Height="16" Margin="3,7"/>
 		<TextBox x:Name="_txtName" Grid.Column="1" HorizontalAlignment="Stretch" Width="Auto" Grid.Row="0" TextWrapping="Wrap" Text="" Margin="3" VerticalAlignment="Stretch"/>
 
-		<TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Server / File" VerticalAlignment="Center" Grid.Row="1" TextAlignment="Right" Height="16" Margin="3,7"/>
-		<TextBox x:Name="_txtServer" Grid.Column="1" HorizontalAlignment="Stretch" Width="Auto" Grid.Row="1" TextWrapping="Wrap" Text="" Margin="3" VerticalAlignment="Stretch"/>
-		<Button Content="Browse" Grid.Column="2" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Stretch" Margin="3,3,0,3" Width="56" Click="ServerBrowse_Click"/>
 
-		<TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Provider" VerticalAlignment="Center" Grid.Row="2" TextAlignment="Right" Height="16" Margin="3,7"/>
-		<ComboBox x:Name="_cmbProvider" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Stretch" Margin="3" SelectionChanged="_cmbProvider_SelectionChanged">
+		<TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Provider" VerticalAlignment="Center" Grid.Row="1" TextAlignment="Right" Height="16" Margin="3,7"/>
+		<ComboBox x:Name="_cmbProvider" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="3" SelectionChanged="_cmbProvider_SelectionChanged">
 			<ComboBoxItem Content="Sqlite"/>
 			<ComboBoxItem Content="MySQL"/>
 		</ComboBox>
+
+		<TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Server / File" VerticalAlignment="Center" Grid.Row="2" TextAlignment="Right" Height="16" Margin="3,7"/>
+		<TextBox x:Name="_txtServer" Grid.Column="1" HorizontalAlignment="Stretch" Width="Auto" Grid.Row="2" TextWrapping="Wrap" Text="" Margin="3" VerticalAlignment="Stretch"/>
+		<Button Content="Browse" Grid.Column="2" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Stretch" Margin="3,3,0,3" Width="56" Click="ServerBrowse_Click"/>
+
 
 		<TextBlock Grid.Row="3" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Username" VerticalAlignment="Center" TextAlignment="Right" Height="16" Margin="3,7"/>
 		<TextBox x:Name="_txtUsername" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" Width="Auto"  TextWrapping="Wrap" Text="" Margin="3" VerticalAlignment="Stretch"/>

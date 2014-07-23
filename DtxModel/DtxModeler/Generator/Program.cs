@@ -11,12 +11,12 @@ using System.Xml.Serialization;
 
 namespace DtxModeler.Generator {
 	class Program {
-		static void Mainold(string[] args) {
+		static void Main(string[] args) {
 
 
 			var options = new ModelGenOptions(args);
 			Database input_database = null;
-			TypeTransformer type_transformer = null;
+			DdlGenerator generator = null;
 
 
 			// Verify that the parsing was successful.
@@ -25,8 +25,8 @@ namespace DtxModeler.Generator {
 				return;
 			}
 
-			if (options.DbClass.ToLower() == "sqlite") {
-				type_transformer = new Sqlite.SqliteTypeTransformer();
+			if (options.DbType.ToLower() == "sqlite") {
+				generator = new SqliteDdlGenerator(@"Data Source=" + options.Input + ";Version=3;");
 			}
 
 			if (options.InputType == "ddl") {
@@ -44,8 +44,6 @@ namespace DtxModeler.Generator {
 					writeLineColor("Required 'db-class' attribute not selected.", ConsoleColor.Red);
 				}
 
-				var generator = new SqliteDdlGenerator(options.Input, type_transformer);
-
 				input_database = generator.generateDdl();
 			}
 
@@ -60,7 +58,7 @@ namespace DtxModeler.Generator {
 
 			// Output SQL file if required.
 			if (options.SqlOutput != null) {
-				var sql_code_writer = new SqlDatabaseGen(input_database, type_transformer);
+				var sql_code_writer = new SqlDatabaseGen(input_database, generator.TypeTransformer);
 
 				using (var fs = new FileStream(options.SqlOutput, FileMode.Create)) {
 					using (var sw = new StreamWriter(fs)) {

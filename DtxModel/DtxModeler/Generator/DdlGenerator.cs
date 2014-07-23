@@ -8,11 +8,11 @@ using System.Text;
 namespace DtxModeler.Generator {
 	public abstract class DdlGenerator {
 		protected DbConnection connection = null;
-		protected TypeTransformer type_transformer;
+		public readonly TypeTransformer TypeTransformer;
 		protected Database database = new Database();
 
 		public DdlGenerator(string connection_string, TypeTransformer type_transformer) {
-			this.type_transformer = type_transformer;
+			this.TypeTransformer = type_transformer;
 		}
 
 		public abstract Database generateDdl();

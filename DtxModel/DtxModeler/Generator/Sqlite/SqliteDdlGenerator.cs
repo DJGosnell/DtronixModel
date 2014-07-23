@@ -13,7 +13,6 @@ namespace DtxModeler.Generator.Sqlite {
 		public SqliteDdlGenerator(string connection_string) : base(null, new SqliteTypeTransformer()) {
 			connection = new SQLiteConnection(connection_string);
 			connection.Open();
-			this.type_transformer = type_transformer;
 		}
 
 		public override Database generateDdl() {
@@ -115,7 +114,7 @@ namespace DtxModeler.Generator.Sqlite {
 							Nullable = !Convert.ToBoolean(reader["notnull"]),
 							NullableSpecified = true,
 							DbType = reader["type"].ToString(),
-							Type = type_transformer.dbToNetType(reader["type"].ToString()),
+							Type = TypeTransformer.dbToNetType(reader["type"].ToString()),
 						};
 
 						if (column.IsPrimaryKey && column.DbType.ToLower() == "integer") {

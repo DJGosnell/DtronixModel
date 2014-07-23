@@ -8,7 +8,7 @@ using System.Reflection;
 namespace DtxModeler.Generator {
 	class ModelGenOptions : Options {
 
-		[OptionAttribute("code-outupt", Required = false, HelpText = "The C# file to output the generated code to.")]
+		[OptionAttribute("code-output", Required = false, HelpText = "The C# file to output the generated code to.")]
 		public string CodeOutput { get; set; }
 
 		[OptionAttribute("code-type", Required = false, HelpText = "The type of C# code the generate.  Allowed values: DtxModel.")]
@@ -21,7 +21,10 @@ namespace DtxModeler.Generator {
 		[OptionAttribute("db-outupt", Required = false, HelpText = "The connection string for the database.")]
 		public string DbOutput { get; set; }
 
-		[OptionAttribute("sql-outupt", Required = false)]
+		[OptionAttribute("db-type", Required = true, HelpText = "The type of datatabase we are dealing with.")]
+		public string DbType { get; set; }
+
+		[OptionAttribute("sql-output", Required = false)]
 		public string SqlOutput { get; set; }
 
 		[OptionAttribute("ddl-outupt", Required = false)]
@@ -34,7 +37,11 @@ namespace DtxModeler.Generator {
 		public string InputType { get; set; }
 
 		[OptionAttribute("db-class", Required = false, HelpText = "Allowed Values: SQLiteConnection")]
-		public string DbClass { get; set; }
+		public string DbClass {
+			get {
+				return "SQLiteConnection";
+			}
+		}
 
 		public ModelGenOptions(string[] args) : base(args) { }
 

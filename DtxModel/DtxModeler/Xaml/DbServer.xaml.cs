@@ -44,6 +44,21 @@ namespace DtxModeler.Xaml {
 		private string generateConnectionString() {
 			var sb = new StringBuilder();
 
+			switch ((DbProvider)_cmbProvider.SelectedIndex) {
+				case DbProvider.Sqlite:
+					sb.Append("Data Source=\"").Append(_txtServer.Text).Append("\";");
+					sb.Append("Version=3;");
+					break;
+				case DbProvider.MySQL:
+
+					break;
+				default:
+					break;
+			}
+
+			
+
+
 			return sb.ToString();
 
 
