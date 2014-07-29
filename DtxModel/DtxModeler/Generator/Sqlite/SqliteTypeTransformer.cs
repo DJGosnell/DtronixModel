@@ -7,7 +7,7 @@ namespace DtxModeler.Generator.Sqlite {
 	class SqliteTypeTransformer : TypeTransformer {
 		public SqliteTypeTransformer() {
 			types = new TypeTransformerType[]{
-				new TypeTransformerType("System.Int64", "BIGINT"),
+				new TypeTransformerType("System.Int64", "INTEGER"),
 				new TypeTransformerType("System.Int16", "SMALLINT"),
 				new TypeTransformerType("System.Int32", "INTEGER"),
 				/*new TypeTransformerType("System.UInt16", "SMALLINT"),

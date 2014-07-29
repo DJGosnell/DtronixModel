@@ -12,10 +12,10 @@ namespace DtxModeler.Generator.Sqlite {
 
 		public SqliteDdlGenerator(string connection_string) : base(null, new SqliteTypeTransformer()) {
 			connection = new SQLiteConnection(connection_string);
-			connection.Open();
 		}
 
 		public override Database generateDdl() {
+			connection.Open();
 			database.Name = Path.GetFileNameWithoutExtension(connection.DataSource);
 			database.Table = getTables();
 			foreach (var table in database.Table) {
