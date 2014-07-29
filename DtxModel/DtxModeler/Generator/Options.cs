@@ -73,6 +73,8 @@ namespace DtxModeler.Generator {
 					ParseSuccess = false;
 				}
 			}
+
+			values.Clear();
 		}
 
 		private void setProperty(string key, string arg) {

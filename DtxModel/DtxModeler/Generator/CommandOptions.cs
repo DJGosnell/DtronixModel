@@ -18,17 +18,17 @@ namespace DtxModeler.Generator {
 			}
 		}
 
-		[OptionAttribute("db-outupt", Required = false, HelpText = "The connection string for the database.")]
+		[OptionAttribute("sql-output", Required = false)]
+		public string SqlOutput { get; set; }
+
+		[OptionAttribute("ddl-output", Required = false)]
+		public string DdlOutput { get; set; }
+
+		[OptionAttribute("db-output", Required = false, HelpText = "The connection string for the database.")]
 		public string DbOutput { get; set; }
 
 		[OptionAttribute("db-type", Required = true, HelpText = "The type of datatabase we are dealing with.")]
 		public string DbType { get; set; }
-
-		[OptionAttribute("sql-output", Required = false)]
-		public string SqlOutput { get; set; }
-
-		[OptionAttribute("ddl-outupt", Required = false)]
-		public string DdlOutput { get; set; }
 
 		[OptionAttribute("input", Required = true, HelpText = "The input that the generator will be working off of.")]
 		public string Input { get; set; }
