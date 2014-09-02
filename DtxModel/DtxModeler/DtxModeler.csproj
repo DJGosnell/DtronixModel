@@ -118,6 +118,15 @@
     </EmbeddedResource>
     <None Include="Ddl\Build.bat" />
     <None Include="Ddl\DdlSchema.xsd" />
+    <None Include="Edmx\Build.bat" />
+    <None Include="Edmx\Microsoft.Data.Entity.Design.Edmx_3.xsd" />
+    <None Include="Edmx\System.Data.Resources.AnnotationSchema.xsd" />
+    <None Include="Edmx\System.Data.Resources.CodeGenerationSchema.xsd" />
+    <None Include="Edmx\System.Data.Resources.CSDLSchema_3.xsd" />
+    <None Include="Edmx\System.Data.Resources.CSMSL_3.xsd" />
+    <None Include="Edmx\system.data.resources.entitystoreschemagenerator.xsd" />
+    <None Include="Edmx\System.Data.Resources.ProviderServices.ProviderManifest.xsd" />
+    <None Include="Edmx\System.Data.Resources.SSDLSchema_3.xsd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

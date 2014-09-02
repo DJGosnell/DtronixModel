@@ -49,6 +49,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\System.Data.SQLite.Core.1.0.93.0\lib\net45\System.Data.SQLite.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -73,6 +75,7 @@
     <None Include="Northwind\Northwind.dbml.layout">
       <DependentUpon>Northwind.ddl</DependentUpon>
     </None>
+    <EntityDeploy Include="Northwind\Northwind.edmx" />
     <None Include="Northwind\northwind.sqlite">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
