@@ -33,7 +33,7 @@ namespace DtxModeler.Generator {
 		[OptionAttribute("input", Required = true, HelpText = "The input that the generator will be working off of.")]
 		public string Input { get; set; }
 
-		[OptionAttribute("input-type", Required = true, HelpText = "Allowed Values: ddl|sql(TBD)|database")]
+		[OptionAttribute("input-type", Required = true, HelpText = "Allowed Values: ddl|edmx|sql(TBD)|database")]
 		public string InputType { get; set; }
 
 		[OptionAttribute("db-class", Required = false, HelpText = "Allowed Values: SQLiteConnection")]

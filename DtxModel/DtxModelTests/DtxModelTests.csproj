@@ -58,6 +58,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdventureWorks\Test.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Test.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Northwind\Northwind.cs">
       <DependentUpon>Northwind.ddl</DependentUpon>
     </Compile>
@@ -68,6 +73,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="AdventureWorks\AdventureWorksModel.edmx">
+      <LastGenOutput>AdventureWorksModel.Designer.cs</LastGenOutput>
+    </None>
+    <EntityDeploy Include="AdventureWorks\Test.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Test.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="AdventureWorks\Test.edmx.diagram">
+      <DependentUpon>Test.edmx</DependentUpon>
+    </None>
     <None Include="App.config" />
     <None Include="Northwind\Northwind.ddl">
       <SubType>Designer</SubType>
@@ -107,7 +122,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy "$(SolutionDir)packages\System.Data.SQLite.Core.1.0.92.0\content\net40\*.*" "$(TargetDir)*.*" /Y /I /E</PreBuildEvent>
+    <PreBuildEvent>xcopy "$(SolutionDir)packages\System.Data.SQLite.Core.1.0.93.0\content\net45\*.*" "$(TargetDir)*.*" /Y /I /E</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
