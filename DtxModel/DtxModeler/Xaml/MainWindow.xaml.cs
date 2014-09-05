@@ -76,16 +76,33 @@ namespace DtxModeler.Xaml {
 			root.Header = "Test";
 			string image_database = "pack://application:,,,/Xaml/Images/database.png";
 			string image_table = "pack://application:,,,/Xaml/Images/table.png";
+			string image_view = "pack://application:,,,/Xaml/Images/table_chart.png";
+			string image_enum = "pack://application:,,,/Xaml/Images/check_box_list.png";
+			string image_function = "pack://application:,,,/Xaml/Images/function.png";
+			
 
 			_treDatabaseLayout.Items.Remove(current_ddl_root);
 
 			var db_root = createTreeViewItem(current_ddl.Name, image_database);
 			db_root.IsExpanded = true;
 
+			// Tables
+			var tables_root = createTreeViewItem("Tables", image_table);
+			tables_root.IsExpanded = true;
+			db_root.Items.Add(tables_root);
+
+			// Views
+			var views_root = createTreeViewItem("Views", image_view);
+			db_root.Items.Add(views_root);
+
+			// Functions
+			var functions_root = createTreeViewItem("Functions", image_function);
+			db_root.Items.Add(functions_root);
+
 			foreach (var table in current_ddl.Table) {
-				var tree_table = createTreeViewItem(table.Name, image_table);
+				var tree_table = createTreeViewItem(table.Name, null);
 				tree_table.Tag = table;
-				db_root.Items.Add(tree_table);
+				tables_root.Items.Add(tree_table);
 			}
 
 			_treDatabaseLayout.Items.Add(db_root);
@@ -108,14 +125,16 @@ namespace DtxModeler.Xaml {
 
 		private TreeViewItem createTreeViewItem(string value, string image_path) {
 			TreeViewItem item = new TreeViewItem();
-			
+			Image image = null;
 
 			StackPanel stack = new StackPanel();
 			stack.Orientation = Orientation.Horizontal;
 
 			// create Image
-			Image image = new Image();
-			image.Source = new BitmapImage(new Uri(image_path));
+			if (image_path != null) {
+				image = new Image();
+				image.Source = new BitmapImage(new Uri(image_path));
+			}
 			//RenderOptions.SetBitmapScalingMode(image, BitmapScalingMode.NearestNeighbor);
 			//RenderOptions.SetEdgeMode(image, EdgeMode.Aliased);
 			
@@ -124,8 +143,9 @@ namespace DtxModeler.Xaml {
 			text.Text = value;
 			text.TextWrapping = TextWrapping.Wrap;
 			text.Padding = new Thickness(2, 2, 5, 2);
-
-			stack.Children.Add(image);
+			if (image_path != null) {
+				stack.Children.Add(image);
+			}
 			stack.Children.Add(text);
 
 			item.Header = stack;

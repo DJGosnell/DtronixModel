@@ -84,7 +84,7 @@
     <Compile Include="Generator\DdlGenerator.cs" />
     <Compile Include="Generator\OptionAttribute.cs" />
     <Compile Include="Generator\Options.cs" />
-    <Compile Include="Generator\Program.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Generator\Sqlite\SqliteDdlGenerator.cs" />
     <Compile Include="Generator\Sqlite\SqliteTypeTransformer.cs" />
     <Compile Include="Generator\TypeTransformer.cs" />
@@ -172,6 +172,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Xaml\Images\page_paste.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\function.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\check_box_list.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

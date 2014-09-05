@@ -8,14 +8,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using DtxModeler.Xaml;
+using System.Windows;
 
 namespace DtxModeler.Generator {
 	class Program {
+
+		[STAThread]
 		static void Main(string[] args) {
 
 			var options = new ModelGenOptions(args);
 			Database input_database = null;
 			DdlGenerator generator = null;
+
+			if (options.UI.ToLower() == "true") {
+				var app = new Application();
+				app.Run(new MainWindow());
+				return;
+			}
 
 
 			// Verify that the parsing was successful.
