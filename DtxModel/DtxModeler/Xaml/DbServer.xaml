@@ -1,0 +1,54 @@
+﻿<Window x:Class="DtxModeler.Xaml.DbServer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Server Connection" Height="340" Width="400" MinHeight="340" MinWidth="400">
+	<Grid Margin="0">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="90"/>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="63"/>
+		</Grid.ColumnDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition Height="30"/>
+			<RowDefinition/>
+			<RowDefinition Height="30"/>
+
+		</Grid.RowDefinitions>
+
+		<TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Name" VerticalAlignment="Center" Grid.Row="0" TextAlignment="Right" Height="16" Margin="3,7"/>
+		<TextBox x:Name="_txtName" Grid.Column="1" HorizontalAlignment="Stretch" Width="Auto" Grid.Row="0" TextWrapping="Wrap" Text="" Margin="3" VerticalAlignment="Stretch"/>
+
+
+		<TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Provider" VerticalAlignment="Center" Grid.Row="1" TextAlignment="Right" Height="16" Margin="3,7"/>
+		<ComboBox x:Name="_cmbProvider" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="3" SelectionChanged="_cmbProvider_SelectionChanged">
+			<ComboBoxItem Content="Sqlite"/>
+			<ComboBoxItem Content="MySQL"/>
+		</ComboBox>
+
+		<TextBlock HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Server / File" VerticalAlignment="Center" Grid.Row="2" TextAlignment="Right" Height="16" Margin="3,7"/>
+		<TextBox x:Name="_txtServer" Grid.Column="1" HorizontalAlignment="Stretch" Width="Auto" Grid.Row="2" TextWrapping="Wrap" Text="" Margin="3" VerticalAlignment="Stretch"/>
+		<Button Content="Browse" Grid.Column="2" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Stretch" Margin="3,3,0,3" Width="56" Click="ServerBrowse_Click"/>
+
+
+		<TextBlock Grid.Row="3" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Username" VerticalAlignment="Center" TextAlignment="Right" Height="16" Margin="3,7"/>
+		<TextBox x:Name="_txtUsername" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Stretch" Width="Auto"  TextWrapping="Wrap" Text="" Margin="3" VerticalAlignment="Stretch"/>
+
+
+		<TextBlock Grid.Row="4" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="Password" VerticalAlignment="Center" TextAlignment="Right" Height="16" Margin="3,7"/>
+		<TextBox x:Name="_txtPassword" Grid.Column="1" Grid.Row="4" HorizontalAlignment="Stretch" Width="Auto"  TextWrapping="Wrap" Text="" Margin="3" VerticalAlignment="Stretch"/>
+		<StackPanel Grid.Column="1" HorizontalAlignment="Left" Height="100" Margin="159,25,0,-93" Grid.Row="5" VerticalAlignment="Top" Width="100"/>
+
+		<StackPanel Grid.Column="1" HorizontalAlignment="Right" Grid.Row="6" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Orientation="Horizontal" Width="186" Height="28">
+			<Button Content="Test" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="3" Width="56" Click="Test_Click"/>
+			<Button Content="Save"  HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="3" Width="56" Click="Save_Click"/>
+			<Button Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Stretch" Margin="3" Width="56" Click="Cancel_Click"/>
+		</StackPanel>
+		<GroupBox Header="Connection String" HorizontalAlignment="Stretch" Grid.Row="5" VerticalAlignment="Stretch" Grid.ColumnSpan="3">
+			<TextBox x:Name="_txtConnectionString" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" IsReadOnly="True"/>
+		</GroupBox>
+	</Grid>
+</Window>

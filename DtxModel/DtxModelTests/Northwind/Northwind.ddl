@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Database Class="NorthwindContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+﻿<?xml version="1.0" encoding="utf-8"?><Database Class="NorthwindContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
   <Table Name="Customers">
     <Type Name="Customers">
       <Column Name="" Member="rowid" AutoSync="Never" Type="System.Int64" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />

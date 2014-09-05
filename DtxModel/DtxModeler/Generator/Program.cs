@@ -8,13 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using DtxModeler.Generator;
-using DtxModeler.Edmx;
 
-namespace DtxModeler {
+namespace DtxModeler.Generator {
 	class Program {
 		static void Main(string[] args) {
-
 
 			var options = new ModelGenOptions(args);
 			Database input_database = null;
@@ -31,76 +28,23 @@ namespace DtxModeler {
 				generator = new SqliteDdlGenerator(@"Data Source=" + options.Input + ";Version=3;");
 			}
 
-			if (options.InputType == "edmx") {
-				input_database = new Database();
-				TEdmx input_edmx;
-				try {
-					using (FileStream stream = new FileStream(options.Input, FileMode.Open)) {
-						var serializer = new XmlSerializer(typeof(TEdmx));
-						input_edmx = (TEdmx)serializer.Deserialize(stream);
-					}
-				} catch (Exception e) {
-					writeLineColor("Could not open input EDMX file at '" + options.Input + "'.", ConsoleColor.Red);
-					writeLineColor(e.ToString(), ConsoleColor.Red);
-					return;
-				}
-
-				// Start translating the EDMX file.
-				var schema = input_edmx.Runtime.ConceptualModels.Schema;
-
-				input_database.EntityNamespace = input_database.ContextNamespace = schema.Namespace;
-
-				List<Table> tables = new List<Table>();
-				foreach(var edmx_table in schema.EntityType){
-					var ddl_table = new Table() {
-						Name = edmx_table.
-					};
-					var ddl_columns = new List<Column>();
-
-					edmx_table.Items.ForEachType<TEntityProperty>((property) => {
-						var ddl_column = new Column() {
-							Name = property.Name,
-							Member = property.Name,
-							Nullable = property.Nullable,
-							NullableSpecified = true,
-							Type = property.Type
-						};
-
-						if(property.StoreGeneratedPatternSpecified && property.StoreGeneratedPattern == TStoreGeneratedPattern.Computed){
-							ddl_column.IsDbGenerated = true;
-						} else {
-							ddl_column.IsDbGenerated = false;
-						}
-
-						ddl_columns.Add(ddl_column);
-						
-					});
-
-					ddl_table.Column = ddl_columns.ToArray();
-
-
-
-				}
-				//Table
-
-				// Find the runtime.
-				
-				//runtime.ConceptualModels.Schema.EntityType
-
-				//runtime.ConceptualModels.Schema.EntityType[0].
-
-
-			} else if (options.InputType == "ddl") {
+			if (options.InputType == "ddl") {
 				try {
 					using (FileStream stream = new FileStream(options.Input, FileMode.Open)) {
 						var serializer = new XmlSerializer(typeof(Database));
 						input_database = (Database)serializer.Deserialize(stream);
 					}
-				} catch (Exception) {
+				} catch (Exception e) {
 					writeLineColor("Could not open input DDL file at '" + options.Input + "'.", ConsoleColor.Red);
+					writeLineColor(e.ToString(), ConsoleColor.Red);
 					return;
 				}
 			} else if (options.InputType == "database") {
+
+				if (options.DbType.ToLower() == "sqlite") {
+					generator = new SqliteDdlGenerator(@"Data Source=" + options.Input + ";Version=3;");
+				}
+
 				if (options.DbClass == null) {
 					writeLineColor("Required 'db-class' attribute not selected.", ConsoleColor.Red);
 				}
