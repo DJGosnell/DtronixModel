@@ -14,16 +14,16 @@ Global
 		SccNumberOfProjects = 4
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://djgosnell.visualstudio.com/defaultcollection
-		SccProjectUniqueName0 = DtxModel\\DtxModel.csproj
-		SccProjectName0 = DtxModel
-		SccLocalPath0 = DtxModel
-		SccProjectUniqueName1 = DtxModelTests\\DtxModelTests.csproj
-		SccProjectName1 = DtxModelTests
-		SccLocalPath1 = DtxModelTests
-		SccProjectUniqueName2 = DtxModeler\\DtxModeler.csproj
-		SccProjectName2 = DtxModeler
-		SccLocalPath2 = DtxModeler
-		SccLocalPath3 = .
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = DtxModel\\DtxModel.csproj
+		SccProjectName1 = DtxModel
+		SccLocalPath1 = DtxModel
+		SccProjectUniqueName2 = DtxModelTests\\DtxModelTests.csproj
+		SccProjectName2 = DtxModelTests
+		SccLocalPath2 = DtxModelTests
+		SccProjectUniqueName3 = DtxModeler\\DtxModeler.csproj
+		SccProjectName3 = DtxModeler
+		SccLocalPath3 = DtxModeler
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

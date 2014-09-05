@@ -15,6 +15,7 @@ namespace DtxModeler {
 	class Program {
 		static void Main(string[] args) {
 
+
 			var options = new ModelGenOptions(args);
 			Database input_database = null;
 			DdlGenerator generator = null;
@@ -95,17 +96,11 @@ namespace DtxModeler {
 						var serializer = new XmlSerializer(typeof(Database));
 						input_database = (Database)serializer.Deserialize(stream);
 					}
-				} catch (Exception e) {
+				} catch (Exception) {
 					writeLineColor("Could not open input DDL file at '" + options.Input + "'.", ConsoleColor.Red);
-					writeLineColor(e.ToString(), ConsoleColor.Red);
 					return;
 				}
 			} else if (options.InputType == "database") {
-
-				if (options.DbType.ToLower() == "sqlite") {
-					generator = new SqliteDdlGenerator(@"Data Source=" + options.Input + ";Version=3;");
-				}
-
 				if (options.DbClass == null) {
 					writeLineColor("Required 'db-class' attribute not selected.", ConsoleColor.Red);
 				}
