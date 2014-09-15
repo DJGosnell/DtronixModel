@@ -17,6 +17,8 @@ using DtxModeler.Ddl;
 using System.Xml.Serialization;
 using System.Threading;
 using System.Collections.ObjectModel;
+using DtxModeler.Generator.Sqlite;
+using DtxModeler.Generator;
 
 namespace DtxModeler.Xaml {
 	/// <summary>
@@ -33,11 +35,17 @@ namespace DtxModeler.Xaml {
 
 		private DtxModeler.Ddl.Table selected_table;
 		private Column selected_column;
+
+		private TypeTransformer type_transformer = new SqliteTypeTransformer();
 		
 
 		public MainWindow() {
 			InitializeComponent();
 			_treDatabaseLayout.UseLayoutRounding = true;
+
+
+			ColumnDbType.ItemsSource = type_transformer.DbTypes();
+			ColumnNetType.ItemsSource = type_transformer.NetTypes();
 		}
 
 		public void openDdl() {
@@ -109,20 +117,6 @@ namespace DtxModeler.Xaml {
 			current_ddl_root = db_root;
 		}
 
-		private void refreshServers() {
-			string image_database_connect = "pack://application:,,,/Xaml/Images/database_connect.png";
-
-			foreach (var database_root in server_databases_roots) {
-				_treDatabaseLayout.Items.Remove(database_root);
-			}
-
-			foreach (var server in current_ddl.Modeler.ServerConnection) {
-				var server_tree = createTreeViewItem(server.Name, image_database_connect);
-
-			}
-
-		}
-
 		private TreeViewItem createTreeViewItem(string value, string image_path) {
 			TreeViewItem item = new TreeViewItem();
 			Image image = null;
@@ -170,7 +164,7 @@ namespace DtxModeler.Xaml {
 
 
 		public void saveDdl() {
-
+			
 		}
 
 
@@ -191,64 +185,42 @@ namespace DtxModeler.Xaml {
 			_tabTable.IsSelected = true;
 			_dagColumnDefinitions.ItemsSource = selected_table.Column;
 		}
-
 		private void _dagColumnDefinitions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 			if (e.AddedItems.Count == 0) {
 				return;
 			}
 
-			var column = e.AddedItems[0] as Column;
+
+			var column = _dagColumnDefinitions.SelectedItem as Column;
 
 			if (column != null) {
 				selected_column = column;
-				refreshCurrentColumn();
-			}
-		}
-
-		private void refreshCurrentColumn() {
-			_tabColumnProperties.IsEnabled = _grdColumnProperties.IsEnabled = true;
-
-			if (selected_column == null) {
-				_txtColumnName.Text = _txtColumnDbType.Text = "";
-				_cmbColumnNetType.SelectedIndex = -1;
-				_chkColumnNullable.IsChecked = _chkColumnPrimaryKey.IsChecked = false;
-				return;
 			}
 
-			_txtColumnName.Text = selected_column.Name;
-			//_txtColumnType.Text = selected_column.Type;
-			_txtColumnDbType.Text = selected_column.DbType;
-			_chkColumnNullable.IsChecked = selected_column.Nullable;
-			
-			// ToDo: Default Value
-
-			_chkColumnPrimaryKey.IsChecked = selected_column.IsPrimaryKey;
-			
-
-		}
-
-		private void _btnColumnCancel_Click(object sender, RoutedEventArgs e) {
-			selected_column = null;
-			refreshCurrentColumn();
-			_dagColumnDefinitions.UnselectAll();
-			_tabColumnProperties.IsEnabled = _grdColumnProperties.IsEnabled = false;
-		}
-
-		private void _btnColumnSave_Click(object sender, RoutedEventArgs e) {
-			selected_column.Name = _txtColumnName.Text;
-			//selected_column.Type = _txtColumnType.Text;
-			selected_column.DbType = _txtColumnDbType.Text;
-			selected_column.Nullable = _chkColumnNullable.IsChecked.Value;
-
-			
-			
-			selected_column.IsPrimaryKey = _chkColumnPrimaryKey.IsChecked.Value;
-
-			_dagColumnDefinitions.Items.Refresh();
 		}
 
 		private void AddServer_Click(object sender, RoutedEventArgs e) {
 
+		}
+
+		private void _dagColumnDefinitions_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e) {
+			if (e.EditAction == DataGridEditAction.Cancel || selected_column == null) {
+				return;
+			}
+			
+			if (e.Column == ColumnDbType) {
+				selected_column.Type = type_transformer.DbToNetType((e.EditingElement as ComboBox).Text);
+			}
+
+			if (e.Column == ColumnNetType) {
+				selected_column.DbType = type_transformer.NetToDbType((e.EditingElement as ComboBox).Text);
+			}
+		}
+
+		private void _treDatabaseLayout_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
+			if (selected_table == null) {
+				e.
+			}
 		}
 
 	}

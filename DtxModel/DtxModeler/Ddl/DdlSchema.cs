@@ -21,7 +21,7 @@ namespace DtxModeler.Ddl {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
-    public partial class Modeler {
+    public partial class Modeler : object, System.ComponentModel.INotifyPropertyChanged {
         
         private ServerConnection[] serverConnectionField;
         
@@ -37,6 +37,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.serverConnectionField = value;
+                this.RaisePropertyChanged("ServerConnection");
             }
         }
         
@@ -48,6 +49,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modifiedField = value;
+                this.RaisePropertyChanged("Modified");
             }
         }
         
@@ -59,6 +61,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modifiedFieldSpecified = value;
+                this.RaisePropertyChanged("ModifiedSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -68,7 +80,7 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class ServerConnection {
+    public partial class ServerConnection : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
         
@@ -84,6 +96,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.nameField = value;
+                this.RaisePropertyChanged("Name");
             }
         }
         
@@ -95,6 +108,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.providerField = value;
+                this.RaisePropertyChanged("Provider");
             }
         }
         
@@ -106,6 +120,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.connectionField = value;
+                this.RaisePropertyChanged("Connection");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -127,7 +151,7 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class Return {
+    public partial class Return : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string typeField;
         
@@ -141,6 +165,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.typeField = value;
+                this.RaisePropertyChanged("Type");
             }
         }
         
@@ -152,6 +177,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.dbTypeField = value;
+                this.RaisePropertyChanged("DbType");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -161,7 +196,7 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class Parameter {
+    public partial class Parameter : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
         
@@ -183,6 +218,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.nameField = value;
+                this.RaisePropertyChanged("Name");
             }
         }
         
@@ -194,6 +230,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.parameter1Field = value;
+                this.RaisePropertyChanged("Parameter1");
             }
         }
         
@@ -205,6 +242,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.typeField = value;
+                this.RaisePropertyChanged("Type");
             }
         }
         
@@ -216,6 +254,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.dbTypeField = value;
+                this.RaisePropertyChanged("DbType");
             }
         }
         
@@ -227,6 +266,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.directionField = value;
+                this.RaisePropertyChanged("Direction");
             }
         }
         
@@ -238,6 +278,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.directionFieldSpecified = value;
+                this.RaisePropertyChanged("DirectionSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -262,7 +312,7 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class Function {
+    public partial class Function : object, System.ComponentModel.INotifyPropertyChanged {
         
         private Parameter[] parameterField;
         
@@ -298,6 +348,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.parameterField = value;
+                this.RaisePropertyChanged("Parameter");
             }
         }
         
@@ -309,6 +360,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.itemField = value;
+                this.RaisePropertyChanged("Item");
             }
         }
         
@@ -320,6 +372,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.nameField = value;
+                this.RaisePropertyChanged("Name");
             }
         }
         
@@ -331,6 +384,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.idField = value;
+                this.RaisePropertyChanged("Id");
             }
         }
         
@@ -342,6 +396,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.methodField = value;
+                this.RaisePropertyChanged("Method");
             }
         }
         
@@ -353,6 +408,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierField = value;
+                this.RaisePropertyChanged("AccessModifier");
             }
         }
         
@@ -364,6 +420,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierFieldSpecified = value;
+                this.RaisePropertyChanged("AccessModifierSpecified");
             }
         }
         
@@ -375,6 +432,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modifierField = value;
+                this.RaisePropertyChanged("Modifier");
             }
         }
         
@@ -386,6 +444,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modifierFieldSpecified = value;
+                this.RaisePropertyChanged("ModifierSpecified");
             }
         }
         
@@ -397,6 +456,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.hasMultipleResultsField = value;
+                this.RaisePropertyChanged("HasMultipleResults");
             }
         }
         
@@ -408,6 +468,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.hasMultipleResultsFieldSpecified = value;
+                this.RaisePropertyChanged("HasMultipleResultsSpecified");
             }
         }
         
@@ -419,6 +480,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.isComposableField = value;
+                this.RaisePropertyChanged("IsComposable");
             }
         }
         
@@ -430,6 +492,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.isComposableFieldSpecified = value;
+                this.RaisePropertyChanged("IsComposableSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -478,7 +550,7 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class View {
+    public partial class View : object, System.ComponentModel.INotifyPropertyChanged {
         
         private Column[] columnField;
         
@@ -504,6 +576,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.columnField = value;
+                this.RaisePropertyChanged("Column");
             }
         }
         
@@ -515,6 +588,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.nameField = value;
+                this.RaisePropertyChanged("Name");
             }
         }
         
@@ -526,6 +600,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.descriptionField = value;
+                this.RaisePropertyChanged("Description");
             }
         }
         
@@ -537,6 +612,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.memberField = value;
+                this.RaisePropertyChanged("Member");
             }
         }
         
@@ -548,6 +624,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierField = value;
+                this.RaisePropertyChanged("AccessModifier");
             }
         }
         
@@ -559,6 +636,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierFieldSpecified = value;
+                this.RaisePropertyChanged("AccessModifierSpecified");
             }
         }
         
@@ -570,6 +648,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modifierField = value;
+                this.RaisePropertyChanged("Modifier");
             }
         }
         
@@ -581,6 +660,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modifierFieldSpecified = value;
+                this.RaisePropertyChanged("ModifierSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -590,23 +679,19 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class Column {
+    public partial class Column : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
+        
+        private string defaultValueField;
         
         private string descriptionField;
         
         private string memberField;
         
-        private string storageField;
-        
         private AccessModifier accessModifierField;
         
         private bool accessModifierFieldSpecified;
-        
-        private MemberModifier modifierField;
-        
-        private bool modifierFieldSpecified;
         
         private string typeField;
         
@@ -632,24 +717,6 @@ namespace DtxModeler.Ddl {
         
         private bool nullableFieldSpecified;
         
-        private bool isDiscriminatorField;
-        
-        private bool isDiscriminatorFieldSpecified;
-        
-        private string expressionField;
-        
-        private bool isVersionField;
-        
-        private bool isVersionFieldSpecified;
-        
-        private bool isDelayLoadedField;
-        
-        private bool isDelayLoadedFieldSpecified;
-        
-        private bool indexedField;
-        
-        private bool indexedFieldSpecified;
-        
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
@@ -658,6 +725,19 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.nameField = value;
+                this.RaisePropertyChanged("Name");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string DefaultValue {
+            get {
+                return this.defaultValueField;
+            }
+            set {
+                this.defaultValueField = value;
+                this.RaisePropertyChanged("DefaultValue");
             }
         }
         
@@ -669,6 +749,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.descriptionField = value;
+                this.RaisePropertyChanged("Description");
             }
         }
         
@@ -680,17 +761,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.memberField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Storage {
-            get {
-                return this.storageField;
-            }
-            set {
-                this.storageField = value;
+                this.RaisePropertyChanged("Member");
             }
         }
         
@@ -702,6 +773,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierField = value;
+                this.RaisePropertyChanged("AccessModifier");
             }
         }
         
@@ -713,28 +785,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public MemberModifier Modifier {
-            get {
-                return this.modifierField;
-            }
-            set {
-                this.modifierField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ModifierSpecified {
-            get {
-                return this.modifierFieldSpecified;
-            }
-            set {
-                this.modifierFieldSpecified = value;
+                this.RaisePropertyChanged("AccessModifierSpecified");
             }
         }
         
@@ -746,6 +797,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.typeField = value;
+                this.RaisePropertyChanged("Type");
             }
         }
         
@@ -757,6 +809,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.dbTypeField = value;
+                this.RaisePropertyChanged("DbType");
             }
         }
         
@@ -768,6 +821,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.isReadOnlyField = value;
+                this.RaisePropertyChanged("IsReadOnly");
             }
         }
         
@@ -779,6 +833,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.isReadOnlyFieldSpecified = value;
+                this.RaisePropertyChanged("IsReadOnlySpecified");
             }
         }
         
@@ -790,6 +845,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.isPrimaryKeyField = value;
+                this.RaisePropertyChanged("IsPrimaryKey");
             }
         }
         
@@ -801,6 +857,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.isPrimaryKeyFieldSpecified = value;
+                this.RaisePropertyChanged("IsPrimaryKeySpecified");
             }
         }
         
@@ -812,6 +869,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.isAutoIncrementField = value;
+                this.RaisePropertyChanged("IsAutoIncrement");
             }
         }
         
@@ -823,6 +881,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.isAutoIncrementFieldSpecified = value;
+                this.RaisePropertyChanged("IsAutoIncrementSpecified");
             }
         }
         
@@ -834,6 +893,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.isDbGeneratedField = value;
+                this.RaisePropertyChanged("IsDbGenerated");
             }
         }
         
@@ -845,6 +905,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.isDbGeneratedFieldSpecified = value;
+                this.RaisePropertyChanged("IsDbGeneratedSpecified");
             }
         }
         
@@ -856,6 +917,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.nullableField = value;
+                this.RaisePropertyChanged("Nullable");
             }
         }
         
@@ -867,105 +929,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.nullableFieldSpecified = value;
+                this.RaisePropertyChanged("NullableSpecified");
             }
         }
         
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool IsDiscriminator {
-            get {
-                return this.isDiscriminatorField;
-            }
-            set {
-                this.isDiscriminatorField = value;
-            }
-        }
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsDiscriminatorSpecified {
-            get {
-                return this.isDiscriminatorFieldSpecified;
-            }
-            set {
-                this.isDiscriminatorFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Expression {
-            get {
-                return this.expressionField;
-            }
-            set {
-                this.expressionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool IsVersion {
-            get {
-                return this.isVersionField;
-            }
-            set {
-                this.isVersionField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsVersionSpecified {
-            get {
-                return this.isVersionFieldSpecified;
-            }
-            set {
-                this.isVersionFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool IsDelayLoaded {
-            get {
-                return this.isDelayLoadedField;
-            }
-            set {
-                this.isDelayLoadedField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsDelayLoadedSpecified {
-            get {
-                return this.isDelayLoadedFieldSpecified;
-            }
-            set {
-                this.isDelayLoadedFieldSpecified = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public bool Indexed {
-            get {
-                return this.indexedField;
-            }
-            set {
-                this.indexedField = value;
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IndexedSpecified {
-            get {
-                return this.indexedFieldSpecified;
-            }
-            set {
-                this.indexedFieldSpecified = value;
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -975,7 +948,7 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class TableFunctionReturn {
+    public partial class TableFunctionReturn : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string memberField;
         
@@ -987,6 +960,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.memberField = value;
+                this.RaisePropertyChanged("Member");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -996,7 +979,7 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class TableFunctionParameter {
+    public partial class TableFunctionParameter : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string parameterField;
         
@@ -1010,6 +993,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.parameterField = value;
+                this.RaisePropertyChanged("Parameter");
             }
         }
         
@@ -1021,6 +1005,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.memberField = value;
+                this.RaisePropertyChanged("Member");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -1030,7 +1024,7 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class TableFunction {
+    public partial class TableFunction : object, System.ComponentModel.INotifyPropertyChanged {
         
         private TableFunctionParameter[] argumentField;
         
@@ -1050,6 +1044,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.argumentField = value;
+                this.RaisePropertyChanged("Argument");
             }
         }
         
@@ -1060,6 +1055,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.returnField = value;
+                this.RaisePropertyChanged("Return");
             }
         }
         
@@ -1071,6 +1067,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.functionIdField = value;
+                this.RaisePropertyChanged("FunctionId");
             }
         }
         
@@ -1082,6 +1079,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierField = value;
+                this.RaisePropertyChanged("AccessModifier");
             }
         }
         
@@ -1093,6 +1091,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierFieldSpecified = value;
+                this.RaisePropertyChanged("AccessModifierSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -1102,11 +1110,11 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class IndexColumn {
+    public partial class IndexColumn : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
         
-        private string directionField;
+        private Order directionField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -1116,17 +1124,28 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.nameField = value;
+                this.RaisePropertyChanged("Name");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Direction {
+        public Order Direction {
             get {
                 return this.directionField;
             }
             set {
                 this.directionField = value;
+                this.RaisePropertyChanged("Direction");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -1134,9 +1153,21 @@ namespace DtxModeler.Ddl {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
     [System.SerializableAttribute()]
+    public enum Order {
+        
+        /// <remarks/>
+        Ascending,
+        
+        /// <remarks/>
+        Descending,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
+    [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class Index {
+    public partial class Index : object, System.ComponentModel.INotifyPropertyChanged {
         
         private IndexColumn[] indexColumnField;
         
@@ -1156,6 +1187,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.indexColumnField = value;
+                this.RaisePropertyChanged("IndexColumn");
             }
         }
         
@@ -1167,6 +1199,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.nameField = value;
+                this.RaisePropertyChanged("Name");
             }
         }
         
@@ -1178,6 +1211,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.descriptionField = value;
+                this.RaisePropertyChanged("Description");
             }
         }
         
@@ -1189,6 +1223,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.uniqueField = value;
+                this.RaisePropertyChanged("Unique");
             }
         }
         
@@ -1200,6 +1235,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.uniqueFieldSpecified = value;
+                this.RaisePropertyChanged("UniqueSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -1209,7 +1254,7 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class Association {
+    public partial class Association : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
         
@@ -1253,6 +1298,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.nameField = value;
+                this.RaisePropertyChanged("Name");
             }
         }
         
@@ -1264,6 +1310,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.memberField = value;
+                this.RaisePropertyChanged("Member");
             }
         }
         
@@ -1275,6 +1322,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.storageField = value;
+                this.RaisePropertyChanged("Storage");
             }
         }
         
@@ -1286,6 +1334,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierField = value;
+                this.RaisePropertyChanged("AccessModifier");
             }
         }
         
@@ -1297,6 +1346,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierFieldSpecified = value;
+                this.RaisePropertyChanged("AccessModifierSpecified");
             }
         }
         
@@ -1308,6 +1358,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modifierField = value;
+                this.RaisePropertyChanged("Modifier");
             }
         }
         
@@ -1319,6 +1370,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modifierFieldSpecified = value;
+                this.RaisePropertyChanged("ModifierSpecified");
             }
         }
         
@@ -1330,6 +1382,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.typeField = value;
+                this.RaisePropertyChanged("Type");
             }
         }
         
@@ -1341,6 +1394,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.thisKeyField = value;
+                this.RaisePropertyChanged("ThisKey");
             }
         }
         
@@ -1352,6 +1406,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.otherKeyField = value;
+                this.RaisePropertyChanged("OtherKey");
             }
         }
         
@@ -1363,6 +1418,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.isForeignKeyField = value;
+                this.RaisePropertyChanged("IsForeignKey");
             }
         }
         
@@ -1374,6 +1430,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.isForeignKeyFieldSpecified = value;
+                this.RaisePropertyChanged("IsForeignKeySpecified");
             }
         }
         
@@ -1385,6 +1442,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.cardinalityField = value;
+                this.RaisePropertyChanged("Cardinality");
             }
         }
         
@@ -1396,6 +1454,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.cardinalityFieldSpecified = value;
+                this.RaisePropertyChanged("CardinalitySpecified");
             }
         }
         
@@ -1407,6 +1466,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.deleteRuleField = value;
+                this.RaisePropertyChanged("DeleteRule");
             }
         }
         
@@ -1418,6 +1478,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.deleteOnNullField = value;
+                this.RaisePropertyChanged("DeleteOnNull");
             }
         }
         
@@ -1429,6 +1490,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.deleteOnNullFieldSpecified = value;
+                this.RaisePropertyChanged("DeleteOnNullSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -1450,7 +1521,7 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class Table {
+    public partial class Table : object, System.ComponentModel.INotifyPropertyChanged {
         
         private Column[] columnField;
         
@@ -1486,6 +1557,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.columnField = value;
+                this.RaisePropertyChanged("Column");
             }
         }
         
@@ -1497,6 +1569,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.associationField = value;
+                this.RaisePropertyChanged("Association");
             }
         }
         
@@ -1508,6 +1581,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.indexField = value;
+                this.RaisePropertyChanged("Index");
             }
         }
         
@@ -1518,6 +1592,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.insertFunctionField = value;
+                this.RaisePropertyChanged("InsertFunction");
             }
         }
         
@@ -1528,6 +1603,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.updateFunctionField = value;
+                this.RaisePropertyChanged("UpdateFunction");
             }
         }
         
@@ -1538,6 +1614,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.deleteFunctionField = value;
+                this.RaisePropertyChanged("DeleteFunction");
             }
         }
         
@@ -1549,6 +1626,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.nameField = value;
+                this.RaisePropertyChanged("Name");
             }
         }
         
@@ -1560,6 +1638,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.descriptionField = value;
+                this.RaisePropertyChanged("Description");
             }
         }
         
@@ -1571,6 +1650,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.memberField = value;
+                this.RaisePropertyChanged("Member");
             }
         }
         
@@ -1582,6 +1662,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierField = value;
+                this.RaisePropertyChanged("AccessModifier");
             }
         }
         
@@ -1593,6 +1674,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierFieldSpecified = value;
+                this.RaisePropertyChanged("AccessModifierSpecified");
             }
         }
         
@@ -1604,6 +1686,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modifierField = value;
+                this.RaisePropertyChanged("Modifier");
             }
         }
         
@@ -1615,6 +1698,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modifierFieldSpecified = value;
+                this.RaisePropertyChanged("ModifierSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }
@@ -1625,7 +1718,7 @@ namespace DtxModeler.Ddl {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
-    public partial class Database {
+    public partial class Database : object, System.ComponentModel.INotifyPropertyChanged {
         
         private Table[] tableField;
         
@@ -1659,6 +1752,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.tableField = value;
+                this.RaisePropertyChanged("Table");
             }
         }
         
@@ -1670,6 +1764,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.viewField = value;
+                this.RaisePropertyChanged("View");
             }
         }
         
@@ -1681,6 +1776,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.functionField = value;
+                this.RaisePropertyChanged("Function");
             }
         }
         
@@ -1691,6 +1787,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modelerField = value;
+                this.RaisePropertyChanged("Modeler");
             }
         }
         
@@ -1702,6 +1799,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.nameField = value;
+                this.RaisePropertyChanged("Name");
             }
         }
         
@@ -1713,6 +1811,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.entityNamespaceField = value;
+                this.RaisePropertyChanged("EntityNamespace");
             }
         }
         
@@ -1724,6 +1823,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.contextNamespaceField = value;
+                this.RaisePropertyChanged("ContextNamespace");
             }
         }
         
@@ -1735,6 +1835,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.classField = value;
+                this.RaisePropertyChanged("Class");
             }
         }
         
@@ -1746,6 +1847,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierField = value;
+                this.RaisePropertyChanged("AccessModifier");
             }
         }
         
@@ -1757,6 +1859,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.accessModifierFieldSpecified = value;
+                this.RaisePropertyChanged("AccessModifierSpecified");
             }
         }
         
@@ -1768,6 +1871,7 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modifierField = value;
+                this.RaisePropertyChanged("Modifier");
             }
         }
         
@@ -1779,6 +1883,16 @@ namespace DtxModeler.Ddl {
             }
             set {
                 this.modifierFieldSpecified = value;
+                this.RaisePropertyChanged("ModifierSpecified");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
     }

@@ -114,7 +114,7 @@ namespace DtxModeler.Generator.Sqlite {
 							Nullable = !Convert.ToBoolean(reader["notnull"]),
 							NullableSpecified = true,
 							DbType = reader["type"].ToString(),
-							Type = TypeTransformer.dbToNetType(reader["type"].ToString()),
+							Type = TypeTransformer.DbToNetType(reader["type"].ToString()),
 						};
 
 						if (column.IsPrimaryKey && column.DbType.ToLower() == "integer") {
