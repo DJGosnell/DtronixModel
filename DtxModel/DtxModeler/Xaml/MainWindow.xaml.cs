@@ -34,6 +34,7 @@ namespace DtxModeler.Xaml {
 		
 
 		private DtxModeler.Ddl.Table selected_table;
+		private ObservableCollection<Column> selected_columns;
 		private Column selected_column;
 
 		private TypeTransformer type_transformer = new SqliteTypeTransformer();
@@ -147,13 +148,6 @@ namespace DtxModeler.Xaml {
 			return item;
 		}
 
-		private void MenuItem_Click(object sender, RoutedEventArgs e) {
-		}
-
-		private void Window_Loaded(object sender, RoutedEventArgs e) {
-			//e.
-		}
-
 		private void Open_Click(object sender, RoutedEventArgs e) {
 			openDdl();
 		}
@@ -169,21 +163,38 @@ namespace DtxModeler.Xaml {
 
 
 		private void _treDatabaseLayout_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
-			var selected_item = _treDatabaseLayout.SelectedItem as TreeViewItem;
-			if ((selected_item != null) && (selected_item.Tag is DtxModeler.Ddl.Table)) {
-				selected_table = selected_item.Tag as DtxModeler.Ddl.Table;
-			}
-
-			refreshCurrentTable();
+			ActivateTreeItem();
 		}
 
-		private void refreshCurrentTable() {
-			if (selected_table == null) {
-				return;
-			}
+		void selected_columns_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
+			selected_table.Column = selected_columns.ToArray();
+		}
 
-			_tabTable.IsSelected = true;
-			_dagColumnDefinitions.ItemsSource = selected_table.Column;
+		private void ActivateTreeItem() {
+			selected_table = null;
+			selected_column = null;
+			selected_columns = null;
+			_dagColumnDefinitions.ItemsSource = null;
+			var selected_item = _treDatabaseLayout.SelectedItem as TreeViewItem;
+
+			_TxtTableDescription.IsEnabled = _TxtColumnDescription.IsEnabled = false;
+			_TxtTableDescription.Text = _TxtColumnDescription.Text = "";
+
+
+			if ((selected_item != null) && (selected_item.Tag is DtxModeler.Ddl.Table)) {
+				selected_table = selected_item.Tag as DtxModeler.Ddl.Table;
+
+				selected_columns = new ObservableCollection<Column>(selected_table.Column);
+				selected_columns.CollectionChanged += selected_columns_CollectionChanged;
+
+				_tabTable.IsSelected = true;
+				_dagColumnDefinitions.ItemsSource = selected_columns;
+
+				_TxtTableDescription.IsEnabled = true;
+				_TxtTableDescription.Text = selected_table.Description;
+				
+
+			}
 		}
 		private void _dagColumnDefinitions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 			if (e.AddedItems.Count == 0) {
@@ -194,7 +205,12 @@ namespace DtxModeler.Xaml {
 			var column = _dagColumnDefinitions.SelectedItem as Column;
 
 			if (column != null) {
+				_CmiDeleteColumn.IsEnabled = _CmiDuplicateColumn.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = true;
 				selected_column = column;
+				_TxtColumnDescription.Text = selected_column.Description;
+				_TxtColumnDescription.IsEnabled = true;
+			} else {
+				_CmiDeleteColumn.IsEnabled = _CmiDuplicateColumn.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = false;
 			}
 
 		}
@@ -219,8 +235,55 @@ namespace DtxModeler.Xaml {
 
 		private void _treDatabaseLayout_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
 			if (selected_table == null) {
-				e.
+				_CmiDuplicateTable.IsEnabled = _CmiDeleteTable.IsEnabled = _CmiCreateTable.IsEnabled = false;
+			} else {
+				_CmiDuplicateTable.IsEnabled = _CmiDeleteTable.IsEnabled = _CmiCreateTable.IsEnabled = true;
 			}
+		}
+
+		private void _treDatabaseLayout_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e) {
+			TreeViewItem item = sender as TreeViewItem;
+			if (item != null) {
+				item.IsSelected = true;
+				e.Handled = true;
+			}
+		}
+
+		private void _TxtColumnDescription_TextChanged(object sender, TextChangedEventArgs e) {
+			if (_TxtColumnDescription.IsEnabled) {
+				selected_column.Description = _TxtColumnDescription.Text;
+			}
+		}
+
+		private void _TxtTableDescription_TextChanged(object sender, TextChangedEventArgs e) {
+			if (_TxtTableDescription.IsEnabled) {
+				selected_table.Description = _TxtTableDescription.Text;
+			}
+		}
+
+		private void _CmiDeleteColumn_Click(object sender, RoutedEventArgs e) {
+			selected_columns.Remove(selected_column);
+		}
+
+		private void _CmiMoveColumnUp_Click(object sender, RoutedEventArgs e) {
+			int old_index = selected_columns.IndexOf(selected_column);
+
+			if (old_index <= 0) {
+				return;
+			}
+
+			selected_columns.Move(old_index, old_index - 1);
+		}
+
+		private void _CmiMoveColumnDown_Click(object sender, RoutedEventArgs e) {
+			int old_index = selected_columns.IndexOf(selected_column);
+			int max = selected_columns.Count - 1;
+
+			if (old_index >= max) {
+				return;
+			}
+
+			selected_columns.Move(old_index, old_index + 1);
 		}
 
 	}
