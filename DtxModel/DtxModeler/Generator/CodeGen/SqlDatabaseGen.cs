@@ -31,7 +31,7 @@ namespace DtxModeler.Generator.CodeGen {
 						code.write("PRIMARY KEY ");
 					}
 
-					if (column.IsAutoIncrementSpecified && column.IsAutoIncrement) {
+					if (column.IsAutoIncrement) {
 						code.write("AUTOINCREMENT ");
 					}
 

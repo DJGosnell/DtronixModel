@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Win32;
 using DtxModeler.Ddl;
 using System.Xml.Serialization;
@@ -19,6 +17,7 @@ using System.Threading;
 using System.Collections.ObjectModel;
 using DtxModeler.Generator.Sqlite;
 using DtxModeler.Generator;
+using System.IO;
 
 namespace DtxModeler.Xaml {
 	/// <summary>
@@ -27,6 +26,7 @@ namespace DtxModeler.Xaml {
 	public partial class MainWindow : Window {
 
 		private Database current_ddl;
+		private string current_ddl_location;
 		private TreeViewItem current_ddl_root;
 
 		private List<Database> server_databases = new List<Database>();
@@ -50,6 +50,7 @@ namespace DtxModeler.Xaml {
 		}
 
 		public void openDdl() {
+			current_ddl_location = null;
 			var dialog = new OpenFileDialog() {
 				Filter = "Ddl files (*.ddl)|*.ddl",
 				Multiselect = false
@@ -62,13 +63,16 @@ namespace DtxModeler.Xaml {
 				return;
 			}
 
+			current_ddl_location = dialog.FileName;
+			this.Title = "Dtronix Modeler" + " - " + Path.GetFileName(dialog.FileName);
+
 			ThreadPool.QueueUserWorkItem(o => { 
 				using (var ddl_stream = dialog.OpenFile()) {
 					try {
 						current_ddl = (Database)serializer.Deserialize(ddl_stream);
-					} catch (Exception) {
+					} catch (Exception e) {
 						this.Dispatcher.BeginInvoke(new Action(() => {
-							MessageBox.Show("Unable to load selected Ddl file.");
+							MessageBox.Show("Unable to load selected Ddl file. \r\n" + e.ToString());
 						}), null);
 						return;
 					}
@@ -78,6 +82,45 @@ namespace DtxModeler.Xaml {
 			});
 
 			
+		}
+
+
+
+		public void saveDdl(string file_name = null) {
+			if (file_name == null) {
+				var dialog = new SaveFileDialog() {
+					CheckPathExists = true,
+					DefaultExt = "ddl",
+					Title = "Save DDL"
+				};
+
+
+				var status = dialog.ShowDialog();
+
+				if (status.HasValue == false || status.Value == false) {
+					return;
+				}
+
+				file_name = dialog.FileName;
+			}
+
+			current_ddl_location = file_name;
+			this.Title = "Dtronix Modeler" + " - " + Path.GetFileName(file_name);
+
+			ThreadPool.QueueUserWorkItem(o => {
+				using (var stream = File.Open(file_name, FileMode.Create, FileAccess.Write, FileShare.None)) {
+					try {
+						var serializer = new XmlSerializer(typeof(Database));
+						serializer.Serialize(stream, current_ddl);
+					} catch (Exception) {
+						this.Dispatcher.BeginInvoke(new Action(() => {
+							MessageBox.Show("Unable to save current DDL into selected file.");
+						}), null);
+
+						return;
+					}
+				}
+			});
 		}
 
 		private void refreshDdl() {
@@ -153,12 +196,11 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void Save_Click(object sender, RoutedEventArgs e) {
-			saveDdl();
+			saveDdl(current_ddl_location);
 		}
 
-
-		public void saveDdl() {
-			
+		private void SaveAs_Click(object sender, RoutedEventArgs e) {
+			saveDdl();
 		}
 
 
@@ -168,11 +210,46 @@ namespace DtxModeler.Xaml {
 
 		void selected_columns_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e) {
 			selected_table.Column = selected_columns.ToArray();
+
+			if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add) {
+				foreach (Column column in e.NewItems) {
+					column.PropertyChanged += selected_column_PropertyChanged;
+				}
+			}
+			
+			
+		}
+
+
+		void selected_column_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
+			Column column = sender as Column;
+
+			// Temporarily remove this event so that we do not get stuck with a stack overflow.
+			column.PropertyChanged -= selected_column_PropertyChanged;
+
+			if (e.PropertyName == "DbType") {
+				column.Type = type_transformer.DbToNetType(column.DbType);
+			}
+
+			if (e.PropertyName == "Type") {
+				column.DbType = type_transformer.NetToDbType(column.Type);
+			}
+
+			// Rebind this event to allow us to listen again.
+			column.PropertyChanged += selected_column_PropertyChanged;
 		}
 
 		private void ActivateTreeItem() {
 			selected_table = null;
 			selected_column = null;
+			
+			// Remove all the bound events so that we do not double up on the same change later on.
+			if (selected_columns != null) {
+				foreach (var column in selected_columns) {
+					column.PropertyChanged -= selected_column_PropertyChanged;
+				}
+			}
+
 			selected_columns = null;
 			_dagColumnDefinitions.ItemsSource = null;
 			var selected_item = _treDatabaseLayout.SelectedItem as TreeViewItem;
@@ -187,6 +264,10 @@ namespace DtxModeler.Xaml {
 				selected_columns = new ObservableCollection<Column>(selected_table.Column);
 				selected_columns.CollectionChanged += selected_columns_CollectionChanged;
 
+				foreach (var column in selected_columns) {
+					column.PropertyChanged += selected_column_PropertyChanged;
+				}
+
 				_tabTable.IsSelected = true;
 				_dagColumnDefinitions.ItemsSource = selected_columns;
 
@@ -196,21 +277,18 @@ namespace DtxModeler.Xaml {
 
 			}
 		}
-		private void _dagColumnDefinitions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-			if (e.AddedItems.Count == 0) {
-				return;
-			}
 
+		private void _dagColumnDefinitions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+			selected_column = null;
 
 			var column = _dagColumnDefinitions.SelectedItem as Column;
 
-			if (column != null) {
-				_CmiDeleteColumn.IsEnabled = _CmiDuplicateColumn.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = true;
+			if (column != null && _dagColumnDefinitions.SelectedItems.Count == 1) {
 				selected_column = column;
+				_TxtColumnDescription.IsEnabled = _CmiDeleteColumn.IsEnabled = _CmiDuplicateColumn.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = true;
 				_TxtColumnDescription.Text = selected_column.Description;
-				_TxtColumnDescription.IsEnabled = true;
 			} else {
-				_CmiDeleteColumn.IsEnabled = _CmiDuplicateColumn.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = false;
+				_TxtColumnDescription.IsEnabled = _CmiDeleteColumn.IsEnabled = _CmiDuplicateColumn.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = false;
 			}
 
 		}
@@ -219,26 +297,19 @@ namespace DtxModeler.Xaml {
 
 		}
 
-		private void _dagColumnDefinitions_CellEditEnding(object sender, DataGridCellEditEndingEventArgs e) {
-			if (e.EditAction == DataGridEditAction.Cancel || selected_column == null) {
-				return;
+		private void _treDatabaseLayout_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
+			_CmiPasteTable.IsEnabled = _CmiCopyTable.IsEnabled = _CmiDeleteTable.IsEnabled = _CmiCreateTable.IsEnabled = false;
+
+			if (selected_table != null) {
+				_CmiCopyTable.IsEnabled = _CmiDeleteTable.IsEnabled = _CmiCreateTable.IsEnabled = true;
+
+				if (Clipboard.ContainsText() && Utilities.XmlDeserializeString<DtxModeler.Ddl.Table>(Clipboard.GetText()) != null) {
+					_CmiPasteTable.IsEnabled = true;
+				}
 			}
 			
-			if (e.Column == ColumnDbType) {
-				selected_column.Type = type_transformer.DbToNetType((e.EditingElement as ComboBox).Text);
-			}
 
-			if (e.Column == ColumnNetType) {
-				selected_column.DbType = type_transformer.NetToDbType((e.EditingElement as ComboBox).Text);
-			}
-		}
 
-		private void _treDatabaseLayout_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
-			if (selected_table == null) {
-				_CmiDuplicateTable.IsEnabled = _CmiDeleteTable.IsEnabled = _CmiCreateTable.IsEnabled = false;
-			} else {
-				_CmiDuplicateTable.IsEnabled = _CmiDeleteTable.IsEnabled = _CmiCreateTable.IsEnabled = true;
-			}
 		}
 
 		private void _treDatabaseLayout_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e) {
@@ -284,7 +355,43 @@ namespace DtxModeler.Xaml {
 			}
 
 			selected_columns.Move(old_index, old_index + 1);
+			
 		}
 
+		private void _CmiCopyTable_Click(object sender, RoutedEventArgs e) {
+			var text = Utilities.XmlSerializeObject(selected_table);
+			Clipboard.SetText(text, TextDataFormat.UnicodeText);
+		}
+
+		private void _CmiPasteTable_Click(object sender, RoutedEventArgs e) {
+			if(Clipboard.ContainsText()){
+				var table = Utilities.XmlDeserializeString<DtxModeler.Ddl.Table>(Clipboard.GetText());
+
+				var dialog = new InputDialogBox() {
+					Title = "New Table",
+					Description = "Enter a new name for the table:",
+					Value = table.Name
+				};
+
+				dialog._TxtValue.SelectAll();
+
+				var result = dialog.ShowDialog();
+
+				if (result.HasValue == false || result.Value == false) {
+					return;
+				}
+
+				table.Name = dialog.Value;
+				var tables = new List<Table>(current_ddl.Table);
+				tables.Add(table);
+				current_ddl.Table = tables.ToArray();
+				refreshDdl();
+
+
+			}
+		}
+
+
 	}
+
 }

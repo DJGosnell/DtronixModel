@@ -166,7 +166,7 @@ namespace DtxModeler.Generator {
 					if (associations.ContainsKey(association.Name)) {
 						var other = associations[association.Name];
 
-						if (other.IsForeignKeySpecified && other.IsForeignKey) {
+						if (other.IsForeignKey) {
 							// This is the child table
 							other.ParentAssociation = association;
 							association.ChildAssociation = other;

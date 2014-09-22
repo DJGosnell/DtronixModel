@@ -67,6 +67,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Xaml\InputDialogBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Xaml\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -92,6 +96,9 @@
     <Compile Include="Generator\Utilities.cs" />
     <Compile Include="Xaml\DbServer.xaml.cs">
       <DependentUpon>DbServer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\InputDialogBox.xaml.cs">
+      <DependentUpon>InputDialogBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Xaml\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -184,6 +191,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Xaml\Images\arrow_down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\database_table.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

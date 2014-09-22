@@ -334,11 +334,12 @@ namespace DtxModeler.Ddl {
         
         private bool hasMultipleResultsField;
         
-        private bool hasMultipleResultsFieldSpecified;
-        
         private bool isComposableField;
         
-        private bool isComposableFieldSpecified;
+        public Function() {
+            this.hasMultipleResultsField = false;
+            this.isComposableField = false;
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("Parameter")]
@@ -450,6 +451,7 @@ namespace DtxModeler.Ddl {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool HasMultipleResults {
             get {
                 return this.hasMultipleResultsField;
@@ -461,19 +463,8 @@ namespace DtxModeler.Ddl {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool HasMultipleResultsSpecified {
-            get {
-                return this.hasMultipleResultsFieldSpecified;
-            }
-            set {
-                this.hasMultipleResultsFieldSpecified = value;
-                this.RaisePropertyChanged("HasMultipleResultsSpecified");
-            }
-        }
-        
-        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool IsComposable {
             get {
                 return this.isComposableField;
@@ -481,18 +472,6 @@ namespace DtxModeler.Ddl {
             set {
                 this.isComposableField = value;
                 this.RaisePropertyChanged("IsComposable");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsComposableSpecified {
-            get {
-                return this.isComposableFieldSpecified;
-            }
-            set {
-                this.isComposableFieldSpecified = value;
-                this.RaisePropertyChanged("IsComposableSpecified");
             }
         }
         
@@ -699,23 +678,21 @@ namespace DtxModeler.Ddl {
         
         private bool isReadOnlyField;
         
-        private bool isReadOnlyFieldSpecified;
-        
         private bool isPrimaryKeyField;
-        
-        private bool isPrimaryKeyFieldSpecified;
         
         private bool isAutoIncrementField;
         
-        private bool isAutoIncrementFieldSpecified;
-        
         private bool isDbGeneratedField;
-        
-        private bool isDbGeneratedFieldSpecified;
         
         private bool nullableField;
         
-        private bool nullableFieldSpecified;
+        public Column() {
+            this.isReadOnlyField = false;
+            this.isPrimaryKeyField = false;
+            this.isAutoIncrementField = false;
+            this.isDbGeneratedField = false;
+            this.nullableField = false;
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -815,6 +792,7 @@ namespace DtxModeler.Ddl {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool IsReadOnly {
             get {
                 return this.isReadOnlyField;
@@ -826,19 +804,8 @@ namespace DtxModeler.Ddl {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsReadOnlySpecified {
-            get {
-                return this.isReadOnlyFieldSpecified;
-            }
-            set {
-                this.isReadOnlyFieldSpecified = value;
-                this.RaisePropertyChanged("IsReadOnlySpecified");
-            }
-        }
-        
-        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool IsPrimaryKey {
             get {
                 return this.isPrimaryKeyField;
@@ -850,19 +817,8 @@ namespace DtxModeler.Ddl {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsPrimaryKeySpecified {
-            get {
-                return this.isPrimaryKeyFieldSpecified;
-            }
-            set {
-                this.isPrimaryKeyFieldSpecified = value;
-                this.RaisePropertyChanged("IsPrimaryKeySpecified");
-            }
-        }
-        
-        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool IsAutoIncrement {
             get {
                 return this.isAutoIncrementField;
@@ -874,19 +830,8 @@ namespace DtxModeler.Ddl {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsAutoIncrementSpecified {
-            get {
-                return this.isAutoIncrementFieldSpecified;
-            }
-            set {
-                this.isAutoIncrementFieldSpecified = value;
-                this.RaisePropertyChanged("IsAutoIncrementSpecified");
-            }
-        }
-        
-        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool IsDbGenerated {
             get {
                 return this.isDbGeneratedField;
@@ -898,19 +843,8 @@ namespace DtxModeler.Ddl {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsDbGeneratedSpecified {
-            get {
-                return this.isDbGeneratedFieldSpecified;
-            }
-            set {
-                this.isDbGeneratedFieldSpecified = value;
-                this.RaisePropertyChanged("IsDbGeneratedSpecified");
-            }
-        }
-        
-        /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool Nullable {
             get {
                 return this.nullableField;
@@ -918,18 +852,6 @@ namespace DtxModeler.Ddl {
             set {
                 this.nullableField = value;
                 this.RaisePropertyChanged("Nullable");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool NullableSpecified {
-            get {
-                return this.nullableFieldSpecified;
-            }
-            set {
-                this.nullableFieldSpecified = value;
-                this.RaisePropertyChanged("NullableSpecified");
             }
         }
         
@@ -1116,6 +1038,10 @@ namespace DtxModeler.Ddl {
         
         private Order directionField;
         
+        public IndexColumn() {
+            this.directionField = Order.Ascending;
+        }
+        
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
@@ -1130,6 +1056,7 @@ namespace DtxModeler.Ddl {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(Order.Ascending)]
         public Order Direction {
             get {
                 return this.directionField;
@@ -1177,7 +1104,9 @@ namespace DtxModeler.Ddl {
         
         private bool uniqueField;
         
-        private bool uniqueFieldSpecified;
+        public Index() {
+            this.uniqueField = false;
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("IndexColumn")]
@@ -1217,6 +1146,7 @@ namespace DtxModeler.Ddl {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool Unique {
             get {
                 return this.uniqueField;
@@ -1224,18 +1154,6 @@ namespace DtxModeler.Ddl {
             set {
                 this.uniqueField = value;
                 this.RaisePropertyChanged("Unique");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool UniqueSpecified {
-            get {
-                return this.uniqueFieldSpecified;
-            }
-            set {
-                this.uniqueFieldSpecified = value;
-                this.RaisePropertyChanged("UniqueSpecified");
             }
         }
         
@@ -1278,8 +1196,6 @@ namespace DtxModeler.Ddl {
         
         private bool isForeignKeyField;
         
-        private bool isForeignKeyFieldSpecified;
-        
         private Cardinality cardinalityField;
         
         private bool cardinalityFieldSpecified;
@@ -1288,7 +1204,10 @@ namespace DtxModeler.Ddl {
         
         private bool deleteOnNullField;
         
-        private bool deleteOnNullFieldSpecified;
+        public Association() {
+            this.isForeignKeyField = false;
+            this.deleteOnNullField = false;
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -1412,6 +1331,7 @@ namespace DtxModeler.Ddl {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool IsForeignKey {
             get {
                 return this.isForeignKeyField;
@@ -1419,18 +1339,6 @@ namespace DtxModeler.Ddl {
             set {
                 this.isForeignKeyField = value;
                 this.RaisePropertyChanged("IsForeignKey");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool IsForeignKeySpecified {
-            get {
-                return this.isForeignKeyFieldSpecified;
-            }
-            set {
-                this.isForeignKeyFieldSpecified = value;
-                this.RaisePropertyChanged("IsForeignKeySpecified");
             }
         }
         
@@ -1472,6 +1380,7 @@ namespace DtxModeler.Ddl {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool DeleteOnNull {
             get {
                 return this.deleteOnNullField;
@@ -1479,18 +1388,6 @@ namespace DtxModeler.Ddl {
             set {
                 this.deleteOnNullField = value;
                 this.RaisePropertyChanged("DeleteOnNull");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool DeleteOnNullSpecified {
-            get {
-                return this.deleteOnNullFieldSpecified;
-            }
-            set {
-                this.deleteOnNullFieldSpecified = value;
-                this.RaisePropertyChanged("DeleteOnNullSpecified");
             }
         }
         

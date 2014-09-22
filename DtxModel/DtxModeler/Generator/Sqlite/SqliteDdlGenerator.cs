@@ -110,16 +110,13 @@ namespace DtxModeler.Generator.Sqlite {
 							Member = reader["name"].ToString(),
 							Name = reader["name"].ToString(),
 							IsPrimaryKey = Convert.ToBoolean(reader["pk"]),
-							IsPrimaryKeySpecified = true,
 							Nullable = !Convert.ToBoolean(reader["notnull"]),
-							NullableSpecified = true,
 							DbType = reader["type"].ToString(),
 							Type = TypeTransformer.DbToNetType(reader["type"].ToString()),
 						};
 
 						if (column.IsPrimaryKey && column.DbType.ToLower() == "integer") {
 							column.IsPrimaryKey = true;
-							column.IsPrimaryKeySpecified = true;
 						}
 
 						columns.Add(column);
