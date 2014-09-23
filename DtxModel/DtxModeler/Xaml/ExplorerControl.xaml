@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="DtxModeler.Xaml.ExplorerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" d:DesignWidth="199" d:DesignHeight="361">
+	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.RowSpan="1">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="24"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<TextBox HorizontalAlignment="Stretch" Height="23" TextWrapping="NoWrap" Text="Filter" VerticalAlignment="Top" BorderThickness="0,1,1,1" IsEnabled="False"/>
+		<TreeView x:Name="_treDatabaseLayout" BorderThickness="0,1,1,1" Grid.Row="1" SelectedItemChanged="_treDatabaseLayout_SelectedItemChanged" ContextMenuOpening="_treDatabaseLayout_ContextMenuOpening">
+			<TreeView.ContextMenu>
+				<ContextMenu>
+					<MenuItem x:Name="_CmiRename" Header="Rename" Click="_CmiRename_Click">
+						<MenuItem.Icon>
+							<Image Source="Images/textfield_rename.png" />
+						</MenuItem.Icon>
+					</MenuItem>
+					<MenuItem x:Name="_CmiNew" Header="New" Click="_CmiNew_Click">
+						<MenuItem.Icon>
+							<Image Source="Images/add.png" />
+						</MenuItem.Icon>
+					</MenuItem>
+					<MenuItem x:Name="_CmiDelete" Header="Delete" Click="_CmiDelete_Click">
+						<MenuItem.Icon>
+							<Image Source="Images/delete.png" />
+						</MenuItem.Icon>
+					</MenuItem>
+					<Separator />
+					<MenuItem x:Name="_CmiCopy" Header="Copy" Click="_CmiCopy_Click">
+						<MenuItem.Icon>
+							<Image Source="Images/page_copy.png" />
+						</MenuItem.Icon>
+					</MenuItem>
+					<MenuItem x:Name="_CmiPaste" Header="Paste" Click="_CmiPaste_Click">
+						<MenuItem.Icon>
+							<Image Source="Images/page_paste.png" />
+						</MenuItem.Icon>
+					</MenuItem>
+				</ContextMenu>
+			</TreeView.ContextMenu>
+
+		</TreeView>
+	</Grid>
+</UserControl>

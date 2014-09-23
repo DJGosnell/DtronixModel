@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 
-namespace DtxModeler.Generator {
+namespace DtxModeler {
 	public static class Utilities {
 
 		public static void addDbParameter(DbCommand command, string name, object value) {

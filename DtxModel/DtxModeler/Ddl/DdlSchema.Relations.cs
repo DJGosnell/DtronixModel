@@ -3,11 +3,24 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Windows.Controls;
 using System.Xml.Serialization;
 
 namespace DtxModeler.Ddl {
 	public partial class Table {
+		[XmlIgnore]
+		public ObservableCollection<Column> _ObservableColumns;
+	}
 
+	public partial class Database {
+		[XmlIgnore]
+		public string _FileLocation;
+
+		[XmlIgnore]
+		public TreeViewItem _TreeRoot;
+
+		[XmlIgnore]
+		public bool _Modified;
 	}
 
 

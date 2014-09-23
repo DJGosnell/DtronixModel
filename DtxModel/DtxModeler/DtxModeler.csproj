@@ -67,6 +67,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Xaml\ExplorerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Xaml\InputDialogBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -93,10 +97,13 @@
     <Compile Include="Generator\Sqlite\SqliteTypeTransformer.cs" />
     <Compile Include="Generator\TypeTransformer.cs" />
     <Compile Include="Generator\TypeTransformerType.cs" />
-    <Compile Include="Generator\Utilities.cs" />
+    <Compile Include="Utilities.cs" />
     <Compile Include="Xaml\DatabaseTree.cs" />
     <Compile Include="Xaml\DbServer.xaml.cs">
       <DependentUpon>DbServer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\ExplorerControl.xaml.cs">
+      <DependentUpon>ExplorerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Xaml\InputDialogBox.xaml.cs">
       <DependentUpon>InputDialogBox.xaml</DependentUpon>
@@ -195,6 +202,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Xaml\Images\database_table.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\textfield_rename.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

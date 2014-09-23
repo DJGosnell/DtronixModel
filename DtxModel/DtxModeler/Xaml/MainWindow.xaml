@@ -22,40 +22,7 @@
 			<ColumnDefinition Width="Auto" MinWidth="200"/>
 			<ColumnDefinition MinWidth="400" Width="*"/>
 		</Grid.ColumnDefinitions>
-		<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.RowSpan="1">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="24"/>
-				<RowDefinition/>
-			</Grid.RowDefinitions>
-			<TreeView x:Name="_treDatabaseLayout" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0,1,1,1" Grid.RowSpan="1" Grid.Row="1" SelectedItemChanged="_treDatabaseLayout_SelectedItemChanged" ContextMenuOpening="_treDatabaseLayout_ContextMenuOpening" PreviewMouseRightButtonDown="_treDatabaseLayout_PreviewMouseRightButtonDown">
-				<TreeView.ContextMenu>
-					<ContextMenu>
-						<MenuItem x:Name="_CmiCreateTable" Header="Create Table" Click="_CmiCreateTable_Click">
-							<MenuItem.Icon>
-								<Image Source="Images/add.png" />
-							</MenuItem.Icon>
-						</MenuItem>
-						<MenuItem x:Name="_CmiDeleteTable" Header="Delete Table" Click="_CmiDeleteTable_Click">
-							<MenuItem.Icon>
-								<Image Source="Images/delete.png" />
-							</MenuItem.Icon>
-						</MenuItem>
-						<MenuItem x:Name="_CmiCopyTable" Header="Copy" Click="_CmiCopyTable_Click">
-							<MenuItem.Icon>
-								<Image Source="Images/page_copy.png" />
-							</MenuItem.Icon>
-						</MenuItem>
-						<MenuItem x:Name="_CmiPasteTable" Header="Paste" Click="_CmiPasteTable_Click">
-							<MenuItem.Icon>
-								<Image Source="Images/page_paste.png" />
-							</MenuItem.Icon>
-						</MenuItem>
-					</ContextMenu>
-				</TreeView.ContextMenu>
-
-			</TreeView>
-			<TextBox HorizontalAlignment="Stretch" Height="23" TextWrapping="NoWrap" Text="Filter" VerticalAlignment="Top" BorderThickness="0,1,1,1"/>
-		</Grid>
+		<!-- <Xaml:ExplorerControl x:Name="_DatabaseExplorer" Grid.Row="1" Margin="0" SelectTable="_DatabaseExplorer_SelectTable" /> -->
 		<GridSplitter HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Grid.Column="1" Grid.Row="1" Grid.RowSpan="1"/>
 		<Menu HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="3" UseLayoutRounding="False">
 			<Menu.Background>
@@ -76,8 +43,12 @@
 			</MenuItem>
 			<MenuItem Header="_Options" Height="21" VerticalAlignment="Top">
 				<MenuItem x:Name="_MiValidateColumnsOnPaste" Header="Validate Columns On Paste" IsCheckable="True" IsChecked="True"/>
+				<MenuItem Header="Target Database Type" VerticalAlignment="Top">
+					<MenuItem Header="Sqlite" VerticalAlignment="Top" IsCheckable="True" IsChecked="True"/>
+				</MenuItem>
 			</MenuItem>
 		</Menu>
+		<Xaml:ExplorerControl x:Name="_DatabaseExplorer"  Grid.Row="1" ChangedSelection="_DatabaseExplorer_ChangedSelection" />
 		<TabControl x:Name="_tbcDatabaseView" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,0,0" BorderThickness="1" Grid.ColumnSpan="1">
 			<TabItem x:Name="_tabTable" Header="Table">
 				<Grid>
@@ -178,5 +149,7 @@
 
 		</TabControl>
 		<StatusBar HorizontalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Stretch"/>
+		
+
 	</Grid>
 </Window>

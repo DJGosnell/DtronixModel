@@ -10,23 +10,36 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using DtxModeler.Xaml;
 using System.Windows;
+using System.Runtime.InteropServices;
 
 namespace DtxModeler.Generator {
 	class Program {
 
+		[DllImport("kernel32.dll")]
+		static extern IntPtr GetConsoleWindow();
+
+		[DllImport("user32.dll")]
+		static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+		const int SW_HIDE = 0;
+		const int SW_SHOW = 5;
+
 		[STAThread]
 		static void Main(string[] args) {
+			// Get and hide the console and show the UI if there are no arguments passed.
+			if (args.Length == 0) {
+				var handle = GetConsoleWindow();
+				ShowWindow(handle, SW_HIDE);
 
-			var options = new ModelGenOptions(args);
-			Database input_database = null;
-			DdlGenerator generator = null;
-
-			if (options.UI) {
+				// Show the UI and start the main loop.
 				var app = new Application();
 				app.Run(new MainWindow());
 				return;
 			}
 
+			ModelGenOptions options = new ModelGenOptions(args);
+			Database input_database = null;
+			DdlGenerator generator = null;
 
 			// Verify that the parsing was successful.
 			if (options.ParseSuccess == false) {
