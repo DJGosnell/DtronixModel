@@ -9,7 +9,7 @@ namespace DtxModeler.Generator {
 	class ModelGenOptions : Options {
 
 		[OptionAttribute("ui", Required = false, HelpText = "Set to true to run the Modeler UI.")]
-		public string UI { get; set; }
+		public bool UI { get; set; }
 
 		[OptionAttribute("code-output", Required = false, HelpText = "The C# file to output the generated code to.")]
 		public string CodeOutput { get; set; }

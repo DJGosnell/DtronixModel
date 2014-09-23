@@ -57,6 +57,12 @@ namespace DtxModeler.Generator {
 					// Strip the dashes off the argument.
 					key = arg.Substring(2).ToLower();
 
+					// If this is a boolean option, set it and then reset the keys.
+					if (properties[key] != null && properties[key].Property.PropertyType == typeof(bool)) {
+						properties[key].Property.SetValue(this, true, null);
+						values.Clear();
+					}
+
 				} else {
 					values.Add(arg);
 				}
@@ -67,6 +73,7 @@ namespace DtxModeler.Generator {
 				setProperty(key, key);
 			}
 
+			// Check for required options.
 			foreach (var prop in properties.Values) {
 				if (prop.OptAttribute.Required && prop.Property.GetValue(this, null) == null) {
 					Console.WriteLine("Value for required attribute '" + prop.OptAttribute.LongName + "' is not set.");

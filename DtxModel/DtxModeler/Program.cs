@@ -21,7 +21,7 @@ namespace DtxModeler.Generator {
 			Database input_database = null;
 			DdlGenerator generator = null;
 
-			if (options.UI.ToLower() == "true") {
+			if (options.UI) {
 				var app = new Application();
 				app.Run(new MainWindow());
 				return;

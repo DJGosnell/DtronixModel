@@ -1,7 +1,7 @@
 ﻿<Window x:Class="DtxModeler.Xaml.InputDialogBox"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="InputDialogBox" Height="135" Width="336" ResizeMode="NoResize">
+        Title="InputDialogBox" Height="135" Width="336" ResizeMode="NoResize" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="30*"/>

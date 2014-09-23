@@ -26,7 +26,7 @@ namespace DtxModeler.Xaml {
 		}
 
 		public string Value {
-			get { return _TxtValue.Text; }
+			get { return _TxtValue.Text.Trim(); }
 			set { _TxtValue.Text = value; }
 		}
 
@@ -38,6 +38,9 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void _BtnOk_Click(object sender, RoutedEventArgs e) {
+			if (_TxtValue.Text.Trim() == "") {
+				return;
+			}
 			DialogResult = true;
 			this.Close();
 		}
