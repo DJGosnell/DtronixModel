@@ -25,6 +25,17 @@ namespace DtxModeler.Xaml {
 	/// </summary>
 	public partial class MainWindow : Window {
 
+		private enum SelectedTreeItemType {
+			None,
+			Database,
+			Tables,
+			TableItems,
+			Functions,
+			FunctionItems,
+			Views,
+			ViewItems
+		}
+
 		private Database current_ddl;
 		private string current_ddl_location;
 		private TreeViewItem current_ddl_root;
@@ -33,8 +44,9 @@ namespace DtxModeler.Xaml {
 
 		private List<Database> server_databases = new List<Database>();
 		private List<TreeViewItem> server_databases_roots = new List<TreeViewItem>();
-		
 
+
+		private SelectedTreeItemType selected_tree_item_type = SelectedTreeItemType.None;
 		private DtxModeler.Ddl.Table selected_table;
 		private ObservableCollection<Column> selected_columns;
 
@@ -158,19 +170,23 @@ namespace DtxModeler.Xaml {
 			_treDatabaseLayout.Items.Remove(current_ddl_root);
 
 			var db_root = createTreeViewItem(current_ddl.Name, image_database);
+			db_root.Tag = current_ddl.GetType();
 			db_root.IsExpanded = true;
 
 			// Tables
 			var tables_root = createTreeViewItem("Tables", image_table);
+			tables_root.Tag = typeof(Table[]);
 			tables_root.IsExpanded = true;
 			db_root.Items.Add(tables_root);
 
 			// Views
 			var views_root = createTreeViewItem("Views", image_view);
+			views_root.Tag = typeof(View[]);
 			db_root.Items.Add(views_root);
 
 			// Functions
 			var functions_root = createTreeViewItem("Functions", image_function);
+			functions_root.Tag = typeof(Function[]);
 			db_root.Items.Add(functions_root);
 
 			foreach (var table in current_ddl.Table) {
@@ -378,14 +394,22 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void _treDatabaseLayout_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
-			_CmiPasteTable.IsEnabled = _CmiCopyTable.IsEnabled = _CmiDeleteTable.IsEnabled = _CmiCreateTable.IsEnabled = false;
+			_CmiPasteTable.Visibility = _CmiCopyTable.Visibility = _CmiDeleteTable.Visibility = _CmiCreateTable.Visibility = System.Windows.Visibility.Collapsed;
+			var selected_node = _treDatabaseLayout.SelectedItem as TreeViewItem;
+			if (selected_node == null) {
+				return;
+			}
 
 			if (selected_table != null) {
-				_CmiCopyTable.IsEnabled = _CmiDeleteTable.IsEnabled = _CmiCreateTable.IsEnabled = true;
+				_CmiCopyTable.Visibility = _CmiDeleteTable.Visibility = _CmiCreateTable.Visibility = System.Windows.Visibility.Visible;
 
 				if (Clipboard.ContainsText() && Utilities.XmlDeserializeString<DtxModeler.Ddl.Table>(Clipboard.GetText()) != null) {
-					_CmiPasteTable.IsEnabled = true;
+					_CmiPasteTable.Visibility = System.Windows.Visibility.Visible;
 				}
+			}
+
+			if ((selected_node.Tag as Type) == typeof(Table[])) {
+				_CmiPasteTable.Visibility = _CmiCreateTable.Visibility = System.Windows.Visibility.Visible;
 			}
 			
 

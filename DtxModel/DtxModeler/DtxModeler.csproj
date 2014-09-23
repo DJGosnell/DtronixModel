@@ -94,6 +94,7 @@
     <Compile Include="Generator\TypeTransformer.cs" />
     <Compile Include="Generator\TypeTransformerType.cs" />
     <Compile Include="Generator\Utilities.cs" />
+    <Compile Include="Xaml\DatabaseTree.cs" />
     <Compile Include="Xaml\DbServer.xaml.cs">
       <DependentUpon>DbServer.xaml</DependentUpon>
     </Compile>
