@@ -279,6 +279,38 @@ namespace DtxModeler.Xaml {
 
 		}
 
+		public void CloseAllDatabases() {
+			foreach(var database in loaded_databases) {
+				
+			}
+		}
+
+		public bool CloseDatabase(Database database) {
+			if (database._Modified) {
+				var result = MessageBox.Show("Do you want to save changes made to (" + database.Name + ")?", "Save Changes", MessageBoxButton.YesNoCancel);
+
+				switch (result) {
+					case MessageBoxResult.None:
+					case MessageBoxResult.Cancel:
+						e.Cancel = true;
+						break;
+
+					case MessageBoxResult.No:
+						break;
+
+					case MessageBoxResult.Yes:
+						Save(database, false);
+						break;
+				}
+			}
+		}
+
+		private void _CmiClose_Click(object sender, RoutedEventArgs e) {
+			if (selected_type == ExplorerSelection.Database) {
+				//selected_database.modi
+			}
+		}
+
 
 		private void _CmiCopy_Click(object sender, RoutedEventArgs e) {
 			if (selected_type == ExplorerSelection.TableItem) {
@@ -380,10 +412,10 @@ namespace DtxModeler.Xaml {
 
 			// Remove any events and clear the collection to ensure that we do not have events
 			// being called after the fact on seperate databases and cause corrupted states.
-			if (selected_table != null && selected_table._ObservableColumns != null) {
+			/*if (selected_table != null && selected_table._ObservableColumns != null) {
 				selected_table._ObservableColumns.Clear();
 				selected_table = null;
-			}
+			}*/
 
 			// Reset out selection.
 			selected_database = null;

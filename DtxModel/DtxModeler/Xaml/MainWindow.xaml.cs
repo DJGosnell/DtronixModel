@@ -228,7 +228,7 @@ namespace DtxModeler.Xaml {
 			}
 
 			foreach (var column in columns) {
-				//selected_columns.Remove(column);
+				_DatabaseExplorer.SelectedTable._ObservableColumns.Remove(column);
 			}
 
 		}
@@ -318,21 +318,8 @@ namespace DtxModeler.Xaml {
 
 		private void Exit(System.ComponentModel.CancelEventArgs e) {
 			foreach (var database in _DatabaseExplorer.ChangedDatabases) {
-				var result = MessageBox.Show("Do you want to save changes made to (" + database.Name + ")?", "Save Changes", MessageBoxButton.YesNoCancel);
+				
 
-				switch (result) {
-					case MessageBoxResult.None:
-					case MessageBoxResult.Cancel:
-						e.Cancel = true;
-						break;
-					
-					case MessageBoxResult.No:
-						break;
-
-					case MessageBoxResult.Yes:
-						_DatabaseExplorer.Save(database, false);
-						break;
-				}
 
 			}
 		}
