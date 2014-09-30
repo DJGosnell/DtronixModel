@@ -13,9 +13,9 @@
 		<TreeView x:Name="_treDatabaseLayout" BorderThickness="0,1,1,1" Grid.Row="1" SelectedItemChanged="_treDatabaseLayout_SelectedItemChanged" ContextMenuOpening="_treDatabaseLayout_ContextMenuOpening">
 			<TreeView.ContextMenu>
 				<ContextMenu>
-					<MenuItem x:Name="_CmiClose" Header="Rename" Click="_CmiClose_Click">
+					<MenuItem x:Name="_CmiClose" Header="Close" Click="_CmiClose_Click">
 						<MenuItem.Icon>
-							<Image Source="Images/textfield_rename.png" />
+							<Image Source="Images/database_delete.png" />
 						</MenuItem.Icon>
 					</MenuItem>
 					<MenuItem x:Name="_CmiRename" Header="Rename" Click="_CmiRename_Click">

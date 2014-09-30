@@ -49,11 +49,11 @@ namespace DtxModeler.Xaml {
 
 
 		private void New_Click(object sender, RoutedEventArgs e) {
-			_DatabaseExplorer.OpenDdl(true);
+			_DatabaseExplorer.CreateDdl();
 		}
 
 		private void Open_Click(object sender, RoutedEventArgs e) {
-			_DatabaseExplorer.OpenDdl();
+			_DatabaseExplorer.BrowseDdl();
 		}
 
 		private void Exit_Click(object sender, RoutedEventArgs e) {
@@ -317,10 +317,8 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void Exit(System.ComponentModel.CancelEventArgs e) {
-			foreach (var database in _DatabaseExplorer.ChangedDatabases) {
-				
-
-
+			if (_DatabaseExplorer.CloseAllDatabases() == false) {
+				e.Cancel = true;
 			}
 		}
 

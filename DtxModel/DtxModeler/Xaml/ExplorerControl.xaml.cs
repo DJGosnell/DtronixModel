@@ -64,21 +64,18 @@ namespace DtxModeler.Xaml {
 			InitializeComponent();
 		}
 
-		private void UpdateDatabase(bool ignore_change = true) {
-			var root = new TreeViewItem();
+		/// <summary>
+		/// Refreshes the control to display the current loaded databases.
+		/// </summary>
+		private void Refresh() {
+			_treDatabaseLayout.Items.Clear();
 
 			string image_database = "pack://application:,,,/Xaml/Images/database.png";
 			string image_table = "pack://application:,,,/Xaml/Images/table.png";
 			string image_view = "pack://application:,,,/Xaml/Images/table_chart.png";
 			string image_function = "pack://application:,,,/Xaml/Images/function.png";
 
-			if (selected_database != null && ignore_change == false) {
-				selected_database._Modified = true;
-			}
-
 			foreach (var database in loaded_databases) {
-				_treDatabaseLayout.Items.Remove(database._TreeRoot);
-
 				var db_root = createTreeViewItem(database.Name, image_database);
 				db_root.Tag = database;
 				db_root.IsExpanded = true;
@@ -111,50 +108,56 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
-		public void OpenDdl(bool create_blank = false) {
-			Database new_ddl = null;
+		public void CreateDdl() {
+			loaded_databases.Add(new Database() {
+				Table = new Table[0]
+			});
+			Refresh();
+		}
 
-			if (create_blank) {
-				new_ddl = new Database() {
-					Table = new Table[0]
-				};
+		public void LoadDdl(Database database) {
+			
+		}
 
-				loaded_databases.Add(new_ddl);
-				UpdateDatabase(true);
+		public void BrowseDdl() {
+			Database ddl = null;
 
-			} else {
-				var dialog = new OpenFileDialog() {
-					Filter = "Ddl files (*.ddl)|*.ddl",
-					Multiselect = false
-				};
+			var dialog = new OpenFileDialog() {
+				Filter = "Ddl files (*.ddl)|*.ddl",
+				Multiselect = true
+			};
 
-				var status = dialog.ShowDialog();
-				var serializer = new XmlSerializer(typeof(Database));
+			var status = dialog.ShowDialog();
+			var serializer = new XmlSerializer(typeof(Database));
 
-				if (status.HasValue == false || status.Value == false) {
-					return;
+			if (status.HasValue == false || status.Value == false) {
+				return;
+			}
+
+			ThreadPool.QueueUserWorkItem(o => {
+				Stream[] ddl_streams = dialog.OpenFiles();
+				for (int i = 0; i < dialog.FileNames.Length; i++) {
+					try {
+						ddl = (Database)serializer.Deserialize(ddl_streams[i]);
+						ddl._FileLocation = dialog.FileNames[i];
+						loaded_databases.Add(ddl);
+
+					} catch (Exception e) {
+						ddl_streams[i].Close();
+						this.Dispatcher.BeginInvoke(new Action(() => {
+							MessageBox.Show("Unable to load selected Ddl file. \r\n" + e.ToString());
+						}), null);
+						return;
+					}
+					ddl_streams[i].Close();
 				}
 
-				ThreadPool.QueueUserWorkItem(o => {
-					using (var ddl_stream = dialog.OpenFile()) {
-						try {
-							new_ddl = (Database)serializer.Deserialize(ddl_stream);
-							new_ddl._FileLocation = dialog.FileName;
-						} catch (Exception e) {
-							this.Dispatcher.BeginInvoke(new Action(() => {
-								MessageBox.Show("Unable to load selected Ddl file. \r\n" + e.ToString());
-							}), null);
-							return;
-						}
-					}
+				this.Dispatcher.BeginInvoke(new Action(() => {
+					Refresh();
+				}), null);
+			});
 
-					this.Dispatcher.BeginInvoke(new Action(() => {
-						loaded_databases.Add(new_ddl);
-						UpdateDatabase(true);
-					}), null);
-				});
 
-			}
 
 		}
 
@@ -185,6 +188,7 @@ namespace DtxModeler.Xaml {
 					try {
 						var serializer = new XmlSerializer(typeof(Database));
 						serializer.Serialize(stream, database);
+						database.Modeler.Modified = DateTime.Now;
 						database._Modified = false;
 					} catch (Exception) {
 						this.Dispatcher.BeginInvoke(new Action(() => {
@@ -279,12 +283,27 @@ namespace DtxModeler.Xaml {
 
 		}
 
-		public void CloseAllDatabases() {
-			foreach(var database in loaded_databases) {
-				
+		/// <summary>
+		/// Closes all the databases open.
+		/// </summary>
+		/// <returns>True on successful closure of all databases.  False if one of the databases did not close.</returns>
+		public bool CloseAllDatabases() {
+
+			foreach (var database in loaded_databases.ToArray()) {
+				bool result = CloseDatabase(database);
+				if (result == false) {
+					return false;
+				}
 			}
+
+			return true;
 		}
 
+		/// <summary>
+		/// Closes the specified database from the explorer.
+		/// </summary>
+		/// <param name="database">Database to close.</param>
+		/// <returns>True on sccessful closure of the datatabase.  False on failure to close.</returns>
 		public bool CloseDatabase(Database database) {
 			if (database._Modified) {
 				var result = MessageBox.Show("Do you want to save changes made to (" + database.Name + ")?", "Save Changes", MessageBoxButton.YesNoCancel);
@@ -292,8 +311,7 @@ namespace DtxModeler.Xaml {
 				switch (result) {
 					case MessageBoxResult.None:
 					case MessageBoxResult.Cancel:
-						e.Cancel = true;
-						break;
+						return false;
 
 					case MessageBoxResult.No:
 						break;
@@ -302,12 +320,17 @@ namespace DtxModeler.Xaml {
 						Save(database, false);
 						break;
 				}
+				
 			}
+			loaded_databases.Remove(database);
+			Refresh();
+
+			return true;
 		}
 
 		private void _CmiClose_Click(object sender, RoutedEventArgs e) {
 			if (selected_type == ExplorerSelection.Database) {
-				//selected_database.modi
+				CloseDatabase(selected_database);
 			}
 		}
 
@@ -343,11 +366,8 @@ namespace DtxModeler.Xaml {
 
 				table.Name = dialog.Value;
 
-
-
-
-
-				UpdateDatabase();
+				selected_database._Modified = true;
+				Refresh();
 
 			}
 		}
@@ -371,7 +391,8 @@ namespace DtxModeler.Xaml {
 				selected_database.Table = selected_database.Table.Concat(new Table[] { table }).ToArray();
 			}
 
-			UpdateDatabase();
+			selected_database._Modified = true;
+			Refresh();
 		}
 
 		private void _CmiDelete_Click(object sender, RoutedEventArgs e) {
@@ -385,7 +406,8 @@ namespace DtxModeler.Xaml {
 
 			}
 
-			UpdateDatabase();
+			selected_database._Modified = true;
+			Refresh();
 		}
 
 
@@ -404,7 +426,9 @@ namespace DtxModeler.Xaml {
 
 				selected_table.Name = dialog.Value;
 			}
-			UpdateDatabase();
+
+			selected_database._Modified = true;
+			Refresh();
 		}
 
 
