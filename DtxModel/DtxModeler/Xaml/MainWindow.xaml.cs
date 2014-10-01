@@ -34,7 +34,8 @@ namespace DtxModeler.Xaml {
 			InitializeComponent();
 
 			ColumnDbType.ItemsSource = type_transformer.DbTypes();
-			ColumnNetType.ItemsSource = type_transformer.NetTypes();
+
+			ColumnNetType.ItemsSource = Enum.GetValues(typeof(NetTypes)).Cast<NetTypes>();
 		}
 
 		private Column GetSelectedColumn() {
@@ -78,16 +79,17 @@ namespace DtxModeler.Xaml {
 
 			switch (e.PropertyName) {
 				case "DbType":
-					column.Type = type_transformer.DbToNetType(column.DbType);
+					column.NetType = type_transformer.DbToNetType(column.DbType);
 					break;
 
-				case "Type":
-					column.DbType = type_transformer.NetToDbType(column.Type);
+				case "NetType":
+					column.DbType = type_transformer.NetToDbType(column.NetType);
 					break;
 
 				case "IsAutoIncrement":
 					if (column.IsAutoIncrement) {
-						if (new string[] { "system.int16", "system.int32", "system.int64" }.Contains(column.Type.ToLower()) == false) {
+
+						if (new NetTypes[] { NetTypes.Int16, NetTypes.Int32, NetTypes.Int64 }.Contains(column.NetType) == false) {
 							MessageBox.Show("An auto incremented column has to be an integer type.", "Invalid Option");
 							column.IsAutoIncrement = false;
 						} else if (column.Nullable) {

@@ -134,23 +134,23 @@ namespace DtxModeler.Generator {
 			foreach (var table in database.Table) {
 
 				// Member / Name.
-				if (string.IsNullOrWhiteSpace(table.Name) && string.IsNullOrWhiteSpace(table.Member) == false) {
-					table.Name = table.Member;
+				if (string.IsNullOrWhiteSpace(table.Name) && string.IsNullOrWhiteSpace(table.Name) == false) {
+					table.Name = table.Name;
 				}
 
 				foreach (var column in table.Column) {
 					var is_name_null = string.IsNullOrWhiteSpace(column.Name);
-					var is_member_null = string.IsNullOrWhiteSpace(column.Member);
+					var is_member_null = string.IsNullOrWhiteSpace(column.Name);
 
 					column.Table = table;
 
 					// If the column name is empty, then assume that the database column name
 					// is the same as the member name and vice versa.
 					if (is_name_null) {
-						column.Name = column.Member;
+						column.Name = column.Name;
 
 					} else if (is_member_null) {
-						column.Member = column.Name;
+						column.Name = column.Name;
 
 					} else if (is_member_null && is_name_null) {
 						writeLineColor("Column on table " + table.Name + "Does not have a name or member.", ConsoleColor.Red);
@@ -195,14 +195,14 @@ namespace DtxModeler.Generator {
 
 						// Get the association's corrisponding columns
 						foreach (var assoc_col in association.Table.Column) {
-							if (assoc_col.Member == association.ThisKey) {
+							if (assoc_col.Name == association.ThisKey) {
 								this_column = assoc_col;
 								break;
 							}
 						}
 
 						foreach (var assoc_col in other.Table.Column) {
-							if (assoc_col.Member == association.OtherKey) {
+							if (assoc_col.Name == association.OtherKey) {
 								other_column = assoc_col;
 								break;
 							}

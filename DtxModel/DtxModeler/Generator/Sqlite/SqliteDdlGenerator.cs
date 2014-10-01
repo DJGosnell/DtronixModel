@@ -36,7 +36,6 @@ namespace DtxModeler.Generator.Sqlite {
 					while (reader.Read()) {
 						var table = new Table();
 						table.Name = reader.GetString(0);
-						table.Member = table.Name;
 
 						if (table.Name == "sqlite_sequence") {
 							continue;
@@ -107,12 +106,11 @@ namespace DtxModeler.Generator.Sqlite {
 						var typ = reader["type"].ToString();
 
 						var column = new Column() {
-							Member = reader["name"].ToString(),
 							Name = reader["name"].ToString(),
 							IsPrimaryKey = Convert.ToBoolean(reader["pk"]),
 							Nullable = !Convert.ToBoolean(reader["notnull"]),
 							DbType = reader["type"].ToString(),
-							Type = TypeTransformer.DbToNetType(reader["type"].ToString()),
+							NetType = TypeTransformer.DbToNetType(reader["type"].ToString()),
 						};
 
 						if (column.IsPrimaryKey && column.DbType.ToLower() == "integer") {

@@ -36,23 +36,23 @@ namespace DtxModeler.Generator.CodeGen {
 
 				// Changed
 				if (read_only == false) {
-					code.write("private bool _").write(column.Member).writeLine("Changed = false;");
+					code.write("private bool _").write(column.Name).writeLine("Changed = false;");
 				}
 
 				// Field Value
-				code.write("private ").write(column.Type).write(" _").write(column.Member).writeLine(";");
+				code.write("private ").write(Enum.GetName(typeof(NetTypes), column.NetType)).write(" _").write(column.Name).writeLine(";");
 
 				// Property
-				code.beginBlock("public ").write(column.Type).write(" ").write(column.Member).writeLine(" {");
+				code.beginBlock("public ").write(Enum.GetName(typeof(NetTypes), column.NetType)).write(" ").write(column.Name).writeLine(" {");
 
 				// Get
-				code.write("get { return _").write(column.Member).writeLine("; }");
+				code.write("get { return _").write(column.Name).writeLine("; }");
 
 				// Set
 				if (read_only == false) {
 					code.beginBlock("set {").writeLine();
-					code.write("_").write(column.Member).writeLine(" = value;");
-					code.write("_").write(column.Member).writeLine("Changed = true;");
+					code.write("_").write(column.Name).writeLine(" = value;");
+					code.write("_").write(column.Name).writeLine("Changed = true;");
 					code.endBlock("}").writeLine();
 				}
 				code.endBlock("}").writeLine();
@@ -69,14 +69,14 @@ namespace DtxModeler.Generator.CodeGen {
 				}
 
 				// Caching Field Value
-				code.write("private ").write(field_type).write(" _").write(association.Member).writeLine(";");
+				code.write("private ").write(field_type).write(" _").write(association.Name).writeLine(";");
 
 				// Association Property
-				code.beginBlock("public ").write(field_type).write(" ").write(association.Member).writeLine(" {");
+				code.beginBlock("public ").write(field_type).write(" ").write(association.Name).writeLine(" {");
 				code.beginBlock("get {").writeLine();
-				code.beginBlock("if(_").write(association.Member).writeLine(" == null){ ");
+				code.beginBlock("if(_").write(association.Name).writeLine(" == null){ ");
 				code.beginBlock("try {").writeLine("");
-				code.write("_").write(association.Member).write(" = ((").write(database.Class).write(")context).")
+				code.write("_").write(association.Name).write(" = ((").write(database.Class).write(")context).")
 					.write(association.Type).write(".select().whereIn(\"").write(association.OtherKeyColumn.Name).write("\", _").write(association.ThisKey).write(").executeFetch");
 
 				if (association.ParentAssociation != null && association.ParentAssociation.Cardinality == Cardinality.Many) {
@@ -86,10 +86,10 @@ namespace DtxModeler.Generator.CodeGen {
 				}
 				code.endBlock("} catch {").beginBlock("").writeLine();
 				code.writeLine("//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.");
-				code.write("_").write(association.Member).writeLine(" = null;");
+				code.write("_").write(association.Name).writeLine(" = null;");
 				code.endBlock("}").writeLine(); // Try/Catch
 				code.endBlock("}").writeLine(); // If
-				code.write("return _").write(association.Member).writeLine(";");
+				code.write("return _").write(association.Name).writeLine(";");
 				code.endBlock("}").writeLine(); // Get
 				code.endBlock("}").writeLine(); // Property
 				code.writeLine();
@@ -121,71 +121,71 @@ namespace DtxModeler.Generator.CodeGen {
 
 			foreach (var column in db_table.Column) {
 				string get_value_type = null;
-				switch (column.Type.ToLower()) {
-					case "system.boolean":
-					case "bool":
-						get_value_type = "GetBoolean";
-						break;
-
-					case "system.byte":
-					case "byte":
-						get_value_type = "GetByte";
-						break;
-
-					case "system.char":
-					case "char":
-						get_value_type = "GetChar";
-						break;
-
-					case "system.datetime":
-					case "datetime":
-						get_value_type = "GetDateTime";
-						break;
-
-					case "system.decimal":
-					case "decimal":
-						get_value_type = "GetDouble";
-						break;
-
-					case "system.double":
-					case "double":
-						get_value_type = "GetDouble";
-						break;
-
-					case "system.float":
-					case "single":
-						get_value_type = "GetFloat";
-						break;
-
-					case "system.int16":
-					case "short":
-						get_value_type = "GetInt16";
-						break;
-
-					case "system.int32":
-					case "int":
-						get_value_type = "GetInt32";
-						break;
-
-					case "system.int64":
-					case "long":
+				switch (column.NetType) {
+					case NetTypes.Int64:
 						get_value_type = "GetInt64";
 						break;
 
-					case "system.uint16":
-					case "system.uint32":
-					case "system.uint64":
+					case NetTypes.Int16:
+						get_value_type = "GetInt16";
+						break;
+
+					case NetTypes.Int32:
+						get_value_type = "GetInt32";
+						break;
+
+					case NetTypes.UInt32:
+					case NetTypes.UInt64:
+					case NetTypes.ByteArray:
 						throw new NotImplementedException("Unsigned inttegers are not handled at this time.");
+						break;
+
+					case NetTypes.Byte:
+						get_value_type = "GetByte";
+						break;
+
+					case NetTypes.DateTime:
+						get_value_type = "GetDateTime";
+						break;
+
+					case NetTypes.DateTimeOffset:
+						get_value_type = "GetDateTime";
+						break;
+
+					case NetTypes.Decimal:
+						get_value_type = "GetDouble";
+						break;
+
+					case NetTypes.Float:
+						get_value_type = "GetFloat";
+						break;
+
+					case NetTypes.Double:
+						get_value_type = "GetDouble";
+						break;
+
+					case NetTypes.Boolean:
+						get_value_type = "GetBoolean";
+						break;
+
+					case NetTypes.String:
+						break;
+
+					case NetTypes.Char:
+						get_value_type = "GetChar";
+						break;
+
+					default:
+						throw new NotImplementedException("Unknown type.");
+						break;
 				}
 
-
-
-				code.write("case \"").write(column.Name).write("\": _").write(column.Member).write(" = ");
+				code.write("case \"").write(column.Name).write("\": _").write(column.Name).write(" = ");
 				if (get_value_type != null) {
 
-					code.write("(reader.IsDBNull(i)) ? default(").write(column.Type).write(") : ").write("reader.").write(get_value_type).write("(i)");
+					code.write("(reader.IsDBNull(i)) ? default(").write(Enum.GetName(typeof(NetTypes), column.NetType)).write(") : ").write("reader.").write(get_value_type).write("(i)");
 				} else {
-					code.write("reader.GetValue(i) as ").write(column.Type);
+					code.write("reader.GetValue(i) as ").write(Enum.GetName(typeof(NetTypes), column.NetType));
 				}
 				code.writeLine("; break;");
 
@@ -206,8 +206,8 @@ namespace DtxModeler.Generator.CodeGen {
 				if (column.IsPrimaryKey) {
 					continue;
 				}
-				code.beginBlock("if (_").write(column.Member).writeLine("Changed)");
-				code.write("changed.Add(\"").write(column.Name).write("\", _").write(column.Member).endBlock(");").writeLine();
+				code.beginBlock("if (_").write(column.Name).writeLine("Changed)");
+				code.write("changed.Add(\"").write(column.Name).write("\", _").write(column.Name).endBlock(");").writeLine();
 			}
 
 			code.writeLine();
@@ -225,7 +225,7 @@ namespace DtxModeler.Generator.CodeGen {
 				if (column.IsPrimaryKey) {
 					continue;
 				}
-				code.write("_").write(column.Member).writeLine(",");
+				code.write("_").write(column.Name).writeLine(",");
 			}
 
 			code.endBlock("};").writeLine();
@@ -257,7 +257,7 @@ namespace DtxModeler.Generator.CodeGen {
 
 				// getPKValue
 				code.beginBlock("public override object getPKValue() {").writeLine();
-				code.write("return _").write(pk_column.Member).writeLine(";");
+				code.write("return _").write(pk_column.Name).writeLine(";");
 				code.endBlock("}").writeLine();
 				code.writeLine();
 			}

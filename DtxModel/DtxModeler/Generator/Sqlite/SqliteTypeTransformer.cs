@@ -2,28 +2,29 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DtxModeler.Ddl;
 
 namespace DtxModeler.Generator.Sqlite {
 	class SqliteTypeTransformer : TypeTransformer {
 		public SqliteTypeTransformer() {
 			types = new TypeTransformerType[]{
-				new TypeTransformerType("System.Int64", "INTEGER"),
-				new TypeTransformerType("System.Int16", "SMALLINT"),
-				new TypeTransformerType("System.Int32", "INTEGER"),
-				/*new TypeTransformerType("System.UInt16", "SMALLINT"),
-				new TypeTransformerType("System.UInt32", "INTEGER"),
-				new TypeTransformerType("System.UInt64", "BIGINT"),*/
-				new TypeTransformerType("System.Byte[]", "BLOB"),
-				new TypeTransformerType("System.Byte", "BLOB"),
-				new TypeTransformerType("System.DateTime", "DATETIME"),
-				new TypeTransformerType("System.DateTimeOffset", "DATETIME"),
-				new TypeTransformerType("System.Decimal", "REAL"),
-				new TypeTransformerType("System.Decimal", "NUMERIC"),
-				new TypeTransformerType("System.Float", "FLOAT"),
-				new TypeTransformerType("System.Double", "DOUBLE"),
-				new TypeTransformerType("System.Boolean", "BOOLEAN"),
-				new TypeTransformerType("System.String", "TEXT"),
-				new TypeTransformerType("System.Char", "CHAR")
+				new TypeTransformerType(NetTypes.Int64, "INTEGER"),
+				new TypeTransformerType(NetTypes.Int16, "SMALLINT"),
+				new TypeTransformerType(NetTypes.Int32, "INTEGER"),
+				/*new TypeTransformerType(NetTypes.UInt16, "SMALLINT"),
+				new TypeTransformerType(NetTypes.UInt32, "INTEGER"),
+				new TypeTransformerType(NetTypes.UInt64, "BIGINT"),*/
+				new TypeTransformerType(NetTypes.ByteArray, "BLOB"),
+				new TypeTransformerType(NetTypes.Byte, "BLOB"),
+				new TypeTransformerType(NetTypes.DateTime, "DATETIME"),
+				new TypeTransformerType(NetTypes.DateTimeOffset, "DATETIME"),
+				new TypeTransformerType(NetTypes.Decimal, "REAL"),
+				new TypeTransformerType(NetTypes.Decimal, "NUMERIC"),
+				new TypeTransformerType(NetTypes.Float, "FLOAT"),
+				new TypeTransformerType(NetTypes.Double, "DOUBLE"),
+				new TypeTransformerType(NetTypes.Boolean, "BOOLEAN"),
+				new TypeTransformerType(NetTypes.String, "TEXT"),
+				new TypeTransformerType(NetTypes.Char, "CHAR")
 			};
 		}
 	}

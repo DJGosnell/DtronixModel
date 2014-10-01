@@ -19,7 +19,7 @@ namespace DtxModeler.Generator.CodeGen {
 
 				// Columns
 				foreach (var column in table.Column) {
-					string net_type = type_transformer.NetToDbType(column.Type);
+					string net_type = type_transformer.NetToDbType(column.NetType);
 
 					code.write(column.Name).write(" ").write(net_type).write(" ");
 
