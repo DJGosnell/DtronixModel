@@ -188,7 +188,6 @@ namespace DtxModeler.Xaml {
 					try {
 						var serializer = new XmlSerializer(typeof(Database));
 						serializer.Serialize(stream, database);
-						database.Modeler.Modified = DateTime.Now;
 						database._Modified = false;
 					} catch (Exception) {
 						this.Dispatcher.BeginInvoke(new Action(() => {

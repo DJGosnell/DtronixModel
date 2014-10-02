@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows.Controls;
@@ -10,17 +11,19 @@ namespace DtxModeler.Ddl {
 	public partial class Table {
 		[XmlIgnore]
 		public ObservableCollection<Column> _ObservableColumns;
+
 	}
 
 	public partial class Database {
+		[XmlIgnore]
+		public bool _Modified;
+
 		[XmlIgnore]
 		public string _FileLocation;
 
 		[XmlIgnore]
 		public TreeViewItem _TreeRoot;
 
-		[XmlIgnore]
-		public bool _Modified;
 	}
 
 

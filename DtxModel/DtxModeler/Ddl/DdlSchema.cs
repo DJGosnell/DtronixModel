@@ -21,47 +21,103 @@ namespace DtxModeler.Ddl {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
-    public partial class Modeler : object, System.ComponentModel.INotifyPropertyChanged {
+    public partial class Database : object, System.ComponentModel.INotifyPropertyChanged {
         
-        private ServerConnection[] serverConnectionField;
+        private Table[] tableField;
         
-        private System.DateTime modifiedField;
+        private View[] viewField;
         
-        private bool modifiedFieldSpecified;
+        private Function[] functionField;
+        
+        private Property[] propertyField;
+        
+        private string nameField;
+        
+        private string contextNamespaceField;
+        
+        private string classField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("ServerConnection")]
-        public ServerConnection[] ServerConnection {
+        [System.Xml.Serialization.XmlElementAttribute("Table")]
+        public Table[] Table {
             get {
-                return this.serverConnectionField;
+                return this.tableField;
             }
             set {
-                this.serverConnectionField = value;
-                this.RaisePropertyChanged("ServerConnection");
+                this.tableField = value;
+                this.RaisePropertyChanged("Table");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("View")]
+        public View[] View {
+            get {
+                return this.viewField;
+            }
+            set {
+                this.viewField = value;
+                this.RaisePropertyChanged("View");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Function")]
+        public Function[] Function {
+            get {
+                return this.functionField;
+            }
+            set {
+                this.functionField = value;
+                this.RaisePropertyChanged("Function");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Property")]
+        public Property[] Property {
+            get {
+                return this.propertyField;
+            }
+            set {
+                this.propertyField = value;
+                this.RaisePropertyChanged("Property");
             }
         }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public System.DateTime Modified {
+        public string Name {
             get {
-                return this.modifiedField;
+                return this.nameField;
             }
             set {
-                this.modifiedField = value;
-                this.RaisePropertyChanged("Modified");
+                this.nameField = value;
+                this.RaisePropertyChanged("Name");
             }
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ModifiedSpecified {
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ContextNamespace {
             get {
-                return this.modifiedFieldSpecified;
+                return this.contextNamespaceField;
             }
             set {
-                this.modifiedFieldSpecified = value;
-                this.RaisePropertyChanged("ModifiedSpecified");
+                this.contextNamespaceField = value;
+                this.RaisePropertyChanged("ContextNamespace");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Class {
+            get {
+                return this.classField;
+            }
+            set {
+                this.classField = value;
+                this.RaisePropertyChanged("Class");
             }
         }
         
@@ -80,13 +136,92 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class ServerConnection : object, System.ComponentModel.INotifyPropertyChanged {
+    public partial class Table : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private Column[] columnField;
+        
+        private Association[] associationField;
+        
+        private Index[] indexField;
+        
+        private TableFunction insertFunctionField;
+        
+        private TableFunction updateFunctionField;
+        
+        private TableFunction deleteFunctionField;
         
         private string nameField;
         
-        private DbProvider providerField;
+        private string descriptionField;
         
-        private string connectionField;
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Column")]
+        public Column[] Column {
+            get {
+                return this.columnField;
+            }
+            set {
+                this.columnField = value;
+                this.RaisePropertyChanged("Column");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Association")]
+        public Association[] Association {
+            get {
+                return this.associationField;
+            }
+            set {
+                this.associationField = value;
+                this.RaisePropertyChanged("Association");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("Index")]
+        public Index[] Index {
+            get {
+                return this.indexField;
+            }
+            set {
+                this.indexField = value;
+                this.RaisePropertyChanged("Index");
+            }
+        }
+        
+        /// <remarks/>
+        public TableFunction InsertFunction {
+            get {
+                return this.insertFunctionField;
+            }
+            set {
+                this.insertFunctionField = value;
+                this.RaisePropertyChanged("InsertFunction");
+            }
+        }
+        
+        /// <remarks/>
+        public TableFunction UpdateFunction {
+            get {
+                return this.updateFunctionField;
+            }
+            set {
+                this.updateFunctionField = value;
+                this.RaisePropertyChanged("UpdateFunction");
+            }
+        }
+        
+        /// <remarks/>
+        public TableFunction DeleteFunction {
+            get {
+                return this.deleteFunctionField;
+            }
+            set {
+                this.deleteFunctionField = value;
+                this.RaisePropertyChanged("DeleteFunction");
+            }
+        }
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
@@ -102,25 +237,13 @@ namespace DtxModeler.Ddl {
         
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public DbProvider Provider {
+        public string Description {
             get {
-                return this.providerField;
+                return this.descriptionField;
             }
             set {
-                this.providerField = value;
-                this.RaisePropertyChanged("Provider");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Connection {
-            get {
-                return this.connectionField;
-            }
-            set {
-                this.connectionField = value;
-                this.RaisePropertyChanged("Connection");
+                this.descriptionField = value;
+                this.RaisePropertyChanged("Description");
             }
         }
         
@@ -137,13 +260,295 @@ namespace DtxModeler.Ddl {
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
     [System.SerializableAttribute()]
-    public enum DbProvider {
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class Column : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string nameField;
+        
+        private string defaultValueField;
+        
+        private string descriptionField;
+        
+        private NetTypes netTypeField;
+        
+        private string dbTypeField;
+        
+        private bool isReadOnlyField;
+        
+        private bool isPrimaryKeyField;
+        
+        private bool isAutoIncrementField;
+        
+        private bool isDbGeneratedField;
+        
+        private bool nullableField;
+        
+        public Column() {
+            this.isReadOnlyField = false;
+            this.isPrimaryKeyField = false;
+            this.isAutoIncrementField = false;
+            this.isDbGeneratedField = false;
+            this.nullableField = false;
+        }
         
         /// <remarks/>
-        Sqlite,
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+                this.RaisePropertyChanged("Name");
+            }
+        }
         
         /// <remarks/>
-        MySQL,
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string DefaultValue {
+            get {
+                return this.defaultValueField;
+            }
+            set {
+                this.defaultValueField = value;
+                this.RaisePropertyChanged("DefaultValue");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
+                this.RaisePropertyChanged("Description");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public NetTypes NetType {
+            get {
+                return this.netTypeField;
+            }
+            set {
+                this.netTypeField = value;
+                this.RaisePropertyChanged("NetType");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string DbType {
+            get {
+                return this.dbTypeField;
+            }
+            set {
+                this.dbTypeField = value;
+                this.RaisePropertyChanged("DbType");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool IsReadOnly {
+            get {
+                return this.isReadOnlyField;
+            }
+            set {
+                this.isReadOnlyField = value;
+                this.RaisePropertyChanged("IsReadOnly");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool IsPrimaryKey {
+            get {
+                return this.isPrimaryKeyField;
+            }
+            set {
+                this.isPrimaryKeyField = value;
+                this.RaisePropertyChanged("IsPrimaryKey");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool IsAutoIncrement {
+            get {
+                return this.isAutoIncrementField;
+            }
+            set {
+                this.isAutoIncrementField = value;
+                this.RaisePropertyChanged("IsAutoIncrement");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool IsDbGenerated {
+            get {
+                return this.isDbGeneratedField;
+            }
+            set {
+                this.isDbGeneratedField = value;
+                this.RaisePropertyChanged("IsDbGenerated");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool Nullable {
+            get {
+                return this.nullableField;
+            }
+            set {
+                this.nullableField = value;
+                this.RaisePropertyChanged("Nullable");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
+    [System.SerializableAttribute()]
+    public enum NetTypes {
+        
+        /// <remarks/>
+        Int64,
+        
+        /// <remarks/>
+        Int16,
+        
+        /// <remarks/>
+        Int32,
+        
+        /// <remarks/>
+        UInt32,
+        
+        /// <remarks/>
+        UInt64,
+        
+        /// <remarks/>
+        ByteArray,
+        
+        /// <remarks/>
+        Byte,
+        
+        /// <remarks/>
+        DateTime,
+        
+        /// <remarks/>
+        DateTimeOffset,
+        
+        /// <remarks/>
+        Decimal,
+        
+        /// <remarks/>
+        Float,
+        
+        /// <remarks/>
+        Double,
+        
+        /// <remarks/>
+        Boolean,
+        
+        /// <remarks/>
+        String,
+        
+        /// <remarks/>
+        Char,
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    public partial class Property : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string nameField;
+        
+        private NetTypes typeField;
+        
+        private string valueField;
+        
+        private string descriptionField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+                this.RaisePropertyChanged("Name");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public NetTypes Type {
+            get {
+                return this.typeField;
+            }
+            set {
+                this.typeField = value;
+                this.RaisePropertyChanged("Type");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("Value");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Description {
+            get {
+                return this.descriptionField;
+            }
+            set {
+                this.descriptionField = value;
+                this.RaisePropertyChanged("Description");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
     }
     
     /// <remarks/>
@@ -581,227 +986,6 @@ namespace DtxModeler.Ddl {
                 propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class Column : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private string nameField;
-        
-        private string defaultValueField;
-        
-        private string descriptionField;
-        
-        private NetTypes netTypeField;
-        
-        private string dbTypeField;
-        
-        private bool isReadOnlyField;
-        
-        private bool isPrimaryKeyField;
-        
-        private bool isAutoIncrementField;
-        
-        private bool isDbGeneratedField;
-        
-        private bool nullableField;
-        
-        public Column() {
-            this.isReadOnlyField = false;
-            this.isPrimaryKeyField = false;
-            this.isAutoIncrementField = false;
-            this.isDbGeneratedField = false;
-            this.nullableField = false;
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-                this.RaisePropertyChanged("Name");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string DefaultValue {
-            get {
-                return this.defaultValueField;
-            }
-            set {
-                this.defaultValueField = value;
-                this.RaisePropertyChanged("DefaultValue");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Description {
-            get {
-                return this.descriptionField;
-            }
-            set {
-                this.descriptionField = value;
-                this.RaisePropertyChanged("Description");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public NetTypes NetType {
-            get {
-                return this.netTypeField;
-            }
-            set {
-                this.netTypeField = value;
-                this.RaisePropertyChanged("NetType");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string DbType {
-            get {
-                return this.dbTypeField;
-            }
-            set {
-                this.dbTypeField = value;
-                this.RaisePropertyChanged("DbType");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool IsReadOnly {
-            get {
-                return this.isReadOnlyField;
-            }
-            set {
-                this.isReadOnlyField = value;
-                this.RaisePropertyChanged("IsReadOnly");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool IsPrimaryKey {
-            get {
-                return this.isPrimaryKeyField;
-            }
-            set {
-                this.isPrimaryKeyField = value;
-                this.RaisePropertyChanged("IsPrimaryKey");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool IsAutoIncrement {
-            get {
-                return this.isAutoIncrementField;
-            }
-            set {
-                this.isAutoIncrementField = value;
-                this.RaisePropertyChanged("IsAutoIncrement");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool IsDbGenerated {
-            get {
-                return this.isDbGeneratedField;
-            }
-            set {
-                this.isDbGeneratedField = value;
-                this.RaisePropertyChanged("IsDbGenerated");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool Nullable {
-            get {
-                return this.nullableField;
-            }
-            set {
-                this.nullableField = value;
-                this.RaisePropertyChanged("Nullable");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
-    [System.SerializableAttribute()]
-    public enum NetTypes {
-        
-        /// <remarks/>
-        Int64,
-        
-        /// <remarks/>
-        Int16,
-        
-        /// <remarks/>
-        Int32,
-        
-        /// <remarks/>
-        UInt32,
-        
-        /// <remarks/>
-        UInt64,
-        
-        /// <remarks/>
-        ByteArray,
-        
-        /// <remarks/>
-        Byte,
-        
-        /// <remarks/>
-        DateTime,
-        
-        /// <remarks/>
-        DateTimeOffset,
-        
-        /// <remarks/>
-        Decimal,
-        
-        /// <remarks/>
-        Float,
-        
-        /// <remarks/>
-        Double,
-        
-        /// <remarks/>
-        Boolean,
-        
-        /// <remarks/>
-        String,
-        
-        /// <remarks/>
-        Char,
     }
     
     /// <remarks/>
@@ -1350,246 +1534,5 @@ namespace DtxModeler.Ddl {
         
         /// <remarks/>
         Many,
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class Table : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private Column[] columnField;
-        
-        private Association[] associationField;
-        
-        private Index[] indexField;
-        
-        private TableFunction insertFunctionField;
-        
-        private TableFunction updateFunctionField;
-        
-        private TableFunction deleteFunctionField;
-        
-        private string nameField;
-        
-        private string descriptionField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Column")]
-        public Column[] Column {
-            get {
-                return this.columnField;
-            }
-            set {
-                this.columnField = value;
-                this.RaisePropertyChanged("Column");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Association")]
-        public Association[] Association {
-            get {
-                return this.associationField;
-            }
-            set {
-                this.associationField = value;
-                this.RaisePropertyChanged("Association");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Index")]
-        public Index[] Index {
-            get {
-                return this.indexField;
-            }
-            set {
-                this.indexField = value;
-                this.RaisePropertyChanged("Index");
-            }
-        }
-        
-        /// <remarks/>
-        public TableFunction InsertFunction {
-            get {
-                return this.insertFunctionField;
-            }
-            set {
-                this.insertFunctionField = value;
-                this.RaisePropertyChanged("InsertFunction");
-            }
-        }
-        
-        /// <remarks/>
-        public TableFunction UpdateFunction {
-            get {
-                return this.updateFunctionField;
-            }
-            set {
-                this.updateFunctionField = value;
-                this.RaisePropertyChanged("UpdateFunction");
-            }
-        }
-        
-        /// <remarks/>
-        public TableFunction DeleteFunction {
-            get {
-                return this.deleteFunctionField;
-            }
-            set {
-                this.deleteFunctionField = value;
-                this.RaisePropertyChanged("DeleteFunction");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-                this.RaisePropertyChanged("Name");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Description {
-            get {
-                return this.descriptionField;
-            }
-            set {
-                this.descriptionField = value;
-                this.RaisePropertyChanged("Description");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
-    /// <remarks/>
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.18020")]
-    [System.SerializableAttribute()]
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
-    public partial class Database : object, System.ComponentModel.INotifyPropertyChanged {
-        
-        private Table[] tableField;
-        
-        private View[] viewField;
-        
-        private Function[] functionField;
-        
-        private Modeler modelerField;
-        
-        private string nameField;
-        
-        private string contextNamespaceField;
-        
-        private string classField;
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Table")]
-        public Table[] Table {
-            get {
-                return this.tableField;
-            }
-            set {
-                this.tableField = value;
-                this.RaisePropertyChanged("Table");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("View")]
-        public View[] View {
-            get {
-                return this.viewField;
-            }
-            set {
-                this.viewField = value;
-                this.RaisePropertyChanged("View");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("Function")]
-        public Function[] Function {
-            get {
-                return this.functionField;
-            }
-            set {
-                this.functionField = value;
-                this.RaisePropertyChanged("Function");
-            }
-        }
-        
-        /// <remarks/>
-        public Modeler Modeler {
-            get {
-                return this.modelerField;
-            }
-            set {
-                this.modelerField = value;
-                this.RaisePropertyChanged("Modeler");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name {
-            get {
-                return this.nameField;
-            }
-            set {
-                this.nameField = value;
-                this.RaisePropertyChanged("Name");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ContextNamespace {
-            get {
-                return this.contextNamespaceField;
-            }
-            set {
-                this.contextNamespaceField = value;
-                this.RaisePropertyChanged("ContextNamespace");
-            }
-        }
-        
-        /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Class {
-            get {
-                return this.classField;
-            }
-            set {
-                this.classField = value;
-                this.RaisePropertyChanged("Class");
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
     }
 }

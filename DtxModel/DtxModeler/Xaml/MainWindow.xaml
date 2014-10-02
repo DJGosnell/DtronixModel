@@ -158,10 +158,10 @@
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
 					<Label Grid.Row="0" Content="Namespace" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalContentAlignment="Stretch" Width="72"/>
-					<TextBox x:Name="_TxtConfigNamespace" Grid.Row="0" Grid.Column="1" Margin="2" Text="{Binding ContextNamespace}" ToolTip="Namespace for all the classes generated to be placed inside." />
+					<TextBox x:Name="_TxtConfigNamespace" Grid.Row="0" Grid.Column="1" Margin="2" Text="{Binding ContextNamespace}" ToolTip="Namespace for all the classes generated to be placed inside." TextChanged="ConfigurationChangedEvent" DataContextChanged="Configuration_DataContextChanged" TargetUpdated="_TxtConfigNamespace_TargetUpdated" />
 
 					<Label Grid.Row="1" Content="Context Class Name" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalContentAlignment="Stretch" Width="116"/>
-					<TextBox x:Name="_TxtConfigContextClassName" Grid.Row="1" Grid.Column="1" Margin="2" Text="{Binding Class}" ToolTip="Name for the context class.  By default it is the class name + &quot;Context&quot;" />
+					<TextBox x:Name="_TxtConfigContextClassName" Grid.Row="1" Grid.Column="1" Margin="2" Text="{Binding Class}" ToolTip="Name for the context class.  By default it is the class name + &quot;Context&quot;" TextChanged="ConfigurationChangedEvent"  DataContextChanged="Configuration_DataContextChanged" TargetUpdated="_TxtConfigNamespace_TargetUpdated" />
 
 
 				</Grid>

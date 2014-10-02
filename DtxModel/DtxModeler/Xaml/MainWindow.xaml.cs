@@ -332,6 +332,21 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
+		bool auto = false;
+
+		private void ConfigurationChangedEvent(object sender, TextChangedEventArgs e) {
+			string test = auto.ToString();
+		}
+
+		private void Configuration_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e) {
+			auto = true;
+		}
+
+		private void _TxtConfigNamespace_TargetUpdated(object sender, DataTransferEventArgs e) {
+			auto = false;
+		}
+
+
 
 	}
 
