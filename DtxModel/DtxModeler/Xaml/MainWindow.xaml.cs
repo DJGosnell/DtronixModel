@@ -124,6 +124,12 @@ namespace DtxModeler.Xaml {
 
 
 		private void _DatabaseExplorer_ChangedSelection(object sender, ExplorerSelectionChangedEventArgs e) {
+			// Re-bind the configurations.
+			var bind_elements = new FrameworkElement[] { _TxtConfigNamespace, _TxtConfigContextClassName };
+			foreach (var element in bind_elements) {
+				element.DataContext = e.Database;
+			}
+
 			_dagColumnDefinitions.ItemsSource = null;
 			_TxtTableDescription.IsEnabled = _TxtColumnDescription.IsEnabled = false;
 			_TxtTableDescription.Text = _TxtColumnDescription.Text = "";
@@ -172,6 +178,8 @@ namespace DtxModeler.Xaml {
 				_TxtTableDescription.IsEnabled = true;
 				_TxtTableDescription.Text = e.Table.Description;
 
+			} else if (e.SelectionType == ExplorerSelection.Database) {
+				_tabConfig.IsSelected = true;
 			}
 			
 		}
