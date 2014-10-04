@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtxModel", "DtxModel\DtxModel.csproj", "{49A79BD4-9166-4BB2-BD7F-E0747B643166}"
 EndProject
@@ -14,16 +14,16 @@ Global
 		SccNumberOfProjects = 4
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://djgosnell.visualstudio.com/defaultcollection
-		SccProjectUniqueName0 = DtxModel\\DtxModel.csproj
-		SccProjectName0 = DtxModel
-		SccLocalPath0 = DtxModel
-		SccProjectUniqueName1 = DtxModelTests\\DtxModelTests.csproj
-		SccProjectName1 = DtxModelTests
-		SccLocalPath1 = DtxModelTests
-		SccProjectUniqueName2 = DtxModeler\\DtxModeler.csproj
-		SccProjectName2 = DtxModeler
-		SccLocalPath2 = DtxModeler
-		SccLocalPath3 = .
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = DtxModel\\DtxModel.csproj
+		SccProjectName1 = DtxModel
+		SccLocalPath1 = DtxModel
+		SccProjectUniqueName2 = DtxModelTests\\DtxModelTests.csproj
+		SccProjectName2 = DtxModelTests
+		SccLocalPath2 = DtxModelTests
+		SccProjectUniqueName3 = DtxModeler\\DtxModeler.csproj
+		SccProjectName3 = DtxModeler
+		SccLocalPath3 = DtxModeler
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

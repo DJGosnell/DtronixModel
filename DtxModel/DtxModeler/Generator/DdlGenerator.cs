@@ -16,9 +16,6 @@ namespace DtxModeler.Generator {
 		}
 
 		public abstract Database generateDdl();
-		public abstract Column[] getTableColumns(string table);
-		public abstract Index[] getIndexes(string table_name);
-		public abstract Table[] getTables();
 
 		protected Table getTableByName(string name) {
 			foreach (var table in database.Table) {

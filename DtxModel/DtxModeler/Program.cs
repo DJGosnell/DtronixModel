@@ -172,7 +172,7 @@ namespace DtxModeler.Generator {
 				}
 
 
-				foreach (var association in table.Association ?? new Association[0]) {
+				foreach (var association in table.Association) {
 					association.Table = table;
 
 					// Determine if we already have this association in the list

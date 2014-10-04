@@ -50,11 +50,11 @@ namespace DtxModeler.Xaml {
 
 
 		private void New_Click(object sender, RoutedEventArgs e) {
-			_DatabaseExplorer.CreateDdl();
+			_DatabaseExplorer.CreateDatabase();
 		}
 
 		private void Open_Click(object sender, RoutedEventArgs e) {
-			_DatabaseExplorer.BrowseDdl();
+			_DatabaseExplorer.LoadDatabase();
 		}
 
 		private void Exit_Click(object sender, RoutedEventArgs e) {
@@ -62,11 +62,11 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void Save_Click(object sender, RoutedEventArgs e) {
-			_DatabaseExplorer.SaveCurrent(false);
+			_DatabaseExplorer.Save();
 		}
 
 		private void SaveAs_Click(object sender, RoutedEventArgs e) {
-			_DatabaseExplorer.SaveCurrent(true);
+			_DatabaseExplorer.Save(true);
 		}
 
 		void Column_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
@@ -123,65 +123,47 @@ namespace DtxModeler.Xaml {
 		}
 
 
-		private void _DatabaseExplorer_ChangedSelection(object sender, ExplorerSelectionChangedEventArgs e) {
-			// Re-bind the configurations.
-			var bind_elements = new FrameworkElement[] { _TxtConfigNamespace, _TxtConfigContextClassName };
-			foreach (var element in bind_elements) {
-				element.DataContext = e.Database;
-			}
-
+		private void _DatabaseExplorer_ChangedSelection(object sender, ExplorerControl.SelectionChangedEventArgs e) {
 			_dagColumnDefinitions.ItemsSource = null;
 			_TxtTableDescription.IsEnabled = _TxtColumnDescription.IsEnabled = false;
 			_TxtTableDescription.Text = _TxtColumnDescription.Text = "";
 
-			if (e.SelectionType == ExplorerSelection.TableItem) {
-				if (e.Table.Column == null) {
-					e.Table.Column = new Column[0];
-				}
-
-				// Setup our validation on the data.
-				if (e.Table._ObservableColumns == null) {
-					bool initial_add = true;
-					e.Table._ObservableColumns = new ObservableCollection<Column>();
-
-					e.Table._ObservableColumns.CollectionChanged += ((coll_sender, coll_e) => {
-						
-						if (coll_e.Action == NotifyCollectionChangedAction.Add) {
-
-							// Don't change the inital array if we are still adding to it.
-							if (initial_add != true) {
-								// Keep the observable collection in sync with the XML array.
-								e.Table.Column = ((ObservableCollection<Column>)coll_sender).ToArray();
-								_DatabaseExplorer.SelectedDatabase._Modified = true;
-							}
-
-							// If we add a new column, add a new property changed event to it.
-							foreach (Column column in coll_e.NewItems) {
-								column.PropertyChanged += Column_PropertyChanged;
-							}
-						}
-
-
-					});
-
-					// Add each column to the observable collection.
-					foreach (var column in e.Table.Column) {
-						e.Table._ObservableColumns.Add(column);
-					}
-
-					initial_add = false;
-				}
-
-				_dagColumnDefinitions.ItemsSource = e.Table._ObservableColumns;
+			if (e.SelectionType == ExplorerControl.Selection.TableItem) {
+				_dagColumnDefinitions.ItemsSource = e.Table.Column;
 				_tabTable.IsSelected = true;
 
 				_TxtTableDescription.IsEnabled = true;
-				_TxtTableDescription.Text = e.Table.Description;
+				_TxtTableDescription.DataContext = e.Table;
 
-			} else if (e.SelectionType == ExplorerSelection.Database) {
+			} else if (e.SelectionType == ExplorerControl.Selection.Database) {
 				_tabConfig.IsSelected = true;
 			}
 			
+		}
+
+		private void _DatabaseExplorer_LoadedDatabase(object sender, ExplorerControl.LoadedDatabaseEventArgs e) {
+			foreach (var table in e.Database.Table) {
+
+				// Attach events to all existing columns.
+				foreach (Column column in table.Column) {
+					column.PropertyChanged += Column_PropertyChanged;
+				}
+
+				// Ensure that the events are attached to all future columns.
+				table.Column.CollectionChanged += ((coll_sender, coll_e) => {
+
+					if (coll_e.Action == NotifyCollectionChangedAction.Add) {
+						_DatabaseExplorer.SelectedDatabase._Modified = true;
+
+						// If we add a new column, add a new property changed event to it.
+						foreach (Column column in coll_e.NewItems) {
+							column.PropertyChanged += Column_PropertyChanged;
+						}
+					}
+
+
+				});
+			}
 		}
 
 		private void _dagColumnDefinitions_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
@@ -216,12 +198,6 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
-		private void _TxtTableDescription_TextChanged(object sender, TextChangedEventArgs e) {
-			if (_TxtTableDescription.IsEnabled) {
-				_DatabaseExplorer.SelectedTable.Description = _TxtTableDescription.Text;
-			}
-		}
-
 
 
 		private void _CmiDeleteColumn_Click(object sender, RoutedEventArgs e) {
@@ -238,14 +214,14 @@ namespace DtxModeler.Xaml {
 			}
 
 			foreach (var column in columns) {
-				_DatabaseExplorer.SelectedTable._ObservableColumns.Remove(column);
+				_DatabaseExplorer.SelectedTable.Column.Remove(column);
 			}
 
 		}
 
 		private void _CmiMoveColumnUp_Click(object sender, RoutedEventArgs e) {
 			var columns = GetSelectedColumns();
-			var all_columns = _DatabaseExplorer.SelectedTable._ObservableColumns;
+			var all_columns = _DatabaseExplorer.SelectedTable.Column;
 
 			foreach (var column in columns) {
 
@@ -261,7 +237,7 @@ namespace DtxModeler.Xaml {
 
 		private void _CmiMoveColumnDown_Click(object sender, RoutedEventArgs e) {
 			var columns = GetSelectedColumns();
-			var all_columns = _DatabaseExplorer.SelectedTable._ObservableColumns;
+			var all_columns = _DatabaseExplorer.SelectedTable.Column;
 
 			foreach (var column in columns) {
 				int old_index = all_columns.IndexOf(column);
@@ -283,7 +259,7 @@ namespace DtxModeler.Xaml {
 
 		private void _CmiPasteColumn_Click(object sender, RoutedEventArgs e) {
 			Column[] columns = deserialized_clipboard as Column[];
-			var all_columns = _DatabaseExplorer.SelectedTable._ObservableColumns;
+			var all_columns = _DatabaseExplorer.SelectedTable.Column;
 			if (columns == null) {
 				return;
 			}
@@ -315,7 +291,7 @@ namespace DtxModeler.Xaml {
 
 			// Add in reverse order to allow for insertion in logical order.
 			for (int i = columns.Length - 1; i >= 0; i--) {
-				_DatabaseExplorer.SelectedTable._ObservableColumns.Insert(_dagColumnDefinitions.SelectedIndex + 1, columns[i]);
+				_DatabaseExplorer.SelectedTable.Column.Insert(_dagColumnDefinitions.SelectedIndex + 1, columns[i]);
 			}
 			
 		}
@@ -345,6 +321,7 @@ namespace DtxModeler.Xaml {
 		private void _TxtConfigNamespace_TargetUpdated(object sender, DataTransferEventArgs e) {
 			auto = false;
 		}
+
 
 
 

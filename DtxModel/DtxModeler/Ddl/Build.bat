@@ -1,1 +1,1 @@
-"C:\Program Files (x86)\Microsoft SDKs\Windows\v8.0A\bin\NETFX 4.0 Tools\xsd.exe" /namespace:DtxModeler.Ddl /classes /enableDataBinding DdlSchema.xsd
+"C:\Program Files (x86)\Xsd2Code\Xsd2Code.exe" DdlSchema.xsd /o DdlSchema.cs /n DtxModeler.Ddl /l CS /pl Net35 /c ObservableCollection /is /db /xa

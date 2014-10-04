@@ -61,7 +61,7 @@ namespace DtxModeler.Generator.CodeGen {
 			}
 
 			// Table Associations;
-			foreach (var association in db_table.Association ?? new Association[0]) {
+			foreach (var association in db_table.Association) {
 
 				string field_type = association.Type;
 				if (association.ParentAssociation != null && association.ParentAssociation.Cardinality == Cardinality.Many) {

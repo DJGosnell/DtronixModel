@@ -9,8 +9,6 @@ using System.Xml.Serialization;
 
 namespace DtxModeler.Ddl {
 	public partial class Table {
-		[XmlIgnore]
-		public ObservableCollection<Column> _ObservableColumns;
 
 	}
 

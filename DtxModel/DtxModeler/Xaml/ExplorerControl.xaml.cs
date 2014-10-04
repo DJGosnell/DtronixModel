@@ -25,11 +25,11 @@ namespace DtxModeler.Xaml {
 
 		private List<Database> loaded_databases = new List<Database>();
 
-		private ExplorerSelection selected_type;
+		private Selection selected_type;
 
 		private object deserialized_clipboard = null;
 
-		public ExplorerSelection SelectedType {
+		public Selection SelectedType {
 			get { return selected_type; }
 		}
 
@@ -54,11 +54,12 @@ namespace DtxModeler.Xaml {
 		}
 
 
-		public event EventHandler<ExplorerSelectionChangedEventArgs> ChangedSelection;
+		public event EventHandler<SelectionChangedEventArgs> ChangedSelection;
+		public event EventHandler<LoadedDatabaseEventArgs> LoadedDatabase;
 
 
 		public ExplorerControl() {
-			selected_type = ExplorerSelection.None;
+			selected_type = Selection.None;
 			this.UseLayoutRounding = true;
 
 			InitializeComponent();
@@ -68,6 +69,14 @@ namespace DtxModeler.Xaml {
 		/// Refreshes the control to display the current loaded databases.
 		/// </summary>
 		private void Refresh() {
+			Refresh(null);
+		}
+
+		/// <summary>
+		/// Refreshes the control to display the current loaded databases and selectes the specified database.
+		/// </summary>
+		/// <param name="select_db">If a database is provided, it will be automatically selected in the tree.</param>
+		private void Refresh(Database select_db) {
 			_treDatabaseLayout.Items.Clear();
 
 			string image_database = "pack://application:,,,/Xaml/Images/database.png";
@@ -79,6 +88,11 @@ namespace DtxModeler.Xaml {
 				var db_root = createTreeViewItem(database.Name, image_database);
 				db_root.Tag = database;
 				db_root.IsExpanded = true;
+
+				if (select_db == database || _treDatabaseLayout.SelectedItem == null) {
+					db_root.IsSelected = true;
+				}
+
 
 				// Tables
 				var tables_root = createTreeViewItem("Tables", image_table);
@@ -108,19 +122,39 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
-		public void CreateDdl() {
-			loaded_databases.Add(new Database() {
-				Table = new Table[0]
+		/// <summary>
+		/// Create a new database and prompt the user for a name.
+		/// </summary>
+		public void CreateDatabase() {
+			var dialog = new InputDialogBox() {
+				Title = "New Database",
+				Description = "Enter a name for the new database."
+			};
+			var result = dialog.ShowDialog();
+
+			if (result.HasValue == false || result.Value == false) {
+				return;
+			}
+
+			CreateDAtabase(dialog.Value);
+		}
+
+		/// <summary>
+		/// Creates a new database with the specified name.
+		/// </summary>
+		/// <param name="database_name">Name of the database.</param>
+		public void CreateDAtabase(string database_name) {
+			LoadDatabase(new Database() {
+				Name = database_name
 			});
-			Refresh();
 		}
 
-		public void LoadDdl(Database database) {
-			
-		}
 
-		public void BrowseDdl() {
-			Database ddl = null;
+		/// <summary>
+		/// Promps the user to select a database and then loads and opens it.
+		/// </summary>
+		public void LoadDatabase() {
+			Database database = null;
 
 			var dialog = new OpenFileDialog() {
 				Filter = "Ddl files (*.ddl)|*.ddl",
@@ -128,32 +162,26 @@ namespace DtxModeler.Xaml {
 			};
 
 			var status = dialog.ShowDialog();
-			var serializer = new XmlSerializer(typeof(Database));
-
 			if (status.HasValue == false || status.Value == false) {
 				return;
 			}
 
 			ThreadPool.QueueUserWorkItem(o => {
-				Stream[] ddl_streams = dialog.OpenFiles();
 				for (int i = 0; i < dialog.FileNames.Length; i++) {
 					try {
-						ddl = (Database)serializer.Deserialize(ddl_streams[i]);
-						ddl._FileLocation = dialog.FileNames[i];
-						loaded_databases.Add(ddl);
+						database = Database.LoadFromFile(dialog.FileNames[i]);
+						database._FileLocation = dialog.FileNames[i];
 
 					} catch (Exception e) {
-						ddl_streams[i].Close();
 						this.Dispatcher.BeginInvoke(new Action(() => {
 							MessageBox.Show("Unable to load selected Ddl file. \r\n" + e.ToString());
 						}), null);
 						return;
 					}
-					ddl_streams[i].Close();
 				}
 
 				this.Dispatcher.BeginInvoke(new Action(() => {
-					Refresh();
+					LoadDatabase(database);
 				}), null);
 			});
 
@@ -161,6 +189,42 @@ namespace DtxModeler.Xaml {
 
 		}
 
+		/// <summary>
+		/// Loads the specified database into the control.
+		/// </summary>
+		/// <param name="database">Database to load.</param>
+		public void LoadDatabase(Database database) {
+			loaded_databases.Add(database);
+			Refresh(database);
+
+			if (LoadedDatabase != null) {
+				LoadedDatabase(this, new LoadedDatabaseEventArgs() {
+					Database = database
+				});
+			}
+		}
+
+
+		/// <summary>
+		/// Saves the current database into its file.
+		/// </summary>
+		public void Save() {
+			Save(selected_database, false);
+		}
+
+		/// <summary>
+		/// Saves the current database and optionally prompts the user to save the database as another file.
+		/// </summary>
+		/// <param name="save_as">True to prompt the user for a new file to save the database into. False to save into the opened file.</param>
+		public void Save(bool save_as) {
+			Save(selected_database, save_as);
+		}
+
+		/// <summary>
+		/// Saves the sepecified database and optionally prompts the user to save the database as another file.
+		/// </summary>
+		/// <param name="database">Database to save.</param>
+		/// <param name="save_as">True to prompt the user for a new file to save the database into. False to save into the opened file.</param>
 		public void Save(Database database, bool save_as) {
 			string file_name = null;
 
@@ -184,24 +248,14 @@ namespace DtxModeler.Xaml {
 			}
 
 			ThreadPool.QueueUserWorkItem(o => {
-				using (var stream = File.Open(file_name, FileMode.Create, FileAccess.Write, FileShare.None)) {
-					try {
-						var serializer = new XmlSerializer(typeof(Database));
-						serializer.Serialize(stream, database);
-						database._Modified = false;
-					} catch (Exception) {
-						this.Dispatcher.BeginInvoke(new Action(() => {
-							MessageBox.Show("Unable to save current DDL into selected file.");
-						}), null);
+				Exception exception = null;
+				if (database.SaveToFile(file_name, out exception) == false) {
+					this.Dispatcher.BeginInvoke(new Action(() => {
+						MessageBox.Show("Unable to save current DDL into selected file. \r\n" + exception.ToString());
+					}), null);
 
-						return;
-					}
 				}
 			});
-		}
-
-		public void SaveCurrent(bool save_as) {
-			Save(selected_database, save_as);
 		}
 
 
@@ -239,23 +293,24 @@ namespace DtxModeler.Xaml {
 			_CmiRename.IsEnabled = _CmiDelete.IsEnabled = _CmiNew.IsEnabled = _CmiPaste.IsEnabled = _CmiCopy.IsEnabled = false;
 
 			switch (selected_type) {
-				case ExplorerSelection.Database:
+				case Selection.Database:
 					_CmiRename.IsEnabled = true;
 					break;
 
-				case ExplorerSelection.Tables:
-				case ExplorerSelection.Views:
-				case ExplorerSelection.Functions:
-					_CmiPaste.IsEnabled = true;
+				case Selection.Tables:
+				case Selection.Views:
+				case Selection.Functions:
+
+					_CmiNew.IsEnabled = _CmiPaste.IsEnabled = true;
 					break;
 
-				case ExplorerSelection.TableItem:
-				case ExplorerSelection.ViewItem:
-				case ExplorerSelection.FunctionItem:
+				case Selection.TableItem:
+				case Selection.ViewItem:
+				case Selection.FunctionItem:
 					_CmiRename.IsEnabled = _CmiDelete.IsEnabled = _CmiNew.IsEnabled = _CmiCopy.IsEnabled = true;
 					break;
 
-				case ExplorerSelection.None:
+				case Selection.None:
 				default:
 					break;
 			}
@@ -264,15 +319,15 @@ namespace DtxModeler.Xaml {
 			if (Clipboard.ContainsText()) {
 				string clipboard_text = Clipboard.GetText();
 
-				if ((selected_type == ExplorerSelection.Tables || selected_type == ExplorerSelection.TableItem)
+				if ((selected_type == Selection.Tables || selected_type == Selection.TableItem)
 					&& (deserialized_clipboard = Utilities.XmlDeserializeString<Table>(clipboard_text)) != null) {
 					_CmiPaste.IsEnabled = true;
 
-				} else if ((selected_type == ExplorerSelection.Views || selected_type == ExplorerSelection.ViewItem)
+				} else if ((selected_type == Selection.Views || selected_type == Selection.ViewItem)
 					&& (deserialized_clipboard = Utilities.XmlDeserializeString<View>(clipboard_text)) != null) {
 					_CmiPaste.IsEnabled = true;
 
-				} else if ((selected_type == ExplorerSelection.Functions || selected_type == ExplorerSelection.FunctionItem)
+				} else if ((selected_type == Selection.Functions || selected_type == Selection.FunctionItem)
 					&& (deserialized_clipboard = Utilities.XmlDeserializeString<Function>(clipboard_text)) != null) {
 					_CmiPaste.IsEnabled = true;
 				}
@@ -328,21 +383,21 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void _CmiClose_Click(object sender, RoutedEventArgs e) {
-			if (selected_type == ExplorerSelection.Database) {
+			if (selected_type == Selection.Database) {
 				CloseDatabase(selected_database);
 			}
 		}
 
 
 		private void _CmiCopy_Click(object sender, RoutedEventArgs e) {
-			if (selected_type == ExplorerSelection.TableItem) {
+			if (selected_type == Selection.TableItem) {
 				var text = Utilities.XmlSerializeObject(selected_table);
 				Clipboard.SetText(text, TextDataFormat.UnicodeText);
 			}
 		}
 
 		private void _CmiPaste_Click(object sender, RoutedEventArgs e) {
-			if (selected_type == ExplorerSelection.Tables || selected_type == ExplorerSelection.TableItem) {
+			if (selected_type == Selection.Tables || selected_type == Selection.TableItem) {
 				Table table = deserialized_clipboard as Table;
 
 				if (table == null) {
@@ -374,7 +429,7 @@ namespace DtxModeler.Xaml {
 
 		private void _CmiNew_Click(object sender, RoutedEventArgs e) {
 			var dialog = new InputDialogBox();
-			if (selected_type == ExplorerSelection.Tables || selected_type == ExplorerSelection.TableItem) {
+			if (selected_type == Selection.Tables || selected_type == Selection.TableItem) {
 				var table = new Table();
 
 				dialog.Title = "New Table";
@@ -387,7 +442,7 @@ namespace DtxModeler.Xaml {
 				}
 
 				table.Name = dialog.Value;
-				selected_database.Table = selected_database.Table.Concat(new Table[] { table }).ToArray();
+				selected_database.Table.Add(table);
 			}
 
 			selected_database._Modified = true;
@@ -395,12 +450,12 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void _CmiDelete_Click(object sender, RoutedEventArgs e) {
-			if (selected_type == ExplorerSelection.Tables || selected_type == ExplorerSelection.TableItem) {
+			if (selected_type == Selection.Tables || selected_type == Selection.TableItem) {
 				var result = MessageBox.Show("Are you sure you want to delete table \"" + selected_table.Name + "\"?", "Delete Table", MessageBoxButton.YesNo);
 
 				if (result == MessageBoxResult.Yes) {
 
-					selected_database.Table = selected_database.Table.Where(table => table != selected_table).ToArray();
+					selected_database.Table.Remove(selected_table);
 				}
 
 			}
@@ -412,7 +467,7 @@ namespace DtxModeler.Xaml {
 
 		private void _CmiRename_Click(object sender, RoutedEventArgs e) {
 			var dialog = new InputDialogBox();
-			if (selected_type == ExplorerSelection.TableItem) {
+			if (selected_type == Selection.TableItem) {
 				dialog.Title = "New Table";
 				dialog.Description = "Enter a new name for the table.";
 				dialog.Value = selected_table.Name;
@@ -485,34 +540,34 @@ namespace DtxModeler.Xaml {
 				// Narrow down the type of node.
 				if (node_tag_type == typeof(Table[])) {
 					if (selected_table == null) {
-						selected_type = ExplorerSelection.Tables;
+						selected_type = Selection.Tables;
 					} else {
-						selected_type = ExplorerSelection.TableItem;
+						selected_type = Selection.TableItem;
 					}
 
 				} else if (node_tag_type == typeof(Function[])) {
 					if (selected_function == null) {
-						selected_type = ExplorerSelection.Functions;
+						selected_type = Selection.Functions;
 					} else {
-						selected_type = ExplorerSelection.FunctionItem;
+						selected_type = Selection.FunctionItem;
 					}
 
 				} else if (node_tag_type == typeof(View[])) {
 					if (selected_view == null) {
-						selected_type = ExplorerSelection.Views;
+						selected_type = Selection.Views;
 					} else {
-						selected_type = ExplorerSelection.ViewItem;
+						selected_type = Selection.ViewItem;
 					}
 
 				} else if (selected_database != null) {
-					selected_type = ExplorerSelection.Database;
+					selected_type = Selection.Database;
 
 				} else {
-					selected_type = ExplorerSelection.None;
+					selected_type = Selection.None;
 				}
 
 				if (ChangedSelection != null) {
-					ChangedSelection(sender, new ExplorerSelectionChangedEventArgs() {
+					ChangedSelection(sender, new SelectionChangedEventArgs() {
 						SelectionType = selected_type,
 						Database = selected_database,
 						Table = selected_table,
@@ -525,26 +580,35 @@ namespace DtxModeler.Xaml {
 
 			}
 		}
+
+
+		public class SelectionChangedEventArgs : EventArgs {
+			public Database Database { get; set; }
+			public Table Table { get; set; }
+			public Function Function { get; set; }
+			public View View { get; set; }
+			public Selection SelectionType { get; set; }
+		}
+
+
+		public class LoadedDatabaseEventArgs : EventArgs {
+			public Database Database { get; set; }
+		}
+
+		public enum Selection {
+			None,
+			Database,
+			Tables,
+			TableItem,
+			Functions,
+			FunctionItem,
+			Views,
+			ViewItem
+		}
 	
 	}
 
-	public class ExplorerSelectionChangedEventArgs : EventArgs {
-		public Database Database { get; set; }
-		public Table Table { get; set; }
-		public Function Function { get; set; }
-		public View View { get; set; }
-		public ExplorerSelection SelectionType { get; set; }
-	}
 
 
-	public enum ExplorerSelection {
-		None,
-		Database,
-		Tables,
-		TableItem,
-		Functions,
-		FunctionItem,
-		Views,
-		ViewItem
-	}
+
 }

@@ -48,7 +48,7 @@
 				</MenuItem>
 			</MenuItem>
 		</Menu>
-		<Xaml:ExplorerControl x:Name="_DatabaseExplorer"  Grid.Row="1" ChangedSelection="_DatabaseExplorer_ChangedSelection" />
+		<Xaml:ExplorerControl x:Name="_DatabaseExplorer"  Grid.Row="1" ChangedSelection="_DatabaseExplorer_ChangedSelection" LoadedDatabase="_DatabaseExplorer_LoadedDatabase" />
 		<TabControl x:Name="_tbcDatabaseView" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,0,0" BorderThickness="1" Grid.ColumnSpan="1">
 			<TabItem x:Name="_tabTable" Header="Table">
 				<Grid>
@@ -62,7 +62,7 @@
 						<RowDefinition Height="60"/>
 					</Grid.RowDefinitions>
 					<GroupBox Grid.Row="0" Header="Table Description" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2">
-						<TextBox x:Name="_TxtTableDescription" IsEnabled="False" TextChanged="_TxtTableDescription_TextChanged" TextWrapping="Wrap" />
+						<TextBox x:Name="_TxtTableDescription" IsEnabled="False" Text="{Binding Description}" TextWrapping="Wrap" />
 					</GroupBox>
 					<GroupBox Grid.Row="1" Header="Colum Definitions" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="2">
 						<DataGrid AutoGenerateColumns="False" x:Name="_dagColumnDefinitions"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_dagColumnDefinitions_ContextMenuOpening">
