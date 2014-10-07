@@ -2,6 +2,10 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,7 +18,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Xml.Serialization;
 
 namespace DtxModeler.Xaml {
@@ -53,9 +56,10 @@ namespace DtxModeler.Xaml {
 			get { return selected_table; }
 		}
 
-
+		public event EventHandler<DatabaseEventArgs> DatabaseModified;
 		public event EventHandler<SelectionChangedEventArgs> ChangedSelection;
-		public event EventHandler<LoadedDatabaseEventArgs> LoadedDatabase;
+		public event EventHandler<DatabaseEventArgs> LoadedDatabase;
+		public event EventHandler<DatabaseEventArgs> UnloadedDatabase;
 
 
 		public ExplorerControl() {
@@ -194,13 +198,79 @@ namespace DtxModeler.Xaml {
 		/// </summary>
 		/// <param name="database">Database to load.</param>
 		public void LoadDatabase(Database database) {
+			NotifyCollectionChangedEventHandler collection_changed = (coll_sender, coll_e) => {
+				database._Modified = true;
+				if (DatabaseModified != null) {
+					DatabaseModified(this, new DatabaseEventArgs() {
+						Database = database
+					});
+				}
+			};
+
+			PropertyChangedEventHandler property_changed = (prop_sender, prop_e) => {
+				database._Modified = true;
+				if (DatabaseModified != null) {
+					DatabaseModified(this, new DatabaseEventArgs() {
+						Database = database
+					});
+				}
+			};
+
+			// Tables
+			BindCollection<Table>(database.Table, collection_changed, property_changed);
+
+			foreach (var table in database.Table) {
+				BindCollection<Association>(table.Association, collection_changed, property_changed);
+				BindCollection<Column>(table.Column, collection_changed, property_changed);
+				BindCollection<Index>(table.Index, collection_changed, property_changed);
+			}
+
+			// Configurations
+			BindCollection<Configuration>(database.Configuration, collection_changed, property_changed);
+
+			// Functions
+			BindCollection<Function>(database.Function, collection_changed, property_changed);
+
+			// Views
+			BindCollection<View>(database.View, collection_changed, property_changed);
+
+			foreach (var view in database.View) {
+				BindCollection<Column>(view.Column, collection_changed, property_changed);
+			}
+
 			loaded_databases.Add(database);
+			database.InitialConfig();
 			Refresh(database);
 
 			if (LoadedDatabase != null) {
-				LoadedDatabase(this, new LoadedDatabaseEventArgs() {
+				LoadedDatabase(this, new DatabaseEventArgs() {
 					Database = database
 				});
+			}
+
+		}
+
+
+		private void BindCollection<T>(ObservableCollection<T> collection, NotifyCollectionChangedEventHandler collection_changed, PropertyChangedEventHandler property_changed) where T : INotifyPropertyChanged {
+			collection.CollectionChanged += (coll_sender, coll_e) => {
+				collection_changed(coll_sender, coll_e);
+				if (coll_e.Action == NotifyCollectionChangedAction.Add) {
+
+					// If we add a new property, add a new property changed event to it.
+					foreach (Configuration config in coll_e.NewItems) {
+						config.PropertyChanged += (prop_sender, prop_e) => {
+							property_changed(prop_sender, prop_e);
+						};
+					}
+
+
+				}
+			};
+
+			foreach (var item in collection) {
+				item.PropertyChanged += (prop_sender, prop_e) => {
+					property_changed(prop_sender, prop_e);
+				};
 			}
 		}
 
@@ -247,13 +317,16 @@ namespace DtxModeler.Xaml {
 				file_name = database._FileLocation;
 			}
 
+			database._FileLocation = file_name;
+			database._Modified = false;
+
 			ThreadPool.QueueUserWorkItem(o => {
 				Exception exception = null;
 				if (database.SaveToFile(file_name, out exception) == false) {
 					this.Dispatcher.BeginInvoke(new Action(() => {
+						database._Modified = true;
 						MessageBox.Show("Unable to save current DDL into selected file. \r\n" + exception.ToString());
 					}), null);
-
 				}
 			});
 		}
@@ -291,10 +364,12 @@ namespace DtxModeler.Xaml {
 
 		private void _treDatabaseLayout_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
 			_CmiRename.IsEnabled = _CmiDelete.IsEnabled = _CmiNew.IsEnabled = _CmiPaste.IsEnabled = _CmiCopy.IsEnabled = false;
+			_CmiClose.Visibility = _CmiBrowse.Visibility = System.Windows.Visibility.Collapsed;
 
 			switch (selected_type) {
 				case Selection.Database:
 					_CmiRename.IsEnabled = true;
+					_CmiClose.Visibility = _CmiBrowse.Visibility = System.Windows.Visibility.Visible;
 					break;
 
 				case Selection.Tables:
@@ -376,10 +451,24 @@ namespace DtxModeler.Xaml {
 				}
 				
 			}
+
+			if (UnloadedDatabase != null) {
+				UnloadedDatabase(this, new DatabaseEventArgs() {
+					Database = database
+				});
+			}
+
 			loaded_databases.Remove(database);
 			Refresh();
 
 			return true;
+		}
+
+
+		private void _CmiBrowse_Click(object sender, RoutedEventArgs e) {
+			if (selected_database._FileLocation != null) {
+				Process.Start(System.IO.Path.GetDirectoryName(selected_database._FileLocation));
+			}
 		}
 
 		private void _CmiClose_Click(object sender, RoutedEventArgs e) {
@@ -404,57 +493,45 @@ namespace DtxModeler.Xaml {
 					return;
 				}
 
-				var dialog = new InputDialogBox() {
-					Title = "New Table",
-					Description = "Enter a new name for the table.",
-					Value = table.Name
+				Action database_changed = () => {
+					selected_database._Modified = true;
+					Refresh();
 				};
 
-				dialog._TxtValue.SelectAll();
+				if (selected_type == Selection.TableItem) {
+					InputDialogBox.Show("Table Name", "Enter a new name for the table.", table.Name, (value) => {
+						table.Name = value;
+						selected_database.Table.Add(table);
+						database_changed();
+					});
 
-				var result = dialog.ShowDialog();
-
-				if (result.HasValue == false || result.Value == false) {
-					return;
 				}
-
-				table.Name = dialog.Value;
-
-				selected_database._Modified = true;
-				Refresh();
-
 			}
 		}
 
 
 		private void _CmiNew_Click(object sender, RoutedEventArgs e) {
-			var dialog = new InputDialogBox();
+			Action database_changed = () => {
+				selected_database._Modified = true;
+				Refresh();
+			};
+
 			if (selected_type == Selection.Tables || selected_type == Selection.TableItem) {
 				var table = new Table();
 
-				dialog.Title = "New Table";
-				dialog.Description = "Enter a new name for the table.";
-				dialog._TxtValue.SelectAll();
-				var result = dialog.ShowDialog();
+				InputDialogBox.Show("Table Name", "Enter a new name for the table.", table.Name, (value) => {
+					table.Name = value;
+					selected_database.Table.Add(table);
+					database_changed();
+				});
 
-				if (result.HasValue == false || result.Value == false) {
-					return;
-				}
-
-				table.Name = dialog.Value;
-				selected_database.Table.Add(table);
+				
 			}
-
-			selected_database._Modified = true;
-			Refresh();
 		}
 
 		private void _CmiDelete_Click(object sender, RoutedEventArgs e) {
 			if (selected_type == Selection.Tables || selected_type == Selection.TableItem) {
-				var result = MessageBox.Show("Are you sure you want to delete table \"" + selected_table.Name + "\"?", "Delete Table", MessageBoxButton.YesNo);
-
-				if (result == MessageBoxResult.Yes) {
-
+				if (MessageBox.Show("Are you sure you want to delete table \"" + selected_table.Name + "\"?", "Delete Table", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
 					selected_database.Table.Remove(selected_table);
 				}
 
@@ -466,23 +543,23 @@ namespace DtxModeler.Xaml {
 
 
 		private void _CmiRename_Click(object sender, RoutedEventArgs e) {
-			var dialog = new InputDialogBox();
+			Action database_changed = () => {
+				selected_database._Modified = true;
+				Refresh();
+			};
+
 			if (selected_type == Selection.TableItem) {
-				dialog.Title = "New Table";
-				dialog.Description = "Enter a new name for the table.";
-				dialog.Value = selected_table.Name;
-				dialog._TxtValue.SelectAll();
-				var result = dialog.ShowDialog();
+				InputDialogBox.Show("Rename Table", "Enter a new name for the table.", selected_table.Name, (value) => {
+					selected_table.Name = value;
+					database_changed();
+				});
 
-				if (result.HasValue == false || result.Value == false) {
-					return;
-				}
-
-				selected_table.Name = dialog.Value;
+			} else if (selected_type == Selection.Database) {
+				InputDialogBox.Show("Rename Database", "Enter a new name for the database.", selected_database.Name, (value) => {
+					selected_database.Name = value;
+					database_changed();
+				});
 			}
-
-			selected_database._Modified = true;
-			Refresh();
 		}
 
 
@@ -591,7 +668,7 @@ namespace DtxModeler.Xaml {
 		}
 
 
-		public class LoadedDatabaseEventArgs : EventArgs {
+		public class DatabaseEventArgs : EventArgs {
 			public Database Database { get; set; }
 		}
 
@@ -605,6 +682,7 @@ namespace DtxModeler.Xaml {
 			Views,
 			ViewItem
 		}
+
 	
 	}
 

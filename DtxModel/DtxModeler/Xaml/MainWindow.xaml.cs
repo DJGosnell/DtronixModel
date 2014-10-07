@@ -19,6 +19,7 @@ using DtxModeler.Generator.Sqlite;
 using DtxModeler.Generator;
 using System.IO;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace DtxModeler.Xaml {
 	/// <summary>
@@ -63,10 +64,12 @@ namespace DtxModeler.Xaml {
 
 		private void Save_Click(object sender, RoutedEventArgs e) {
 			_DatabaseExplorer.Save();
+			UpdateTitle();
 		}
 
 		private void SaveAs_Click(object sender, RoutedEventArgs e) {
 			_DatabaseExplorer.Save(true);
+			UpdateTitle();
 		}
 
 		void Column_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
@@ -127,6 +130,8 @@ namespace DtxModeler.Xaml {
 			_dagColumnDefinitions.ItemsSource = null;
 			_TxtTableDescription.IsEnabled = _TxtColumnDescription.IsEnabled = false;
 			_TxtTableDescription.Text = _TxtColumnDescription.Text = "";
+			_DagConfigurations.ItemsSource = e.Database.Configuration;
+
 
 			if (e.SelectionType == ExplorerControl.Selection.TableItem) {
 				_dagColumnDefinitions.ItemsSource = e.Table.Column;
@@ -138,32 +143,40 @@ namespace DtxModeler.Xaml {
 			} else if (e.SelectionType == ExplorerControl.Selection.Database) {
 				_tabConfig.IsSelected = true;
 			}
-			
+
+			UpdateTitle();
 		}
 
-		private void _DatabaseExplorer_LoadedDatabase(object sender, ExplorerControl.LoadedDatabaseEventArgs e) {
-			foreach (var table in e.Database.Table) {
 
-				// Attach events to all existing columns.
-				foreach (Column column in table.Column) {
-					column.PropertyChanged += Column_PropertyChanged;
+		private void _DatabaseExplorer_DatabaseModified(object sender, ExplorerControl.DatabaseEventArgs e) {
+			UpdateTitle();
+		}
+
+		private void UpdateTitle() {
+			var database = _DatabaseExplorer.SelectedDatabase;
+
+			if(database != null){
+				if (database._FileLocation != null) {
+					this.Title = "Dtronix Modeler - " + database.Name + " (" + Path.GetFileName(database._FileLocation) + ")";
+				} else {
+					this.Title = "Dtronix Modeler - " + database.Name + "(Usaved)";
 				}
 
-				// Ensure that the events are attached to all future columns.
-				table.Column.CollectionChanged += ((coll_sender, coll_e) => {
-
-					if (coll_e.Action == NotifyCollectionChangedAction.Add) {
-						_DatabaseExplorer.SelectedDatabase._Modified = true;
-
-						// If we add a new column, add a new property changed event to it.
-						foreach (Column column in coll_e.NewItems) {
-							column.PropertyChanged += Column_PropertyChanged;
-						}
-					}
-
-
-				});
+				if (database._Modified) {
+					this.Title += " [Unsaved Changes]";
+				}
+			} else {
+				this.Title = "Dtronix Modeler";
 			}
+		}
+
+		private void _DatabaseExplorer_LoadedDatabase(object sender, ExplorerControl.DatabaseEventArgs e) {
+
+		}
+
+
+		private void _DatabaseExplorer_UnloadedDatabase(object sender, ExplorerControl.DatabaseEventArgs e) {
+			_DagConfigurations.ItemsSource = null;
 		}
 
 		private void _dagColumnDefinitions_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
@@ -269,21 +282,11 @@ namespace DtxModeler.Xaml {
 					var found_column = all_columns.FirstOrDefault(col => col.Name.ToLower() == column.Name.ToLower());
 
 					if (found_column != null) {
-						var dialog = new InputDialogBox() {
-							Title = "Column naming collision",
-							Description = "Enter a new name for the old \"" + found_column.Name + "\" Column.",
-							Value = found_column.Name
-						};
+						InputDialogBox.Show("Column Naming Collision", "Enter a new name for the old \"" + found_column.Name + "\" Column.", found_column.Name, value => {
+							column.Name = value;
+						});
 
-						var result = dialog.ShowDialog();
-
-						if (result.HasValue && result.Value) {
-							column.Name = dialog.Value;
-						} else {
-							return;
-						}
-
-
+						continue;
 					}
 				}
 			}
@@ -321,6 +324,7 @@ namespace DtxModeler.Xaml {
 		private void _TxtConfigNamespace_TargetUpdated(object sender, DataTransferEventArgs e) {
 			auto = false;
 		}
+
 
 
 

@@ -206,6 +206,9 @@
   <ItemGroup>
     <Resource Include="Xaml\Images\textfield_rename.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\folder_vertical_open.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)packages\System.Data.SQLite.Core.1.0.93.0\content\net45\*.*" "$(TargetDir)*.*" /Y /I /E</PreBuildEvent>

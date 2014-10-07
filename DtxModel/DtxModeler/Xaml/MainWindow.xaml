@@ -48,7 +48,7 @@
 				</MenuItem>
 			</MenuItem>
 		</Menu>
-		<Xaml:ExplorerControl x:Name="_DatabaseExplorer"  Grid.Row="1" ChangedSelection="_DatabaseExplorer_ChangedSelection" LoadedDatabase="_DatabaseExplorer_LoadedDatabase" />
+		<Xaml:ExplorerControl x:Name="_DatabaseExplorer"  Grid.Row="1" ChangedSelection="_DatabaseExplorer_ChangedSelection" LoadedDatabase="_DatabaseExplorer_LoadedDatabase" UnloadedDatabase="_DatabaseExplorer_UnloadedDatabase" DatabaseModified="_DatabaseExplorer_DatabaseModified" />
 		<TabControl x:Name="_tbcDatabaseView" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,0,0" BorderThickness="1" Grid.ColumnSpan="1">
 			<TabItem x:Name="_tabTable" Header="Table">
 				<Grid>
@@ -148,22 +148,13 @@
 			</TabItem>
 			<TabItem x:Name="_tabConfig" Header="Configurations">
 				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="28"/>
-						<RowDefinition Height="28"/>
-						<RowDefinition/>
-					</Grid.RowDefinitions>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="160"/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
-					<Label Grid.Row="0" Content="Namespace" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalContentAlignment="Stretch" Width="72"/>
-					<TextBox x:Name="_TxtConfigNamespace" Grid.Row="0" Grid.Column="1" Margin="2" Text="{Binding ContextNamespace}" ToolTip="Namespace for all the classes generated to be placed inside." TextChanged="ConfigurationChangedEvent" DataContextChanged="Configuration_DataContextChanged" TargetUpdated="_TxtConfigNamespace_TargetUpdated" />
-
-					<Label Grid.Row="1" Content="Context Class Name" HorizontalContentAlignment="Center" HorizontalAlignment="Right" VerticalContentAlignment="Stretch" Width="116"/>
-					<TextBox x:Name="_TxtConfigContextClassName" Grid.Row="1" Grid.Column="1" Margin="2" Text="{Binding Class}" ToolTip="Name for the context class.  By default it is the class name + &quot;Context&quot;" TextChanged="ConfigurationChangedEvent"  DataContextChanged="Configuration_DataContextChanged" TargetUpdated="_TxtConfigNamespace_TargetUpdated" />
-
-
+					<DataGrid x:Name="_DagConfigurations" AutoGenerateColumns="False" >
+						<DataGrid.Columns>
+							<DataGridTextColumn Binding="{Binding Name}" Width="250" Header="Configuration "/>
+							<DataGridTextColumn Binding="{Binding Value}" Width="200" Header="Value"/>
+							<DataGridTextColumn Binding="{Binding Description}" Width="*" Header="Description"/>
+						</DataGrid.Columns>
+					</DataGrid>
 				</Grid>
 			</TabItem>
 

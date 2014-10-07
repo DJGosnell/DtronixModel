@@ -28,7 +28,7 @@ namespace DtxModeler.Ddl {
         
         private ObservableCollection<Function> functionField;
         
-        private ObservableCollection<Property> propertyField;
+        private ObservableCollection<Configuration> configurationField;
         
         private string nameField;
         
@@ -39,7 +39,7 @@ namespace DtxModeler.Ddl {
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Database() {
-            this.propertyField = new ObservableCollection<Property>();
+            this.configurationField = new ObservableCollection<Configuration>();
             this.functionField = new ObservableCollection<Function>();
             this.viewField = new ObservableCollection<View>();
             this.tableField = new ObservableCollection<Table>();
@@ -102,21 +102,21 @@ namespace DtxModeler.Ddl {
             }
         }
         
-        [System.Xml.Serialization.XmlElementAttribute("Property")]
-        public ObservableCollection<Property> Property {
+        [System.Xml.Serialization.XmlElementAttribute("Configuration")]
+        public ObservableCollection<Configuration> Configuration {
             get {
-                return this.propertyField;
+                return this.configurationField;
             }
             set {
-                if ((this.propertyField != null)) {
-                    if ((propertyField.Equals(value) != true)) {
-                        this.propertyField = value;
-                        this.OnPropertyChanged("Property");
+                if ((this.configurationField != null)) {
+                    if ((configurationField.Equals(value) != true)) {
+                        this.configurationField = value;
+                        this.OnPropertyChanged("Configuration");
                     }
                 }
                 else {
-                    this.propertyField = value;
-                    this.OnPropertyChanged("Property");
+                    this.configurationField = value;
+                    this.OnPropertyChanged("Configuration");
                 }
             }
         }
@@ -1036,11 +1036,9 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class Property : System.ComponentModel.INotifyPropertyChanged {
+    public partial class Configuration : System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
-        
-        private NetTypes typeField;
         
         private string valueField;
         
@@ -1063,19 +1061,6 @@ namespace DtxModeler.Ddl {
                 else {
                     this.nameField = value;
                     this.OnPropertyChanged("Name");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public NetTypes Type {
-            get {
-                return this.typeField;
-            }
-            set {
-                if ((typeField.Equals(value) != true)) {
-                    this.typeField = value;
-                    this.OnPropertyChanged("Type");
                 }
             }
         }
@@ -1121,7 +1106,7 @@ namespace DtxModeler.Ddl {
         private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Property));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));
                 }
                 return serializer;
             }
@@ -1138,7 +1123,7 @@ namespace DtxModeler.Ddl {
         
         #region Serialize/Deserialize
         /// <summary>
-        /// Serializes current Property object into an XML document
+        /// Serializes current Configuration object into an XML document
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
@@ -1162,15 +1147,15 @@ namespace DtxModeler.Ddl {
         }
         
         /// <summary>
-        /// Deserializes workflow markup into an Property object
+        /// Deserializes workflow markup into an Configuration object
         /// </summary>
         /// <param name="xml">string workflow markup to deserialize</param>
-        /// <param name="obj">Output Property object</param>
+        /// <param name="obj">Output Configuration object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out Property obj, out System.Exception exception) {
+        public static bool Deserialize(string xml, out Configuration obj, out System.Exception exception) {
             exception = null;
-            obj = default(Property);
+            obj = default(Configuration);
             try {
                 obj = Deserialize(xml);
                 return true;
@@ -1181,16 +1166,16 @@ namespace DtxModeler.Ddl {
             }
         }
         
-        public static bool Deserialize(string xml, out Property obj) {
+        public static bool Deserialize(string xml, out Configuration obj) {
             System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
-        public static Property Deserialize(string xml) {
+        public static Configuration Deserialize(string xml) {
             System.IO.StringReader stringReader = null;
             try {
                 stringReader = new System.IO.StringReader(xml);
-                return ((Property)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+                return ((Configuration)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
                 if ((stringReader != null)) {
@@ -1200,7 +1185,7 @@ namespace DtxModeler.Ddl {
         }
         
         /// <summary>
-        /// Serializes current Property object into file
+        /// Serializes current Configuration object into file
         /// </summary>
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
@@ -1234,15 +1219,15 @@ namespace DtxModeler.Ddl {
         }
         
         /// <summary>
-        /// Deserializes xml markup from file into an Property object
+        /// Deserializes xml markup from file into an Configuration object
         /// </summary>
         /// <param name="fileName">string xml file to load and deserialize</param>
-        /// <param name="obj">Output Property object</param>
+        /// <param name="obj">Output Configuration object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out Property obj, out System.Exception exception) {
+        public static bool LoadFromFile(string fileName, out Configuration obj, out System.Exception exception) {
             exception = null;
-            obj = default(Property);
+            obj = default(Configuration);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
@@ -1253,12 +1238,12 @@ namespace DtxModeler.Ddl {
             }
         }
         
-        public static bool LoadFromFile(string fileName, out Property obj) {
+        public static bool LoadFromFile(string fileName, out Configuration obj) {
             System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
-        public static Property LoadFromFile(string fileName) {
+        public static Configuration LoadFromFile(string fileName) {
             System.IO.FileStream file = null;
             System.IO.StreamReader sr = null;
             try {

@@ -18,6 +18,21 @@ namespace DtxModeler.Xaml {
 	/// </summary>
 	public partial class InputDialogBox : Window {
 
+		public static InputDialogBox Show(string title, string description, string default_value, Action<string> success) {
+			var dialog = new InputDialogBox() {
+				Title = title,
+				Description = description,
+				Value = default_value
+			};
+			dialog._TxtValue.SelectAll();
+			var result = dialog.ShowDialog();
+
+			if (result.HasValue == true && result.Value != false) {
+				success(dialog.Value);
+			}
+
+			return dialog;
+		}
 
 
 		public string Description {

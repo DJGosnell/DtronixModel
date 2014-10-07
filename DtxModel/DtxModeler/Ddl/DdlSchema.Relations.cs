@@ -22,6 +22,62 @@ namespace DtxModeler.Ddl {
 		[XmlIgnore]
 		public TreeViewItem _TreeRoot;
 
+		private bool initial_config = false;
+
+		public T GetConfiguration<T>(string property, T default_value) {
+			InitialConfig();
+
+			property = property.ToLower();
+			foreach (var config in this.configurationField) {
+				if (config.Name == property) {
+					try {
+						return (T)Convert.ChangeType(config.Value, typeof(T));
+					} catch {
+						return default_value;
+					}
+				}
+			}
+
+			SetConfiguration(property, default_value);
+
+			return default_value;
+		}
+
+		public void SetConfiguration(string property, object value) {
+			SetConfiguration(property, value, true);
+		}
+
+		public void SetConfiguration(string property, object value, bool override_value) {
+			SetConfiguration(property, value, override_value, null);
+		}
+
+		public void SetConfiguration(string property, object value, bool override_value, string description) {
+			InitialConfig();
+			Configuration existing_config = configurationField.FirstOrDefault(config => config.Name == property);
+			
+			if(existing_config == null) {
+				configurationField.Add(new Configuration() {
+					Name = property,
+					Value = value.ToString(),
+					Description = description
+				});
+
+			}else if(override_value) {
+				existing_config.Value = value.ToString();
+				existing_config.Description = description;
+			}
+		}
+
+		public void InitialConfig() {
+			if (initial_config == false) {
+				initial_config = true;
+
+				SetConfiguration("database.namespace", "", false, "Namespace for all the generated classes.");
+				SetConfiguration("database.context_class", Name + "Context", false, "Name of the context class.");
+
+				
+			}
+		}
 	}
 
 
