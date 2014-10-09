@@ -41,11 +41,15 @@
 				<Separator/>
 				<MenuItem Header="E_xit" Click="Exit_Click"/>
 			</MenuItem>
-			<MenuItem Header="_Options" Height="21" VerticalAlignment="Top">
+			<MenuItem Header="_Output" Height="21" VerticalAlignment="Top">
+				<MenuItem Header="Generate All" Click="OutputGenerateAll_Click" />
+			</MenuItem>
+			<MenuItem Header="_Options" Height="21" VerticalAlignment="Top" ContextMenuOpening="MenuItem_ContextMenuOpening">
 				<MenuItem x:Name="_MiValidateColumnsOnPaste" Header="Validate Columns On Paste" IsCheckable="True" IsChecked="True"/>
 				<MenuItem Header="Target Database Type" VerticalAlignment="Top">
 					<MenuItem Header="Sqlite" VerticalAlignment="Top" IsCheckable="True" IsChecked="True"/>
 				</MenuItem>
+				<MenuItem x:Name="_MiCommandlineToggle" Header="Show Commandline" VerticalAlignment="Top" IsCheckable="True" IsChecked="false" Click="_MiCommandlineToggle_Click"/>
 			</MenuItem>
 		</Menu>
 		<Xaml:ExplorerControl x:Name="_DatabaseExplorer"  Grid.Row="1" ChangedSelection="_DatabaseExplorer_ChangedSelection" LoadedDatabase="_DatabaseExplorer_LoadedDatabase" UnloadedDatabase="_DatabaseExplorer_UnloadedDatabase" DatabaseModified="_DatabaseExplorer_DatabaseModified" />

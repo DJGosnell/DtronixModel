@@ -239,7 +239,7 @@ namespace DtxModeler.Xaml {
 			}
 
 			loaded_databases.Add(database);
-			database.InitialConfig();
+			database.Initialize();
 			Refresh(database);
 
 			if (LoadedDatabase != null) {

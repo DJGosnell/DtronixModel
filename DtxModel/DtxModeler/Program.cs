@@ -16,20 +16,21 @@ namespace DtxModeler.Generator {
 	class Program {
 
 		[DllImport("kernel32.dll")]
-		static extern IntPtr GetConsoleWindow();
+		private static extern IntPtr GetConsoleWindow();
 
 		[DllImport("user32.dll")]
-		static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+		private static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
 		const int SW_HIDE = 0;
 		const int SW_SHOW = 5;
+
+		public static bool CommandlineVisible { get; private set; }
 
 		[STAThread]
 		static void Main(string[] args) {
 			// Get and hide the console and show the UI if there are no arguments passed.
 			if (args.Length == 0) {
-				var handle = GetConsoleWindow();
-				ShowWindow(handle, SW_HIDE);
+				CommandlineHide();
 
 				// Show the UI and start the main loop.
 				var app = new Application();
@@ -38,8 +39,7 @@ namespace DtxModeler.Generator {
 			}
 
 			ModelGenOptions options = new ModelGenOptions(args);
-			Database input_database = null;
-			DdlGenerator generator = null;
+
 
 			// Verify that the parsing was successful.
 			if (options.ParseSuccess == false) {
@@ -47,21 +47,40 @@ namespace DtxModeler.Generator {
 				return;
 			}
 
-			if (options.DbType.ToLower() == "sqlite") {
-				generator = new SqliteDdlGenerator(@"Data Source=" + options.Input + ";Version=3;");
-			}
+			ExecuteOptions(options, null);
+
+		}
+
+		public static void CommandlineShow() {
+			ShowWindow(GetConsoleWindow(), SW_SHOW);
+			CommandlineVisible = true;
+		}
+
+		public static void CommandlineHide() {
+			ShowWindow(GetConsoleWindow(), SW_HIDE);
+			CommandlineVisible = false;
+		}
+
+		public static void ExecuteOptions(ModelGenOptions options, Database input_database) {
+			DdlGenerator generator = null;
+			TypeTransformer type_transformer = new SqliteTypeTransformer();
 
 			if (options.InputType == "ddl") {
-				try {
-					using (FileStream stream = new FileStream(options.Input, FileMode.Open)) {
-						var serializer = new XmlSerializer(typeof(Database));
-						input_database = (Database)serializer.Deserialize(stream);
+				if (input_database == null) {
+					try {
+						using (FileStream stream = new FileStream(options.Input, FileMode.Open)) {
+							var serializer = new XmlSerializer(typeof(Database));
+							input_database = (Database)serializer.Deserialize(stream);
+						}
+					} catch (Exception e) {
+						writeLineColor("Could not open input DDL file at '" + options.Input + "'.", ConsoleColor.Red);
+						writeLineColor(e.ToString(), ConsoleColor.Red);
+						return;
 					}
-				} catch (Exception e) {
-					writeLineColor("Could not open input DDL file at '" + options.Input + "'.", ConsoleColor.Red);
-					writeLineColor(e.ToString(), ConsoleColor.Red);
-					return;
+				} else {
+					Console.WriteLine("Using database passed.");
 				}
+
 			} else if (options.InputType == "database") {
 
 				if (options.DbType.ToLower() == "sqlite") {
@@ -75,6 +94,8 @@ namespace DtxModeler.Generator {
 				input_database = generator.generateDdl();
 			}
 
+			// Ensure that the base database is initialized.
+			input_database.Initialize();
 
 			// Clean up the DDL
 			if (normalizeDatabase(input_database) == false) {
@@ -82,11 +103,9 @@ namespace DtxModeler.Generator {
 				return;
 			}
 
-			
-
 			// Output SQL file if required.
 			if (options.SqlOutput != null) {
-				var sql_code_writer = new SqlDatabaseGen(input_database, generator.TypeTransformer);
+				var sql_code_writer = new SqlDatabaseGen(input_database, type_transformer);
 
 				using (var fs = new FileStream(options.SqlOutput, FileMode.Create)) {
 					using (var sw = new StreamWriter(fs)) {

@@ -22,10 +22,10 @@ namespace DtxModeler.Ddl {
 		[XmlIgnore]
 		public TreeViewItem _TreeRoot;
 
-		private bool initial_config = false;
+		private bool initialized = false;
 
 		public T GetConfiguration<T>(string property, T default_value) {
-			InitialConfig();
+			Initialize();
 
 			property = property.ToLower();
 			foreach (var config in this.configurationField) {
@@ -52,7 +52,7 @@ namespace DtxModeler.Ddl {
 		}
 
 		public void SetConfiguration(string property, object value, bool override_value, string description) {
-			InitialConfig();
+			Initialize();
 			Configuration existing_config = configurationField.FirstOrDefault(config => config.Name == property);
 			
 			if(existing_config == null) {
@@ -68,12 +68,14 @@ namespace DtxModeler.Ddl {
 			}
 		}
 
-		public void InitialConfig() {
-			if (initial_config == false) {
-				initial_config = true;
+		public void Initialize() {
+			if (initialized == false) {
+				initialized = true;
 
 				SetConfiguration("database.namespace", "", false, "Namespace for all the generated classes.");
 				SetConfiguration("database.context_class", Name + "Context", false, "Name of the context class.");
+				SetConfiguration("output.sql_tables", false, false, "True to output the SQL database schematic tables.");
+				SetConfiguration("output.cs_classes", true, false, "True to output the C# classes.");
 
 				
 			}

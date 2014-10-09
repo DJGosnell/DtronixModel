@@ -25,6 +25,10 @@ namespace DtxModeler.Generator {
 		List<string> values = new List<string>();
 
 		public Options(string[] args) {
+			if (args == null) {
+				return;
+			}
+
 			string key = null;
 			ParseSuccess = true;
 

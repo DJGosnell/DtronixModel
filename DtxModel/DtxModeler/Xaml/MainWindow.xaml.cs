@@ -37,6 +37,8 @@ namespace DtxModeler.Xaml {
 			ColumnDbType.ItemsSource = type_transformer.DbTypes();
 
 			ColumnNetType.ItemsSource = Enum.GetValues(typeof(NetTypes)).Cast<NetTypes>();
+
+			
 		}
 
 		private Column GetSelectedColumn() {
@@ -124,7 +126,6 @@ namespace DtxModeler.Xaml {
 			// Rebind this event to allow us to listen again.
 			column.PropertyChanged += Column_PropertyChanged;
 		}
-
 
 		private void _DatabaseExplorer_ChangedSelection(object sender, ExplorerControl.SelectionChangedEventArgs e) {
 			_dagColumnDefinitions.ItemsSource = null;
@@ -325,9 +326,45 @@ namespace DtxModeler.Xaml {
 			auto = false;
 		}
 
+		private void _MiCommandlineToggle_Click(object sender, RoutedEventArgs e) {
+			if (_MiCommandlineToggle.IsChecked) {
+				Program.CommandlineShow();
+			} else {
+				Program.CommandlineHide();
+			}
+			
+		}
 
+		private void MenuItem_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
+			_MiCommandlineToggle.IsChecked = Program.CommandlineVisible;
+		}
 
+		private void OutputGenerateAll_Click(object sender, RoutedEventArgs e) {
+			Program.ExecuteOptions(GenerateOptions(), _DatabaseExplorer.SelectedDatabase);
+		}
 
+		private ModelGenOptions GenerateOptions() {
+			var database = _DatabaseExplorer.SelectedDatabase;
+			var options = new ModelGenOptions(null) {
+				DbType = "sqlite",
+				InputType = "ddl"
+			};
+
+			string base_ddl_filename = Path.Combine(Path.GetDirectoryName( database._FileLocation), 
+				Path.GetFileNameWithoutExtension( database._FileLocation));
+
+			// If we are set to output in the ddl, then set a default name.
+			if (database.GetConfiguration<bool>("output.sql_tables", false)) {
+				options.SqlOutput = base_ddl_filename + ".sql";
+			}
+
+			// If we are set to output in the ddl, then set a default name.
+			if (database.GetConfiguration<bool>("output.cs_classes", true)) {
+				options.CodeOutput = base_ddl_filename + ".cs";
+			}
+
+			return options;
+		}
 
 	}
 
