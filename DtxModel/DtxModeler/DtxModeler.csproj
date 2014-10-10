@@ -63,6 +63,10 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Xaml\AssociationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Xaml\DbServer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -98,6 +102,9 @@
     <Compile Include="Generator\TypeTransformer.cs" />
     <Compile Include="Generator\TypeTransformerType.cs" />
     <Compile Include="Utilities.cs" />
+    <Compile Include="Xaml\AssociationWindow.xaml.cs">
+      <DependentUpon>AssociationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Xaml\DatabaseTree.cs" />
     <Compile Include="Xaml\DbServer.xaml.cs">
       <DependentUpon>DbServer.xaml</DependentUpon>
@@ -208,6 +215,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Xaml\Images\folder_vertical_open.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\chart_line_add.png" />
+    <Resource Include="Xaml\Images\chart_line_delete.png" />
+    <Resource Include="Xaml\Images\chart_line_edit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

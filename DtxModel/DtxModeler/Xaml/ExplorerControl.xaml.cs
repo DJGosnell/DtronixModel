@@ -217,25 +217,25 @@ namespace DtxModeler.Xaml {
 			};
 
 			// Tables
-			BindCollection<Table>(database.Table, collection_changed, property_changed);
+			Utilities.BindChangedCollection<Table>(database.Table, collection_changed, property_changed);
+			Utilities.BindChangedCollection<Association>(database.Association, collection_changed, property_changed);
 
 			foreach (var table in database.Table) {
-				BindCollection<Association>(table.Association, collection_changed, property_changed);
-				BindCollection<Column>(table.Column, collection_changed, property_changed);
-				BindCollection<Index>(table.Index, collection_changed, property_changed);
+				Utilities.BindChangedCollection<Column>(table.Column, collection_changed, property_changed);
+				Utilities.BindChangedCollection<Index>(table.Index, collection_changed, property_changed);
 			}
 
 			// Configurations
-			BindCollection<Configuration>(database.Configuration, collection_changed, property_changed);
+			Utilities.BindChangedCollection<Configuration>(database.Configuration, collection_changed, property_changed);
 
 			// Functions
-			BindCollection<Function>(database.Function, collection_changed, property_changed);
+			Utilities.BindChangedCollection<Function>(database.Function, collection_changed, property_changed);
 
 			// Views
-			BindCollection<View>(database.View, collection_changed, property_changed);
+			Utilities.BindChangedCollection<View>(database.View, collection_changed, property_changed);
 
 			foreach (var view in database.View) {
-				BindCollection<Column>(view.Column, collection_changed, property_changed);
+				Utilities.BindChangedCollection<Column>(view.Column, collection_changed, property_changed);
 			}
 
 			loaded_databases.Add(database);
@@ -248,30 +248,6 @@ namespace DtxModeler.Xaml {
 				});
 			}
 
-		}
-
-
-		private void BindCollection<T>(ObservableCollection<T> collection, NotifyCollectionChangedEventHandler collection_changed, PropertyChangedEventHandler property_changed) where T : INotifyPropertyChanged {
-			collection.CollectionChanged += (coll_sender, coll_e) => {
-				collection_changed(coll_sender, coll_e);
-				if (coll_e.Action == NotifyCollectionChangedAction.Add) {
-
-					// If we add a new property, add a new property changed event to it.
-					foreach (Configuration config in coll_e.NewItems) {
-						config.PropertyChanged += (prop_sender, prop_e) => {
-							property_changed(prop_sender, prop_e);
-						};
-					}
-
-
-				}
-			};
-
-			foreach (var item in collection) {
-				item.PropertyChanged += (prop_sender, prop_e) => {
-					property_changed(prop_sender, prop_e);
-				};
-			}
 		}
 
 

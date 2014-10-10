@@ -190,8 +190,8 @@ namespace DtxModeler.Generator {
 					}*/
 				}
 
-
-				foreach (var association in table.Association) {
+				/*
+				foreach (var association in database.Association) {
 					association.Table = table;
 
 					// Determine if we already have this association in the list
@@ -240,14 +240,14 @@ namespace DtxModeler.Generator {
 					/*
 					if (association.IsForeignKeySpecified == false) {
 						association.IsForeignKey = false;
-					}*/
+					}
 
 					if (association.CardinalitySpecified == false && association.IsForeignKey == false) {
 						association.Cardinality = Cardinality.Many;
 					} else {
 						association.Cardinality = Cardinality.One;
 					}
-				}
+				}*/
 			}
 
 

@@ -1,5 +1,9 @@
-﻿using System;
+﻿using DtxModeler.Ddl;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Data.Common;
 using System.IO;
 using System.Linq;
@@ -34,6 +38,29 @@ namespace DtxModeler {
 					return default(T);
 				}
 				
+			}
+		}
+
+		public static void BindChangedCollection<T>(ObservableCollection<T> collection, NotifyCollectionChangedEventHandler collection_changed, PropertyChangedEventHandler property_changed) where T : INotifyPropertyChanged {
+			collection.CollectionChanged += (coll_sender, coll_e) => {
+				if (collection_changed != null) {
+					collection_changed(coll_sender, coll_e);
+				}
+				if (coll_e.Action == NotifyCollectionChangedAction.Add) {
+
+					// If we add a new property, add a new property changed event to it.
+					foreach (T item in coll_e.NewItems) {
+						if (property_changed != null) {
+							item.PropertyChanged += property_changed;
+						}
+					}
+				}
+			};
+
+			foreach (T item in collection) {
+				if (property_changed != null) {
+					item.PropertyChanged += property_changed;
+				}
 			}
 		}
 	}

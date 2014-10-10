@@ -61,7 +61,7 @@ namespace DtxModeler.Generator.CodeGen {
 			}
 
 			// Table Associations;
-			foreach (var association in db_table.Association) {
+			/*foreach (var association in database.Association) {
 
 				string field_type = association.Type;
 				if (association.ParentAssociation != null && association.ParentAssociation.Cardinality == Cardinality.Many) {
@@ -93,7 +93,7 @@ namespace DtxModeler.Generator.CodeGen {
 				code.endBlock("}").writeLine(); // Get
 				code.endBlock("}").writeLine(); // Property
 				code.writeLine();
-			}
+			}*/
 			/*
 			 * } catch (Exception e ) {
 				throw new InvalidOperationException("SQL operations are not allowed outside of the Database Context.", e);

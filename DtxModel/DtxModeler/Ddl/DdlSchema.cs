@@ -24,6 +24,8 @@ namespace DtxModeler.Ddl {
         
         private ObservableCollection<Table> tableField;
         
+        private ObservableCollection<Association> associationField;
+        
         private ObservableCollection<View> viewField;
         
         private ObservableCollection<Function> functionField;
@@ -42,6 +44,7 @@ namespace DtxModeler.Ddl {
             this.configurationField = new ObservableCollection<Configuration>();
             this.functionField = new ObservableCollection<Function>();
             this.viewField = new ObservableCollection<View>();
+            this.associationField = new ObservableCollection<Association>();
             this.tableField = new ObservableCollection<Table>();
         }
         
@@ -60,6 +63,25 @@ namespace DtxModeler.Ddl {
                 else {
                     this.tableField = value;
                     this.OnPropertyChanged("Table");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlElementAttribute("Association")]
+        public ObservableCollection<Association> Association {
+            get {
+                return this.associationField;
+            }
+            set {
+                if ((this.associationField != null)) {
+                    if ((associationField.Equals(value) != true)) {
+                        this.associationField = value;
+                        this.OnPropertyChanged("Association");
+                    }
+                }
+                else {
+                    this.associationField = value;
+                    this.OnPropertyChanged("Association");
                 }
             }
         }
@@ -349,8 +371,6 @@ namespace DtxModeler.Ddl {
         
         private ObservableCollection<Column> columnField;
         
-        private ObservableCollection<Association> associationField;
-        
         private ObservableCollection<Index> indexField;
         
         private string nameField;
@@ -361,7 +381,6 @@ namespace DtxModeler.Ddl {
         
         public Table() {
             this.indexField = new ObservableCollection<Index>();
-            this.associationField = new ObservableCollection<Association>();
             this.columnField = new ObservableCollection<Column>();
         }
         
@@ -380,25 +399,6 @@ namespace DtxModeler.Ddl {
                 else {
                     this.columnField = value;
                     this.OnPropertyChanged("Column");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlElementAttribute("Association")]
-        public ObservableCollection<Association> Association {
-            get {
-                return this.associationField;
-            }
-            set {
-                if ((this.associationField != null)) {
-                    if ((associationField.Equals(value) != true)) {
-                        this.associationField = value;
-                        this.OnPropertyChanged("Association");
-                    }
-                }
-                else {
-                    this.associationField = value;
-                    this.OnPropertyChanged("Association");
                 }
             }
         }
@@ -2435,6 +2435,366 @@ namespace DtxModeler.Ddl {
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class Association : System.ComponentModel.INotifyPropertyChanged {
+        
+        private string nameField;
+        
+        private string table1NameField;
+        
+        private string table1Field;
+        
+        private string table1ColumnField;
+        
+        private Cardinality table1CardinalityField;
+        
+        private string table2NameField;
+        
+        private string table2Field;
+        
+        private string table2ColumnField;
+        
+        private Cardinality table2CardinalityField;
+        
+        private static System.Xml.Serialization.XmlSerializer serializer;
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                if ((this.nameField != null)) {
+                    if ((nameField.Equals(value) != true)) {
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
+                    }
+                }
+                else {
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Table1Name {
+            get {
+                return this.table1NameField;
+            }
+            set {
+                if ((this.table1NameField != null)) {
+                    if ((table1NameField.Equals(value) != true)) {
+                        this.table1NameField = value;
+                        this.OnPropertyChanged("Table1Name");
+                    }
+                }
+                else {
+                    this.table1NameField = value;
+                    this.OnPropertyChanged("Table1Name");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Table1 {
+            get {
+                return this.table1Field;
+            }
+            set {
+                if ((this.table1Field != null)) {
+                    if ((table1Field.Equals(value) != true)) {
+                        this.table1Field = value;
+                        this.OnPropertyChanged("Table1");
+                    }
+                }
+                else {
+                    this.table1Field = value;
+                    this.OnPropertyChanged("Table1");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Table1Column {
+            get {
+                return this.table1ColumnField;
+            }
+            set {
+                if ((this.table1ColumnField != null)) {
+                    if ((table1ColumnField.Equals(value) != true)) {
+                        this.table1ColumnField = value;
+                        this.OnPropertyChanged("Table1Column");
+                    }
+                }
+                else {
+                    this.table1ColumnField = value;
+                    this.OnPropertyChanged("Table1Column");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public Cardinality Table1Cardinality {
+            get {
+                return this.table1CardinalityField;
+            }
+            set {
+                if ((table1CardinalityField.Equals(value) != true)) {
+                    this.table1CardinalityField = value;
+                    this.OnPropertyChanged("Table1Cardinality");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Table2Name {
+            get {
+                return this.table2NameField;
+            }
+            set {
+                if ((this.table2NameField != null)) {
+                    if ((table2NameField.Equals(value) != true)) {
+                        this.table2NameField = value;
+                        this.OnPropertyChanged("Table2Name");
+                    }
+                }
+                else {
+                    this.table2NameField = value;
+                    this.OnPropertyChanged("Table2Name");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Table2 {
+            get {
+                return this.table2Field;
+            }
+            set {
+                if ((this.table2Field != null)) {
+                    if ((table2Field.Equals(value) != true)) {
+                        this.table2Field = value;
+                        this.OnPropertyChanged("Table2");
+                    }
+                }
+                else {
+                    this.table2Field = value;
+                    this.OnPropertyChanged("Table2");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Table2Column {
+            get {
+                return this.table2ColumnField;
+            }
+            set {
+                if ((this.table2ColumnField != null)) {
+                    if ((table2ColumnField.Equals(value) != true)) {
+                        this.table2ColumnField = value;
+                        this.OnPropertyChanged("Table2Column");
+                    }
+                }
+                else {
+                    this.table2ColumnField = value;
+                    this.OnPropertyChanged("Table2Column");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public Cardinality Table2Cardinality {
+            get {
+                return this.table2CardinalityField;
+            }
+            set {
+                if ((table2CardinalityField.Equals(value) != true)) {
+                    this.table2CardinalityField = value;
+                    this.OnPropertyChanged("Table2Cardinality");
+                }
+            }
+        }
+        
+        private static System.Xml.Serialization.XmlSerializer Serializer {
+            get {
+                if ((serializer == null)) {
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Association));
+                }
+                return serializer;
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        public virtual void OnPropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
+            if ((handler != null)) {
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+        
+        #region Serialize/Deserialize
+        /// <summary>
+        /// Serializes current Association object into an XML document
+        /// </summary>
+        /// <returns>string XML value</returns>
+        public virtual string Serialize() {
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
+            try {
+                memoryStream = new System.IO.MemoryStream();
+                Serializer.Serialize(memoryStream, this);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
+                return streamReader.ReadToEnd();
+            }
+            finally {
+                if ((streamReader != null)) {
+                    streamReader.Dispose();
+                }
+                if ((memoryStream != null)) {
+                    memoryStream.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Deserializes workflow markup into an Association object
+        /// </summary>
+        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="obj">Output Association object</param>
+        /// <param name="exception">output Exception value if deserialize failed</param>
+        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        public static bool Deserialize(string xml, out Association obj, out System.Exception exception) {
+            exception = null;
+            obj = default(Association);
+            try {
+                obj = Deserialize(xml);
+                return true;
+            }
+            catch (System.Exception ex) {
+                exception = ex;
+                return false;
+            }
+        }
+        
+        public static bool Deserialize(string xml, out Association obj) {
+            System.Exception exception = null;
+            return Deserialize(xml, out obj, out exception);
+        }
+        
+        public static Association Deserialize(string xml) {
+            System.IO.StringReader stringReader = null;
+            try {
+                stringReader = new System.IO.StringReader(xml);
+                return ((Association)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+            }
+            finally {
+                if ((stringReader != null)) {
+                    stringReader.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Serializes current Association object into file
+        /// </summary>
+        /// <param name="fileName">full path of outupt xml file</param>
+        /// <param name="exception">output Exception value if failed</param>
+        /// <returns>true if can serialize and save into file; otherwise, false</returns>
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
+            exception = null;
+            try {
+                SaveToFile(fileName);
+                return true;
+            }
+            catch (System.Exception e) {
+                exception = e;
+                return false;
+            }
+        }
+        
+        public virtual void SaveToFile(string fileName) {
+            System.IO.StreamWriter streamWriter = null;
+            try {
+                string xmlString = Serialize();
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
+                streamWriter = xmlFile.CreateText();
+                streamWriter.WriteLine(xmlString);
+                streamWriter.Close();
+            }
+            finally {
+                if ((streamWriter != null)) {
+                    streamWriter.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Deserializes xml markup from file into an Association object
+        /// </summary>
+        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="obj">Output Association object</param>
+        /// <param name="exception">output Exception value if deserialize failed</param>
+        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        public static bool LoadFromFile(string fileName, out Association obj, out System.Exception exception) {
+            exception = null;
+            obj = default(Association);
+            try {
+                obj = LoadFromFile(fileName);
+                return true;
+            }
+            catch (System.Exception ex) {
+                exception = ex;
+                return false;
+            }
+        }
+        
+        public static bool LoadFromFile(string fileName, out Association obj) {
+            System.Exception exception = null;
+            return LoadFromFile(fileName, out obj, out exception);
+        }
+        
+        public static Association LoadFromFile(string fileName) {
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
+            try {
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
+                string xmlString = sr.ReadToEnd();
+                sr.Close();
+                file.Close();
+                return Deserialize(xmlString);
+            }
+            finally {
+                if ((file != null)) {
+                    file.Dispose();
+                }
+                if ((sr != null)) {
+                    sr.Dispose();
+                }
+            }
+        }
+        #endregion
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
+    public enum Cardinality {
+        
+        /// <remarks/>
+        One,
+        
+        /// <remarks/>
+        Many,
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
     public partial class IndexColumn : System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
@@ -2908,463 +3268,6 @@ namespace DtxModeler.Ddl {
             }
         }
         #endregion
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [System.SerializableAttribute()]
-    [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class Association : System.ComponentModel.INotifyPropertyChanged {
-        
-        private string nameField;
-        
-        private string memberField;
-        
-        private string storageField;
-        
-        private AccessModifier accessModifierField;
-        
-        private bool accessModifierFieldSpecified;
-        
-        private MemberModifier modifierField;
-        
-        private bool modifierFieldSpecified;
-        
-        private string typeField;
-        
-        private string thisKeyField;
-        
-        private string otherKeyField;
-        
-        private bool isForeignKeyField;
-        
-        private Cardinality cardinalityField;
-        
-        private bool cardinalityFieldSpecified;
-        
-        private string deleteRuleField;
-        
-        private bool deleteOnNullField;
-        
-        private static System.Xml.Serialization.XmlSerializer serializer;
-        
-        public Association() {
-            this.isForeignKeyField = false;
-            this.deleteOnNullField = false;
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Name {
-            get {
-                return this.nameField;
-            }
-            set {
-                if ((this.nameField != null)) {
-                    if ((nameField.Equals(value) != true)) {
-                        this.nameField = value;
-                        this.OnPropertyChanged("Name");
-                    }
-                }
-                else {
-                    this.nameField = value;
-                    this.OnPropertyChanged("Name");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Member {
-            get {
-                return this.memberField;
-            }
-            set {
-                if ((this.memberField != null)) {
-                    if ((memberField.Equals(value) != true)) {
-                        this.memberField = value;
-                        this.OnPropertyChanged("Member");
-                    }
-                }
-                else {
-                    this.memberField = value;
-                    this.OnPropertyChanged("Member");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Storage {
-            get {
-                return this.storageField;
-            }
-            set {
-                if ((this.storageField != null)) {
-                    if ((storageField.Equals(value) != true)) {
-                        this.storageField = value;
-                        this.OnPropertyChanged("Storage");
-                    }
-                }
-                else {
-                    this.storageField = value;
-                    this.OnPropertyChanged("Storage");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public AccessModifier AccessModifier {
-            get {
-                return this.accessModifierField;
-            }
-            set {
-                if ((accessModifierField.Equals(value) != true)) {
-                    this.accessModifierField = value;
-                    this.OnPropertyChanged("AccessModifier");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool AccessModifierSpecified {
-            get {
-                return this.accessModifierFieldSpecified;
-            }
-            set {
-                if ((accessModifierFieldSpecified.Equals(value) != true)) {
-                    this.accessModifierFieldSpecified = value;
-                    this.OnPropertyChanged("AccessModifierSpecified");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public MemberModifier Modifier {
-            get {
-                return this.modifierField;
-            }
-            set {
-                if ((modifierField.Equals(value) != true)) {
-                    this.modifierField = value;
-                    this.OnPropertyChanged("Modifier");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool ModifierSpecified {
-            get {
-                return this.modifierFieldSpecified;
-            }
-            set {
-                if ((modifierFieldSpecified.Equals(value) != true)) {
-                    this.modifierFieldSpecified = value;
-                    this.OnPropertyChanged("ModifierSpecified");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Type {
-            get {
-                return this.typeField;
-            }
-            set {
-                if ((this.typeField != null)) {
-                    if ((typeField.Equals(value) != true)) {
-                        this.typeField = value;
-                        this.OnPropertyChanged("Type");
-                    }
-                }
-                else {
-                    this.typeField = value;
-                    this.OnPropertyChanged("Type");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ThisKey {
-            get {
-                return this.thisKeyField;
-            }
-            set {
-                if ((this.thisKeyField != null)) {
-                    if ((thisKeyField.Equals(value) != true)) {
-                        this.thisKeyField = value;
-                        this.OnPropertyChanged("ThisKey");
-                    }
-                }
-                else {
-                    this.thisKeyField = value;
-                    this.OnPropertyChanged("ThisKey");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string OtherKey {
-            get {
-                return this.otherKeyField;
-            }
-            set {
-                if ((this.otherKeyField != null)) {
-                    if ((otherKeyField.Equals(value) != true)) {
-                        this.otherKeyField = value;
-                        this.OnPropertyChanged("OtherKey");
-                    }
-                }
-                else {
-                    this.otherKeyField = value;
-                    this.OnPropertyChanged("OtherKey");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool IsForeignKey {
-            get {
-                return this.isForeignKeyField;
-            }
-            set {
-                if ((isForeignKeyField.Equals(value) != true)) {
-                    this.isForeignKeyField = value;
-                    this.OnPropertyChanged("IsForeignKey");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public Cardinality Cardinality {
-            get {
-                return this.cardinalityField;
-            }
-            set {
-                if ((cardinalityField.Equals(value) != true)) {
-                    this.cardinalityField = value;
-                    this.OnPropertyChanged("Cardinality");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool CardinalitySpecified {
-            get {
-                return this.cardinalityFieldSpecified;
-            }
-            set {
-                if ((cardinalityFieldSpecified.Equals(value) != true)) {
-                    this.cardinalityFieldSpecified = value;
-                    this.OnPropertyChanged("CardinalitySpecified");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string DeleteRule {
-            get {
-                return this.deleteRuleField;
-            }
-            set {
-                if ((this.deleteRuleField != null)) {
-                    if ((deleteRuleField.Equals(value) != true)) {
-                        this.deleteRuleField = value;
-                        this.OnPropertyChanged("DeleteRule");
-                    }
-                }
-                else {
-                    this.deleteRuleField = value;
-                    this.OnPropertyChanged("DeleteRule");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool DeleteOnNull {
-            get {
-                return this.deleteOnNullField;
-            }
-            set {
-                if ((deleteOnNullField.Equals(value) != true)) {
-                    this.deleteOnNullField = value;
-                    this.OnPropertyChanged("DeleteOnNull");
-                }
-            }
-        }
-        
-        private static System.Xml.Serialization.XmlSerializer Serializer {
-            get {
-                if ((serializer == null)) {
-                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Association));
-                }
-                return serializer;
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        public virtual void OnPropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
-            if ((handler != null)) {
-                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-        
-        #region Serialize/Deserialize
-        /// <summary>
-        /// Serializes current Association object into an XML document
-        /// </summary>
-        /// <returns>string XML value</returns>
-        public virtual string Serialize() {
-            System.IO.StreamReader streamReader = null;
-            System.IO.MemoryStream memoryStream = null;
-            try {
-                memoryStream = new System.IO.MemoryStream();
-                Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
-                streamReader = new System.IO.StreamReader(memoryStream);
-                return streamReader.ReadToEnd();
-            }
-            finally {
-                if ((streamReader != null)) {
-                    streamReader.Dispose();
-                }
-                if ((memoryStream != null)) {
-                    memoryStream.Dispose();
-                }
-            }
-        }
-        
-        /// <summary>
-        /// Deserializes workflow markup into an Association object
-        /// </summary>
-        /// <param name="xml">string workflow markup to deserialize</param>
-        /// <param name="obj">Output Association object</param>
-        /// <param name="exception">output Exception value if deserialize failed</param>
-        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out Association obj, out System.Exception exception) {
-            exception = null;
-            obj = default(Association);
-            try {
-                obj = Deserialize(xml);
-                return true;
-            }
-            catch (System.Exception ex) {
-                exception = ex;
-                return false;
-            }
-        }
-        
-        public static bool Deserialize(string xml, out Association obj) {
-            System.Exception exception = null;
-            return Deserialize(xml, out obj, out exception);
-        }
-        
-        public static Association Deserialize(string xml) {
-            System.IO.StringReader stringReader = null;
-            try {
-                stringReader = new System.IO.StringReader(xml);
-                return ((Association)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
-            }
-            finally {
-                if ((stringReader != null)) {
-                    stringReader.Dispose();
-                }
-            }
-        }
-        
-        /// <summary>
-        /// Serializes current Association object into file
-        /// </summary>
-        /// <param name="fileName">full path of outupt xml file</param>
-        /// <param name="exception">output Exception value if failed</param>
-        /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
-            exception = null;
-            try {
-                SaveToFile(fileName);
-                return true;
-            }
-            catch (System.Exception e) {
-                exception = e;
-                return false;
-            }
-        }
-        
-        public virtual void SaveToFile(string fileName) {
-            System.IO.StreamWriter streamWriter = null;
-            try {
-                string xmlString = Serialize();
-                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
-                streamWriter = xmlFile.CreateText();
-                streamWriter.WriteLine(xmlString);
-                streamWriter.Close();
-            }
-            finally {
-                if ((streamWriter != null)) {
-                    streamWriter.Dispose();
-                }
-            }
-        }
-        
-        /// <summary>
-        /// Deserializes xml markup from file into an Association object
-        /// </summary>
-        /// <param name="fileName">string xml file to load and deserialize</param>
-        /// <param name="obj">Output Association object</param>
-        /// <param name="exception">output Exception value if deserialize failed</param>
-        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out Association obj, out System.Exception exception) {
-            exception = null;
-            obj = default(Association);
-            try {
-                obj = LoadFromFile(fileName);
-                return true;
-            }
-            catch (System.Exception ex) {
-                exception = ex;
-                return false;
-            }
-        }
-        
-        public static bool LoadFromFile(string fileName, out Association obj) {
-            System.Exception exception = null;
-            return LoadFromFile(fileName, out obj, out exception);
-        }
-        
-        public static Association LoadFromFile(string fileName) {
-            System.IO.FileStream file = null;
-            System.IO.StreamReader sr = null;
-            try {
-                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new System.IO.StreamReader(file);
-                string xmlString = sr.ReadToEnd();
-                sr.Close();
-                file.Close();
-                return Deserialize(xmlString);
-            }
-            finally {
-                if ((file != null)) {
-                    file.Dispose();
-                }
-                if ((sr != null)) {
-                    sr.Dispose();
-                }
-            }
-        }
-        #endregion
-    }
-    
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
-    public enum Cardinality {
-        
-        /// <remarks/>
-        One,
-        
-        /// <remarks/>
-        Many,
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]

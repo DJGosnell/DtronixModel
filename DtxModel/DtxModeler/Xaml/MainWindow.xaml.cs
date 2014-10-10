@@ -74,12 +74,12 @@ namespace DtxModeler.Xaml {
 			UpdateTitle();
 		}
 
-		void Column_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
+		void TableColumn_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
 			Column column = sender as Column;
 			_DatabaseExplorer.SelectedDatabase._Modified = true;
 
 			// Temporarily remove this event so that we do not get stuck with a stack overflow.
-			column.PropertyChanged -= Column_PropertyChanged;
+			column.PropertyChanged -= TableColumn_PropertyChanged;
 
 
 			switch (e.PropertyName) {
@@ -124,25 +124,29 @@ namespace DtxModeler.Xaml {
 
 
 			// Rebind this event to allow us to listen again.
-			column.PropertyChanged += Column_PropertyChanged;
+			column.PropertyChanged += TableColumn_PropertyChanged;
 		}
 
 		private void _DatabaseExplorer_ChangedSelection(object sender, ExplorerControl.SelectionChangedEventArgs e) {
 			_dagColumnDefinitions.ItemsSource = null;
 			_TxtTableDescription.IsEnabled = _TxtColumnDescription.IsEnabled = false;
 			_TxtTableDescription.Text = _TxtColumnDescription.Text = "";
-			_DagConfigurations.ItemsSource = e.Database.Configuration;
+
+			if (e.SelectionType != ExplorerControl.Selection.None) {
+				_DagConfigurations.ItemsSource = e.Database.Configuration;
+			}
 
 
 			if (e.SelectionType == ExplorerControl.Selection.TableItem) {
 				_dagColumnDefinitions.ItemsSource = e.Table.Column;
-				_tabTable.IsSelected = true;
+				_LstAssociations.ItemsSource = e.Database.Association;
+				//_tabTable.IsSelected = true;
 
 				_TxtTableDescription.IsEnabled = true;
 				_TxtTableDescription.DataContext = e.Table;
 
 			} else if (e.SelectionType == ExplorerControl.Selection.Database) {
-				_tabConfig.IsSelected = true;
+				//_tabConfig.IsSelected = true;
 			}
 
 			UpdateTitle();
@@ -172,7 +176,9 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void _DatabaseExplorer_LoadedDatabase(object sender, ExplorerControl.DatabaseEventArgs e) {
-
+			foreach (var table in e.Database.Table) {
+				Utilities.BindChangedCollection<Column>(table.Column, null, TableColumn_PropertyChanged);
+			}
 		}
 
 
@@ -189,7 +195,7 @@ namespace DtxModeler.Xaml {
 					_TxtColumnDescription.Text = column.Description;
 				}
 
-				_CmiDeleteColumn.IsEnabled = _CmiCopyColumn.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = true;
+				_CmiCreateAssociationWith.IsEnabled = _CmiDeleteColumn.IsEnabled = _CmiCopyColumn.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = true;
 
 				// Only allow paste if the clipboard is valid XML.
 				if (Clipboard.ContainsText() && (deserialized_clipboard = Utilities.XmlDeserializeString<DtxModeler.Ddl.Column[]>(Clipboard.GetText())) != null) {
@@ -364,6 +370,34 @@ namespace DtxModeler.Xaml {
 			}
 
 			return options;
+		}
+
+		private void AssociationDelete_Click(object sender, RoutedEventArgs e) {
+
+		}
+
+		private void AssociationCreate_Click(object sender, RoutedEventArgs e) {
+			var association = new Association();
+			var column = GetSelectedColumn();
+
+			if (_DatabaseExplorer.SelectedTable != null) {
+				association.Table1 = _DatabaseExplorer.SelectedTable.Name;
+			}
+
+			if (column != null) {
+				association.Table1Column = column.Name;
+			}
+
+			if (_DatabaseExplorer.SelectedTable != null) {
+				association.Table1 = _DatabaseExplorer.SelectedTable.Name;
+			}
+
+			var creator_window = new AssociationWindow(_DatabaseExplorer.SelectedDatabase, association);
+			creator_window.ShowDialog();
+		}
+
+		private void AssociationEdit_Click(object sender, RoutedEventArgs e) {
+
 		}
 
 	}
