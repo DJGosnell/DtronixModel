@@ -100,6 +100,7 @@ namespace DtxModeler.Ddl {
 
 		[XmlIgnore]
 		public Table Table;
+
 	}
 
 	public partial class Column {

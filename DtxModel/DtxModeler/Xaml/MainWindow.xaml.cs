@@ -378,6 +378,7 @@ namespace DtxModeler.Xaml {
 
 		private void AssociationCreate_Click(object sender, RoutedEventArgs e) {
 			var association = new Association();
+			var database = _DatabaseExplorer.SelectedDatabase;
 			var column = GetSelectedColumn();
 
 			if (_DatabaseExplorer.SelectedTable != null) {
@@ -392,8 +393,30 @@ namespace DtxModeler.Xaml {
 				association.Table1 = _DatabaseExplorer.SelectedTable.Name;
 			}
 
+			// See if we can determine what other table and column this column is referencing.
+			if (column.Name.Contains('_')) {
+				int index = column.Name.IndexOf('_');
+				string sel_table = column.Name.Substring(0, index);
+				string sel_column = column.Name.Substring(index + 1);
+				Table found_table = null;
+
+				if ((found_table = database.Table.FirstOrDefault(t => t.Name == sel_table)) != null) {
+					association.Table2 = sel_table;
+
+					if (found_table.Column.FirstOrDefault(c => c.Name == sel_column) != null) {
+						association.Table2Column = sel_column;
+						association.Table1Cardinality = Cardinality.Many;
+						association.Table2Cardinality = Cardinality.One;
+					}
+				}
+			}
+
+
 			var creator_window = new AssociationWindow(_DatabaseExplorer.SelectedDatabase, association);
+			creator_window.Owner = this;
 			creator_window.ShowDialog();
+
+			database.Association.Add(creator_window.Association);
 		}
 
 		private void AssociationEdit_Click(object sender, RoutedEventArgs e) {
