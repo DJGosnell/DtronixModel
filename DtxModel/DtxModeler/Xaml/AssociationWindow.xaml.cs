@@ -51,6 +51,20 @@ namespace DtxModeler.Xaml {
 			if (_CmbTable2.SelectedItem != null) {
 				_CmbTable2Column.SelectedItem = (_CmbTable2.SelectedItem as Table).Column.FirstOrDefault(column => column.Name == association.Table2Column);
 			}
+
+			// Cardinality
+			if (association.Table1Cardinality == Cardinality.One && association.Table2Cardinality == Cardinality.One) {
+				_CmbCardinality.SelectedIndex = 0;
+
+			} else if (association.Table1Cardinality == Cardinality.Many && association.Table2Cardinality == Cardinality.One) {
+				_CmbCardinality.SelectedIndex = 1;
+
+			} else if (association.Table1Cardinality == Cardinality.One && association.Table2Cardinality == Cardinality.Many) {
+				_CmbCardinality.SelectedIndex = 2;
+
+			} else if (association.Table1Cardinality == Cardinality.Many && association.Table2Cardinality == Cardinality.Many) {
+				_CmbCardinality.SelectedIndex = 3;
+			}
 		}
 
 		private void _CmbTable1_SelectionChanged(object sender, SelectionChangedEventArgs e) {

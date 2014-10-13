@@ -85,6 +85,7 @@ namespace DtxModeler.Xaml {
 
 			string image_database = "pack://application:,,,/Xaml/Images/database.png";
 			string image_table = "pack://application:,,,/Xaml/Images/table.png";
+			string image_tables = "pack://application:,,,/Xaml/Images/table_multiple.png";
 			string image_view = "pack://application:,,,/Xaml/Images/table_chart.png";
 			string image_function = "pack://application:,,,/Xaml/Images/function.png";
 
@@ -99,14 +100,14 @@ namespace DtxModeler.Xaml {
 
 
 				// Tables
-				var tables_root = createTreeViewItem("Tables", image_table);
+				var tables_root = createTreeViewItem("Tables", image_tables);
 				tables_root.Tag = typeof(Table[]);
 				tables_root.IsExpanded = true;
 				db_root.Items.Add(tables_root);
 
 				// Display all the tables
 				foreach (var table in database.Table) {
-					var tree_table = createTreeViewItem(table.Name, null);
+					var tree_table = createTreeViewItem(table.Name, image_table);
 					tree_table.Tag = table;
 					tables_root.Items.Add(tree_table);
 				}
@@ -250,7 +251,6 @@ namespace DtxModeler.Xaml {
 
 		}
 
-
 		/// <summary>
 		/// Saves the current database into its file.
 		/// </summary>
@@ -306,7 +306,7 @@ namespace DtxModeler.Xaml {
 				}
 			});
 		}
-
+		bool isFirstTime = false;
 
 		private TreeViewItem createTreeViewItem(string value, string image_path) {
 			TreeViewItem item = new TreeViewItem();
@@ -334,9 +334,52 @@ namespace DtxModeler.Xaml {
 			stack.Children.Add(text);
 			item.Header = stack;
 
+			
+
+			item.MouseDown += async(object sender, MouseButtonEventArgs e)  => {
+
+
+				var node = sender as TreeViewItem;
+				if (node != null && isFirstTime == false) {
+					node.Focus();
+					isFirstTime = true;
+					isFirstTime = await Task.Factory.StartNew(() => { Thread.Sleep(500); return false; });
+				}
+
+
+				/*if (FindVisualParent((DependencyObject)e.OriginalSource, e.Source.GetType()) == sender) {
+					var selected = _treDatabaseLayout.SelectedItem as TreeViewItem;
+					if (selected.IsSelected) {
+						selected.IsSelected = false;
+					}
+					VisualTreeHelper.
+
+					item.IsSelected = true;
+				}
+				*/
+				//if (e.RightButton == MouseButtonState.Pressed) {
+					
+				//}
+			};
+
 			return item;
 		}
 
+		/*private async void ResetRightClickAsync() {
+			isFirstTime = await SetFirstTimeToFalse();
+		}
+
+		private async Task<bool> SetFirstTimeToFalse() {
+			return ;
+		}*/
+
+		public DependencyObject FindVisualParent(DependencyObject obj, Type type) {
+			DependencyObject o = obj;
+			while (o != null && type != o.GetType()) {
+				o = VisualTreeHelper.GetParent(o);
+			}
+			return o;
+		}
 
 		private void _treDatabaseLayout_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
 			_CmiRename.IsEnabled = _CmiDelete.IsEnabled = _CmiNew.IsEnabled = _CmiPaste.IsEnabled = _CmiCopy.IsEnabled = false;
@@ -437,13 +480,15 @@ namespace DtxModeler.Xaml {
 			loaded_databases.Remove(database);
 			Refresh();
 
+			_treDatabaseLayout_SelectedItemChanged(null, null);
+
 			return true;
 		}
 
 
 		private void _CmiBrowse_Click(object sender, RoutedEventArgs e) {
 			if (selected_database._FileLocation != null) {
-				Process.Start(System.IO.Path.GetDirectoryName(selected_database._FileLocation));
+				Process.Start("explorer.exe", "/select,\"" + selected_database._FileLocation + "\"");
 			}
 		}
 
@@ -540,24 +585,15 @@ namespace DtxModeler.Xaml {
 
 
 		private void _treDatabaseLayout_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
-
-			// Remove any events and clear the collection to ensure that we do not have events
-			// being called after the fact on seperate databases and cause corrupted states.
-			/*if (selected_table != null && selected_table._ObservableColumns != null) {
-				selected_table._ObservableColumns.Clear();
-				selected_table = null;
-			}*/
-
 			// Reset out selection.
 			selected_database = null;
 			selected_table = null;
 			selected_function = null;
 			selected_view = null;
+			selected_type = Selection.None;
 
 			// If nothing is selected, then there is nothing to do.
 			if (_treDatabaseLayout.SelectedItem != null) {
-
-
 
 				// Find the root node for the database.
 				TreeViewItem root = _treDatabaseLayout.SelectedItem as TreeViewItem;
@@ -615,22 +651,18 @@ namespace DtxModeler.Xaml {
 				} else if (selected_database != null) {
 					selected_type = Selection.Database;
 
-				} else {
-					selected_type = Selection.None;
 				}
-
-				if (ChangedSelection != null) {
-					ChangedSelection(sender, new SelectionChangedEventArgs() {
-						SelectionType = selected_type,
-						Database = selected_database,
-						Table = selected_table,
-						Function = selected_function,
-						View = selected_view
-					});
-				}
+			}
 
 
-
+			if (ChangedSelection != null) {
+				ChangedSelection(sender, new SelectionChangedEventArgs() {
+					SelectionType = selected_type,
+					Database = selected_database,
+					Table = selected_table,
+					Function = selected_function,
+					View = selected_view
+				});
 			}
 		}
 

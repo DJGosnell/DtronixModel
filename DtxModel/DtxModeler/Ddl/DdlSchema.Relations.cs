@@ -80,11 +80,37 @@ namespace DtxModeler.Ddl {
 				
 			}
 		}
+
+		public Association[] GetAssociations(string table) {
+			return GetAssociations(tableField.FirstOrDefault(t => t.Name == table));
+		}
+
+		public Association[] GetAssociations(Table table) {
+			if (table == null) {
+				return null;
+			}
+			var table_associations = associationField.Where(association => association.Table1 == table.Name || association.Table2 == table.Name);
+
+			if (table_associations == null || table_associations.Count() == 0) {
+				return null;
+			}
+
+			return table_associations.ToArray();
+		}
 	}
 
 
 
 	public partial class Association {
+
+		[XmlIgnore]
+		public string DisplayName {
+			get {
+				string card1 = (Table1Cardinality == Cardinality.Many) ? "[*]" : "[1]";
+				string card2 = (Table2Cardinality == Cardinality.Many) ? "[*]" : "[1]";
+				return Table1Name + " (" + Table1 + "." + Table1Column + ") " + card1 + " <-> " + card2 + " " + Table2Name + " (" + Table2 + "." + Table2Column + ")";
+			}
+		}
 
 		[XmlIgnore]
 		public Association ChildAssociation;
