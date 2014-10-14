@@ -85,12 +85,12 @@ namespace DtxModeler.Xaml {
 		}
 
 		private Column GetSelectedColumn() {
-			return _dagColumnDefinitions.SelectedItem as Column;
+			return _DagColumnDefinitions.SelectedItem as Column;
 		}
 
 		private Column[] GetSelectedColumns() {
 			try {
-				return _dagColumnDefinitions.SelectedItems.Cast<Column>().ToArray();
+				return _DagColumnDefinitions.SelectedItems.Cast<Column>().ToArray();
 			} catch {
 				return new Column[0];
 			}
@@ -163,7 +163,7 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void _DatabaseExplorer_ChangedSelection(object sender, ExplorerControl.SelectionChangedEventArgs e) {
-			_dagColumnDefinitions.ItemsSource = null;
+			_DagColumnDefinitions.ItemsSource = null;
 			_LstAssociations.ItemsSource = null;
 			_TxtTableDescription.IsEnabled = false;
 			_TxtTableDescription.Text = _TxtColumnDescription.Text = "";
@@ -174,7 +174,7 @@ namespace DtxModeler.Xaml {
 
 
 			if (e.SelectionType == ExplorerControl.Selection.TableItem) {
-				_dagColumnDefinitions.ItemsSource = e.Table.Column;
+				_DagColumnDefinitions.ItemsSource = e.Table.Column;
 				_LstAssociations.ItemsSource = e.Database.Association;
 				//_tabTable.IsSelected = true;
 
@@ -212,24 +212,21 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
-		private void _dagColumnDefinitions_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
+		private void _DagColumnDefinitions_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
 			var column = GetSelectedColumn();
-			_TxtColumnDescription.IsEnabled = _CmiDeleteColumn.IsEnabled = _CmiCopyColumn.IsEnabled = _CmiPasteColumn.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = false;
+			_TxtColumnDescription.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = false;
 			
 			if (column != null) {
 
-				if (_dagColumnDefinitions.SelectedItems.Count == 1) {
+				if (_DagColumnDefinitions.SelectedItems.Count == 1) {
 					_CmiCreateAssociationWith.IsEnabled = true;
 				} else {
 					_CmiCreateAssociationWith.IsEnabled = false;
 				}
 
-				_CmiDeleteColumn.IsEnabled = _CmiCopyColumn.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = true;
+				_CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = true;
 
-				// Only allow paste if the clipboard is valid XML.
-				if (Clipboard.ContainsText() && (deserialized_clipboard = Utilities.XmlDeserializeString<DtxModeler.Ddl.Column[]>(Clipboard.GetText())) != null) {
-					_CmiPasteColumn.IsEnabled = true;
-				}
+
 			}
 		}
 
@@ -284,40 +281,6 @@ namespace DtxModeler.Xaml {
 				all_columns.Move(old_index, old_index + 1);
 			}
 
-		}
-
-		private void _CmiCopyColumn_Click(object sender, RoutedEventArgs e) {
-			var text = Utilities.XmlSerializeObject(GetSelectedColumns());
-			Clipboard.SetText(text, TextDataFormat.UnicodeText);
-		}
-
-		private void _CmiPasteColumn_Click(object sender, RoutedEventArgs e) {
-			Column[] columns = deserialized_clipboard as Column[];
-			var all_columns = _DatabaseExplorer.SelectedTable.Column;
-			if (columns == null) {
-				return;
-			}
-			
-			if (_MiValidateColumnsOnPaste.IsChecked) {
-				foreach (var column in columns) {
-					var found_column = all_columns.FirstOrDefault(col => col.Name.ToLower() == column.Name.ToLower());
-
-					if (found_column != null) {
-						InputDialogBox.Show("Column Naming Collision", "Enter a new name for the old \"" + found_column.Name + "\" Column.", found_column.Name, value => {
-							column.Name = value;
-						});
-
-						continue;
-					}
-				}
-			}
-
-
-			// Add in reverse order to allow for insertion in logical order.
-			for (int i = columns.Length - 1; i >= 0; i--) {
-				_DatabaseExplorer.SelectedTable.Column.Insert(_dagColumnDefinitions.SelectedIndex + 1, columns[i]);
-			}
-			
 		}
 
 
@@ -452,7 +415,7 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
-		private void _dagColumnDefinitions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+		private void _DagColumnDefinitions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 			var columns = GetSelectedColumns();
 			if (columns.Length == 1) {
 				_TxtColumnDescription.IsEnabled = true;
@@ -470,6 +433,64 @@ namespace DtxModeler.Xaml {
 				UpdateTitle();
 			}
 		}
+
+		private void _DagColumnDefinitions_PasteCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			// Only allow paste if the clipboard is valid XML.
+			if (Clipboard.ContainsText()){ 
+				e.CanExecute = true;
+			} else {
+				e.CanExecute = false;
+				e.Handled = true;
+			}
+		}
+
+
+		private void _DagColumnDefinitions_Paste(object sender, ExecutedRoutedEventArgs e) {
+			Column[] columns = Utilities.XmlDeserializeString<DtxModeler.Ddl.Column[]>(Clipboard.GetText()) as Column[];
+			var all_columns = _DatabaseExplorer.SelectedTable.Column;
+
+			if (columns == null) {
+				return;
+			}
+
+			if (_MiValidateColumnsOnPaste.IsChecked) {
+				foreach (var column in columns) {
+					var found_column = all_columns.FirstOrDefault(col => col.Name.ToLower() == column.Name.ToLower());
+
+					if (found_column != null) {
+						InputDialogBox.Show("Column Naming Collision", "Enter a new name for the old \"" + found_column.Name + "\" Column.", found_column.Name, value => {
+							column.Name = value;
+						});
+
+						continue;
+					}
+				}
+			}
+
+			// Add in reverse order to allow for insertion in logical order.
+			for (int i = columns.Length - 1; i >= 0; i--) {
+				if (_DagColumnDefinitions.Items.Count > _DagColumnDefinitions.SelectedIndex + 1) {
+					_DatabaseExplorer.SelectedTable.Column.Insert(_DagColumnDefinitions.SelectedIndex + 1, columns[i]);
+				}else{
+					_DatabaseExplorer.SelectedTable.Column.Add(columns[i]);
+				}
+			}
+		}
+
+		private void _DagColumnDefinitions_CopyCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			if (GetSelectedColumn() != null) {
+				e.CanExecute = true;
+			} else {
+				e.CanExecute = false;
+				e.Handled = true;
+			}
+		}
+
+		private void _DagColumnDefinitions_Copy(object sender, ExecutedRoutedEventArgs e) {
+			var text = Utilities.XmlSerializeObject(GetSelectedColumns());
+			Clipboard.SetText(text, TextDataFormat.UnicodeText);
+		}
+
 
 	}
 

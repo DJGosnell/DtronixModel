@@ -38,15 +38,15 @@ namespace DtxModeler.Xaml {
 				return;
 			}
 
-			_txtServer.Text = server_file.FileName;
+			_TxtServer.Text = server_file.FileName;
 		}
 
 		private string generateConnectionString() {
 			var sb = new StringBuilder();
 
-			switch ((DbProvider)_cmbProvider.SelectedIndex) {
+			switch ((DbProvider)_CmbProvider.SelectedIndex) {
 				case DbProvider.Sqlite:
-					sb.Append("Data Source=\"").Append(_txtServer.Text).Append("\";");
+					sb.Append("Data Source=\"").Append(_TxtServer.Text).Append("\";");
 					sb.Append("Version=3;");
 					break;
 				case DbProvider.MySQL:
@@ -68,7 +68,7 @@ namespace DtxModeler.Xaml {
 			var connection_string = generateConnectionString();
 			DdlGenerator generator = null;
 
-			switch ((DbProvider)_cmbProvider.SelectedIndex) {
+			switch ((DbProvider)_CmbProvider.SelectedIndex) {
 				case DbProvider.Sqlite:
 					generator = new SqliteDdlGenerator(connection_string);
 					break;
@@ -93,7 +93,7 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void _cmbProvider_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-			switch ((DbProvider)_cmbProvider.SelectedIndex) {
+			switch ((DbProvider)_CmbProvider.SelectedIndex) {
 				case DbProvider.Sqlite:
 					_txtPassword.IsEnabled = true;
 					_txtPassword.IsEnabled = false;

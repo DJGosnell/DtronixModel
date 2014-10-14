@@ -35,11 +35,19 @@
 			</Menu.Background>
 			<MenuItem Header="_File" Height="21" VerticalAlignment="Top">
 				<MenuItem Header="_New"  Command="ApplicationCommands.New"/>
+				<Separator/>
 				<MenuItem Header="_Open" Command="ApplicationCommands.Open"/>
+				<MenuItem Header="_Open" Command="ApplicationCommands.Open"/>
+				<Separator/>
 				<MenuItem Header="_Save" Command="ApplicationCommands.Save"/>
 				<MenuItem Header="Save _As" Command="ApplicationCommands.SaveAs"/>
 				<Separator/>
 				<MenuItem Header="E_xit" Command="ApplicationCommands.Close" />
+			</MenuItem>
+			<MenuItem Header="_Edit" Height="21" VerticalAlignment="Top">
+				<MenuItem Command="Copy" />
+				<MenuItem Command="Paste" />
+				<MenuItem Command="Delete" />
 			</MenuItem>
 			<MenuItem Header="_Output" Height="21" VerticalAlignment="Top">
 				<MenuItem Header="Generate All" Click="OutputGenerateAll_Click" />
@@ -66,7 +74,7 @@
 						<TextBox x:Name="_TxtTableDescription" IsEnabled="False" Text="{Binding Description}" TextWrapping="Wrap" />
 					</GroupBox>
 					<GroupBox Grid.Row="1" Header="Colum Definitions">
-						<DataGrid AutoGenerateColumns="False" x:Name="_dagColumnDefinitions"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_dagColumnDefinitions_ContextMenuOpening" SelectionChanged="_dagColumnDefinitions_SelectionChanged">
+						<DataGrid AutoGenerateColumns="False" x:Name="_DagColumnDefinitions"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_DagColumnDefinitions_ContextMenuOpening" SelectionChanged="_DagColumnDefinitions_SelectionChanged">
 							<DataGrid.Columns>
 								<DataGridTextColumn Header="Name" Width="100*" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
 								<DataGridComboBoxColumn Width="140" x:Name="ColumnNetType" Header=".Net Type" SelectedValueBinding="{Binding NetType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding NetType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
@@ -78,8 +86,6 @@
 							</DataGrid.Columns>
 							<DataGrid.ContextMenu>
 								<ContextMenu>
-
-
 									<MenuItem x:Name="_CmiMoveColumnUp" Header="Move Column Up" Click="_CmiMoveColumnUp_Click" IsEnabled="False">
 										<MenuItem.Icon>
 											<Image Source="Images/arrow_up.png" />
@@ -96,17 +102,17 @@
 										</MenuItem.Icon>
 									</MenuItem>
 									<Separator />
-									<MenuItem x:Name="_CmiCopyColumn" Header="Copy" IsEnabled="False" Click="_CmiCopyColumn_Click">
+									<MenuItem Command="Copy">
 										<MenuItem.Icon>
 											<Image Source="Images/page_copy.png" />
 										</MenuItem.Icon>
 									</MenuItem>
-									<MenuItem x:Name="_CmiPasteColumn" Header="Paste" IsEnabled="False" Click="_CmiPasteColumn_Click">
+									<MenuItem Command="Paste">
 										<MenuItem.Icon>
 											<Image Source="Images/page_paste.png" />
 										</MenuItem.Icon>
 									</MenuItem>
-									<MenuItem x:Name="_CmiDeleteColumn" Header="Delete" Click="_CmiDeleteColumn_Click" IsEnabled="False">
+									<MenuItem Command="Delete">
 										<MenuItem.Icon>
 											<Image Source="Images/delete.png" />
 										</MenuItem.Icon>
@@ -115,6 +121,10 @@
 								</ContextMenu>
 
 							</DataGrid.ContextMenu>
+							<DataGrid.CommandBindings>
+								<CommandBinding Command="Copy" Executed="_DagColumnDefinitions_Copy" CanExecute="_DagColumnDefinitions_CopyCanExecute" />
+								<CommandBinding Command="Paste" Executed="_DagColumnDefinitions_Paste" CanExecute="_DagColumnDefinitions_PasteCanExecute" />
+							</DataGrid.CommandBindings>
 						</DataGrid>
 					</GroupBox>
 					<GroupBox Grid.Row="2" Header="Column Description" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">

@@ -162,7 +162,7 @@ namespace DtxModeler.Xaml {
 			Database database = null;
 
 			var dialog = new OpenFileDialog() {
-				Filter = "Ddl files (*.ddl)|*.ddl",
+				Filter = "DDL files (*.ddl)|*.ddl", //Text Files (*.txt)|*.txt|All Files (*.*)|*.*
 				Multiselect = true
 			};
 
@@ -171,14 +171,14 @@ namespace DtxModeler.Xaml {
 				return;
 			}
 
-			ThreadPool.QueueUserWorkItem(o => {
+			Task.Run(() => {
 				for (int i = 0; i < dialog.FileNames.Length; i++) {
 					try {
 						database = Database.LoadFromFile(dialog.FileNames[i]);
 						database._FileLocation = dialog.FileNames[i];
 
 					} catch (Exception e) {
-						this.Dispatcher.BeginInvoke(new Action(() => {
+						this.Dispatcher.Invoke(new Action(() => {
 							MessageBox.Show("Unable to load selected Ddl file. \r\n" + e.ToString());
 						}), null);
 						return;
@@ -296,7 +296,7 @@ namespace DtxModeler.Xaml {
 			database._FileLocation = file_name;
 			database._Modified = false;
 
-			ThreadPool.QueueUserWorkItem(o => {
+			Task.Run(() => {
 				Exception exception = null;
 				if (database.SaveToFile(file_name, out exception) == false) {
 					this.Dispatcher.BeginInvoke(new Action(() => {
@@ -343,7 +343,7 @@ namespace DtxModeler.Xaml {
 				if (node != null && isFirstTime == false) {
 					node.Focus();
 					isFirstTime = true;
-					isFirstTime = await Task.Factory.StartNew(() => { Thread.Sleep(500); return false; });
+					isFirstTime = await Task.Run(() => { Thread.Sleep(500); return false; });
 				}
 
 
