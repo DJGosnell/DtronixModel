@@ -10,7 +10,7 @@
 			<RowDefinition/>
 		</Grid.RowDefinitions>
 		<TextBox HorizontalAlignment="Stretch" Height="23" TextWrapping="NoWrap" Text="Filter" VerticalAlignment="Top" BorderThickness="0,1,1,1" IsEnabled="False"/>
-		<TreeView x:Name="_treDatabaseLayout" BorderThickness="0,1,1,1" Grid.Row="1" SelectedItemChanged="_treDatabaseLayout_SelectedItemChanged" ContextMenuOpening="_treDatabaseLayout_ContextMenuOpening">
+		<TreeView x:Name="_TreDatabaseLayout" BorderThickness="0,1,1,1" Grid.Row="1" SelectedItemChanged="_TreDatabaseLayout_SelectedItemChanged" ContextMenuOpening="_TreDatabaseLayout_ContextMenuOpening">
 			<TreeView.ContextMenu>
 				<ContextMenu>
 					<MenuItem x:Name="_CmiBrowse" Header="Open Containing Directory" Click="_CmiBrowse_Click">
@@ -33,25 +33,32 @@
 							<Image Source="Images/add.png" />
 						</MenuItem.Icon>
 					</MenuItem>
-					<MenuItem x:Name="_CmiDelete" Header="Delete" Click="_CmiDelete_Click">
-						<MenuItem.Icon>
-							<Image Source="Images/delete.png" />
-						</MenuItem.Icon>
-					</MenuItem>
 					<Separator />
-					<MenuItem x:Name="_CmiCopy" Header="Copy" Click="_CmiCopy_Click">
+					<!-- <MenuItem x:Name="_CmiCopy" Header="Copy" Click="_CmiCopy_Click">-->
+					<MenuItem Command="Copy">
 						<MenuItem.Icon>
 							<Image Source="Images/page_copy.png" />
 						</MenuItem.Icon>
 					</MenuItem>
-					<MenuItem x:Name="_CmiPaste" Header="Paste" Click="_CmiPaste_Click">
+					<!-- <MenuItem x:Name="_CmiPaste" Header="Paste" Click="_CmiPaste_Click">-->
+					<MenuItem Command="Paste">
 						<MenuItem.Icon>
 							<Image Source="Images/page_paste.png" />
 						</MenuItem.Icon>
 					</MenuItem>
+					<!-- <MenuItem x:Name="_CmiDelete" Header="Delete" Click="_CmiDelete_Click">-->
+					<MenuItem Command="Delete">
+						<MenuItem.Icon>
+							<Image Source="Images/delete.png" />
+						</MenuItem.Icon>
+					</MenuItem>
 				</ContextMenu>
 			</TreeView.ContextMenu>
-
+			<TreeView.CommandBindings>
+				<CommandBinding Command="Copy" Executed="_TreDatabaseLayout_Copy" CanExecute="_TreDatabaseLayout_CopyCanExecute" />
+				<CommandBinding Command="Paste" Executed="_TreDatabaseLayout_Paste" CanExecute="_TreDatabaseLayout_PasteCanExecute" />
+				<CommandBinding Command="Delete" Executed="_TreDatabaseLayout_Delete" CanExecute="_TreDatabaseLayout_DeleteCanExecute" />
+			</TreeView.CommandBindings>
 		</TreeView>
 	</Grid>
 </UserControl>

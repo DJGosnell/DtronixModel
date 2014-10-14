@@ -81,7 +81,7 @@ namespace DtxModeler.Xaml {
 		/// </summary>
 		/// <param name="select_db">If a database is provided, it will be automatically selected in the tree.</param>
 		private void Refresh(Database select_db) {
-			_treDatabaseLayout.Items.Clear();
+			_TreDatabaseLayout.Items.Clear();
 
 			string image_database = "pack://application:,,,/Xaml/Images/database.png";
 			string image_table = "pack://application:,,,/Xaml/Images/table.png";
@@ -94,7 +94,7 @@ namespace DtxModeler.Xaml {
 				db_root.Tag = database;
 				db_root.IsExpanded = true;
 
-				if (select_db == database || _treDatabaseLayout.SelectedItem == null) {
+				if (select_db == database || _TreDatabaseLayout.SelectedItem == null) {
 					db_root.IsSelected = true;
 				}
 
@@ -122,7 +122,7 @@ namespace DtxModeler.Xaml {
 				functions_root.Tag = typeof(Function[]);
 				db_root.Items.Add(functions_root);
 
-				_treDatabaseLayout.Items.Add(db_root);
+				_TreDatabaseLayout.Items.Add(db_root);
 				database._TreeRoot = db_root;
 			}
 		}
@@ -348,7 +348,7 @@ namespace DtxModeler.Xaml {
 
 
 				/*if (FindVisualParent((DependencyObject)e.OriginalSource, e.Source.GetType()) == sender) {
-					var selected = _treDatabaseLayout.SelectedItem as TreeViewItem;
+					var selected = _TreDatabaseLayout.SelectedItem as TreeViewItem;
 					if (selected.IsSelected) {
 						selected.IsSelected = false;
 					}
@@ -381,8 +381,8 @@ namespace DtxModeler.Xaml {
 			return o;
 		}
 
-		private void _treDatabaseLayout_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
-			_CmiRename.IsEnabled = _CmiDelete.IsEnabled = _CmiNew.IsEnabled = _CmiPaste.IsEnabled = _CmiCopy.IsEnabled = false;
+		private void _TreDatabaseLayout_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
+			_CmiRename.IsEnabled = _CmiNew.IsEnabled = _CmiPaste.IsEnabled = _CmiCopy.IsEnabled = false;
 			_CmiClose.Visibility = _CmiBrowse.Visibility = System.Windows.Visibility.Collapsed;
 
 			switch (selected_type) {
@@ -401,7 +401,7 @@ namespace DtxModeler.Xaml {
 				case Selection.TableItem:
 				case Selection.ViewItem:
 				case Selection.FunctionItem:
-					_CmiRename.IsEnabled = _CmiDelete.IsEnabled = _CmiNew.IsEnabled = _CmiCopy.IsEnabled = true;
+					_CmiRename.IsEnabled = _CmiNew.IsEnabled = _CmiCopy.IsEnabled = true;
 					break;
 
 				case Selection.None:
@@ -480,7 +480,7 @@ namespace DtxModeler.Xaml {
 			loaded_databases.Remove(database);
 			Refresh();
 
-			_treDatabaseLayout_SelectedItemChanged(null, null);
+			_TreDatabaseLayout_SelectedItemChanged(null, null);
 
 			return true;
 		}
@@ -495,38 +495,6 @@ namespace DtxModeler.Xaml {
 		private void _CmiClose_Click(object sender, RoutedEventArgs e) {
 			if (selected_type == Selection.Database) {
 				CloseDatabase(selected_database);
-			}
-		}
-
-
-		private void _CmiCopy_Click(object sender, RoutedEventArgs e) {
-			if (selected_type == Selection.TableItem) {
-				var text = Utilities.XmlSerializeObject(selected_table);
-				Clipboard.SetText(text, TextDataFormat.UnicodeText);
-			}
-		}
-
-		private void _CmiPaste_Click(object sender, RoutedEventArgs e) {
-			if (selected_type == Selection.Tables || selected_type == Selection.TableItem) {
-				Table table = deserialized_clipboard as Table;
-
-				if (table == null) {
-					return;
-				}
-
-				Action database_changed = () => {
-					selected_database._Modified = true;
-					Refresh();
-				};
-
-				if (selected_type == Selection.TableItem) {
-					InputDialogBox.Show("Table Name", "Enter a new name for the table.", table.Name, (value) => {
-						table.Name = value;
-						selected_database.Table.Add(table);
-						database_changed();
-					});
-
-				}
 			}
 		}
 
@@ -550,19 +518,6 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
-		private void _CmiDelete_Click(object sender, RoutedEventArgs e) {
-			if (selected_type == Selection.Tables || selected_type == Selection.TableItem) {
-				if (MessageBox.Show("Are you sure you want to delete table \"" + selected_table.Name + "\"?", "Delete Table", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
-					selected_database.Table.Remove(selected_table);
-				}
-
-			}
-
-			selected_database._Modified = true;
-			Refresh();
-		}
-
-
 		private void _CmiRename_Click(object sender, RoutedEventArgs e) {
 			Action database_changed = () => {
 				selected_database._Modified = true;
@@ -584,7 +539,7 @@ namespace DtxModeler.Xaml {
 		}
 
 
-		private void _treDatabaseLayout_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
+		private void _TreDatabaseLayout_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
 			// Reset out selection.
 			selected_database = null;
 			selected_table = null;
@@ -593,10 +548,10 @@ namespace DtxModeler.Xaml {
 			selected_type = Selection.None;
 
 			// If nothing is selected, then there is nothing to do.
-			if (_treDatabaseLayout.SelectedItem != null) {
+			if (_TreDatabaseLayout.SelectedItem != null) {
 
 				// Find the root node for the database.
-				TreeViewItem root = _treDatabaseLayout.SelectedItem as TreeViewItem;
+				TreeViewItem root = _TreDatabaseLayout.SelectedItem as TreeViewItem;
 				TreeViewItem trasnverse_node = root;
 
 				while (trasnverse_node != null) {
@@ -607,7 +562,7 @@ namespace DtxModeler.Xaml {
 				selected_database = root.Tag as Database;
 
 				// Determine what we have selected.
-				var selected_node = _treDatabaseLayout.SelectedItem as TreeViewItem;
+				var selected_node = _TreDatabaseLayout.SelectedItem as TreeViewItem;
 				Type node_tag_type = selected_node.Tag as Type;
 
 				if (node_tag_type == null) {
@@ -690,6 +645,84 @@ namespace DtxModeler.Xaml {
 			Views,
 			ViewItem
 		}
+
+
+		private void _TreDatabaseLayout_DeleteCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			switch (selected_type) {
+				case Selection.TableItem:
+				case Selection.ViewItem:
+				case Selection.FunctionItem:
+					e.CanExecute = true;
+					break;
+				default:
+					e.CanExecute = false;
+					break;
+			}
+
+		}
+
+		private void _TreDatabaseLayout_Delete(object sender, ExecutedRoutedEventArgs e) {
+			if (selected_type == Selection.TableItem) {
+				if (MessageBox.Show("Are you sure you want to delete table \"" + selected_table.Name + "\"?", "Delete Table", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
+					selected_database.Table.Remove(selected_table);
+				}
+
+			}
+
+			selected_database._Modified = true;
+			Refresh();
+		}
+
+		private void _TreDatabaseLayout_Paste(object sender, ExecutedRoutedEventArgs e) {
+			if (selected_type == Selection.Tables || selected_type == Selection.TableItem) {
+				Table table = deserialized_clipboard as Table;
+
+				if (table == null) {
+					return;
+				}
+
+				Action database_changed = () => {
+					selected_database._Modified = true;
+					Refresh();
+				};
+
+				if (selected_type == Selection.TableItem) {
+					InputDialogBox.Show("Table Name", "Enter a new name for the table.", table.Name, (value) => {
+						table.Name = value;
+						selected_database.Table.Add(table);
+						database_changed();
+					});
+
+				}
+			}
+		}
+
+		private void _TreDatabaseLayout_PasteCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			switch (selected_type) {
+				case Selection.TableItem:
+				//case Selection.ViewItem:
+				//case Selection.FunctionItem:
+					e.CanExecute = true;
+					break;
+				default:
+					e.CanExecute = false;
+					break;
+			}
+		}
+
+		private void _TreDatabaseLayout_Copy(object sender, ExecutedRoutedEventArgs e) {
+			switch (selected_type) {
+				case Selection.TableItem:
+					Clipboard.SetText(Utilities.XmlSerializeObject(selected_table), TextDataFormat.UnicodeText);
+					break;
+				case Selection.ViewItem:
+				case Selection.FunctionItem:
+					break;
+			}
+		}
+
+
+
 
 	
 	}
