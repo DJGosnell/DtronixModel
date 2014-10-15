@@ -28,9 +28,9 @@ namespace DtxModeler.Xaml {
 
 		private List<Database> loaded_databases = new List<Database>();
 
-		private Selection selected_type;
+		private bool first_rightclick = false;
 
-		private object deserialized_clipboard = null;
+		private Selection selected_type;
 
 		public Selection SelectedType {
 			get { return selected_type; }
@@ -306,7 +306,6 @@ namespace DtxModeler.Xaml {
 				}
 			});
 		}
-		bool isFirstTime = false;
 
 		private TreeViewItem createTreeViewItem(string value, string image_path) {
 			TreeViewItem item = new TreeViewItem();
@@ -337,41 +336,17 @@ namespace DtxModeler.Xaml {
 			
 
 			item.MouseDown += async(object sender, MouseButtonEventArgs e)  => {
-
-
 				var node = sender as TreeViewItem;
-				if (node != null && isFirstTime == false) {
+				if (node != null && first_rightclick == false) {
 					node.Focus();
-					isFirstTime = true;
-					isFirstTime = await Task.Run(() => { Thread.Sleep(500); return false; });
+					first_rightclick = true;
+					first_rightclick = await Task.Run(() => { Thread.Sleep(500); return false; });
 				}
 
-
-				/*if (FindVisualParent((DependencyObject)e.OriginalSource, e.Source.GetType()) == sender) {
-					var selected = _TreDatabaseLayout.SelectedItem as TreeViewItem;
-					if (selected.IsSelected) {
-						selected.IsSelected = false;
-					}
-					VisualTreeHelper.
-
-					item.IsSelected = true;
-				}
-				*/
-				//if (e.RightButton == MouseButtonState.Pressed) {
-					
-				//}
 			};
 
 			return item;
 		}
-
-		/*private async void ResetRightClickAsync() {
-			isFirstTime = await SetFirstTimeToFalse();
-		}
-
-		private async Task<bool> SetFirstTimeToFalse() {
-			return ;
-		}*/
 
 		public DependencyObject FindVisualParent(DependencyObject obj, Type type) {
 			DependencyObject o = obj;
@@ -379,56 +354,6 @@ namespace DtxModeler.Xaml {
 				o = VisualTreeHelper.GetParent(o);
 			}
 			return o;
-		}
-
-		private void _TreDatabaseLayout_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
-			_CmiRename.IsEnabled = _CmiNew.IsEnabled = _CmiPaste.IsEnabled = _CmiCopy.IsEnabled = false;
-			_CmiClose.Visibility = _CmiBrowse.Visibility = System.Windows.Visibility.Collapsed;
-
-			switch (selected_type) {
-				case Selection.Database:
-					_CmiRename.IsEnabled = true;
-					_CmiClose.Visibility = _CmiBrowse.Visibility = System.Windows.Visibility.Visible;
-					break;
-
-				case Selection.Tables:
-				case Selection.Views:
-				case Selection.Functions:
-
-					_CmiNew.IsEnabled = _CmiPaste.IsEnabled = true;
-					break;
-
-				case Selection.TableItem:
-				case Selection.ViewItem:
-				case Selection.FunctionItem:
-					_CmiRename.IsEnabled = _CmiNew.IsEnabled = _CmiCopy.IsEnabled = true;
-					break;
-
-				case Selection.None:
-				default:
-					break;
-			}
-
-			// See if we have anything in the clipboard to paste.
-			if (Clipboard.ContainsText()) {
-				string clipboard_text = Clipboard.GetText();
-
-				if ((selected_type == Selection.Tables || selected_type == Selection.TableItem)
-					&& (deserialized_clipboard = Utilities.XmlDeserializeString<Table>(clipboard_text)) != null) {
-					_CmiPaste.IsEnabled = true;
-
-				} else if ((selected_type == Selection.Views || selected_type == Selection.ViewItem)
-					&& (deserialized_clipboard = Utilities.XmlDeserializeString<View>(clipboard_text)) != null) {
-					_CmiPaste.IsEnabled = true;
-
-				} else if ((selected_type == Selection.Functions || selected_type == Selection.FunctionItem)
-					&& (deserialized_clipboard = Utilities.XmlDeserializeString<Function>(clipboard_text)) != null) {
-					_CmiPaste.IsEnabled = true;
-				}
-			}
-
-
-
 		}
 
 		/// <summary>
@@ -484,60 +409,6 @@ namespace DtxModeler.Xaml {
 
 			return true;
 		}
-
-
-		private void _CmiBrowse_Click(object sender, RoutedEventArgs e) {
-			if (selected_database._FileLocation != null) {
-				Process.Start("explorer.exe", "/select,\"" + selected_database._FileLocation + "\"");
-			}
-		}
-
-		private void _CmiClose_Click(object sender, RoutedEventArgs e) {
-			if (selected_type == Selection.Database) {
-				CloseDatabase(selected_database);
-			}
-		}
-
-
-		private void _CmiNew_Click(object sender, RoutedEventArgs e) {
-			Action database_changed = () => {
-				selected_database._Modified = true;
-				Refresh();
-			};
-
-			if (selected_type == Selection.Tables || selected_type == Selection.TableItem) {
-				var table = new Table();
-
-				InputDialogBox.Show("Table Name", "Enter a new name for the table.", table.Name, (value) => {
-					table.Name = value;
-					selected_database.Table.Add(table);
-					database_changed();
-				});
-
-				
-			}
-		}
-
-		private void _CmiRename_Click(object sender, RoutedEventArgs e) {
-			Action database_changed = () => {
-				selected_database._Modified = true;
-				Refresh();
-			};
-
-			if (selected_type == Selection.TableItem) {
-				InputDialogBox.Show("Rename Table", "Enter a new name for the table.", selected_table.Name, (value) => {
-					selected_table.Name = value;
-					database_changed();
-				});
-
-			} else if (selected_type == Selection.Database) {
-				InputDialogBox.Show("Rename Database", "Enter a new name for the database.", selected_database.Name, (value) => {
-					selected_database.Name = value;
-					database_changed();
-				});
-			}
-		}
-
 
 		private void _TreDatabaseLayout_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e) {
 			// Reset out selection.
@@ -622,30 +493,6 @@ namespace DtxModeler.Xaml {
 		}
 
 
-		public class SelectionChangedEventArgs : EventArgs {
-			public Database Database { get; set; }
-			public Table Table { get; set; }
-			public Function Function { get; set; }
-			public View View { get; set; }
-			public Selection SelectionType { get; set; }
-		}
-
-
-		public class DatabaseEventArgs : EventArgs {
-			public Database Database { get; set; }
-		}
-
-		public enum Selection {
-			None,
-			Database,
-			Tables,
-			TableItem,
-			Functions,
-			FunctionItem,
-			Views,
-			ViewItem
-		}
-
 
 		private void _TreDatabaseLayout_DeleteCanExecute(object sender, CanExecuteRoutedEventArgs e) {
 			switch (selected_type) {
@@ -674,39 +521,38 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void _TreDatabaseLayout_Paste(object sender, ExecutedRoutedEventArgs e) {
-			if (selected_type == Selection.Tables || selected_type == Selection.TableItem) {
-				Table table = deserialized_clipboard as Table;
+			switch (selected_type) {
+				case Selection.Tables:
+				case Selection.TableItem:
+					var table = Utilities.XmlDeserializeString<Table>(Clipboard.GetText());
+					if (table == null) {
+						return;
+					}
 
-				if (table == null) {
-					return;
-				}
-
-				Action database_changed = () => {
-					selected_database._Modified = true;
-					Refresh();
-				};
-
-				if (selected_type == Selection.TableItem) {
 					InputDialogBox.Show("Table Name", "Enter a new name for the table.", table.Name, (value) => {
 						table.Name = value;
 						selected_database.Table.Add(table);
-						database_changed();
+						Refresh();
 					});
-
-				}
+					break;
 			}
 		}
 
 		private void _TreDatabaseLayout_PasteCanExecute(object sender, CanExecuteRoutedEventArgs e) {
-			switch (selected_type) {
-				case Selection.TableItem:
-				//case Selection.ViewItem:
-				//case Selection.FunctionItem:
-					e.CanExecute = true;
-					break;
-				default:
-					e.CanExecute = false;
-					break;
+			if (Clipboard.ContainsText()) {
+				switch (selected_type) {
+					case Selection.Tables:
+					case Selection.TableItem:
+						//case Selection.ViewItem:
+						//case Selection.FunctionItem:
+						e.CanExecute = true;
+						break;
+					default:
+						e.CanExecute = false;
+						break;
+				}
+			} else {
+				e.CanExecute = false;
 			}
 		}
 
@@ -721,8 +567,119 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
+		private void _TreDatabaseLayout_CopyCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			_TreDatabaseLayout_DeleteCanExecute(sender, e);
+		}
 
 
+
+		public class SelectionChangedEventArgs : EventArgs {
+			public Database Database { get; set; }
+			public Table Table { get; set; }
+			public Function Function { get; set; }
+			public View View { get; set; }
+			public Selection SelectionType { get; set; }
+		}
+
+
+		public class DatabaseEventArgs : EventArgs {
+			public Database Database { get; set; }
+		}
+
+		public enum Selection {
+			None,
+			Database,
+			Tables,
+			TableItem,
+			Functions,
+			FunctionItem,
+			Views,
+			ViewItem
+		}
+
+		private void _TreDatabaseLayout_New(object sender, ExecutedRoutedEventArgs e) {
+
+			if (selected_type == Selection.Tables || selected_type == Selection.TableItem) {
+				InputDialogBox.Show("Table Name", "Enter a new name for the table.", "", (value) => {
+					var table = new Table() {
+						Name = value
+					};
+					selected_database.Table.Add(table);
+					Refresh();
+				});
+			}
+		}
+
+		private void _TreDatabaseLayout_NewCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			switch (selected_type) {
+				case Selection.Tables:
+				case Selection.TableItem:
+				//case Selection.Functions:
+				//case Selection.FunctionItem:
+				//case Selection.Views:
+				//case Selection.ViewItem:
+					e.CanExecute = true;
+					break;
+				default:
+					e.CanExecute = false;
+					break;
+			}
+		}
+
+		private void _TreDatabaseLayout_Rename(object sender, ExecutedRoutedEventArgs e) {
+
+			if (selected_type == Selection.TableItem) {
+				InputDialogBox.Show("Rename Table", "Enter a new name for the table.", selected_table.Name, (value) => {
+					selected_table.Name = value;
+					Refresh();
+				});
+
+			} else if (selected_type == Selection.Database) {
+				InputDialogBox.Show("Rename Database", "Enter a new name for the database.", selected_database.Name, (value) => {
+					selected_database.Name = value;
+					Refresh();
+				});
+			}
+		}
+
+		private void _TreDatabaseLayout_RenameCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			switch (selected_type) {
+				case Selection.Database:
+				case Selection.TableItem:
+				case Selection.ViewItem:
+				case Selection.FunctionItem:
+					e.CanExecute = true;
+					break;
+				default:
+					e.CanExecute = false;
+					break;
+			}
+		}
+
+		private void _TreDatabaseLayout_OpenDatabaseDirectory(object sender, ExecutedRoutedEventArgs e) {
+			if (selected_database._FileLocation != null) {
+				Process.Start("explorer.exe", "/select,\"" + selected_database._FileLocation + "\"");
+			}
+		}
+
+		private void _TreDatabaseLayout_OpenDatabaseDirectoryCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			switch (selected_type) {
+				case Selection.Database:
+					e.CanExecute = true;
+					break;
+				default:
+					e.CanExecute = false;
+					break;
+			}
+		}
+
+		private void _TreDatabaseLayout_CloseDatabase(object sender, ExecutedRoutedEventArgs e) {
+			CloseDatabase(selected_database);
+		}
+
+		private void _TreDatabaseLayout_CloseDatabaseCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			_TreDatabaseLayout_OpenDatabaseDirectoryCanExecute(sender, e);
+		}
 
 	
 	}

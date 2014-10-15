@@ -106,6 +106,7 @@
       <DependentUpon>AssociationWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Xaml\Commands.cs" />
+    <Compile Include="Xaml\Converters.cs" />
     <Compile Include="Xaml\DatabaseTree.cs" />
     <Compile Include="Xaml\DbServer.xaml.cs">
       <DependentUpon>DbServer.xaml</DependentUpon>
