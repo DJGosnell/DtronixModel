@@ -7,7 +7,7 @@ using System.Windows.Input;
 
 namespace DtxModeler.Xaml {
 	public static class Commands {
-
+		public static readonly RoutedUICommand ImportDatabase = new RoutedUICommand("Import", "ImportDatabase", typeof(Commands));
 		public static readonly RoutedUICommand NewDatabaseItem = new RoutedUICommand("New", "NewDatabaseItem", typeof(Commands));
 		public static readonly RoutedUICommand CloseDatabase = new RoutedUICommand("Close Database", "CloseDatabase", typeof(Commands));
 		public static readonly RoutedUICommand OpenDatabaseDirectory = new RoutedUICommand("Open Containing Directory", "OpenDatabaseDirectory", typeof(Commands));

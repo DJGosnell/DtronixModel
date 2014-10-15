@@ -67,7 +67,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Xaml\DbServer.xaml">
+    <Page Include="Xaml\DatabaseServer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -108,8 +108,8 @@
     <Compile Include="Xaml\Commands.cs" />
     <Compile Include="Xaml\Converters.cs" />
     <Compile Include="Xaml\DatabaseTree.cs" />
-    <Compile Include="Xaml\DbServer.xaml.cs">
-      <DependentUpon>DbServer.xaml</DependentUpon>
+    <Compile Include="Xaml\DatabaseServer.xaml.cs">
+      <DependentUpon>DatabaseServer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Xaml\ExplorerControl.xaml.cs">
       <DependentUpon>ExplorerControl.xaml</DependentUpon>
@@ -228,6 +228,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Xaml\Images\table_multiple.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\table_import.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -11,7 +11,7 @@ namespace DtxModeler.Generator {
 		public readonly TypeTransformer TypeTransformer;
 		protected Database database = new Database();
 
-		public DdlGenerator(string connection_string, TypeTransformer type_transformer) {
+		public DdlGenerator(TypeTransformer type_transformer) {
 			this.TypeTransformer = type_transformer;
 		}
 

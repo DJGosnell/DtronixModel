@@ -40,15 +40,24 @@ namespace DtxModeler.Xaml {
 
 			BindCommand(ApplicationCommands.New, new KeyGesture(Key.N, ModifierKeys.Control), Command_New);
 			BindCommand(ApplicationCommands.Open, new KeyGesture(Key.O, ModifierKeys.Control), Command_Open);
-			BindCommand(ApplicationCommands.Save, new KeyGesture(Key.S, ModifierKeys.Control), Command_Save);
-			BindCommand(ApplicationCommands.SaveAs, new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt), Command_SaveAs);
+			BindCommand(Commands.ImportDatabase, new KeyGesture(Key.I, ModifierKeys.Control), Command_Import);
+			BindCommand(ApplicationCommands.Save, new KeyGesture(Key.S, ModifierKeys.Control), Command_Save, Command_SaveCanExecute);
+			BindCommand(ApplicationCommands.SaveAs, new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt), Command_SaveAs, Command_SaveCanExecute);
 			BindCommand(ApplicationCommands.Close, new KeyGesture(Key.F4, ModifierKeys.Alt), Command_Exit);
 		}
 
-		private void BindCommand(ICommand command, KeyGesture gesture, ExecutedRoutedEventHandler event_handler) {
+		private void BindCommand(ICommand command, KeyGesture gesture, ExecutedRoutedEventHandler execute) {
+			BindCommand(command, gesture, execute, null);
+		}
+
+		private void BindCommand(ICommand command, KeyGesture gesture, ExecutedRoutedEventHandler execute, CanExecuteRoutedEventHandler can_execute) {
 			InputBindings.Add(new InputBinding(command, gesture));
 			CommandBinding cb = new CommandBinding(command);
-			cb.Executed += event_handler;
+			cb.Executed += execute;
+
+			if (can_execute != null) {
+				cb.CanExecute += can_execute;
+			}
 
 			CommandBindings.Add(cb);
 		}
@@ -57,15 +66,36 @@ namespace DtxModeler.Xaml {
 
 		private void Command_New(object obSender, ExecutedRoutedEventArgs e) {
 			_DatabaseExplorer.CreateDatabase();
+			
 		}
 
 		private void Command_Open(object obSender, ExecutedRoutedEventArgs e) {
 			_DatabaseExplorer.LoadDatabase();
 		}
 
+		private void Command_Import(object obSender, ExecutedRoutedEventArgs e) {
+			var db_server = new DatabaseServer(){ 
+				Owner = this
+			};
+			if (db_server.ShowDialog() == true) {
+				var database = db_server.Database;
+				if (database != null) {
+					_DatabaseExplorer.LoadDatabase(database);
+				}
+			}
+		}
+
 		private void Command_Save(object obSender, ExecutedRoutedEventArgs e) {
 			_DatabaseExplorer.Save();
 			UpdateTitle();
+		}
+
+		private void Command_SaveCanExecute(object obSender, CanExecuteRoutedEventArgs e) {
+			if (_DatabaseExplorer.SelectedType != ExplorerControl.Selection.None) {
+				e.CanExecute = true;
+			} else {
+				e.CanExecute = false;
+			}
 		}
 
 		private void Command_SaveAs(object obSender, ExecutedRoutedEventArgs e) {

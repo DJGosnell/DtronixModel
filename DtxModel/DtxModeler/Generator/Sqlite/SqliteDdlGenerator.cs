@@ -10,8 +10,14 @@ namespace DtxModeler.Generator.Sqlite {
 	public class SqliteDdlGenerator : DdlGenerator {
 
 
-		public SqliteDdlGenerator(string connection_string) : base(null, new SqliteTypeTransformer()) {
+		public SqliteDdlGenerator(string connection_string)
+			: base(new SqliteTypeTransformer()) {
 			connection = new SQLiteConnection(connection_string);
+		}
+
+		public SqliteDdlGenerator(SQLiteConnection connection)
+			: base(new SqliteTypeTransformer()) {
+				this.connection = connection;
 		}
 
 		public override Database generateDdl() {
@@ -37,7 +43,7 @@ namespace DtxModeler.Generator.Sqlite {
 			foreach (var table in database.Table) {
 				// Get the columns
 				using (var command = connection.CreateCommand()) {
-					command.CommandText = "PRAGMA table_info(" + table + ")";
+					command.CommandText = "PRAGMA table_info(" + table.Name + ")";
 					using (var reader = command.ExecuteReader()) {
 
 
@@ -104,7 +110,10 @@ namespace DtxModeler.Generator.Sqlite {
 			}
 
 			//CREATE UNIQUE INDEX "main"."Test" ON "MangaTitles" ("Manga_id" ASC)
+			connection.Close();
+
 			return database;
+
 		}
 	}
 }
