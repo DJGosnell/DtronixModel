@@ -20,6 +20,8 @@ using DtxModeler.Generator;
 using System.IO;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Windows.Documents;
+using System.Diagnostics;
 
 namespace DtxModeler.Xaml {
 	/// <summary>
@@ -392,7 +394,7 @@ namespace DtxModeler.Xaml {
 				int index = column.Name.IndexOf('_');
 				string sel_table = column.Name.Substring(0, index);
 				string sel_column = column.Name.Substring(index + 1);
-				Table found_table = null;
+				DtxModeler.Ddl.Table found_table = null;
 
 				if ((found_table = database.Table.FirstOrDefault(t => t.Name == sel_table)) != null) {
 					association.Table2 = sel_table;
@@ -518,6 +520,44 @@ namespace DtxModeler.Xaml {
 			var text = Utilities.XmlSerializeObject(GetSelectedColumns());
 			Clipboard.SetText(text, TextDataFormat.UnicodeText);
 		}
+
+		private void _TxtConfigSearch_TextChanged(object sender, TextChangedEventArgs e) {
+			var database = _DatabaseExplorer.SelectedDatabase;
+
+			if (database == null || database.Configuration == null || _TxtConfigSearch.Text == " Search Configurations") {
+				return;
+			}
+
+			var text = _TxtConfigSearch.Text;
+			var text_empty = string.IsNullOrWhiteSpace(_TxtConfigSearch.Text);
+
+			foreach (var config in database.Configuration) {
+				if (config.Name.Contains(text) == false && text_empty == false) {
+					config.Visibility = System.Windows.Visibility.Collapsed;
+				} else {
+					config.Visibility = System.Windows.Visibility.Visible;
+				}
+			}
+		}
+
+		private void _TxtConfigSearch_GotFocus(object sender, RoutedEventArgs e) {
+			if (_TxtConfigSearch.Text == " Search Configurations") {
+				_TxtConfigSearch.Text = "";
+			}
+		}
+
+		private void _TxtConfigSearch_LostFocus(object sender, RoutedEventArgs e) {
+			if (string.IsNullOrWhiteSpace(_TxtConfigSearch.Text)) {
+				_TxtConfigSearch.Text = " Search Configurations";
+			}
+		}
+
+		private void _DagConfigurations_Hyperlink(object sender, RoutedEventArgs e) {
+			Hyperlink link = e.OriginalSource as Hyperlink;
+			if (link.NavigateUri.IsAbsoluteUri) {
+				Process.Start(link.NavigateUri.ToString());
+			}
+		} 
 
 
 	}

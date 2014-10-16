@@ -185,25 +185,41 @@
 								<DataGridTextColumn Header="Value" Width="150" Binding="{Binding Value}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
 							</DataGrid.Columns>
 						</DataGrid>
-						
+
 					</GroupBox>
-					
+
 				</Grid>
 			</TabItem>
 			<TabItem x:Name="_tabConfig" Header="Config">
 				<Grid>
-					<GroupBox Header="Configuration Values">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="24"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+					<TextBox x:Name="_TxtConfigSearch" Grid.Row="0" TextChanged="_TxtConfigSearch_TextChanged" Text=" Search Configurations" VerticalContentAlignment="Center" GotFocus="_TxtConfigSearch_GotFocus" LostFocus="_TxtConfigSearch_LostFocus" />
+					<GroupBox Header="Configuration Values" Grid.Row="1">
 						<DataGrid x:Name="_DagConfigurations" AutoGenerateColumns="False" >
 							<DataGrid.Columns>
 								<DataGridTextColumn Binding="{Binding Name}" Width="250" Header="Configuration"/>
 								<DataGridTextColumn Binding="{Binding Value}" Width="200" Header="Value"/>
-								<DataGridTextColumn Binding="{Binding Description}" Width="*" Header="Description"/>
+								<DataGridHyperlinkColumn Binding="{Binding Description}" Width="*" Header="Description">
+									<DataGridHyperlinkColumn.ElementStyle>
+										<Style>
+											<EventSetter Event="Hyperlink.Click" Handler="_DagConfigurations_Hyperlink"/>
+										</Style>
+									</DataGridHyperlinkColumn.ElementStyle>
+								</DataGridHyperlinkColumn>
 							</DataGrid.Columns>
+							<DataGrid.RowStyle>
+								<Style TargetType="DataGridRow">
+									<Setter Property="Visibility" Value="{Binding Visibility}" />
+								</Style>
+							</DataGrid.RowStyle>
 						</DataGrid>
 					</GroupBox>
 				</Grid>
 			</TabItem>
-			
+
 
 
 

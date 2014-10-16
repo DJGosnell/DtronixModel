@@ -227,7 +227,12 @@ namespace DtxModeler.Xaml {
 			}
 
 			// Configurations
-			Utilities.BindChangedCollection<Configuration>(database.Configuration, collection_changed, property_changed);
+			Utilities.BindChangedCollection<Configuration>(database.Configuration, collection_changed, (prop_sender, prop_e) => {
+				// Ignore the visibility property because this is internal to the GUI and has nothing to do with the schema.
+				if (prop_e.PropertyName != "Visibility") {
+					property_changed(prop_sender, prop_e);
+				}
+			});
 
 			// Functions
 			Utilities.BindChangedCollection<Function>(database.Function, collection_changed, property_changed);

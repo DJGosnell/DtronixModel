@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
 using System.Xml.Serialization;
 
@@ -54,15 +55,15 @@ namespace DtxModeler.Ddl {
 		public void SetConfiguration(string property, object value, bool override_value, string description) {
 			Initialize();
 			Configuration existing_config = configurationField.FirstOrDefault(config => config.Name == property);
-			
-			if(existing_config == null) {
+
+			if (existing_config == null) {
 				configurationField.Add(new Configuration() {
 					Name = property,
 					Value = value.ToString(),
 					Description = description
 				});
 
-			}else if(override_value) {
+			} else if (override_value) {
 				existing_config.Value = value.ToString();
 				existing_config.Description = description;
 			}
@@ -77,7 +78,7 @@ namespace DtxModeler.Ddl {
 				SetConfiguration("output.sql_tables", false, false, "True to output the SQL database schematic tables.");
 				SetConfiguration("output.cs_classes", true, false, "True to output the C# classes.");
 
-				
+
 			}
 		}
 
@@ -141,6 +142,24 @@ namespace DtxModeler.Ddl {
 		/// <remarks/>
 		[XmlIgnore]
 		public Table Table;
+	}
+
+	public partial class Configuration {
+		[XmlIgnore]
+		private Visibility visibilityField;
+
+		[XmlIgnore]
+		public Visibility Visibility {
+			get {
+				return this.visibilityField;
+			}
+			set {
+				if ((visibilityField.Equals(value) != true)) {
+					this.visibilityField = value;
+					this.OnPropertyChanged("Visibility");
+				}
+			}
+		}
 	}
 }
 
