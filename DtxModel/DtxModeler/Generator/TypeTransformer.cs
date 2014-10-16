@@ -9,7 +9,6 @@ namespace DtxModeler.Generator {
 
 		protected TypeTransformerType[] types;
 
-		private string[] all_net_types = null;
 		private string[] all_db_types = null;
 
 		public string NetToDbType(NetTypes net_type){

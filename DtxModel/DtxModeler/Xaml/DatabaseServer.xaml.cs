@@ -117,15 +117,16 @@ namespace DtxModeler.Xaml {
 						return;
 					}
 
-					using (var stream = File.OpenRead(_TxtServer.Text)) {
-						for (int i = 0; i < sqlite_header.Length; i++) {
-							if (stream.ReadByte() != sqlite_header[i]) {
-								MessageBox.Show("Specified file is not a SQLite database file.");
-								return;
+					try {
+						using (var stream = File.Open(_TxtServer.Text, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+							for (int i = 0; i < sqlite_header.Length; i++) {
+								if (stream.ReadByte() != sqlite_header[i]) {
+									MessageBox.Show("Specified file is not a SQLite database file.");
+									return;
+								}
 							}
 						}
-					}
-					try {
+
 						using (var connection = this.Connection) {
 							connection.Open();
 							MessageBox.Show("Successfully Verified database.");

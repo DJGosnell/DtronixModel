@@ -26,8 +26,6 @@ namespace DtxModeler.Xaml {
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
 	public partial class MainWindow : Window {
-		private object deserialized_clipboard;
-
 		private TypeTransformer type_transformer = new SqliteTypeTransformer();
 		
 
