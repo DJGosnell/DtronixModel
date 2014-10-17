@@ -38,12 +38,13 @@ namespace DtxModeler.Xaml {
 
 			ColumnNetType.ItemsSource = Enum.GetValues(typeof(NetTypes)).Cast<NetTypes>();
 
-			BindCommand(ApplicationCommands.New, new KeyGesture(Key.N, ModifierKeys.Control), Command_New);
+			BindCommand(Commands.NewDatabase, null, Command_NewDatabase);
 			BindCommand(ApplicationCommands.Open, new KeyGesture(Key.O, ModifierKeys.Control), Command_Open);
 			BindCommand(Commands.ImportDatabase, new KeyGesture(Key.I, ModifierKeys.Control), Command_Import);
 			BindCommand(ApplicationCommands.Save, new KeyGesture(Key.S, ModifierKeys.Control), Command_Save, Command_SaveCanExecute);
 			BindCommand(ApplicationCommands.SaveAs, new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt), Command_SaveAs, Command_SaveCanExecute);
-			BindCommand(ApplicationCommands.Close, new KeyGesture(Key.F4, ModifierKeys.Alt), Command_Exit);
+			BindCommand(Commands.Exit, new KeyGesture(Key.F4, ModifierKeys.Alt), Command_Exit);
+			BindCommand(Commands.GenerateAll, null, Command_GenerateAll, Command_GenerateAllCanExecute);
 		}
 
 		private void BindCommand(ICommand command, KeyGesture gesture, ExecutedRoutedEventHandler execute) {
@@ -51,7 +52,10 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void BindCommand(ICommand command, KeyGesture gesture, ExecutedRoutedEventHandler execute, CanExecuteRoutedEventHandler can_execute) {
-			InputBindings.Add(new InputBinding(command, gesture));
+			if (gesture != null) {
+				InputBindings.Add(new InputBinding(command, gesture));
+			}
+			
 			CommandBinding cb = new CommandBinding(command);
 			cb.Executed += execute;
 
@@ -62,11 +66,40 @@ namespace DtxModeler.Xaml {
 			CommandBindings.Add(cb);
 		}
 
+		private void Command_GenerateAll(object obSender, ExecutedRoutedEventArgs e) {
+			var database = _DatabaseExplorer.SelectedDatabase;
+			var options = new ModelGenOptions(null) {
+				DbType = "sqlite",
+				InputType = "ddl"
+			};
 
+			string base_ddl_filename = Path.Combine(Path.GetDirectoryName(database._FileLocation),
+				Path.GetFileNameWithoutExtension(database._FileLocation));
 
-		private void Command_New(object obSender, ExecutedRoutedEventArgs e) {
+			// If we are set to output in the ddl, then set a default name.
+			if (database.GetConfiguration<bool>("output.sql_tables", false)) {
+				options.SqlOutput = base_ddl_filename + ".sql";
+			}
+
+			// If we are set to output in the ddl, then set a default name.
+			if (database.GetConfiguration<bool>("output.cs_classes", true)) {
+				options.CodeOutput = base_ddl_filename + ".cs";
+			}
+
+			Program.ExecuteOptions(options, _DatabaseExplorer.SelectedDatabase);
+		}
+
+		private void Command_GenerateAllCanExecute(object obSender, CanExecuteRoutedEventArgs e) {
+			if (_DatabaseExplorer.SelectedType != ExplorerControl.Selection.None) {
+				e.CanExecute = true;
+			} else {
+				e.CanExecute = false;
+			}
+		}
+
+		private void Command_NewDatabase(object obSender, ExecutedRoutedEventArgs e) {
 			_DatabaseExplorer.CreateDatabase();
-			
+			// Header="Generate All" Click="OutputGenerateAll_Click"
 		}
 
 		private void Command_Open(object obSender, ExecutedRoutedEventArgs e) {
@@ -331,33 +364,6 @@ namespace DtxModeler.Xaml {
 
 		private void MenuItem_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
 			_MiCommandlineToggle.IsChecked = Program.CommandlineVisible;
-		}
-
-		private void OutputGenerateAll_Click(object sender, RoutedEventArgs e) {
-			Program.ExecuteOptions(GenerateOptions(), _DatabaseExplorer.SelectedDatabase);
-		}
-
-		private ModelGenOptions GenerateOptions() {
-			var database = _DatabaseExplorer.SelectedDatabase;
-			var options = new ModelGenOptions(null) {
-				DbType = "sqlite",
-				InputType = "ddl"
-			};
-
-			string base_ddl_filename = Path.Combine(Path.GetDirectoryName( database._FileLocation), 
-				Path.GetFileNameWithoutExtension( database._FileLocation));
-
-			// If we are set to output in the ddl, then set a default name.
-			if (database.GetConfiguration<bool>("output.sql_tables", false)) {
-				options.SqlOutput = base_ddl_filename + ".sql";
-			}
-
-			// If we are set to output in the ddl, then set a default name.
-			if (database.GetConfiguration<bool>("output.cs_classes", true)) {
-				options.CodeOutput = base_ddl_filename + ".cs";
-			}
-
-			return options;
 		}
 
 		private void AssociationDelete_Click(object sender, RoutedEventArgs e) {

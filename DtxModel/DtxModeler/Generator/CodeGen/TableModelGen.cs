@@ -136,8 +136,11 @@ namespace DtxModeler.Generator.CodeGen {
 
 					case NetTypes.UInt32:
 					case NetTypes.UInt64:
-					case NetTypes.ByteArray:
 						throw new NotImplementedException("Unsigned inttegers are not handled at this time.");
+
+					case NetTypes.ByteArray:
+						get_value_type = "GetStream";
+						break;
 
 					case NetTypes.Byte:
 						get_value_type = "GetByte";

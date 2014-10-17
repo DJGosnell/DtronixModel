@@ -17,7 +17,7 @@
 		<TreeView x:Name="_TreDatabaseLayout" BorderThickness="0,1,1,1" Grid.Row="1" SelectedItemChanged="_TreDatabaseLayout_SelectedItemChanged">
 			<TreeView.ContextMenu>
 				<ContextMenu>
-					<MenuItem Command="dxaml:Commands.NewDatabaseItem" Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BooleanToVisibiltyConverter}}">
+					<MenuItem Command="New" Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BooleanToVisibiltyConverter}}">
 						<MenuItem.Icon>
 							<Image Source="Images/add.png" />
 						</MenuItem.Icon>
@@ -59,7 +59,7 @@
 				<CommandBinding Command="dxaml:Commands.OpenDatabaseDirectory" Executed="_TreDatabaseLayout_OpenDatabaseDirectory" CanExecute="_TreDatabaseLayout_OpenDatabaseDirectoryCanExecute" />
 				<CommandBinding Command="dxaml:Commands.CloseDatabase" Executed="_TreDatabaseLayout_CloseDatabase" CanExecute="_TreDatabaseLayout_CloseDatabaseCanExecute" />
 				<CommandBinding Command="dxaml:Commands.RenameDatabaseItem" Executed="_TreDatabaseLayout_Rename" CanExecute="_TreDatabaseLayout_RenameCanExecute" />
-				<CommandBinding Command="dxaml:Commands.NewDatabaseItem" Executed="_TreDatabaseLayout_New" CanExecute="_TreDatabaseLayout_NewCanExecute" />
+				<CommandBinding Command="New" Executed="_TreDatabaseLayout_New" CanExecute="_TreDatabaseLayout_NewCanExecute" />
 				<CommandBinding Command="Copy" Executed="_TreDatabaseLayout_Copy" CanExecute="_TreDatabaseLayout_CopyCanExecute" />
 				<CommandBinding Command="Paste" Executed="_TreDatabaseLayout_Paste" CanExecute="_TreDatabaseLayout_PasteCanExecute" />
 				<CommandBinding Command="Delete" Executed="_TreDatabaseLayout_Delete" CanExecute="_TreDatabaseLayout_DeleteCanExecute" />

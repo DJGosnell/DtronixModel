@@ -34,26 +34,26 @@
 					<GradientStop Color="White" Offset="1"/>
 				</LinearGradientBrush>
 			</Menu.Background>
-			<MenuItem Header="_File" Height="21" VerticalAlignment="Top">
-				<MenuItem Header="_New"  Command="New"/>
+			<MenuItem Header="_File">
+				<MenuItem Command="dxaml:Commands.NewDatabase"/>
 				<Separator/>
-				<MenuItem Header="_Open" Command="Open"/>
-				<MenuItem Header="_Import" Command="dxaml:Commands.ImportDatabase"/>
+				<MenuItem Command="Open"/>
+				<MenuItem Command="dxaml:Commands.ImportDatabase"/>
 				<Separator/>
-				<MenuItem Header="_Save" Command="Save"/>
-				<MenuItem Header="Save _As" Command="SaveAs"/>
+				<MenuItem Command="Save"/>
+				<MenuItem Command="SaveAs"/>
 				<Separator/>
-				<MenuItem Header="E_xit" Command="Close" />
+				<MenuItem Command="Close" />
 			</MenuItem>
-			<MenuItem Header="_Edit" Height="21" VerticalAlignment="Top">
+			<MenuItem Header="_Edit">
 				<MenuItem Command="Copy" />
 				<MenuItem Command="Paste" />
 				<MenuItem Command="Delete" />
 			</MenuItem>
-			<MenuItem Header="_Output" Height="21" VerticalAlignment="Top">
-				<MenuItem Header="Generate All" Click="OutputGenerateAll_Click" />
+			<MenuItem Header="_Output">
+				<MenuItem Command="dxaml:Commands.GenerateAll"/>
 			</MenuItem>
-			<MenuItem Header="_Options" Height="21" VerticalAlignment="Top" ContextMenuOpening="MenuItem_ContextMenuOpening">
+			<MenuItem Header="_Options" ContextMenuOpening="MenuItem_ContextMenuOpening">
 				<MenuItem x:Name="_MiValidateColumnsOnPaste" Header="Validate Columns On Paste" IsCheckable="True" IsChecked="True"/>
 				<MenuItem Header="Target Database Type" VerticalAlignment="Top">
 					<MenuItem Header="Sqlite" VerticalAlignment="Top" IsCheckable="True" IsChecked="True"/>
@@ -158,13 +158,39 @@
 				</Grid>
 			</TabItem>
 
-			<TabItem x:Name="_tabIndexes" Header="Indexes" IsEnabled="false">
+			<TabItem x:Name="_tabIndexes" Header="Indexes">
 				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="49"/>
-						<RowDefinition Height="61"/>
-						<RowDefinition/>
-					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="36*"/>
+						<ColumnDefinition Width="65*"/>
+					</Grid.ColumnDefinitions>
+					<GroupBox Header="Indexes" Grid.Column="0" Margin="3">
+						<ListBox x:Name="_LstIndexes" >
+							<ListBox.ContextMenu>
+								<ContextMenu>
+									<MenuItem Command="New">
+										<MenuItem.Icon>
+											<Image Source="Images/add.png" />
+										</MenuItem.Icon>
+									</MenuItem>
+									<MenuItem Command="Delete">
+										<MenuItem.Icon>
+											<Image Source="Images/delete.png" />
+										</MenuItem.Icon>
+									</MenuItem>
+								</ContextMenu>
+							</ListBox.ContextMenu>
+						</ListBox>
+					</GroupBox>
+					<GridSplitter HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Grid.Column="1" Grid.RowSpan="1"/>
+					<GroupBox Grid.Column="1" Header="Index Definition" Margin="3">
+						<DataGrid x:Name="_DatIndexDefinition" >
+							<DataGrid.Columns>
+								<DataGridComboBoxColumn Width="140" Header=".Net Type" SelectedValueBinding="{Binding NetType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding NetType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+							</DataGrid.Columns>
+						</DataGrid>
+					</GroupBox>
+					
 				</Grid>
 			</TabItem>
 
