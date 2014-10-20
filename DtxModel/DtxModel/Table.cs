@@ -9,46 +9,45 @@ namespace DtxModel {
 	public class Table<T> where T : Model, new() {
 		private Context context;
 
-
-		public SqlStatement<T> select(string select = "*") {
+		public SqlStatement<T> Select(string select = "*") {
 			try {
-				return new SqlStatement<T>(SqlStatement<T>.Mode.Select, context).select(select);
+				return new SqlStatement<T>(SqlStatement<T>.Mode.Select, context).Select(select);
 			} catch (Exception e) {
 				throw new InvalidOperationException("SQL operations are not allowed outside of the Database Context.", e);
 			}
 		}
 
-		public void insert(T model) {
-			insert(new T[] { model });
+		public void Insert(T model) {
+			Insert(new T[] { model });
 		}
 
-		public void insert(T[] model) {
+		public void Insert(T[] model) {
 			try {
-				new SqlStatement<T>(SqlStatement<T>.Mode.Insert, context).insert(model);
+				new SqlStatement<T>(SqlStatement<T>.Mode.Insert, context).Insert(model);
 			} catch (Exception e) {
 				throw new InvalidOperationException("SQL operations are not allowed outside of the Database Context.", e);
 			}
 		}
 
-		public void update(T model) {
-			update(new T[] { model });
+		public void Update(T model) {
+			Update(new T[] { model });
 		}
 
-		public void update(T[] model) {
+		public void Update(T[] model) {
 			try {
-				new SqlStatement<T>(SqlStatement<T>.Mode.Update, context).update(model);
+				new SqlStatement<T>(SqlStatement<T>.Mode.Update, context).Update(model);
 			} catch (Exception e) {
 				throw new InvalidOperationException("SQL operations are not allowed outside of the Database Context.", e);
 			}
 		}
 
-		public void delete(T model) {
-			delete(new T[] { model });
+		public void Delete(T model) {
+			Delete(new T[] { model });
 		}
 
-		public void delete(T[] models) {
+		public void Delete(T[] models) {
 			try {
-				new SqlStatement<T>(SqlStatement<T>.Mode.Delete, context).delete(models);
+				new SqlStatement<T>(SqlStatement<T>.Mode.Delete, context).Delete(models);
 			} catch (Exception e) {
 				throw new InvalidOperationException("SQL operations are not allowed outside of the Database Context.", e);
 			}

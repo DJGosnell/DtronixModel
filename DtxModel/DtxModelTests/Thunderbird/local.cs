@@ -162,6 +162,14 @@ namespace DtxModelTests.Models {
 
 	[TableAttribute(Name = "cal_calendar_schema_version")]
 	public partial class cal_calendar_schema_version : Model {
+		private Int64 _rowid;
+		/// <summary>
+		/// Auto generated SQLite rowid column.
+		/// </summary>
+		public Int64 rowid {
+			get { return _rowid; }
+		}
+
 		private bool _versionChanged = false;
 		private Int64 _version;
 		public Int64 version {
@@ -175,23 +183,24 @@ namespace DtxModelTests.Models {
 		public cal_calendar_schema_version() : this(null, null) { }
 
 		public cal_calendar_schema_version(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
+					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "version": _version = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					default: break;
 				}
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_versionChanged)
 				changed.Add("version", _version);
@@ -199,16 +208,24 @@ namespace DtxModelTests.Models {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_version,
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"version",
 			};
+		}
+
+		public override string GetPKName() {
+			return "rowid";
+		}
+
+		public override object GetPKValue() {
+			return _rowid;
 		}
 
 	}
@@ -216,6 +233,9 @@ namespace DtxModelTests.Models {
 	[TableAttribute(Name = "cal_properties")]
 	public partial class cal_properties : Model {
 		private Int64 _rowid;
+		/// <summary>
+		/// Auto generated SQLite rowid column.
+		/// </summary>
 		public Int64 rowid {
 			get { return _rowid; }
 		}
@@ -283,10 +303,10 @@ namespace DtxModelTests.Models {
 		public cal_properties() : this(null, null) { }
 
 		public cal_properties(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -296,7 +316,7 @@ namespace DtxModelTests.Models {
 					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "item_id": _item_id = reader.GetValue(i) as String; break;
 					case "key": _key = reader.GetValue(i) as String; break;
-					case "value": _value = reader.GetValue(i) as byte[]; break;
+					case "value": _value = reader.GetValue(i) as Byte[]; break;
 					case "recurrence_id": _recurrence_id = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "recurrence_id_tz": _recurrence_id_tz = reader.GetValue(i) as String; break;
 					case "cal_id": _cal_id = reader.GetValue(i) as String; break;
@@ -305,7 +325,7 @@ namespace DtxModelTests.Models {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_item_idChanged)
 				changed.Add("item_id", _item_id);
@@ -323,7 +343,7 @@ namespace DtxModelTests.Models {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_item_id,
 				_key,
@@ -334,7 +354,7 @@ namespace DtxModelTests.Models {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"item_id",
 				"key",
@@ -345,11 +365,11 @@ namespace DtxModelTests.Models {
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "rowid";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _rowid;
 		}
 
@@ -357,6 +377,14 @@ namespace DtxModelTests.Models {
 
 	[TableAttribute(Name = "cal_events")]
 	public partial class cal_events : Model {
+		private Int64 _rowid;
+		/// <summary>
+		/// Auto generated SQLite rowid column.
+		/// </summary>
+		public Int64 rowid {
+			get { return _rowid; }
+		}
+
 		private bool _cal_idChanged = false;
 		private String _cal_id;
 		public String cal_id {
@@ -540,16 +568,17 @@ namespace DtxModelTests.Models {
 		public cal_events() : this(null, null) { }
 
 		public cal_events(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
+					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "cal_id": _cal_id = reader.GetValue(i) as String; break;
 					case "id": _id = reader.GetValue(i) as String; break;
 					case "time_created": _time_created = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
@@ -573,7 +602,7 @@ namespace DtxModelTests.Models {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_cal_idChanged)
 				changed.Add("cal_id", _cal_id);
@@ -615,7 +644,7 @@ namespace DtxModelTests.Models {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_cal_id,
 				_id,
@@ -638,7 +667,7 @@ namespace DtxModelTests.Models {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"cal_id",
 				"id",
@@ -661,10 +690,26 @@ namespace DtxModelTests.Models {
 			};
 		}
 
+		public override string GetPKName() {
+			return "rowid";
+		}
+
+		public override object GetPKValue() {
+			return _rowid;
+		}
+
 	}
 
 	[TableAttribute(Name = "cal_todos")]
 	public partial class cal_todos : Model {
+		private Int64 _rowid;
+		/// <summary>
+		/// Auto generated SQLite rowid column.
+		/// </summary>
+		public Int64 rowid {
+			get { return _rowid; }
+		}
+
 		private bool _cal_idChanged = false;
 		private String _cal_id;
 		public String cal_id {
@@ -878,16 +923,17 @@ namespace DtxModelTests.Models {
 		public cal_todos() : this(null, null) { }
 
 		public cal_todos(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
+					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "cal_id": _cal_id = reader.GetValue(i) as String; break;
 					case "id": _id = reader.GetValue(i) as String; break;
 					case "time_created": _time_created = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
@@ -914,7 +960,7 @@ namespace DtxModelTests.Models {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_cal_idChanged)
 				changed.Add("cal_id", _cal_id);
@@ -962,7 +1008,7 @@ namespace DtxModelTests.Models {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_cal_id,
 				_id,
@@ -988,7 +1034,7 @@ namespace DtxModelTests.Models {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"cal_id",
 				"id",
@@ -1014,10 +1060,26 @@ namespace DtxModelTests.Models {
 			};
 		}
 
+		public override string GetPKName() {
+			return "rowid";
+		}
+
+		public override object GetPKValue() {
+			return _rowid;
+		}
+
 	}
 
 	[TableAttribute(Name = "cal_tz_version")]
 	public partial class cal_tz_version : Model {
+		private Int64 _rowid;
+		/// <summary>
+		/// Auto generated SQLite rowid column.
+		/// </summary>
+		public Int64 rowid {
+			get { return _rowid; }
+		}
+
 		private bool _versionChanged = false;
 		private String _version;
 		public String version {
@@ -1031,23 +1093,24 @@ namespace DtxModelTests.Models {
 		public cal_tz_version() : this(null, null) { }
 
 		public cal_tz_version(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
+					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "version": _version = reader.GetValue(i) as String; break;
 					default: break;
 				}
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_versionChanged)
 				changed.Add("version", _version);
@@ -1055,22 +1118,38 @@ namespace DtxModelTests.Models {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_version,
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"version",
 			};
+		}
+
+		public override string GetPKName() {
+			return "rowid";
+		}
+
+		public override object GetPKValue() {
+			return _rowid;
 		}
 
 	}
 
 	[TableAttribute(Name = "cal_metadata")]
 	public partial class cal_metadata : Model {
+		private Int64 _rowid;
+		/// <summary>
+		/// Auto generated SQLite rowid column.
+		/// </summary>
+		public Int64 rowid {
+			get { return _rowid; }
+		}
+
 		private bool _cal_idChanged = false;
 		private String _cal_id;
 		public String cal_id {
@@ -1104,25 +1183,26 @@ namespace DtxModelTests.Models {
 		public cal_metadata() : this(null, null) { }
 
 		public cal_metadata(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
+					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "cal_id": _cal_id = reader.GetValue(i) as String; break;
 					case "item_id": _item_id = reader.GetValue(i) as String; break;
-					case "value": _value = reader.GetValue(i) as byte[]; break;
+					case "value": _value = reader.GetValue(i) as Byte[]; break;
 					default: break;
 				}
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_cal_idChanged)
 				changed.Add("cal_id", _cal_id);
@@ -1134,7 +1214,7 @@ namespace DtxModelTests.Models {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_cal_id,
 				_item_id,
@@ -1142,7 +1222,7 @@ namespace DtxModelTests.Models {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"cal_id",
 				"item_id",
@@ -1150,10 +1230,26 @@ namespace DtxModelTests.Models {
 			};
 		}
 
+		public override string GetPKName() {
+			return "rowid";
+		}
+
+		public override object GetPKValue() {
+			return _rowid;
+		}
+
 	}
 
 	[TableAttribute(Name = "cal_alarms")]
 	public partial class cal_alarms : Model {
+		private Int64 _rowid;
+		/// <summary>
+		/// Auto generated SQLite rowid column.
+		/// </summary>
+		public Int64 rowid {
+			get { return _rowid; }
+		}
+
 		private bool _cal_idChanged = false;
 		private String _cal_id;
 		public String cal_id {
@@ -1207,16 +1303,17 @@ namespace DtxModelTests.Models {
 		public cal_alarms() : this(null, null) { }
 
 		public cal_alarms(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
+					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "cal_id": _cal_id = reader.GetValue(i) as String; break;
 					case "item_id": _item_id = reader.GetValue(i) as String; break;
 					case "recurrence_id": _recurrence_id = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
@@ -1227,7 +1324,7 @@ namespace DtxModelTests.Models {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_cal_idChanged)
 				changed.Add("cal_id", _cal_id);
@@ -1243,7 +1340,7 @@ namespace DtxModelTests.Models {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_cal_id,
 				_item_id,
@@ -1253,7 +1350,7 @@ namespace DtxModelTests.Models {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"cal_id",
 				"item_id",
@@ -1263,10 +1360,26 @@ namespace DtxModelTests.Models {
 			};
 		}
 
+		public override string GetPKName() {
+			return "rowid";
+		}
+
+		public override object GetPKValue() {
+			return _rowid;
+		}
+
 	}
 
 	[TableAttribute(Name = "cal_attachments")]
 	public partial class cal_attachments : Model {
+		private Int64 _rowid;
+		/// <summary>
+		/// Auto generated SQLite rowid column.
+		/// </summary>
+		public Int64 rowid {
+			get { return _rowid; }
+		}
+
 		private bool _item_idChanged = false;
 		private String _item_id;
 		public String item_id {
@@ -1320,16 +1433,17 @@ namespace DtxModelTests.Models {
 		public cal_attachments() : this(null, null) { }
 
 		public cal_attachments(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
+					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "item_id": _item_id = reader.GetValue(i) as String; break;
 					case "cal_id": _cal_id = reader.GetValue(i) as String; break;
 					case "recurrence_id": _recurrence_id = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
@@ -1340,7 +1454,7 @@ namespace DtxModelTests.Models {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_item_idChanged)
 				changed.Add("item_id", _item_id);
@@ -1356,7 +1470,7 @@ namespace DtxModelTests.Models {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_item_id,
 				_cal_id,
@@ -1366,7 +1480,7 @@ namespace DtxModelTests.Models {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"item_id",
 				"cal_id",
@@ -1376,10 +1490,26 @@ namespace DtxModelTests.Models {
 			};
 		}
 
+		public override string GetPKName() {
+			return "rowid";
+		}
+
+		public override object GetPKValue() {
+			return _rowid;
+		}
+
 	}
 
 	[TableAttribute(Name = "cal_relations")]
 	public partial class cal_relations : Model {
+		private Int64 _rowid;
+		/// <summary>
+		/// Auto generated SQLite rowid column.
+		/// </summary>
+		public Int64 rowid {
+			get { return _rowid; }
+		}
+
 		private bool _cal_idChanged = false;
 		private String _cal_id;
 		public String cal_id {
@@ -1433,16 +1563,17 @@ namespace DtxModelTests.Models {
 		public cal_relations() : this(null, null) { }
 
 		public cal_relations(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
+					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "cal_id": _cal_id = reader.GetValue(i) as String; break;
 					case "item_id": _item_id = reader.GetValue(i) as String; break;
 					case "recurrence_id": _recurrence_id = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
@@ -1453,7 +1584,7 @@ namespace DtxModelTests.Models {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_cal_idChanged)
 				changed.Add("cal_id", _cal_id);
@@ -1469,7 +1600,7 @@ namespace DtxModelTests.Models {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_cal_id,
 				_item_id,
@@ -1479,7 +1610,7 @@ namespace DtxModelTests.Models {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"cal_id",
 				"item_id",
@@ -1489,10 +1620,26 @@ namespace DtxModelTests.Models {
 			};
 		}
 
+		public override string GetPKName() {
+			return "rowid";
+		}
+
+		public override object GetPKValue() {
+			return _rowid;
+		}
+
 	}
 
 	[TableAttribute(Name = "cal_attendees")]
 	public partial class cal_attendees : Model {
+		private Int64 _rowid;
+		/// <summary>
+		/// Auto generated SQLite rowid column.
+		/// </summary>
+		public Int64 rowid {
+			get { return _rowid; }
+		}
+
 		private bool _item_idChanged = false;
 		private String _item_id;
 		public String item_id {
@@ -1546,16 +1693,17 @@ namespace DtxModelTests.Models {
 		public cal_attendees() : this(null, null) { }
 
 		public cal_attendees(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
+					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "item_id": _item_id = reader.GetValue(i) as String; break;
 					case "recurrence_id": _recurrence_id = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "recurrence_id_tz": _recurrence_id_tz = reader.GetValue(i) as String; break;
@@ -1566,7 +1714,7 @@ namespace DtxModelTests.Models {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_item_idChanged)
 				changed.Add("item_id", _item_id);
@@ -1582,7 +1730,7 @@ namespace DtxModelTests.Models {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_item_id,
 				_recurrence_id,
@@ -1592,7 +1740,7 @@ namespace DtxModelTests.Models {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"item_id",
 				"recurrence_id",
@@ -1602,10 +1750,26 @@ namespace DtxModelTests.Models {
 			};
 		}
 
+		public override string GetPKName() {
+			return "rowid";
+		}
+
+		public override object GetPKValue() {
+			return _rowid;
+		}
+
 	}
 
 	[TableAttribute(Name = "cal_recurrence")]
 	public partial class cal_recurrence : Model {
+		private Int64 _rowid;
+		/// <summary>
+		/// Auto generated SQLite rowid column.
+		/// </summary>
+		public Int64 rowid {
+			get { return _rowid; }
+		}
+
 		private bool _item_idChanged = false;
 		private String _item_id;
 		public String item_id {
@@ -1639,16 +1803,17 @@ namespace DtxModelTests.Models {
 		public cal_recurrence() : this(null, null) { }
 
 		public cal_recurrence(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
+					case "rowid": _rowid = (reader.IsDBNull(i)) ? default(Int64) : reader.GetFieldValue<Int64>(i); break;
 					case "item_id": _item_id = reader.GetValue(i) as String; break;
 					case "cal_id": _cal_id = reader.GetValue(i) as String; break;
 					case "icalString": _icalString = reader.GetValue(i) as String; break;
@@ -1657,7 +1822,7 @@ namespace DtxModelTests.Models {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_item_idChanged)
 				changed.Add("item_id", _item_id);
@@ -1669,7 +1834,7 @@ namespace DtxModelTests.Models {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_item_id,
 				_cal_id,
@@ -1677,12 +1842,20 @@ namespace DtxModelTests.Models {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"item_id",
 				"cal_id",
 				"icalString",
 			};
+		}
+
+		public override string GetPKName() {
+			return "rowid";
+		}
+
+		public override object GetPKValue() {
+			return _rowid;
 		}
 
 	}

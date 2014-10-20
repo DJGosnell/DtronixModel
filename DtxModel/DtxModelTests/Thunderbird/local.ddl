@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <Database xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="local.sqlite">
   <Table Name="cal_calendar_schema_version">
+    <Column Name="rowid" Description="Auto generated SQLite rowid column." NetType="Int64" DbType="INTEGER" IsReadOnly="true" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="version" NetType="Int64" DbType="INTEGER" Nullable="true" />
   </Table>
   <Table Name="cal_properties">
-    <Column Name="rowid" NetType="Int64" DbType="INTEGER" IsPrimaryKey="true" IsAutoIncrement="true" />
+    <Column Name="rowid" Description="Auto generated SQLite rowid column." NetType="Int64" DbType="INTEGER" IsReadOnly="true" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="item_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="key" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="value" NetType="ByteArray" DbType="BLOB" Nullable="true" />
@@ -19,6 +20,7 @@
     </Index>
   </Table>
   <Table Name="cal_events">
+    <Column Name="rowid" Description="Auto generated SQLite rowid column." NetType="Int64" DbType="INTEGER" IsReadOnly="true" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="cal_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="time_created" NetType="Int64" DbType="INTEGER" Nullable="true" />
@@ -49,6 +51,7 @@
     </Index>
   </Table>
   <Table Name="cal_todos">
+    <Column Name="rowid" Description="Auto generated SQLite rowid column." NetType="Int64" DbType="INTEGER" IsReadOnly="true" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="cal_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="time_created" NetType="Int64" DbType="INTEGER" Nullable="true" />
@@ -82,9 +85,11 @@
     </Index>
   </Table>
   <Table Name="cal_tz_version">
+    <Column Name="rowid" Description="Auto generated SQLite rowid column." NetType="Int64" DbType="INTEGER" IsReadOnly="true" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="version" NetType="String" DbType="TEXT" Nullable="true" />
   </Table>
   <Table Name="cal_metadata">
+    <Column Name="rowid" Description="Auto generated SQLite rowid column." NetType="Int64" DbType="INTEGER" IsReadOnly="true" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="cal_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="item_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="value" NetType="ByteArray" DbType="BLOB" Nullable="true" />
@@ -94,6 +99,7 @@
     </Index>
   </Table>
   <Table Name="cal_alarms">
+    <Column Name="rowid" Description="Auto generated SQLite rowid column." NetType="Int64" DbType="INTEGER" IsReadOnly="true" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="cal_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="item_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="recurrence_id" NetType="Int64" DbType="INTEGER" Nullable="true" />
@@ -107,6 +113,7 @@
     </Index>
   </Table>
   <Table Name="cal_attachments">
+    <Column Name="rowid" Description="Auto generated SQLite rowid column." NetType="Int64" DbType="INTEGER" IsReadOnly="true" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="item_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="cal_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="recurrence_id" NetType="Int64" DbType="INTEGER" Nullable="true" />
@@ -114,6 +121,7 @@
     <Column Name="icalString" NetType="String" DbType="TEXT" Nullable="true" />
   </Table>
   <Table Name="cal_relations">
+    <Column Name="rowid" Description="Auto generated SQLite rowid column." NetType="Int64" DbType="INTEGER" IsReadOnly="true" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="cal_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="item_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="recurrence_id" NetType="Int64" DbType="INTEGER" Nullable="true" />
@@ -121,6 +129,7 @@
     <Column Name="icalString" NetType="String" DbType="TEXT" Nullable="true" />
   </Table>
   <Table Name="cal_attendees">
+    <Column Name="rowid" Description="Auto generated SQLite rowid column." NetType="Int64" DbType="INTEGER" IsReadOnly="true" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="item_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="recurrence_id" NetType="Int64" DbType="INTEGER" Nullable="true" />
     <Column Name="recurrence_id_tz" NetType="String" DbType="TEXT" Nullable="true" />
@@ -128,6 +137,7 @@
     <Column Name="icalString" NetType="String" DbType="TEXT" Nullable="true" />
   </Table>
   <Table Name="cal_recurrence">
+    <Column Name="rowid" Description="Auto generated SQLite rowid column." NetType="Int64" DbType="INTEGER" IsReadOnly="true" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="item_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="cal_id" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="icalString" NetType="String" DbType="TEXT" Nullable="true" />

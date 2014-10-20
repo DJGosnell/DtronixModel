@@ -18,11 +18,11 @@ namespace DtxModel {
 			attributes = att_objects as TAttribute[];
 		}
 
-		public static TAttribute getAttribute(){
+		public static TAttribute GetAttribute(){
 			return attributes[0];
 		}
 
-		public static TAttribute[] getAttributes() {
+		public static TAttribute[] GetAttributes() {
 			return attributes;
 		}
 	}

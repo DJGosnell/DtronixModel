@@ -182,7 +182,7 @@ namespace DtxModelTests.Northwind {
 			get {
 				if(_Category == null){ 
 					try {
-						_Category = ((NorthwindContext)context).Categories.select().whereIn("CategoryID", Categories_rowid).executeFetch();
+						_Category = ((NorthwindContext)context).Categories.Select().WhereIn("CategoryID", Categories_rowid).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Category = null;
@@ -195,10 +195,10 @@ namespace DtxModelTests.Northwind {
 		public Customers() : this(null, null) { }
 
 		public Customers(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -224,7 +224,7 @@ namespace DtxModelTests.Northwind {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_CustomerIDChanged)
 				changed.Add("CustomerID", _CustomerID);
@@ -254,7 +254,7 @@ namespace DtxModelTests.Northwind {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_CustomerID,
 				_CompanyName,
@@ -271,7 +271,7 @@ namespace DtxModelTests.Northwind {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"CustomerID",
 				"CompanyName",
@@ -288,11 +288,11 @@ namespace DtxModelTests.Northwind {
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "rowid";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _rowid;
 		}
 
@@ -340,7 +340,7 @@ namespace DtxModelTests.Northwind {
 			get {
 				if(_Customers == null){ 
 					try {
-						_Customers = ((NorthwindContext)context).Customers.select().whereIn("Categories_rowid", CategoryID).executeFetchAll();
+						_Customers = ((NorthwindContext)context).Customers.Select().WhereIn("Categories_rowid", CategoryID).ExecuteFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Customers = null;
@@ -353,10 +353,10 @@ namespace DtxModelTests.Northwind {
 		public Categories() : this(null, null) { }
 
 		public Categories(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -373,7 +373,7 @@ namespace DtxModelTests.Northwind {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_CategoryNameChanged)
 				changed.Add("CategoryName", _CategoryName);
@@ -385,7 +385,7 @@ namespace DtxModelTests.Northwind {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_CategoryName,
 				_Description,
@@ -393,7 +393,7 @@ namespace DtxModelTests.Northwind {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"CategoryName",
 				"Description",
@@ -401,11 +401,11 @@ namespace DtxModelTests.Northwind {
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "CategoryID";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _CategoryID;
 		}
 

@@ -51,7 +51,7 @@ namespace DtxModel {
 			command = context.connection.CreateCommand();
 
 			try {
-				table_name = AttributeCache<T, TableAttribute>.getAttribute().Name;
+				table_name = AttributeCache<T, TableAttribute>.GetAttribute().Name;
 			} catch (Exception) {
 				throw new Exception("Class passed does not have a TableAttribute");
 			}
@@ -65,12 +65,12 @@ namespace DtxModel {
 		/// <param name="sql">SQL to execute with parameters in string.format style.</param>
 		/// <param name="binding">Parameters to replace the string.format placeholders with.</param>
 		/// <returns>The number of rows affected.</returns>
-		public int query(string sql, params object[] binding) {
+		public int Query(string sql, params object[] binding) {
 			if (mode != Mode.Execute) {
 				throw new InvalidOperationException("Need to be in Execute mode to use this method.");
 			}
 			command.Parameters.Clear();
-			command.CommandText = sqlBindParameters(sql, binding);
+			command.CommandText = SqlBindParameters(sql, binding);
 			int result = command.ExecuteNonQuery();
 			
 			command.Dispose();
@@ -86,12 +86,12 @@ namespace DtxModel {
 		/// <param name="binding">Parameters to replace the string.format placeholders with.</param>
 		/// <param name="on_read">Called when the query has been executed and reader created.</param>
 		/// <returns>The number of rows affected.</returns>
-		public void queryRead(string sql, object[] binding, Action<DbDataReader> on_read) {
+		public void QueryRead(string sql, object[] binding, Action<DbDataReader> on_read) {
 			if (mode != Mode.Execute) {
 				throw new InvalidOperationException("Need to be in Execute mode to use this method.");
 			}
 			command.Parameters.Clear();
-			command.CommandText = sqlBindParameters(sql, binding);
+			command.CommandText = SqlBindParameters(sql, binding);
 
 			using (var reader = command.ExecuteReader()) {
 				on_read(reader);
@@ -102,14 +102,14 @@ namespace DtxModel {
 
 
 
-		private string sqlBindParameters(string sql, object[] binding){
+		private string SqlBindParameters(string sql, object[] binding){
 			if (binding == null) {
 				return sql;
 			}
 
 			string[] sql_param_holder = new string[binding.Length];
 			for (int i = 0; i < binding.Length; i++) {
-				sql_param_holder[i] = bindParameter(binding[i]);
+				sql_param_holder[i] = BindParameter(binding[i]);
 			}
 
 			try {
@@ -119,7 +119,7 @@ namespace DtxModel {
 			}
 		}
 
-		public SqlStatement<T> select(string select) {
+		public SqlStatement<T> Select(string select) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -128,30 +128,30 @@ namespace DtxModel {
 			return this;
 		}
 
-		public void update(T[] models) {
+		public void Update(T[] models) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
 
 			sql_models = models;
-			execute();
+			Execute();
 			command.Dispose();
 		}
 
 
-		public void delete(T[] models) {
+		public void Delete(T[] models) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
 
-			where(models);
+			Where(models);
 
 			sql_models = models;
-			execute();
+			Execute();
 		}
 
-		public SqlStatement<T> whereIn(string column, params object[] values) {
-			validateWhere();
+		public SqlStatement<T> WhereIn(string column, params object[] values) {
+			ValidateWhere();
 
 			if (string.IsNullOrWhiteSpace(column)) {
 				throw new ArgumentException("Column parameter can not be empty.");
@@ -161,7 +161,7 @@ namespace DtxModel {
 			sql.Append(column).Append(" IN(");
 
 			foreach (var value in values) {
-				sql.Append(bindParameter(value)).Append(",");
+				sql.Append(BindParameter(value)).Append(",");
 			}
 			sql.Remove(sql.Length - 1, 1).Append(")");
 
@@ -175,8 +175,8 @@ namespace DtxModel {
 		/// </summary>
 		/// <param name="model">Model to provide the primary key for.</param>
 		/// <returns>Current statement for chaining.</returns>
-		public SqlStatement<T> where(T model) {
-			return where(new T[] { model });
+		public SqlStatement<T> Where(T model) {
+			return Where(new T[] { model });
 		}
 
 		/// <summary>
@@ -184,8 +184,8 @@ namespace DtxModel {
 		/// </summary>
 		/// <param name="models">Models to provide the primary key for.</param>
 		/// <returns>Current statement for chaining.</returns>
-		public SqlStatement<T> where(T[] models) {
-			validateWhere();
+		public SqlStatement<T> Where(T[] models) {
+			ValidateWhere();
 
 			// Set the update by the primary key.
 			if(models == null || models.Length == 0){
@@ -193,13 +193,13 @@ namespace DtxModel {
 			}
 
 			// Get the primary key for the first parameter 
-			string pk_name = models[0].getPKName();
+			string pk_name = models[0].GetPKName();
 
 			StringBuilder sql = new StringBuilder();
 			sql.Append(pk_name).Append(" IN(");
 
 			foreach(var model in models){
-				sql.Append(bindParameter(model.getPKValue())).Append(",");
+				sql.Append(BindParameter(model.GetPKValue())).Append(",");
 			}
 			sql.Remove(sql.Length - 1, 1).Append(")");
 
@@ -209,15 +209,15 @@ namespace DtxModel {
 		}
 
 
-		public SqlStatement<T> where(string where, params object[] parameters) {
-			validateWhere();
+		public SqlStatement<T> Where(string where, params object[] parameters) {
+			ValidateWhere();
 
-			sql_where = sqlBindParameters(where, parameters);
+			sql_where = SqlBindParameters(where, parameters);
 
 			return this;
 		}
 
-		private void validateWhere() {
+		private void ValidateWhere() {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -231,11 +231,11 @@ namespace DtxModel {
 			}
 		}
 
-		public SqlStatement<T> limit(int count) {
-			return limit(count, -1);
+		public SqlStatement<T> Limit(int count) {
+			return Limit(count, -1);
 		}
 
-		public SqlStatement<T> limit(int count, int start) {
+		public SqlStatement<T> Limit(int count, int start) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -250,7 +250,7 @@ namespace DtxModel {
 			return this;
 		}
 
-		public SqlStatement<T> orderBy(string column, SortDirection direction) {
+		public SqlStatement<T> OrderBy(string column, SortDirection direction) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -268,7 +268,7 @@ namespace DtxModel {
 			return this;
 		}
 
-		public SqlStatement<T> groupBy(string column) {
+		public SqlStatement<T> GroupBy(string column) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -286,7 +286,7 @@ namespace DtxModel {
 			return this;
 		}
 
-		public void execute() {
+		public void Execute() {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -295,8 +295,8 @@ namespace DtxModel {
 				using (var transaction = context.connection.BeginTransaction()) {
 
 					for (int i = 0; i < sql_models.Length; i++) {
-						where(sql_models[i]);
-						buildSql(sql_models[i]);
+						Where(sql_models[i]);
+						BuildSql(sql_models[i]);
 
 						// Execute the update command.
 						command.ExecuteNonQuery();
@@ -306,7 +306,7 @@ namespace DtxModel {
 				}
 
 			} else {
-				buildSql(null);
+				BuildSql(null);
 				command.ExecuteNonQuery();
 			}
 
@@ -317,7 +317,7 @@ namespace DtxModel {
 		}
 
 
-		public T executeFetch() {
+		public T ExecuteFetch() {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -326,7 +326,7 @@ namespace DtxModel {
 				throw new InvalidOperationException("Can not fetch from the server when not in SELECT mode.");
 			}
 
-			buildSql(null);
+			BuildSql(null);
 			T model;
 
 			using (var reader = command.ExecuteReader()) {
@@ -335,7 +335,7 @@ namespace DtxModel {
 				}
 
 				model = new T();
-				model.read(reader, context);
+				model.Read(reader, context);
 			}
 
 			if (_auto_close_command) {
@@ -345,7 +345,7 @@ namespace DtxModel {
 			return model;
 		}
 
-		public T[] executeFetchAll() {
+		public T[] ExecuteFetchAll() {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -354,13 +354,13 @@ namespace DtxModel {
 				throw new InvalidOperationException("Can not fetch from the server when not in SELECT mode.");
 			}
 
-			buildSql(null);
+			BuildSql(null);
 
 			var results = new List<T>();
 			using (var reader = command.ExecuteReader()) {
 				while (reader.Read()) {
 					T model = new T();
-					model.read(reader, context);
+					model.Read(reader, context);
 					results.Add(model);
 				}
 			}
@@ -372,7 +372,7 @@ namespace DtxModel {
 			return results.ToArray();
 		}
 
-		private void buildSql(T model) {
+		private void BuildSql(T model) {
 			var sql = new StringBuilder();
 
 			switch (mode) {
@@ -386,7 +386,7 @@ namespace DtxModel {
 					sql.Append("UPDATE ").AppendLine(table_name);
 					sql.Append("SET ");
 
-					var changed_fields = model.getChangedValues();
+					var changed_fields = model.GetChangedValues();
 
 					// If there are no fields to update, then do nothing.
 					if (changed_fields.Count == 0) {
@@ -394,7 +394,7 @@ namespace DtxModel {
 					}
 
 					foreach (var field in changed_fields) {
-						sql.Append(field.Key).Append(" = ").Append(bindParameter(field.Value)).Append(", ");
+						sql.Append(field.Key).Append(" = ").Append(BindParameter(field.Value)).Append(", ");
 					}
 
 					sql.Remove(sql.Length - 2, 2).AppendLine();
@@ -463,7 +463,7 @@ namespace DtxModel {
 		/// </summary>
 		/// <param name="value">Value to bind.</param>
 		/// <returns>Parameter name for the binding reference.</returns>
-		private string bindParameter(object value, List<DbParameter> parameter_list = null) {
+		private string BindParameter(object value, List<DbParameter> parameter_list = null) {
 			string key = "@p" + command.Parameters.Count;
 			var param = command.CreateParameter();
 			param.ParameterName = key;
@@ -485,7 +485,7 @@ namespace DtxModel {
 		/// If one of the inserts fails, then all of the inserts are rolled back.
 		/// </remarks>
 		/// <param name="models">Models to insert.</param>
-		public void insert(T[] models) {
+		public void Insert(T[] models) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -498,7 +498,7 @@ namespace DtxModel {
 				throw new InvalidOperationException("Can not insert when statement is not in INSERT mode.");
 			}
 
-			var columns = models[0].getColumns();
+			var columns = models[0].GetColumns();
 
 			StringBuilder sb_sql = new StringBuilder();
 			sb_sql.Append("INSERT INTO ").Append(table_name).Append(" (");
@@ -538,7 +538,7 @@ namespace DtxModel {
 
 					// Loop through wach of the provided models.
 					foreach (var model in models) {
-						var values = model.getAllValues();
+						var values = model.GetAllValues();
 
 						for (int i = 0; i < values.Length; i++) {
 							command.Parameters[i].Value = values[i];

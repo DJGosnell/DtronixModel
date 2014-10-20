@@ -28,14 +28,8 @@ namespace DtxModeler.Generator.CodeGen {
 			// Table Properties;
 			
 			foreach(var column in db_table.Column) {
-				bool read_only = false;
-
-				if (column.IsDbGenerated || column.IsAutoIncrement) {
-					read_only = true;
-				}
-
 				// Changed
-				if (read_only == false) {
+				if (column.IsReadOnly == false) {
 					code.Write("private bool _").Write(column.Name).WriteLine("Changed = false;");
 				}
 
@@ -50,6 +44,13 @@ namespace DtxModeler.Generator.CodeGen {
 				// Field Value
 				code.Write("private ").Write(type).Write(" _").Write(column.Name).WriteLine(";");
 
+				// Property Comment
+				if (string.IsNullOrWhiteSpace(column.Description) == false) {
+					code.WriteLine("/// <summary>");
+					code.Write("/// ").WriteLine(column.Description);
+					code.WriteLine("/// </summary>");
+				}
+
 				// Property
 				code.BeginBlock("public ").Write(type).Write(" ").Write(column.Name).WriteLine(" {");
 
@@ -57,7 +58,7 @@ namespace DtxModeler.Generator.CodeGen {
 				code.Write("get { return _").Write(column.Name).WriteLine("; }");
 
 				// Set
-				if (read_only == false) {
+				if (column.IsReadOnly == false) {
 					code.BeginBlock("set {").WriteLine();
 					code.Write("_").Write(column.Name).WriteLine(" = value;");
 					code.Write("_").Write(column.Name).WriteLine("Changed = true;");
@@ -113,12 +114,12 @@ namespace DtxModeler.Generator.CodeGen {
 			code.WriteLine();
 
 			code.BeginBlock("public ").Write(db_table.Name).WriteLine("(DbDataReader reader, Context context) {");
-			code.WriteLine("read(reader, context);");
+			code.WriteLine("Read(reader, context);");
 			code.EndBlock("}").WriteLine();
 			code.WriteLine();
 
 			// read Override
-			code.BeginBlock("public override void read(DbDataReader reader, Context context) {").WriteLine();
+			code.BeginBlock("public override void Read(DbDataReader reader, Context context) {").WriteLine();
 			code.WriteLine("this.context = context;");
 			code.WriteLine("if (reader == null) { return; }");
 			code.WriteLine();
@@ -128,79 +129,24 @@ namespace DtxModeler.Generator.CodeGen {
 			// Read fields
 
 			foreach (var column in db_table.Column) {
-				string type = null;
-				if (column.NetType == NetTypes.ByteArray) {
-					type = "byte[]";
-				} else {
-					type = Enum.GetName(typeof(NetTypes), column.NetType);
-				}
-
-				string get_value_type = null;
+				string type = Enum.GetName(typeof(NetTypes), column.NetType);
+				bool cast_as = false;
 				switch (column.NetType) {
-					case NetTypes.Int64:
-						get_value_type = "GetInt64";
+					case NetTypes.ByteArray:
+						type = "Byte[]";
+						cast_as = true;
 						break;
-
-					case NetTypes.Int16:
-						get_value_type = "GetInt16";
-						break;
-
-					case NetTypes.Int32:
-						get_value_type = "GetInt32";
-						break;
-
-					case NetTypes.UInt32:
-					case NetTypes.UInt64:
-						throw new NotImplementedException("Unsigned inttegers are not handled at this time.");
-
-					case NetTypes.ByteArray: 
-						break;
-
-					case NetTypes.Byte:
-						get_value_type = "GetByteArray";
-						break;
-
-					case NetTypes.DateTime:
-						get_value_type = "GetDateTime";
-						break;
-
-					case NetTypes.DateTimeOffset:
-						get_value_type = "GetDateTime";
-						break;
-
-					case NetTypes.Decimal:
-						get_value_type = "GetDouble";
-						break;
-
-					case NetTypes.Float:
-						get_value_type = "GetFloat";
-						break;
-
-					case NetTypes.Double:
-						get_value_type = "GetDouble";
-						break;
-
-					case NetTypes.Boolean:
-						get_value_type = "GetBoolean";
-						break;
-
 					case NetTypes.String:
+						cast_as = true;
 						break;
-
-					case NetTypes.Char:
-						get_value_type = "GetChar";
-						break;
-
-					default:
-						throw new NotImplementedException("Unknown type.");
 				}
 
 				code.Write("case \"").Write(column.Name).Write("\": _").Write(column.Name).Write(" = ");
 
-				if (get_value_type != null) {
-					code.Write("(reader.IsDBNull(i)) ? default(").Write(type).Write(") : ").Write("reader.GetFieldValue<").Write(type).Write(">(i)");
-				} else {
+				if (cast_as) {
 					code.Write("reader.GetValue(i) as ").Write(type);
+				} else {
+					code.Write("(reader.IsDBNull(i)) ? default(").Write(type).Write(") : ").Write("reader.GetFieldValue<").Write(type).Write(">(i)");
 				}
 				code.WriteLine("; break;");
 
@@ -213,7 +159,7 @@ namespace DtxModeler.Generator.CodeGen {
 			code.WriteLine();
 
 			// getChangedValues override
-			code.BeginBlock("public override Dictionary<string, object> getChangedValues() {").WriteLine();
+			code.BeginBlock("public override Dictionary<string, object> GetChangedValues() {").WriteLine();
 			code.WriteLine("var changed = new Dictionary<string, object>();");
 
 			foreach (var column in db_table.Column) {
@@ -232,7 +178,7 @@ namespace DtxModeler.Generator.CodeGen {
 			code.WriteLine();
 
 			// getAllvalues method
-			code.BeginBlock("public override object[] getAllValues() {").WriteLine();
+			code.BeginBlock("public override object[] GetAllValues() {").WriteLine();
 			code.BeginBlock("return new object[] {").WriteLine();
 
 			foreach (var column in db_table.Column) {
@@ -248,7 +194,7 @@ namespace DtxModeler.Generator.CodeGen {
 			code.WriteLine();
 
 			// getColumns method
-			code.BeginBlock("public override string[] getColumns() {").WriteLine();
+			code.BeginBlock("public override string[] GetColumns() {").WriteLine();
 			code.BeginBlock("return new string[] {").WriteLine();
 
 			foreach (var column in db_table.Column) {
@@ -265,13 +211,13 @@ namespace DtxModeler.Generator.CodeGen {
 
 			if (pk_column != null) {
 				// getPKName method
-				code.BeginBlock("public override string getPKName() {").WriteLine();
+				code.BeginBlock("public override string GetPKName() {").WriteLine();
 				code.Write("return \"").Write(pk_column.Name).WriteLine("\";");
 				code.EndBlock("}").WriteLine();
 				code.WriteLine();
 
 				// getPKValue
-				code.BeginBlock("public override object getPKValue() {").WriteLine();
+				code.BeginBlock("public override object GetPKValue() {").WriteLine();
 				code.Write("return _").Write(pk_column.Name).WriteLine(";");
 				code.EndBlock("}").WriteLine();
 				code.WriteLine();

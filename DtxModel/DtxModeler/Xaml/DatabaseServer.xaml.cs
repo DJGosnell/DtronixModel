@@ -23,6 +23,7 @@ namespace DtxModeler.Xaml {
 	/// </summary>
 	public partial class DatabaseServer : Window {
 		byte[] sqlite_header = new byte[] { 0x53, 0x51, 0x4c, 0x69, 0x74, 0x65, 0x20, 0x66, 0x6f, 0x72, 0x6d, 0x61, 0x74, 0x20, 0x33, 0x00 };
+		private bool sqlite_add_rowid;
 
 		public string ConnectionString {
 			get {
@@ -66,6 +67,7 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
+
 		public Database Database {
 			get {
 				DdlGenerator generator = null;
@@ -82,6 +84,22 @@ namespace DtxModeler.Xaml {
 
 				var database = generator.generateDdl();
 				database.Name = name;
+
+				if (sqlite_add_rowid) {
+					foreach (var table in database.Table) {
+						table.Column.Insert(0, new Column() {
+							Name = "rowid",
+							IsAutoIncrement = true,
+							IsReadOnly = true,
+							Nullable = false,
+							Description = "Auto generated SQLite rowid column.",
+							IsPrimaryKey = true,
+							DbType = "INTEGER",
+							NetType = NetTypes.Int64,
+						});
+					}
+				}
+
 				database.Initialize();
 				
 
@@ -163,6 +181,11 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void Open_Click(object sender, RoutedEventArgs e) {
+			if ((DbProvider)_CmbProvider.SelectedValue == DbProvider.Sqlite) {
+				if (MessageBox.Show("Do you want to automatically add the 'rowid' column to all the tables?", "SQLite Import", MessageBoxButton.YesNo) == MessageBoxResult.Yes) {
+					sqlite_add_rowid = true;
+				}
+			};
 			this.DialogResult = true;
 		}
 	}

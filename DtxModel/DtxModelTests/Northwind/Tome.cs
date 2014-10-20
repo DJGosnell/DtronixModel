@@ -214,7 +214,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Pages == null){ 
 					try {
-						_Pages = ((TomeContext)context).Pages.select().whereIn("Volumes_id", _id).executeFetch();
+						_Pages = ((TomeContext)context).Pages.Select().WhereIn("Volumes_id", _id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Pages = null;
@@ -229,7 +229,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Manga == null){ 
 					try {
-						_Manga = ((TomeContext)context).Manga.select().whereIn("id", _Manga_id).executeFetchAll();
+						_Manga = ((TomeContext)context).Manga.Select().WhereIn("id", _Manga_id).ExecuteFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Manga = null;
@@ -242,10 +242,10 @@ namespace DtxModelTests.Tome {
 		public Volumes() : this(null, null) { }
 
 		public Volumes(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -261,7 +261,7 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_numberChanged)
 				changed.Add("number", _number);
@@ -273,7 +273,7 @@ namespace DtxModelTests.Tome {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_number,
 				_description,
@@ -281,7 +281,7 @@ namespace DtxModelTests.Tome {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"number",
 				"description",
@@ -289,11 +289,11 @@ namespace DtxModelTests.Tome {
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "id";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _id;
 		}
 
@@ -371,7 +371,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_VolumesModels == null){ 
 					try {
-						_VolumesModels = ((TomeContext)context).Volumes.select().whereIn("Manga_id", _id).executeFetch();
+						_VolumesModels = ((TomeContext)context).Volumes.Select().WhereIn("Manga_id", _id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_VolumesModels = null;
@@ -386,7 +386,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaGenres == null){ 
 					try {
-						_MangaGenres = ((TomeContext)context).MangaGenres.select().whereIn("Manga_id", _id).executeFetch();
+						_MangaGenres = ((TomeContext)context).MangaGenres.Select().WhereIn("Manga_id", _id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaGenres = null;
@@ -401,7 +401,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaCategories == null){ 
 					try {
-						_MangaCategories = ((TomeContext)context).MangaCategories.select().whereIn("Manga_id", _id).executeFetch();
+						_MangaCategories = ((TomeContext)context).MangaCategories.Select().WhereIn("Manga_id", _id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaCategories = null;
@@ -416,7 +416,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaPeople == null){ 
 					try {
-						_MangaPeople = ((TomeContext)context).MangaPeople.select().whereIn("Manga_id", _id).executeFetch();
+						_MangaPeople = ((TomeContext)context).MangaPeople.Select().WhereIn("Manga_id", _id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaPeople = null;
@@ -431,7 +431,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaTitles == null){ 
 					try {
-						_MangaTitles = ((TomeContext)context).MangaTitles.select().whereIn("Manga_id", _id).executeFetch();
+						_MangaTitles = ((TomeContext)context).MangaTitles.Select().WhereIn("Manga_id", _id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaTitles = null;
@@ -444,10 +444,10 @@ namespace DtxModelTests.Tome {
 		public Manga() : this(null, null) { }
 
 		public Manga(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -466,7 +466,7 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_status_enumChanged)
 				changed.Add("status_enum", _status_enum);
@@ -484,7 +484,7 @@ namespace DtxModelTests.Tome {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_status_enum,
 				_last_updated,
@@ -495,7 +495,7 @@ namespace DtxModelTests.Tome {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"status_enum",
 				"last_updated",
@@ -506,11 +506,11 @@ namespace DtxModelTests.Tome {
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "id";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _id;
 		}
 
@@ -538,7 +538,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_PageTags == null){ 
 					try {
-						_PageTags = ((TomeContext)context).PageTags.select().whereIn("Tags_id", _id).executeFetch();
+						_PageTags = ((TomeContext)context).PageTags.Select().WhereIn("Tags_id", _id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_PageTags = null;
@@ -551,10 +551,10 @@ namespace DtxModelTests.Tome {
 		public Tags() : this(null, null) { }
 
 		public Tags(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -568,7 +568,7 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_valueChanged)
 				changed.Add("value", _value);
@@ -576,23 +576,23 @@ namespace DtxModelTests.Tome {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_value,
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"value",
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "id";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _id;
 		}
 
@@ -630,7 +630,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Tags == null){ 
 					try {
-						_Tags = ((TomeContext)context).Tags.select().whereIn("id", _Tags_id).executeFetch();
+						_Tags = ((TomeContext)context).Tags.Select().WhereIn("id", _Tags_id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Tags = null;
@@ -645,7 +645,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Pages == null){ 
 					try {
-						_Pages = ((TomeContext)context).Pages.select().whereIn("id", _Pages_id).executeFetchAll();
+						_Pages = ((TomeContext)context).Pages.Select().WhereIn("id", _Pages_id).ExecuteFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Pages = null;
@@ -658,10 +658,10 @@ namespace DtxModelTests.Tome {
 		public PageTags() : this(null, null) { }
 
 		public PageTags(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -676,7 +676,7 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_Pages_idChanged)
 				changed.Add("Pages_id", _Pages_id);
@@ -686,25 +686,25 @@ namespace DtxModelTests.Tome {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_Pages_id,
 				_Tags_id,
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"Pages_id",
 				"Tags_id",
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "id";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _id;
 		}
 
@@ -742,7 +742,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_PageTags == null){ 
 					try {
-						_PageTags = ((TomeContext)context).PageTags.select().whereIn("Pages_id", _id).executeFetch();
+						_PageTags = ((TomeContext)context).PageTags.Select().WhereIn("Pages_id", _id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_PageTags = null;
@@ -757,7 +757,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Volume == null){ 
 					try {
-						_Volume = ((TomeContext)context).Volumes.select().whereIn("id", _Volumes_id).executeFetchAll();
+						_Volume = ((TomeContext)context).Volumes.Select().WhereIn("id", _Volumes_id).ExecuteFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Volume = null;
@@ -770,10 +770,10 @@ namespace DtxModelTests.Tome {
 		public Pages() : this(null, null) { }
 
 		public Pages(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -788,7 +788,7 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_Files_idChanged)
 				changed.Add("Files_id", _Files_id);
@@ -798,25 +798,25 @@ namespace DtxModelTests.Tome {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_Files_id,
 				_Volumes_id,
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"Files_id",
 				"Volumes_id",
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "id";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _id;
 		}
 
@@ -844,7 +844,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaGenres == null){ 
 					try {
-						_MangaGenres = ((TomeContext)context).MangaGenres.select().whereIn("Genres_id", _id).executeFetchAll();
+						_MangaGenres = ((TomeContext)context).MangaGenres.Select().WhereIn("Genres_id", _id).ExecuteFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaGenres = null;
@@ -857,10 +857,10 @@ namespace DtxModelTests.Tome {
 		public Genres() : this(null, null) { }
 
 		public Genres(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -874,7 +874,7 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_valueChanged)
 				changed.Add("value", _value);
@@ -882,23 +882,23 @@ namespace DtxModelTests.Tome {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_value,
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"value",
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "id";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _id;
 		}
 
@@ -936,7 +936,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Genres == null){ 
 					try {
-						_Genres = ((TomeContext)context).Genres.select().whereIn("id", _Genres_id).executeFetch();
+						_Genres = ((TomeContext)context).Genres.Select().WhereIn("id", _Genres_id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Genres = null;
@@ -951,7 +951,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Manga == null){ 
 					try {
-						_Manga = ((TomeContext)context).Manga.select().whereIn("id", _Manga_id).executeFetchAll();
+						_Manga = ((TomeContext)context).Manga.Select().WhereIn("id", _Manga_id).ExecuteFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Manga = null;
@@ -964,10 +964,10 @@ namespace DtxModelTests.Tome {
 		public MangaGenres() : this(null, null) { }
 
 		public MangaGenres(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -982,7 +982,7 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_Manga_idChanged)
 				changed.Add("Manga_id", _Manga_id);
@@ -992,25 +992,25 @@ namespace DtxModelTests.Tome {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_Manga_id,
 				_Genres_id,
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"Manga_id",
 				"Genres_id",
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "Id";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _Id;
 		}
 
@@ -1038,7 +1038,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaCategories == null){ 
 					try {
-						_MangaCategories = ((TomeContext)context).MangaCategories.select().whereIn("Categories_id", _id).executeFetchAll();
+						_MangaCategories = ((TomeContext)context).MangaCategories.Select().WhereIn("Categories_id", _id).ExecuteFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaCategories = null;
@@ -1051,10 +1051,10 @@ namespace DtxModelTests.Tome {
 		public Categories() : this(null, null) { }
 
 		public Categories(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -1068,7 +1068,7 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_valueChanged)
 				changed.Add("value", _value);
@@ -1076,23 +1076,23 @@ namespace DtxModelTests.Tome {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_value,
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"value",
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "id";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _id;
 		}
 
@@ -1130,7 +1130,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Categories == null){ 
 					try {
-						_Categories = ((TomeContext)context).Categories.select().whereIn("id", _Categories_id).executeFetch();
+						_Categories = ((TomeContext)context).Categories.Select().WhereIn("id", _Categories_id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Categories = null;
@@ -1145,7 +1145,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Manga == null){ 
 					try {
-						_Manga = ((TomeContext)context).Manga.select().whereIn("id", _Manga_id).executeFetchAll();
+						_Manga = ((TomeContext)context).Manga.Select().WhereIn("id", _Manga_id).ExecuteFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Manga = null;
@@ -1158,10 +1158,10 @@ namespace DtxModelTests.Tome {
 		public MangaCategories() : this(null, null) { }
 
 		public MangaCategories(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -1176,7 +1176,7 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_Manga_idChanged)
 				changed.Add("Manga_id", _Manga_id);
@@ -1186,25 +1186,25 @@ namespace DtxModelTests.Tome {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_Manga_id,
 				_Categories_id,
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"Manga_id",
 				"Categories_id",
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "id";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _id;
 		}
 
@@ -1232,7 +1232,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_MangaPeople == null){ 
 					try {
-						_MangaPeople = ((TomeContext)context).MangaPeople.select().whereIn("People_id", _id).executeFetchAll();
+						_MangaPeople = ((TomeContext)context).MangaPeople.Select().WhereIn("People_id", _id).ExecuteFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_MangaPeople = null;
@@ -1245,10 +1245,10 @@ namespace DtxModelTests.Tome {
 		public People() : this(null, null) { }
 
 		public People(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -1262,7 +1262,7 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_nameChanged)
 				changed.Add("name", _name);
@@ -1270,23 +1270,23 @@ namespace DtxModelTests.Tome {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_name,
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"name",
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "id";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _id;
 		}
 
@@ -1344,7 +1344,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_People == null){ 
 					try {
-						_People = ((TomeContext)context).People.select().whereIn("id", _People_id).executeFetch();
+						_People = ((TomeContext)context).People.Select().WhereIn("id", _People_id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_People = null;
@@ -1359,7 +1359,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Manga == null){ 
 					try {
-						_Manga = ((TomeContext)context).Manga.select().whereIn("id", _Manga_id).executeFetchAll();
+						_Manga = ((TomeContext)context).Manga.Select().WhereIn("id", _Manga_id).ExecuteFetchAll();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Manga = null;
@@ -1372,10 +1372,10 @@ namespace DtxModelTests.Tome {
 		public MangaPeople() : this(null, null) { }
 
 		public MangaPeople(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -1392,7 +1392,7 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_People_idChanged)
 				changed.Add("People_id", _People_id);
@@ -1406,7 +1406,7 @@ namespace DtxModelTests.Tome {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_People_id,
 				_Manga_id,
@@ -1415,7 +1415,7 @@ namespace DtxModelTests.Tome {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"People_id",
 				"Manga_id",
@@ -1424,11 +1424,11 @@ namespace DtxModelTests.Tome {
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "id";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _id;
 		}
 
@@ -1476,7 +1476,7 @@ namespace DtxModelTests.Tome {
 			get {
 				if(_Manga == null){ 
 					try {
-						_Manga = ((TomeContext)context).Manga.select().whereIn("id", _Manga_id).executeFetch();
+						_Manga = ((TomeContext)context).Manga.Select().WhereIn("id", _Manga_id).ExecuteFetch();
 					} catch {
 						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
 						_Manga = null;
@@ -1489,10 +1489,10 @@ namespace DtxModelTests.Tome {
 		public MangaTitles() : this(null, null) { }
 
 		public MangaTitles(DbDataReader reader, Context context) {
-			read(reader, context);
+			Read(reader, context);
 		}
 
-		public override void read(DbDataReader reader, Context context) {
+		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
 
@@ -1508,7 +1508,7 @@ namespace DtxModelTests.Tome {
 			}
 		}
 
-		public override Dictionary<string, object> getChangedValues() {
+		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
 			if (_Manga_idChanged)
 				changed.Add("Manga_id", _Manga_id);
@@ -1520,7 +1520,7 @@ namespace DtxModelTests.Tome {
 			return changed;
 		}
 
-		public override object[] getAllValues() {
+		public override object[] GetAllValues() {
 			return new object[] {
 				_Manga_id,
 				_value,
@@ -1528,7 +1528,7 @@ namespace DtxModelTests.Tome {
 			};
 		}
 
-		public override string[] getColumns() {
+		public override string[] GetColumns() {
 			return new string[] {
 				"Manga_id",
 				"value",
@@ -1536,11 +1536,11 @@ namespace DtxModelTests.Tome {
 			};
 		}
 
-		public override string getPKName() {
+		public override string GetPKName() {
 			return "id";
 		}
 
-		public override object getPKValue() {
+		public override object GetPKValue() {
 			return _id;
 		}
 

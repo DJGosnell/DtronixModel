@@ -84,7 +84,7 @@ namespace DtxModeler.Generator.Sqlite {
 								DbType = reader["type"].ToString(),
 								NetType = TypeTransformer.DbToNetType(reader["type"].ToString()),
 							};
-
+							
 							if (column.IsPrimaryKey && column.DbType.ToLower() == "integer") {
 								column.IsPrimaryKey = true;
 							}

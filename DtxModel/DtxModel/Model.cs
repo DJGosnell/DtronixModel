@@ -17,7 +17,7 @@ namespace DtxModel {
 
 		public Model() { }
 
-		public virtual void read(DbDataReader reader, Context context) {
+		public virtual void Read(DbDataReader reader, Context context) {
 			this.context = context;
 		}
 
@@ -41,23 +41,23 @@ namespace DtxModel {
 			
 		}
 
-		public virtual Dictionary<string, object> getChangedValues() {
+		public virtual Dictionary<string, object> GetChangedValues() {
 			return null;
 		}
 
-		public virtual object[] getAllValues() {
+		public virtual object[] GetAllValues() {
 			return null;
 		}
 
-		public virtual string[] getColumns() {
+		public virtual string[] GetColumns() {
 			return null;
 		}
 
-		public virtual string getPKName() {
+		public virtual string GetPKName() {
 			return null;
 		}
 
-		public virtual object getPKValue() {
+		public virtual object GetPKValue() {
 			return null;
 		}
 	}

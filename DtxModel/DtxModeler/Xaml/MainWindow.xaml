@@ -72,7 +72,7 @@
 						<RowDefinition Height="150"/>
 					</Grid.RowDefinitions>
 					<GroupBox Grid.Row="0" Header="Table Description">
-						<TextBox x:Name="_TxtTableDescription" IsEnabled="False" Text="{Binding Description}" TextWrapping="Wrap" />
+						<TextBox x:Name="_TxtTableDescription" IsEnabled="False" Text="{Binding Description}" TextWrapping="Wrap" SpellCheck.IsEnabled="True" />
 					</GroupBox>
 					<GroupBox Grid.Row="1" Header="Colum Definitions">
 						<DataGrid AutoGenerateColumns="False" x:Name="_DagColumnDefinitions"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_DagColumnDefinitions_ContextMenuOpening" SelectionChanged="_DagColumnDefinitions_SelectionChanged">
@@ -129,7 +129,7 @@
 						</DataGrid>
 					</GroupBox>
 					<GroupBox Grid.Row="2" Header="Column Description" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-						<TextBox x:Name="_TxtColumnDescription" Text="{Binding Description}" TextWrapping="Wrap" IsEnabled="False" />
+						<TextBox x:Name="_TxtColumnDescription" Text="{Binding Description}" TextWrapping="Wrap" IsEnabled="False" SpellCheck.IsEnabled="True" />
 					</GroupBox>
 					<GroupBox Grid.Row="3" Header="Associations">
 						<ListBox x:Name="_LstAssociations" DisplayMemberPath="DisplayName" ContextMenuOpening="_LstAssociations_ContextMenuOpening">

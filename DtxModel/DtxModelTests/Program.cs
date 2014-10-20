@@ -26,15 +26,23 @@ namespace DtxModelTests {
 			};
 
 			using (var context = new ThunderbirdCalendarContext()) {
-				var events = context.cal_properties.select("*,rowid").limit(1).executeFetch();
 
-				string val = Encoding.UTF8.GetString(events.value);
+				var min_date = (new DateTime(2014, 10, 10, 0, 0, 0, DateTimeKind.Utc) - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds * 1000;
+				var max_date = (new DateTime(2014, 10, 20, 0, 0, 0, DateTimeKind.Utc) - new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds * 1000;
 
-				events.value = Encoding.UTF8.GetBytes("beginning!" + val);
 
-				context.cal_properties.update(events);
 
-				string test = "";
+				var events = context.cal_events.Select("*,rowid")
+					.Where("event_start > {0} AND event_start < {1}", min_date, max_date).ExecuteFetchAll();
+
+				foreach(var ev in events){
+					Console.Write("Event: ");
+					Console.Write(ev.title);
+					Console.Write(" | ");
+					Console.WriteLine(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(ev.event_start / 1000).ToShortTimeString());
+				}
+
+				Console.ReadLine();
 			}
 		}
 

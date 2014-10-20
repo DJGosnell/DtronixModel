@@ -621,8 +621,6 @@ namespace DtxModeler.Ddl {
         
         private bool isAutoIncrementField;
         
-        private bool isDbGeneratedField;
-        
         private bool nullableField;
         
         private static System.Xml.Serialization.XmlSerializer serializer;
@@ -631,7 +629,6 @@ namespace DtxModeler.Ddl {
             this.isReadOnlyField = false;
             this.isPrimaryKeyField = false;
             this.isAutoIncrementField = false;
-            this.isDbGeneratedField = false;
             this.nullableField = false;
         }
         
@@ -762,20 +759,6 @@ namespace DtxModeler.Ddl {
                 if ((isAutoIncrementField.Equals(value) != true)) {
                     this.isAutoIncrementField = value;
                     this.OnPropertyChanged("IsAutoIncrement");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool IsDbGenerated {
-            get {
-                return this.isDbGeneratedField;
-            }
-            set {
-                if ((isDbGeneratedField.Equals(value) != true)) {
-                    this.isDbGeneratedField = value;
-                    this.OnPropertyChanged("IsDbGenerated");
                 }
             }
         }
