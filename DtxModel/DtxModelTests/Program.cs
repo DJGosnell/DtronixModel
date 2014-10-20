@@ -33,7 +33,7 @@ namespace DtxModelTests {
 
 
 				var events = context.cal_events.Select("*,rowid")
-					.Where("event_start > {0} AND event_start < {1}", min_date, max_date).ExecuteFetchAll();
+					.Where("event_start > {0} AND event_start < {1} AND flags != 12", min_date, max_date).ExecuteFetchAll();
 
 				foreach(var ev in events){
 					Console.Write("Event: ");

@@ -165,7 +165,7 @@
 						<ColumnDefinition Width="65*"/>
 					</Grid.ColumnDefinitions>
 					<GroupBox Header="Indexes" Grid.Column="0" Margin="3">
-						<ListBox x:Name="_LstIndexes" >
+						<ListBox x:Name="_LstIndexes" DisplayMemberPath="Name" >
 							<ListBox.ContextMenu>
 								<ContextMenu>
 									<MenuItem Command="New">
@@ -186,7 +186,8 @@
 					<GroupBox Grid.Column="1" Header="Index Definition" Margin="3">
 						<DataGrid x:Name="_DatIndexDefinition" >
 							<DataGrid.Columns>
-								<DataGridComboBoxColumn Width="140" Header=".Net Type" SelectedValueBinding="{Binding NetType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding NetType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+								<DataGridComboBoxColumn Width="*" Header="Column Name" SelectedValueBinding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+								<DataGridComboBoxColumn Width="140" Header="Sort Direction" SelectedValueBinding="{Binding SortDirection, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding SortDirection}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
 							</DataGrid.Columns>
 						</DataGrid>
 					</GroupBox>
