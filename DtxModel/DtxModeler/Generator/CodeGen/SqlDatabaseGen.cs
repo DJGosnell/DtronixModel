@@ -15,44 +15,44 @@ namespace DtxModeler.Generator.CodeGen {
 			code.clear();
 
 			foreach (var table in database.Table) {
-				code.beginBlock("CREATE TABLE ").write(table.Name).writeLine(" (");
+				code.BeginBlock("CREATE TABLE ").Write(table.Name).WriteLine(" (");
 
 				// Columns
 				foreach (var column in table.Column) {
 					string net_type = type_transformer.NetToDbType(column.NetType);
 
-					code.write(column.Name).write(" ").write(net_type).write(" ");
+					code.Write(column.Name).Write(" ").Write(net_type).Write(" ");
 
 					if(column.Nullable == false) {
-						code.write("NOT NULL ");
+						code.Write("NOT NULL ");
 					}
 
 					if (column.IsPrimaryKey) {
-						code.write("PRIMARY KEY ");
+						code.Write("PRIMARY KEY ");
 					}
 
 					if (column.IsAutoIncrement) {
-						code.write("AUTOINCREMENT ");
+						code.Write("AUTOINCREMENT ");
 					}
 
-					code.writeLine(",");
+					code.WriteLine(",");
 				}
 
 				code.removeLength(1);
 
-				code.endBlock(");").writeLine().writeLine();
+				code.EndBlock(");").WriteLine().WriteLine();
 
 				// Indexes
 				
 				foreach (var column in table.Column) {
 					if (column.DbType != null && column.DbType.Contains("IDX")) {
-						code.write("CREATE INDEX IF NOT EXISTS IDX_").write(table.Name).write("_").write(column.Name)
-							.write(" ON ").write(table.Name).write(" (").write(column.Name).writeLine(");");
+						code.Write("CREATE INDEX IF NOT EXISTS IDX_").Write(table.Name).Write("_").Write(column.Name)
+							.Write(" ON ").Write(table.Name).Write(" (").Write(column.Name).WriteLine(");");
 					}
 
 				}
 
-				code.writeLine().writeLine();
+				code.WriteLine().WriteLine();
 			}
 
 			return code.ToString();

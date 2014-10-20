@@ -8,16 +8,38 @@ using System.Threading;
 using System.Threading.Tasks;
 using DtxModelTests.Northwind;
 using DtxModelTests.Tome;
+using DtxModelTests.Models;
 
 namespace DtxModelTests {
     class Program {
         static void Main(string[] args) {
-			insertTests();
+			ThunderbirdTests();
         }
 
 		static Process proc = Process.GetCurrentProcess();
 
-		static void insertTests() {
+		static void ThunderbirdTests() {
+			ThunderbirdCalendarContext.DefaultConnection = () => {
+				var connection = new SQLiteConnection(@"Data Source=C:\Users\mepengadmin\Source\Workspaces\DtronixModel\DtxModel\DtxModelTests\Thunderbird\local.sqlite;Version=3;");
+				connection.Open();
+				return connection;
+			};
+
+			using (var context = new ThunderbirdCalendarContext()) {
+				var events = context.cal_properties.select("*,rowid").limit(1).executeFetch();
+
+				string val = Encoding.UTF8.GetString(events.value);
+
+				events.value = Encoding.UTF8.GetBytes("beginning!" + val);
+
+				context.cal_properties.update(events);
+
+				string test = "";
+			}
+		}
+
+
+		/*static void insertTests() {
 
 			TomeContext.DefaultConnection = () => {
 				var connection = new SQLiteConnection(@"Data Source=C:\Users\mepengadmin\Desktop\Tome.db;Version=3;");
@@ -43,7 +65,7 @@ namespace DtxModelTests {
 			}
 
 
-			/*
+			
 			
 			var customers = new Customers[100000];
 			var rand = new Random();
@@ -145,7 +167,7 @@ namespace DtxModelTests {
 
 					//result[52]
 				}
-			});*/
+			});
 
 
 			timeFunc("Manual Select", () => {
@@ -175,21 +197,21 @@ namespace DtxModelTests {
 					}*/
 
 					//context.Customers.delete(results);
-					/*foreach (var row in results) {
-						row.Region = null;
-					}
-					var sw = Stopwatch.StartNew();
-					context.Customers.update(results);
-					sw.Stop();*/
+		/*foreach (var row in results) {
+			row.Region = null;
+		}
+		var sw = Stopwatch.StartNew();
+		context.Customers.update(results);
+		sw.Stop();
 
 
-					//result[52]
-				}
-			});
+		//result[52]
+	}
+});
 
-			foreach (var cus in custs) {
-				var test = cus.Category;
-			}
+foreach (var cus in custs) {
+	var test = cus.Category;
+}
 		
 
 
@@ -198,12 +220,12 @@ namespace DtxModelTests {
 		
 
 
-			Console.ReadLine();
+Console.ReadLine();
 
 
 
 
-		}
+}*/
 
 		private static long timeFunc(string text, int repeat, Action action) {
 			Console.Write(text + "... [");

@@ -12,7 +12,7 @@ namespace DtxModeler.Generator {
 		public CodeWriter() {
 		}
 
-		public CodeWriter write(string value) {
+		public CodeWriter Write(string value) {
 			indent();
 			code.Append(value);
 			return this;
@@ -24,28 +24,28 @@ namespace DtxModeler.Generator {
 			return this;
 		}
 
-		public CodeWriter beginBlock(string value) {
+		public CodeWriter BeginBlock(string value) {
 			indent();
 			code.Append(value);
 			indent_level++;
 			return this;
 		}
 
-		public CodeWriter endBlock(string value) {
+		public CodeWriter EndBlock(string value) {
 			indent_level--;
 			indent();
 			code.Append(value);
 			return this;
 		}
 
-		public CodeWriter writeLine(string value) {
+		public CodeWriter WriteLine(string value) {
 			indent();
 			code.AppendLine(value);
 			fresh_line = true;
 			return this;
 		}
 
-		public CodeWriter writeLine() {
+		public CodeWriter WriteLine() {
 			code.AppendLine();
 			fresh_line = true;
 			return this;

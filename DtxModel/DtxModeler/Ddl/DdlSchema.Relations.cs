@@ -25,6 +25,23 @@ namespace DtxModeler.Ddl {
 
 		private bool initialized = false;
 
+		public T GetConfiguration<T>(string property) {
+			Initialize();
+
+			property = property.ToLower();
+			foreach (var config in this.configurationField) {
+				if (config.Name == property) {
+					try {
+						return (T)Convert.ChangeType(config.Value, typeof(T));
+					} catch {
+						return default(T);
+					}
+				}
+			}
+
+			throw new Exception("Configuration not set for the property " + property);
+		}
+
 		public T GetConfiguration<T>(string property, T default_value) {
 			Initialize();
 

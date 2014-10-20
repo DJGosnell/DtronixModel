@@ -34,10 +34,6 @@ namespace DtxModeler.Ddl {
         
         private string nameField;
         
-        private string contextNamespaceField;
-        
-        private string classField;
-        
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Database() {
@@ -158,44 +154,6 @@ namespace DtxModeler.Ddl {
                 else {
                     this.nameField = value;
                     this.OnPropertyChanged("Name");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string ContextNamespace {
-            get {
-                return this.contextNamespaceField;
-            }
-            set {
-                if ((this.contextNamespaceField != null)) {
-                    if ((contextNamespaceField.Equals(value) != true)) {
-                        this.contextNamespaceField = value;
-                        this.OnPropertyChanged("ContextNamespace");
-                    }
-                }
-                else {
-                    this.contextNamespaceField = value;
-                    this.OnPropertyChanged("ContextNamespace");
-                }
-            }
-        }
-        
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        public string Class {
-            get {
-                return this.classField;
-            }
-            set {
-                if ((this.classField != null)) {
-                    if ((classField.Equals(value) != true)) {
-                        this.classField = value;
-                        this.OnPropertyChanged("Class");
-                    }
-                }
-                else {
-                    this.classField = value;
-                    this.OnPropertyChanged("Class");
                 }
             }
         }

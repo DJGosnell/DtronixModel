@@ -20,44 +20,52 @@ namespace DtxModeler.Generator.CodeGen {
 				}
 			}
 
-			code.beginBlock("").writeLine();
+			code.BeginBlock("").WriteLine();
 			// Attributes
-			code.write("[TableAttribute(Name = \"").write(db_table.Name).writeLine("\")]");
-			code.beginBlock("public partial class ").write(db_table.Name).writeLine(" : Model {");
+			code.Write("[TableAttribute(Name = \"").Write(db_table.Name).WriteLine("\")]");
+			code.BeginBlock("public partial class ").Write(db_table.Name).WriteLine(" : Model {");
 
 			// Table Properties;
 			
 			foreach(var column in db_table.Column) {
 				bool read_only = false;
 
-				if (column.IsDbGenerated) {
+				if (column.IsDbGenerated || column.IsAutoIncrement) {
 					read_only = true;
 				}
 
 				// Changed
 				if (read_only == false) {
-					code.write("private bool _").write(column.Name).writeLine("Changed = false;");
+					code.Write("private bool _").Write(column.Name).WriteLine("Changed = false;");
+				}
+
+				// Determine type of field.
+				string type = null;
+				if (column.NetType == NetTypes.ByteArray) {
+					type = "byte[]";
+				} else {
+					type = Enum.GetName(typeof(NetTypes), column.NetType);
 				}
 
 				// Field Value
-				code.write("private ").write(Enum.GetName(typeof(NetTypes), column.NetType)).write(" _").write(column.Name).writeLine(";");
+				code.Write("private ").Write(type).Write(" _").Write(column.Name).WriteLine(";");
 
 				// Property
-				code.beginBlock("public ").write(Enum.GetName(typeof(NetTypes), column.NetType)).write(" ").write(column.Name).writeLine(" {");
+				code.BeginBlock("public ").Write(type).Write(" ").Write(column.Name).WriteLine(" {");
 
 				// Get
-				code.write("get { return _").write(column.Name).writeLine("; }");
+				code.Write("get { return _").Write(column.Name).WriteLine("; }");
 
 				// Set
 				if (read_only == false) {
-					code.beginBlock("set {").writeLine();
-					code.write("_").write(column.Name).writeLine(" = value;");
-					code.write("_").write(column.Name).writeLine("Changed = true;");
-					code.endBlock("}").writeLine();
+					code.BeginBlock("set {").WriteLine();
+					code.Write("_").Write(column.Name).WriteLine(" = value;");
+					code.Write("_").Write(column.Name).WriteLine("Changed = true;");
+					code.EndBlock("}").WriteLine();
 				}
-				code.endBlock("}").writeLine();
+				code.EndBlock("}").WriteLine();
 
-				code.writeLine();
+				code.WriteLine();
 			}
 
 			// Table Associations;
@@ -101,25 +109,32 @@ namespace DtxModeler.Generator.CodeGen {
 			 * */
 
 			// Constructors
-			code.write("public ").write(db_table.Name).writeLine("() : this(null, null) { }");
-			code.writeLine();
+			code.Write("public ").Write(db_table.Name).WriteLine("() : this(null, null) { }");
+			code.WriteLine();
 
-			code.beginBlock("public ").write(db_table.Name).writeLine("(DbDataReader reader, Context context) {");
-			code.writeLine("read(reader, context);");
-			code.endBlock("}").writeLine();
-			code.writeLine();
+			code.BeginBlock("public ").Write(db_table.Name).WriteLine("(DbDataReader reader, Context context) {");
+			code.WriteLine("read(reader, context);");
+			code.EndBlock("}").WriteLine();
+			code.WriteLine();
 
 			// read Override
-			code.beginBlock("public override void read(DbDataReader reader, Context context) {").writeLine();
-			code.writeLine("this.context = context;");
-			code.writeLine("if (reader == null) { return; }");
-			code.writeLine();
-			code.writeLine("int length = reader.FieldCount;");
-			code.beginBlock("for (int i = 0; i < length; i++) {").writeLine();
-			code.beginBlock("switch (reader.GetName(i)) {").writeLine();
+			code.BeginBlock("public override void read(DbDataReader reader, Context context) {").WriteLine();
+			code.WriteLine("this.context = context;");
+			code.WriteLine("if (reader == null) { return; }");
+			code.WriteLine();
+			code.WriteLine("int length = reader.FieldCount;");
+			code.BeginBlock("for (int i = 0; i < length; i++) {").WriteLine();
+			code.BeginBlock("switch (reader.GetName(i)) {").WriteLine();
 			// Read fields
 
 			foreach (var column in db_table.Column) {
+				string type = null;
+				if (column.NetType == NetTypes.ByteArray) {
+					type = "byte[]";
+				} else {
+					type = Enum.GetName(typeof(NetTypes), column.NetType);
+				}
+
 				string get_value_type = null;
 				switch (column.NetType) {
 					case NetTypes.Int64:
@@ -138,12 +153,11 @@ namespace DtxModeler.Generator.CodeGen {
 					case NetTypes.UInt64:
 						throw new NotImplementedException("Unsigned inttegers are not handled at this time.");
 
-					case NetTypes.ByteArray:
-						get_value_type = "GetStream";
+					case NetTypes.ByteArray: 
 						break;
 
 					case NetTypes.Byte:
-						get_value_type = "GetByte";
+						get_value_type = "GetByteArray";
 						break;
 
 					case NetTypes.DateTime:
@@ -181,89 +195,89 @@ namespace DtxModeler.Generator.CodeGen {
 						throw new NotImplementedException("Unknown type.");
 				}
 
-				code.write("case \"").write(column.Name).write("\": _").write(column.Name).write(" = ");
-				if (get_value_type != null) {
+				code.Write("case \"").Write(column.Name).Write("\": _").Write(column.Name).Write(" = ");
 
-					code.write("(reader.IsDBNull(i)) ? default(").write(Enum.GetName(typeof(NetTypes), column.NetType)).write(") : ").write("reader.").write(get_value_type).write("(i)");
+				if (get_value_type != null) {
+					code.Write("(reader.IsDBNull(i)) ? default(").Write(type).Write(") : ").Write("reader.GetFieldValue<").Write(type).Write(">(i)");
 				} else {
-					code.write("reader.GetValue(i) as ").write(Enum.GetName(typeof(NetTypes), column.NetType));
+					code.Write("reader.GetValue(i) as ").Write(type);
 				}
-				code.writeLine("; break;");
+				code.WriteLine("; break;");
 
 			}
 
-			code.writeLine("default: break;");
-			code.endBlock("}").writeLine();
-			code.endBlock("}").writeLine();
-			code.endBlock("}").writeLine();
-			code.writeLine();
+			code.WriteLine("default: break;");
+			code.EndBlock("}").WriteLine();
+			code.EndBlock("}").WriteLine();
+			code.EndBlock("}").WriteLine();
+			code.WriteLine();
 
 			// getChangedValues override
-			code.beginBlock("public override Dictionary<string, object> getChangedValues() {").writeLine();
-			code.writeLine("var changed = new Dictionary<string, object>();");
+			code.BeginBlock("public override Dictionary<string, object> getChangedValues() {").WriteLine();
+			code.WriteLine("var changed = new Dictionary<string, object>();");
 
 			foreach (var column in db_table.Column) {
 				// Ignore primary keys.
 				if (column.IsPrimaryKey) {
 					continue;
 				}
-				code.beginBlock("if (_").write(column.Name).writeLine("Changed)");
-				code.write("changed.Add(\"").write(column.Name).write("\", _").write(column.Name).endBlock(");").writeLine();
+				code.BeginBlock("if (_").Write(column.Name).WriteLine("Changed)");
+				code.Write("changed.Add(\"").Write(column.Name).Write("\", _").Write(column.Name).EndBlock(");").WriteLine();
 			}
 
-			code.writeLine();
-			code.writeLine("return changed;");
+			code.WriteLine();
+			code.WriteLine("return changed;");
 
-			code.endBlock("}").writeLine();
-			code.writeLine();
+			code.EndBlock("}").WriteLine();
+			code.WriteLine();
 
 			// getAllvalues method
-			code.beginBlock("public override object[] getAllValues() {").writeLine();
-			code.beginBlock("return new object[] {").writeLine();
+			code.BeginBlock("public override object[] getAllValues() {").WriteLine();
+			code.BeginBlock("return new object[] {").WriteLine();
 
 			foreach (var column in db_table.Column) {
 				// Ignore primary keys.
 				if (column.IsPrimaryKey) {
 					continue;
 				}
-				code.write("_").write(column.Name).writeLine(",");
+				code.Write("_").Write(column.Name).WriteLine(",");
 			}
 
-			code.endBlock("};").writeLine();
-			code.endBlock("}").writeLine();
-			code.writeLine();
+			code.EndBlock("};").WriteLine();
+			code.EndBlock("}").WriteLine();
+			code.WriteLine();
 
 			// getColumns method
-			code.beginBlock("public override string[] getColumns() {").writeLine();
-			code.beginBlock("return new string[] {").writeLine();
+			code.BeginBlock("public override string[] getColumns() {").WriteLine();
+			code.BeginBlock("return new string[] {").WriteLine();
 
 			foreach (var column in db_table.Column) {
 				// Ignore primary keys.
 				if (column.IsPrimaryKey) {
 					continue;
 				}
-				code.write("\"").write(column.Name).writeLine("\",");
+				code.Write("\"").Write(column.Name).WriteLine("\",");
 			}
 
-			code.endBlock("};").writeLine();
-			code.endBlock("}").writeLine();
-			code.writeLine();
+			code.EndBlock("};").WriteLine();
+			code.EndBlock("}").WriteLine();
+			code.WriteLine();
 
 			if (pk_column != null) {
 				// getPKName method
-				code.beginBlock("public override string getPKName() {").writeLine();
-				code.write("return \"").write(pk_column.Name).writeLine("\";");
-				code.endBlock("}").writeLine();
-				code.writeLine();
+				code.BeginBlock("public override string getPKName() {").WriteLine();
+				code.Write("return \"").Write(pk_column.Name).WriteLine("\";");
+				code.EndBlock("}").WriteLine();
+				code.WriteLine();
 
 				// getPKValue
-				code.beginBlock("public override object getPKValue() {").writeLine();
-				code.write("return _").write(pk_column.Name).writeLine(";");
-				code.endBlock("}").writeLine();
-				code.writeLine();
+				code.BeginBlock("public override object getPKValue() {").WriteLine();
+				code.Write("return _").Write(pk_column.Name).WriteLine(";");
+				code.EndBlock("}").WriteLine();
+				code.WriteLine();
 			}
 
-			code.endBlock("}").writeLine();
+			code.EndBlock("}").WriteLine();
 
 			return code.ToString();
 		}

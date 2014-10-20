@@ -123,7 +123,7 @@ namespace DtxModeler.Generator {
 				// Output code file if required.
 				using (var fs = new FileStream(options.CodeOutput, FileMode.Create)) {
 					using (var sw = new StreamWriter(fs)) {
-						sw.Write(database_code_writer.generate());
+						sw.Write(database_code_writer.Generate());
 
 						foreach (var db_table in input_database.Table) {
 							sw.Write(table_code_writer.generate(db_table));
