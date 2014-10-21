@@ -141,14 +141,14 @@ namespace DtxModeler.Xaml {
 				return;
 			}
 
-			CreateDAtabase(dialog.Value);
+			CreateDatabase(dialog.Value);
 		}
 
 		/// <summary>
 		/// Creates a new database with the specified name.
 		/// </summary>
 		/// <param name="database_name">Name of the database.</param>
-		public void CreateDAtabase(string database_name) {
+		public void CreateDatabase(string database_name) {
 			LoadDatabase(new Database() {
 				Name = database_name
 			});
