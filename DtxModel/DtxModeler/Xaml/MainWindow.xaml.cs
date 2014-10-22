@@ -33,6 +33,7 @@ namespace DtxModeler.Xaml {
 
 		public MainWindow() {
 			InitializeComponent();
+			
 
 			ColumnDbType.ItemsSource = type_transformer.DbTypes();
 
@@ -45,13 +46,17 @@ namespace DtxModeler.Xaml {
 			BindCommand(ApplicationCommands.SaveAs, new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt), Command_SaveAs, Command_SaveCanExecute);
 			BindCommand(Commands.Exit, new KeyGesture(Key.F4, ModifierKeys.Alt), Command_Exit);
 			BindCommand(Commands.GenerateAll, null, Command_GenerateAll, Command_GenerateAllCanExecute);
+
+			_Status.SetStatus("Application Loaded And Ready", ColorStatusBar.Status.Completed);
 		}
+
 
 		private void BindCommand(ICommand command, KeyGesture gesture, ExecutedRoutedEventHandler execute) {
 			BindCommand(command, gesture, execute, null);
 		}
 
 		private void BindCommand(ICommand command, KeyGesture gesture, ExecutedRoutedEventHandler execute, CanExecuteRoutedEventHandler can_execute) {
+			
 			if (gesture != null) {
 				InputBindings.Add(new InputBinding(command, gesture));
 			}
@@ -67,6 +72,7 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void Command_GenerateAll(object obSender, ExecutedRoutedEventArgs e) {
+			_Status.SetStatus("Beginning Code Generation", ColorStatusBar.Status.Working);
 			var database = _DatabaseExplorer.SelectedDatabase;
 			var options = new ModelGenOptions(null) {
 				DbType = "sqlite",
@@ -86,7 +92,10 @@ namespace DtxModeler.Xaml {
 				options.CodeOutput = base_ddl_filename + ".cs";
 			}
 
+			_Status.SetStatus("Generating Code...", ColorStatusBar.Status.Working);
 			Program.ExecuteOptions(options, _DatabaseExplorer.SelectedDatabase);
+
+			_Status.SetStatus("Completed Generating Code", ColorStatusBar.Status.Completed);
 		}
 
 		private void Command_GenerateAllCanExecute(object obSender, CanExecuteRoutedEventArgs e) {
@@ -99,22 +108,32 @@ namespace DtxModeler.Xaml {
 
 		private void Command_NewDatabase(object obSender, ExecutedRoutedEventArgs e) {
 			_DatabaseExplorer.CreateDatabase();
+			_Status.SetStatus("Created New Database", ColorStatusBar.Status.Completed);
 			// Header="Generate All" Click="OutputGenerateAll_Click"
 		}
 
 		private void Command_Open(object obSender, ExecutedRoutedEventArgs e) {
-			_DatabaseExplorer.LoadDatabase();
+			_Status.SetStatus("Opening Database", ColorStatusBar.Status.Working);
+			if (_DatabaseExplorer.LoadDatabase() == false) {
+				_Status.SetStatus("Canceled Opening Database", ColorStatusBar.Status.Completed);
+			}
+			
 		}
 
 		private void Command_Import(object obSender, ExecutedRoutedEventArgs e) {
+			_Status.SetStatus("Importing Database", ColorStatusBar.Status.Working);
 			var db_server = new DatabaseServer(){ 
 				Owner = this
 			};
+
 			if (db_server.ShowDialog() == true) {
 				var database = db_server.Database;
 				if (database != null) {
 					_DatabaseExplorer.LoadDatabase(database);
 				}
+				_Status.SetStatus("Completed Importing Database", ColorStatusBar.Status.Completed);
+			} else {
+				_Status.SetStatus("Canceled Importing Database", ColorStatusBar.Status.Completed);
 			}
 		}
 
@@ -218,6 +237,7 @@ namespace DtxModeler.Xaml {
 			foreach (var table in e.Database.Table) {
 				Utilities.BindChangedCollection<Column>(table.Column, null, TableColumn_PropertyChanged);
 			}
+			_Status.SetStatus("Opened Database", ColorStatusBar.Status.Completed);
 		}
 
 

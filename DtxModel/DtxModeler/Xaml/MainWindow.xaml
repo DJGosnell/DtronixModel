@@ -17,7 +17,7 @@
 		<Grid.RowDefinitions>
 			<RowDefinition Height="22"/>
 			<RowDefinition/>
-			<RowDefinition Height="22"/>
+			<RowDefinition Height="27"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto" MinWidth="200"/>
@@ -62,7 +62,7 @@
 			</MenuItem>
 		</Menu>
 		<Xaml:ExplorerControl x:Name="_DatabaseExplorer"  Grid.Row="1" ChangedSelection="_DatabaseExplorer_ChangedSelection" LoadedDatabase="_DatabaseExplorer_LoadedDatabase" UnloadedDatabase="_DatabaseExplorer_UnloadedDatabase" DatabaseModified="_DatabaseExplorer_DatabaseModified" />
-		<TabControl x:Name="_tbcDatabaseView" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,0,0" BorderThickness="1" Grid.ColumnSpan="1">
+		<TabControl x:Name="_tbcDatabaseView" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,0,0" BorderThickness="1,1,0,0" Grid.ColumnSpan="1">
 			<TabItem x:Name="_tabTable" Header="Table">
 				<Grid>
 					<Grid.RowDefinitions>
@@ -191,7 +191,7 @@
 							</DataGrid.Columns>
 						</DataGrid>
 					</GroupBox>
-					
+
 				</Grid>
 			</TabItem>
 
@@ -251,8 +251,6 @@
 
 
 		</TabControl>
-		<StatusBar HorizontalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="3" VerticalAlignment="Stretch"/>
-
-
+		<dxaml:ColorStatusBar x:Name="_Status" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2"/>
 	</Grid>
 </Window>

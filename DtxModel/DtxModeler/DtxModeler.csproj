@@ -67,6 +67,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Xaml\ColorStatusBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Xaml\DatabaseServer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -105,6 +109,9 @@
     <Compile Include="Utilities.cs" />
     <Compile Include="Xaml\AssociationWindow.xaml.cs">
       <DependentUpon>AssociationWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Xaml\ColorStatusBar.xaml.cs">
+      <DependentUpon>ColorStatusBar.xaml</DependentUpon>
     </Compile>
     <Compile Include="Xaml\Commands.cs" />
     <Compile Include="Xaml\Converters.cs" />

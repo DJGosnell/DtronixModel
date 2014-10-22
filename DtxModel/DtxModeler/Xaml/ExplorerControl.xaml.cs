@@ -36,7 +36,6 @@ namespace DtxModeler.Xaml {
 			get { return selected_type; }
 		}
 
-
 		private Table selected_table;
 		private View selected_view;
 		private Function selected_function;
@@ -67,6 +66,8 @@ namespace DtxModeler.Xaml {
 			this.UseLayoutRounding = true;
 
 			InitializeComponent();
+
+			
 		}
 
 		/// <summary>
@@ -158,7 +159,7 @@ namespace DtxModeler.Xaml {
 		/// <summary>
 		/// Promps the user to select a database and then loads and opens it.
 		/// </summary>
-		public void LoadDatabase() {
+		public bool LoadDatabase() {
 			Database database = null;
 
 			var dialog = new OpenFileDialog() {
@@ -168,7 +169,7 @@ namespace DtxModeler.Xaml {
 
 			var status = dialog.ShowDialog();
 			if (status.HasValue == false || status.Value == false) {
-				return;
+				return false;
 			}
 
 			Task.Run(() => {
@@ -190,7 +191,7 @@ namespace DtxModeler.Xaml {
 				}), null);
 			});
 
-
+			return true;
 
 		}
 
