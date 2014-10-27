@@ -18,7 +18,7 @@ namespace DtxModeler.Generator {
 			return this;
 		}
 
-		public CodeWriter write(object value) {
+		public CodeWriter Write(object value) {
 			indent();
 			code.Append(value);
 			return this;

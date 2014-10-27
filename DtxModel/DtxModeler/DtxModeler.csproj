@@ -240,6 +240,9 @@
   <ItemGroup>
     <Resource Include="Xaml\Images\table_import.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Xaml\Images\table_gear.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)packages\System.Data.SQLite.Core.1.0.93.0\content\net45\*.*" "$(TargetDir)*.*" /Y /I /E</PreBuildEvent>

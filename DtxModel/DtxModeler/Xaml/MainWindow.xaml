@@ -62,191 +62,218 @@
 			</MenuItem>
 		</Menu>
 		<Xaml:ExplorerControl x:Name="_DatabaseExplorer"  Grid.Row="1" ChangedSelection="_DatabaseExplorer_ChangedSelection" LoadedDatabase="_DatabaseExplorer_LoadedDatabase" UnloadedDatabase="_DatabaseExplorer_UnloadedDatabase" DatabaseModified="_DatabaseExplorer_DatabaseModified" />
-		<TabControl x:Name="_tbcDatabaseView" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,0,0" BorderThickness="1,1,0,0" Grid.ColumnSpan="1">
-			<TabItem x:Name="_tabTable" Header="Table">
-				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="60"/>
-						<RowDefinition/>
-						<RowDefinition Height="60"/>
-						<RowDefinition Height="150"/>
-					</Grid.RowDefinitions>
-					<GroupBox Grid.Row="0" Header="Table Description">
-						<TextBox x:Name="_TxtTableDescription" IsEnabled="False" Text="{Binding Description}" TextWrapping="Wrap" SpellCheck.IsEnabled="True" />
-					</GroupBox>
-					<GroupBox Grid.Row="1" Header="Colum Definitions">
-						<DataGrid AutoGenerateColumns="False" x:Name="_DagColumnDefinitions"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_DagColumnDefinitions_ContextMenuOpening" SelectionChanged="_DagColumnDefinitions_SelectionChanged">
-							<DataGrid.Columns>
-								<DataGridTextColumn Header="Name" Width="100*" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-								<DataGridComboBoxColumn Width="140" x:Name="ColumnNetType" Header=".Net Type" SelectedValueBinding="{Binding NetType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding NetType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-								<DataGridComboBoxColumn Width="140" x:Name="ColumnDbType" Header="Database Type" SelectedValueBinding="{Binding DbType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding DbType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-								<DataGridTextColumn Header="Default Value" Width="100" Binding="{Binding DefaultValue, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-								<DataGridCheckBoxColumn Header="AI" Width="24" Binding="{Binding IsAutoIncrement, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
-								<DataGridCheckBoxColumn Header="PK" Width="24" Binding="{Binding IsPrimaryKey, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
-								<DataGridCheckBoxColumn Header="N" Width="20" Binding="{Binding Nullable, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
-							</DataGrid.Columns>
-							<DataGrid.ContextMenu>
-								<ContextMenu>
-									<MenuItem x:Name="_CmiMoveColumnUp" Header="Move Column Up" Click="_CmiMoveColumnUp_Click" IsEnabled="False">
-										<MenuItem.Icon>
-											<Image Source="Images/arrow_up.png" />
-										</MenuItem.Icon>
-									</MenuItem>
-									<MenuItem x:Name="_CmiMoveColumnDown" Header="Move Column Down" Click="_CmiMoveColumnDown_Click" IsEnabled="False">
-										<MenuItem.Icon>
-											<Image Source="Images/arrow_down.png" />
-										</MenuItem.Icon>
-									</MenuItem>
-									<MenuItem x:Name="_CmiCreateAssociationWith" Header="Create Association With..." Click="AssociationCreate_Click" IsEnabled="False">
-										<MenuItem.Icon>
-											<Image Source="Images/chart_line_add.png" />
-										</MenuItem.Icon>
-									</MenuItem>
-									<Separator />
-									<MenuItem Command="Copy">
-										<MenuItem.Icon>
-											<Image Source="Images/page_copy.png" />
-										</MenuItem.Icon>
-									</MenuItem>
-									<MenuItem Command="Paste">
-										<MenuItem.Icon>
-											<Image Source="Images/page_paste.png" />
-										</MenuItem.Icon>
-									</MenuItem>
-									<MenuItem Command="Delete">
-										<MenuItem.Icon>
-											<Image Source="Images/delete.png" />
-										</MenuItem.Icon>
-									</MenuItem>
+		<TabControl Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,0,0" BorderThickness="1,1,0,0" Grid.ColumnSpan="1" Padding="0,4">
+			<TabItem Header="Tables">
+				<TabControl x:Name="_tbcDatabaseView" VerticalAlignment="Stretch" BorderThickness="0,1">
+					<TabItem x:Name="_tabTable" Header="Table">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="60"/>
+								<RowDefinition/>
+								<RowDefinition Height="60"/>
+								<RowDefinition Height="150"/>
+							</Grid.RowDefinitions>
+							<GroupBox Grid.Row="0" Header="Table Description">
+								<TextBox x:Name="_TxtTableDescription" IsEnabled="False" Text="{Binding Description}" TextWrapping="Wrap" SpellCheck.IsEnabled="True" AcceptsReturn="True" />
+							</GroupBox>
+							<GroupBox Grid.Row="1" Header="Colum Definitions">
+								<DataGrid AutoGenerateColumns="False" x:Name="_DagColumnDefinitions"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_DagColumnDefinitions_ContextMenuOpening" SelectionChanged="_DagColumnDefinitions_SelectionChanged">
+									<DataGrid.Columns>
+										<DataGridTextColumn Header="Name" Width="100*" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridComboBoxColumn Width="140" x:Name="ColumnNetType" Header=".Net Type" SelectedValueBinding="{Binding NetType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding NetType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridComboBoxColumn Width="140" x:Name="ColumnDbType" Header="Database Type" SelectedValueBinding="{Binding DbType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding DbType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridTextColumn Header="Default Value" Width="100" Binding="{Binding DefaultValue, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridCheckBoxColumn Header="AI" Width="24" Binding="{Binding IsAutoIncrement, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
+										<DataGridCheckBoxColumn Header="PK" Width="24" Binding="{Binding IsPrimaryKey, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
+										<DataGridCheckBoxColumn Header="N" Width="20" Binding="{Binding Nullable, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
+									</DataGrid.Columns>
+									<DataGrid.ContextMenu>
+										<ContextMenu>
+											<MenuItem x:Name="_CmiMoveColumnUp" Header="Move Column Up" Click="_CmiMoveColumnUp_Click" IsEnabled="False">
+												<MenuItem.Icon>
+													<Image Source="Images/arrow_up.png" />
+												</MenuItem.Icon>
+											</MenuItem>
+											<MenuItem x:Name="_CmiMoveColumnDown" Header="Move Column Down" Click="_CmiMoveColumnDown_Click" IsEnabled="False">
+												<MenuItem.Icon>
+													<Image Source="Images/arrow_down.png" />
+												</MenuItem.Icon>
+											</MenuItem>
+											<MenuItem x:Name="_CmiCreateAssociationWith" Header="Create Association With..." Click="AssociationCreate_Click" IsEnabled="False">
+												<MenuItem.Icon>
+													<Image Source="Images/chart_line_add.png" />
+												</MenuItem.Icon>
+											</MenuItem>
+											<Separator />
+											<MenuItem Command="Copy">
+												<MenuItem.Icon>
+													<Image Source="Images/page_copy.png" />
+												</MenuItem.Icon>
+											</MenuItem>
+											<MenuItem Command="Paste">
+												<MenuItem.Icon>
+													<Image Source="Images/page_paste.png" />
+												</MenuItem.Icon>
+											</MenuItem>
+											<MenuItem Command="Delete">
+												<MenuItem.Icon>
+													<Image Source="Images/delete.png" />
+												</MenuItem.Icon>
+											</MenuItem>
 
-								</ContextMenu>
+										</ContextMenu>
 
-							</DataGrid.ContextMenu>
-							<DataGrid.CommandBindings>
-								<CommandBinding Command="Copy" Executed="_DagColumnDefinitions_Copy" CanExecute="_DagColumnDefinitions_CopyCanExecute" />
-								<CommandBinding Command="Paste" Executed="_DagColumnDefinitions_Paste" CanExecute="_DagColumnDefinitions_PasteCanExecute" />
-							</DataGrid.CommandBindings>
-						</DataGrid>
-					</GroupBox>
-					<GroupBox Grid.Row="2" Header="Column Description" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-						<TextBox x:Name="_TxtColumnDescription" Text="{Binding Description}" TextWrapping="Wrap" IsEnabled="False" SpellCheck.IsEnabled="True" />
-					</GroupBox>
-					<GroupBox Grid.Row="3" Header="Associations">
-						<ListBox x:Name="_LstAssociations" DisplayMemberPath="DisplayName" ContextMenuOpening="_LstAssociations_ContextMenuOpening">
-							<ListBox.ContextMenu>
-								<ContextMenu>
-									<MenuItem x:Name="_CmiCreateAssociation" Header="Create Association" Click="AssociationCreate_Click">
-										<MenuItem.Icon>
-											<Image Source="Images/chart_line_add.png" />
-										</MenuItem.Icon>
-									</MenuItem>
-									<MenuItem x:Name="_CmiEditAssociation" Header="Edit Association" Click="AssociationEdit_Click" IsEnabled="False">
-										<MenuItem.Icon>
-											<Image Source="Images/chart_line_edit.png" />
-										</MenuItem.Icon>
-									</MenuItem>
-									<MenuItem x:Name="_CmiDeleteAssociation" Header="Delete Association" Click="AssociationDelete_Click" IsEnabled="False">
-										<MenuItem.Icon>
-											<Image Source="Images/chart_line_delete.png" />
-										</MenuItem.Icon>
-									</MenuItem>
-									<MenuItem x:Name="_CmiGoToOtherTable" Header="Go To Other Table" IsEnabled="False" Visibility="Collapsed" />
-								</ContextMenu>
-							</ListBox.ContextMenu>
-						</ListBox>
-					</GroupBox>
-				</Grid>
+									</DataGrid.ContextMenu>
+									<DataGrid.CommandBindings>
+										<CommandBinding Command="Copy" Executed="_DagColumnDefinitions_Copy" CanExecute="_DagColumnDefinitions_CopyCanExecute" />
+										<CommandBinding Command="Paste" Executed="_DagColumnDefinitions_Paste" CanExecute="_DagColumnDefinitions_PasteCanExecute" />
+									</DataGrid.CommandBindings>
+								</DataGrid>
+							</GroupBox>
+							<GroupBox Grid.Row="2" Header="Column Description" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+								<TextBox x:Name="_TxtColumnDescription" Text="{Binding Description}" TextWrapping="Wrap" IsEnabled="False" SpellCheck.IsEnabled="True" AcceptsReturn="True" />
+							</GroupBox>
+							<GroupBox Grid.Row="3" Header="Associations">
+								<ListBox x:Name="_LstAssociations" DisplayMemberPath="DisplayName" ContextMenuOpening="_LstAssociations_ContextMenuOpening">
+									<ListBox.ContextMenu>
+										<ContextMenu>
+											<MenuItem x:Name="_CmiCreateAssociation" Header="Create Association" Click="AssociationCreate_Click">
+												<MenuItem.Icon>
+													<Image Source="Images/chart_line_add.png" />
+												</MenuItem.Icon>
+											</MenuItem>
+											<MenuItem x:Name="_CmiEditAssociation" Header="Edit Association" Click="AssociationEdit_Click" IsEnabled="False">
+												<MenuItem.Icon>
+													<Image Source="Images/chart_line_edit.png" />
+												</MenuItem.Icon>
+											</MenuItem>
+											<MenuItem x:Name="_CmiDeleteAssociation" Header="Delete Association" Click="AssociationDelete_Click" IsEnabled="False">
+												<MenuItem.Icon>
+													<Image Source="Images/chart_line_delete.png" />
+												</MenuItem.Icon>
+											</MenuItem>
+											<MenuItem x:Name="_CmiGoToOtherTable" Header="Go To Other Table" IsEnabled="False" Visibility="Collapsed" />
+										</ContextMenu>
+									</ListBox.ContextMenu>
+								</ListBox>
+							</GroupBox>
+						</Grid>
+					</TabItem>
+
+					<TabItem x:Name="_tabIndexes" Header="Indexes">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="36*"/>
+								<ColumnDefinition Width="65*"/>
+							</Grid.ColumnDefinitions>
+							<GroupBox Header="Indexes" Grid.Column="0" Margin="3">
+								<ListBox x:Name="_LstIndexes" DisplayMemberPath="Name" >
+									<ListBox.ContextMenu>
+										<ContextMenu>
+											<MenuItem Command="New">
+												<MenuItem.Icon>
+													<Image Source="Images/add.png" />
+												</MenuItem.Icon>
+											</MenuItem>
+											<MenuItem Command="Delete">
+												<MenuItem.Icon>
+													<Image Source="Images/delete.png" />
+												</MenuItem.Icon>
+											</MenuItem>
+										</ContextMenu>
+									</ListBox.ContextMenu>
+								</ListBox>
+							</GroupBox>
+							<GridSplitter HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Grid.Column="1" Grid.RowSpan="1"/>
+							<GroupBox Grid.Column="1" Header="Index Definition" Margin="3">
+								<DataGrid x:Name="_DatIndexDefinition" >
+									<DataGrid.Columns>
+										<DataGridComboBoxColumn Width="*" Header="Column Name" SelectedValueBinding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridComboBoxColumn Width="140" Header="Sort Direction" SelectedValueBinding="{Binding SortDirection, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding SortDirection}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+									</DataGrid.Columns>
+								</DataGrid>
+							</GroupBox>
+
+						</Grid>
+					</TabItem>
+
+					<TabItem x:Name="_tabEnums" Header="Enums" IsEnabled="False">
+						<Grid>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="200"/>
+								<ColumnDefinition/>
+							</Grid.ColumnDefinitions>
+							<GroupBox Grid.Column="0" Header="Enum List" >
+								<TextBox />
+							</GroupBox>
+							<GroupBox Grid.Column="1" Header="Values" >
+								<DataGrid x:Name="_DatEnumList">
+									<DataGrid.Columns>
+										<DataGridTextColumn Header="Name" Width="150" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridComboBoxColumn Header="Type" Width="140"  SelectedValueBinding="{Binding DbType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding DbType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridTextColumn Header="Value" Width="150" Binding="{Binding Value}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+									</DataGrid.Columns>
+								</DataGrid>
+
+							</GroupBox>
+
+						</Grid>
+					</TabItem>
+					<TabItem x:Name="_tabTableSql" Header="SQL">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="40"/>
+								<RowDefinition/>
+							</Grid.RowDefinitions>
+							<GroupBox Grid.Row="0" Header="Options">
+								<StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+									<CheckBox Name="ChkCustomTableSql" IsChecked="{Binding DataContext.UseCustomSql, RelativeSource={RelativeSource AncestorType=TabItem}}">Custom Table SQL</CheckBox>
+								</StackPanel>
+							</GroupBox>
+							<GroupBox Grid.Row="1" Header="Table SQL">
+								<TextBox x:Name="_TxtTableSql" Text="{Binding DataContext.CustomSql, RelativeSource={RelativeSource AncestorType=TabItem}}" IsEnabled="{Binding ElementName=ChkCustomTableSql, Path=IsChecked}" AcceptsTab="True" AcceptsReturn="True" />
+							</GroupBox>
+							
+						</Grid>
+					</TabItem>
+				</TabControl>
 			</TabItem>
+			<TabItem Header="Database">
+				<TabControl VerticalAlignment="Stretch" BorderThickness="0,1">
+							<TabItem x:Name="_tabConfig" Header="Config">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="24"/>
+										<RowDefinition Height="*"/>
+									</Grid.RowDefinitions>
+									<TextBox x:Name="_TxtConfigSearch" Grid.Row="0" TextChanged="_TxtConfigSearch_TextChanged" Text=" Search Configurations" VerticalContentAlignment="Center" GotFocus="_TxtConfigSearch_GotFocus" LostFocus="_TxtConfigSearch_LostFocus" />
+									<GroupBox Header="Configuration Values" Grid.Row="1">
+										<DataGrid x:Name="_DagConfigurations" AutoGenerateColumns="False" >
+											<DataGrid.Columns>
+												<DataGridTextColumn Binding="{Binding Name}" Width="250" Header="Configuration"/>
+												<DataGridTextColumn Binding="{Binding Value}" Width="200" Header="Value"/>
+												<DataGridHyperlinkColumn Binding="{Binding Description}" Width="*" Header="Description">
+													<DataGridHyperlinkColumn.ElementStyle>
+														<Style>
+															<EventSetter Event="Hyperlink.Click" Handler="_DagConfigurations_Hyperlink"/>
+														</Style>
+													</DataGridHyperlinkColumn.ElementStyle>
+												</DataGridHyperlinkColumn>
+											</DataGrid.Columns>
+											<DataGrid.RowStyle>
+												<Style TargetType="DataGridRow">
+													<Setter Property="Visibility" Value="{Binding Visibility}" />
+												</Style>
+											</DataGrid.RowStyle>
+										</DataGrid>
+									</GroupBox>
+								</Grid>
+							</TabItem>
 
-			<TabItem x:Name="_tabIndexes" Header="Indexes">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="36*"/>
-						<ColumnDefinition Width="65*"/>
-					</Grid.ColumnDefinitions>
-					<GroupBox Header="Indexes" Grid.Column="0" Margin="3">
-						<ListBox x:Name="_LstIndexes" DisplayMemberPath="Name" >
-							<ListBox.ContextMenu>
-								<ContextMenu>
-									<MenuItem Command="New">
-										<MenuItem.Icon>
-											<Image Source="Images/add.png" />
-										</MenuItem.Icon>
-									</MenuItem>
-									<MenuItem Command="Delete">
-										<MenuItem.Icon>
-											<Image Source="Images/delete.png" />
-										</MenuItem.Icon>
-									</MenuItem>
-								</ContextMenu>
-							</ListBox.ContextMenu>
-						</ListBox>
-					</GroupBox>
-					<GridSplitter HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Grid.Column="1" Grid.RowSpan="1"/>
-					<GroupBox Grid.Column="1" Header="Index Definition" Margin="3">
-						<DataGrid x:Name="_DatIndexDefinition" >
-							<DataGrid.Columns>
-								<DataGridComboBoxColumn Width="*" Header="Column Name" SelectedValueBinding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-								<DataGridComboBoxColumn Width="140" Header="Sort Direction" SelectedValueBinding="{Binding SortDirection, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding SortDirection}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-							</DataGrid.Columns>
-						</DataGrid>
-					</GroupBox>
 
-				</Grid>
-			</TabItem>
 
-			<TabItem x:Name="_tabEnums" Header="Enums" IsEnabled="False">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="200"/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
-					<GroupBox Grid.Column="0" Header="Enum List" >
-						<TextBox />
-					</GroupBox>
-					<GroupBox Grid.Column="1" Header="Values" >
-						<DataGrid x:Name="_DatEnumList">
-							<DataGrid.Columns>
-								<DataGridTextColumn Header="Name" Width="150" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-								<DataGridComboBoxColumn Header="Type" Width="140"  SelectedValueBinding="{Binding DbType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding DbType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-								<DataGridTextColumn Header="Value" Width="150" Binding="{Binding Value}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-							</DataGrid.Columns>
-						</DataGrid>
-
-					</GroupBox>
-
-				</Grid>
-			</TabItem>
-			<TabItem x:Name="_tabConfig" Header="Config">
-				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="24"/>
-						<RowDefinition Height="*"/>
-					</Grid.RowDefinitions>
-					<TextBox x:Name="_TxtConfigSearch" Grid.Row="0" TextChanged="_TxtConfigSearch_TextChanged" Text=" Search Configurations" VerticalContentAlignment="Center" GotFocus="_TxtConfigSearch_GotFocus" LostFocus="_TxtConfigSearch_LostFocus" />
-					<GroupBox Header="Configuration Values" Grid.Row="1">
-						<DataGrid x:Name="_DagConfigurations" AutoGenerateColumns="False" >
-							<DataGrid.Columns>
-								<DataGridTextColumn Binding="{Binding Name}" Width="250" Header="Configuration"/>
-								<DataGridTextColumn Binding="{Binding Value}" Width="200" Header="Value"/>
-								<DataGridHyperlinkColumn Binding="{Binding Description}" Width="*" Header="Description">
-									<DataGridHyperlinkColumn.ElementStyle>
-										<Style>
-											<EventSetter Event="Hyperlink.Click" Handler="_DagConfigurations_Hyperlink"/>
-										</Style>
-									</DataGridHyperlinkColumn.ElementStyle>
-								</DataGridHyperlinkColumn>
-							</DataGrid.Columns>
-							<DataGrid.RowStyle>
-								<Style TargetType="DataGridRow">
-									<Setter Property="Visibility" Value="{Binding Visibility}" />
-								</Style>
-							</DataGrid.RowStyle>
-						</DataGrid>
-					</GroupBox>
-				</Grid>
-			</TabItem>
-
+						</TabControl>
+					</TabItem>
 
 
 

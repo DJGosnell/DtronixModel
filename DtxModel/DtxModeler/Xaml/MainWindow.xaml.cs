@@ -259,6 +259,7 @@ namespace DtxModeler.Xaml {
 			if (e.SelectionType == ExplorerControl.Selection.TableItem) {
 				_DagColumnDefinitions.ItemsSource = e.Table.Column;
 				_LstAssociations.ItemsSource = e.Database.Association;
+				_tabTableSql.DataContext = e.Table;
 				//_tabTable.IsSelected = true;
 
 				_TxtTableDescription.IsEnabled = true;

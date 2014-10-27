@@ -82,10 +82,11 @@ namespace DtxModeler.Xaml {
 		/// </summary>
 		/// <param name="select_db">If a database is provided, it will be automatically selected in the tree.</param>
 		private void Refresh(Database select_db) {
-			_TreDatabaseLayout.Items.Clear();
+			
 
 			string image_database = "pack://application:,,,/Xaml/Images/database.png";
 			string image_table = "pack://application:,,,/Xaml/Images/table.png";
+			string image_table_custom = "pack://application:,,,/Xaml/Images/table_gear.png";
 			string image_tables = "pack://application:,,,/Xaml/Images/table_multiple.png";
 			string image_view = "pack://application:,,,/Xaml/Images/table_chart.png";
 			string image_function = "pack://application:,,,/Xaml/Images/function.png";
@@ -108,9 +109,10 @@ namespace DtxModeler.Xaml {
 
 				// Display all the tables
 				foreach (var table in database.Table) {
-					var tree_table = createTreeViewItem(table.Name, image_table);
+					var tree_table = createTreeViewItem(table.Name, (table.UseCustomSql)? image_table_custom : image_table);
 					tree_table.Tag = table;
 					tables_root.Items.Add(tree_table);
+					tree_table.IsSelected = (selected_table == table);
 				}
 
 				// Views
@@ -123,6 +125,7 @@ namespace DtxModeler.Xaml {
 				functions_root.Tag = typeof(Function[]);
 				db_root.Items.Add(functions_root);
 
+				_TreDatabaseLayout.Items.Clear();
 				_TreDatabaseLayout.Items.Add(db_root);
 				database._TreeRoot = db_root;
 			}
@@ -219,7 +222,12 @@ namespace DtxModeler.Xaml {
 			};
 
 			// Tables
-			Utilities.BindChangedCollection<Table>(database.Table, collection_changed, property_changed);
+			Utilities.BindChangedCollection<Table>(database.Table, collection_changed, (prop_sender, prop_e) => {
+				property_changed(prop_sender, prop_e);
+				if (prop_e.PropertyName == "UseCustomSql") {
+					Refresh();
+				}
+			});
 			Utilities.BindChangedCollection<Association>(database.Association, collection_changed, property_changed);
 
 			foreach (var table in database.Table) {

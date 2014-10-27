@@ -15,32 +15,39 @@ namespace DtxModeler.Generator.CodeGen {
 			code.clear();
 
 			foreach (var table in database.Table) {
-				code.BeginBlock("CREATE TABLE ").Write(table.Name).WriteLine(" (");
 
-				// Columns
-				foreach (var column in table.Column) {
-					string net_type = type_transformer.NetToDbType(column.NetType);
+				if (table.UseCustomSql) {
+					code.WriteLine("/* Custom Table SQL */");
+					code.WriteLine(table.CustomSql).WriteLine().WriteLine();
 
-					code.Write(column.Name).Write(" ").Write(net_type).Write(" ");
+				} else {
+					code.BeginBlock("CREATE TABLE ").Write(table.Name).WriteLine(" (");
 
-					if(column.Nullable == false) {
-						code.Write("NOT NULL ");
+					// Columns
+					foreach (var column in table.Column) {
+						string net_type = type_transformer.NetToDbType(column.NetType);
+
+						code.Write(column.Name).Write(" ").Write(net_type).Write(" ");
+
+						if (column.Nullable == false) {
+							code.Write("NOT NULL ");
+						}
+
+						if (column.IsPrimaryKey) {
+							code.Write("PRIMARY KEY ");
+						}
+
+						if (column.IsAutoIncrement) {
+							code.Write("AUTOINCREMENT ");
+						}
+
+						code.WriteLine(",");
 					}
 
-					if (column.IsPrimaryKey) {
-						code.Write("PRIMARY KEY ");
-					}
+					code.removeLength(1);
 
-					if (column.IsAutoIncrement) {
-						code.Write("AUTOINCREMENT ");
-					}
-
-					code.WriteLine(",");
+					code.EndBlock(");").WriteLine().WriteLine();
 				}
-
-				code.removeLength(1);
-
-				code.EndBlock(");").WriteLine().WriteLine();
 
 				// Indexes
 				

@@ -340,15 +340,20 @@ namespace DtxModeler.Ddl {
         
         private ObservableCollection<Index> indexField;
         
+        private string customSqlField;
+        
         private string nameField;
         
         private string descriptionField;
+        
+        private bool useCustomSqlField;
         
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Table() {
             this.indexField = new ObservableCollection<Index>();
             this.columnField = new ObservableCollection<Column>();
+            this.useCustomSqlField = false;
         }
         
         [System.Xml.Serialization.XmlElementAttribute("Column")]
@@ -389,6 +394,24 @@ namespace DtxModeler.Ddl {
             }
         }
         
+        public string CustomSql {
+            get {
+                return this.customSqlField;
+            }
+            set {
+                if ((this.customSqlField != null)) {
+                    if ((customSqlField.Equals(value) != true)) {
+                        this.customSqlField = value;
+                        this.OnPropertyChanged("CustomSql");
+                    }
+                }
+                else {
+                    this.customSqlField = value;
+                    this.OnPropertyChanged("CustomSql");
+                }
+            }
+        }
+        
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
@@ -423,6 +446,20 @@ namespace DtxModeler.Ddl {
                 else {
                     this.descriptionField = value;
                     this.OnPropertyChanged("Description");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool UseCustomSql {
+            get {
+                return this.useCustomSqlField;
+            }
+            set {
+                if ((useCustomSqlField.Equals(value) != true)) {
+                    this.useCustomSqlField = value;
+                    this.OnPropertyChanged("UseCustomSql");
                 }
             }
         }
