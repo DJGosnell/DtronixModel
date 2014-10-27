@@ -71,17 +71,10 @@ namespace DtxModeler.Xaml {
 		}
 
 		/// <summary>
-		/// Refreshes the control to display the current loaded databases.
-		/// </summary>
-		private void Refresh() {
-			Refresh(null);
-		}
-
-		/// <summary>
 		/// Refreshes the control to display the current loaded databases and selectes the specified database.
 		/// </summary>
 		/// <param name="select_db">If a database is provided, it will be automatically selected in the tree.</param>
-		private void Refresh(Database select_db) {
+		private void Refresh() {
 			
 
 			string image_database = "pack://application:,,,/Xaml/Images/database.png";
@@ -96,7 +89,7 @@ namespace DtxModeler.Xaml {
 				db_root.Tag = database;
 				db_root.IsExpanded = true;
 
-				if (select_db == database || _TreDatabaseLayout.SelectedItem == null) {
+				if (selected_database == database || _TreDatabaseLayout.SelectedItem == null) {
 					db_root.IsSelected = true;
 				}
 
@@ -255,7 +248,7 @@ namespace DtxModeler.Xaml {
 
 			loaded_databases.Add(database);
 			database.Initialize();
-			Refresh(database);
+			Refresh();
 
 			if (LoadedDatabase != null) {
 				LoadedDatabase(this, new DatabaseEventArgs() {
