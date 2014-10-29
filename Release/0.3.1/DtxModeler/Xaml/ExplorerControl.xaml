@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="DtxModeler.Xaml.ExplorerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			 xmlns:dxaml="clr-namespace:DtxModeler.Xaml"
+             mc:Ignorable="d" d:DesignWidth="199" d:DesignHeight="361">
+	<UserControl.Resources>
+		<dxaml:BooleanToVisibiltyConverter x:Key="BooleanToVisibiltyConverter" />
+	</UserControl.Resources>
+	<Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Grid.RowSpan="1">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="24"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+		<TextBox HorizontalAlignment="Stretch" Height="23" TextWrapping="NoWrap" Text="Filter" VerticalAlignment="Top" BorderThickness="0,1,1,1" IsEnabled="False"/>
+		<TreeView x:Name="_TreDatabaseLayout" BorderThickness="0,1,1,0" Grid.Row="1" SelectedItemChanged="_TreDatabaseLayout_SelectedItemChanged">
+			<TreeView.ContextMenu>
+				<ContextMenu>
+					<MenuItem Command="New" Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BooleanToVisibiltyConverter}}">
+						<MenuItem.Icon>
+							<Image Source="Images/add.png" />
+						</MenuItem.Icon>
+					</MenuItem>
+					<MenuItem Command="dxaml:Commands.RenameDatabaseItem" Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BooleanToVisibiltyConverter}}">
+						<MenuItem.Icon>
+							<Image Source="Images/textfield_rename.png" />
+						</MenuItem.Icon>
+					</MenuItem>
+					<MenuItem Command="dxaml:Commands.OpenDatabaseDirectory" Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BooleanToVisibiltyConverter}}">
+						<MenuItem.Icon>
+							<Image Source="Images/folder_vertical_open.png" />
+						</MenuItem.Icon>
+					</MenuItem>
+					<MenuItem Command="dxaml:Commands.CloseDatabase" Visibility="{Binding Path=IsEnabled, RelativeSource={RelativeSource Self}, Mode=OneWay, Converter={StaticResource BooleanToVisibiltyConverter}}">
+						<MenuItem.Icon>
+							<Image Source="Images/database_delete.png" />
+						</MenuItem.Icon>
+					</MenuItem>
+					<Separator />
+					<MenuItem Command="Copy">
+						<MenuItem.Icon>
+							<Image Source="Images/page_copy.png" />
+						</MenuItem.Icon>
+					</MenuItem>
+					<MenuItem Command="Paste">
+						<MenuItem.Icon>
+							<Image Source="Images/page_paste.png" />
+						</MenuItem.Icon>
+					</MenuItem>
+					<MenuItem Command="Delete">
+						<MenuItem.Icon>
+							<Image Source="Images/delete.png" />
+						</MenuItem.Icon>
+					</MenuItem>
+				</ContextMenu>
+			</TreeView.ContextMenu>
+			<TreeView.CommandBindings>
+				<CommandBinding Command="dxaml:Commands.OpenDatabaseDirectory" Executed="_TreDatabaseLayout_OpenDatabaseDirectory" CanExecute="_TreDatabaseLayout_OpenDatabaseDirectoryCanExecute" />
+				<CommandBinding Command="dxaml:Commands.CloseDatabase" Executed="_TreDatabaseLayout_CloseDatabase" CanExecute="_TreDatabaseLayout_CloseDatabaseCanExecute" />
+				<CommandBinding Command="dxaml:Commands.RenameDatabaseItem" Executed="_TreDatabaseLayout_Rename" CanExecute="_TreDatabaseLayout_RenameCanExecute" />
+				<CommandBinding Command="New" Executed="_TreDatabaseLayout_New" CanExecute="_TreDatabaseLayout_NewCanExecute" />
+				<CommandBinding Command="Copy" Executed="_TreDatabaseLayout_Copy" CanExecute="_TreDatabaseLayout_CopyCanExecute" />
+				<CommandBinding Command="Paste" Executed="_TreDatabaseLayout_Paste" CanExecute="_TreDatabaseLayout_PasteCanExecute" />
+				<CommandBinding Command="Delete" Executed="_TreDatabaseLayout_Delete" CanExecute="_TreDatabaseLayout_DeleteCanExecute" />
+			</TreeView.CommandBindings>
+		</TreeView>
+	</Grid>
+</UserControl>
