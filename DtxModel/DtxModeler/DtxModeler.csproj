@@ -175,7 +175,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="CreateSetup.bat" />
     <None Include="Ddl\Build.bat" />
     <None Include="Ddl\DdlSchema.xsd" />
     <None Include="packages.config" />
