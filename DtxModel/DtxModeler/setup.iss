@@ -39,7 +39,7 @@ Source: "x86\SQLite.Interop.dll"; DestDir: "{app}\x86"
 Source: "x64\SQLite.Interop.dll"; DestDir: "{app}\x64"
 
 [Icons]
-Name: "{group}\DtronixModel"; Filename: "{app}\MyProg.exe"
+Name: "{group}\DtronixModel"; Filename: "{app}\{#MainBinaryName}"
 Name: "{group}\{cm:UninstallProgram,DtronixModel}"; Filename: "{uninstallexe}"
 
 [Run]
