@@ -24,7 +24,7 @@
 
 
 		<TextBlock HorizontalAlignment="Stretch" Text="Provider" VerticalAlignment="Center" Grid.Row="1" TextAlignment="Right" Height="16" Margin="3,7"/>
-		<ComboBox x:Name="_CmbProvider" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="3" SelectionChanged="_cmbProvider_SelectionChanged" SelectedIndex="0" IsEnabled="False" />
+		<ComboBox x:Name="_CmbProvider" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="3" SelectionChanged="_cmbProvider_SelectionChanged" SelectedIndex="0" />
 
 		<TextBlock HorizontalAlignment="Stretch" Text="Server / File" VerticalAlignment="Center" Grid.Row="2" TextAlignment="Right" Height="16" Margin="3,7"/>
 		<TextBox x:Name="_TxtServer" Grid.Column="1" HorizontalAlignment="Stretch" Width="Auto" Grid.Row="2" Text="" Margin="3" VerticalAlignment="Stretch"/>

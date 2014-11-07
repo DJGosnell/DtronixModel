@@ -26,7 +26,7 @@ namespace DtxModeler.Generator.Sqlite {
 
 		}
 
-		public override Database generateDdl() {
+		public override Database GenerateDdl() {
 			connection.Open();
 			database.Name = Path.GetFileNameWithoutExtension(connection.DataSource);
 

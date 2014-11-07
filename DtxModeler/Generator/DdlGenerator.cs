@@ -15,7 +15,7 @@ namespace DtxModeler.Generator {
 			this.TypeTransformer = type_transformer;
 		}
 
-		public abstract Database generateDdl();
+		public abstract Database GenerateDdl();
 
 		protected Table getTableByName(string name) {
 			foreach (var table in database.Table) {

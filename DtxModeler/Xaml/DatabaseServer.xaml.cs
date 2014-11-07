@@ -82,7 +82,7 @@ namespace DtxModeler.Xaml {
 						throw new NotImplementedException("MySQL servers not implimented yet.");
 				}
 
-				var database = generator.generateDdl();
+				var database = generator.GenerateDdl();
 				database.Name = name;
 
 				if (sqlite_add_rowid) {
@@ -173,7 +173,7 @@ namespace DtxModeler.Xaml {
 					_txtPassword.IsEnabled = false;
 					break;
 				case DbProvider.MySQL:
-					_txtPassword.IsEnabled = _txtPassword.IsEnabled = true;
+					//_txtPassword.IsEnabled = _txtPassword.IsEnabled = true;
 					break;
 				default:
 					break;

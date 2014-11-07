@@ -81,17 +81,14 @@ namespace DtxModeler.Generator {
 					Console.WriteLine("Using database passed.");
 				}
 
-			} else if (options.InputType == "database") {
-
-				if (options.DbType.ToLower() == "sqlite") {
-					generator = new SqliteDdlGenerator(@"Data Source=" + options.Input + ";Version=3;");
-				}
+			} else if (options.InputType == "database-sqlite") {
+				generator = new SqliteDdlGenerator(@"Data Source=" + options.Input + ";Version=3;");
 
 				if (options.DbClass == null) {
 					writeLineColor("Required 'db-class' attribute not selected.", ConsoleColor.Red);
 				}
 
-				input_database = generator.generateDdl();
+				input_database = generator.GenerateDdl();
 			}
 
 			// Ensure that the base database is initialized.

@@ -39,6 +39,7 @@
 				<Separator/>
 				<MenuItem Command="Open"/>
 				<MenuItem Command="dxaml:Commands.ImportDatabase"/>
+				<MenuItem Command="dxaml:Commands.ImportMySqlMwb"/>
 				<Separator/>
 				<MenuItem Command="Save"/>
 				<MenuItem Command="SaveAs"/>

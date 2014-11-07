@@ -22,6 +22,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Windows.Documents;
 using System.Diagnostics;
+using DtxModeler.Generator.MySqlMwb;
 
 namespace DtxModeler.Xaml {
 	/// <summary>
@@ -42,12 +43,32 @@ namespace DtxModeler.Xaml {
 			BindCommand(Commands.NewDatabase, null, Command_NewDatabase);
 			BindCommand(ApplicationCommands.Open, new KeyGesture(Key.O, ModifierKeys.Control), Command_Open);
 			BindCommand(Commands.ImportDatabase, new KeyGesture(Key.I, ModifierKeys.Control), Command_Import);
+			BindCommand(Commands.ImportMySqlMwb, null, Command_ImportMySqlMwb);
 			BindCommand(ApplicationCommands.Save, new KeyGesture(Key.S, ModifierKeys.Control), Command_Save, Command_SaveCanExecute);
 			BindCommand(ApplicationCommands.SaveAs, new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt), Command_SaveAs, Command_SaveCanExecute);
 			BindCommand(Commands.Exit, new KeyGesture(Key.F4, ModifierKeys.Alt), Command_Exit);
 			BindCommand(Commands.GenerateAll, null, Command_GenerateAll, Command_GenerateAllCanExecute);
 
 			_Status.SetStatus("Application Loaded And Ready", ColorStatusBar.Status.Completed);
+		}
+
+		private void Command_ImportMySqlMwb(object sender, ExecutedRoutedEventArgs e) {
+			var browse = new OpenFileDialog() {
+				CheckFileExists = true,
+				Multiselect = false
+			};
+
+			if (browse.ShowDialog() != true) {
+				return;
+			}
+
+			var generator = new MySqlMwbDdlGenerator(browse.FileName);
+
+			var database = generator.GenerateDdl();
+
+			if (database != null) {
+				_DatabaseExplorer.LoadDatabase(database);
+			}
 		}
 
 
@@ -75,7 +96,7 @@ namespace DtxModeler.Xaml {
 			_Status.SetStatus("Beginning Code Generation", ColorStatusBar.Status.Working);
 			var database = _DatabaseExplorer.SelectedDatabase;
 			var options = new ModelGenOptions(null) {
-				DbType = "sqlite",
+				OutputDbType = "sqlite",
 				InputType = "ddl"
 			};
 
