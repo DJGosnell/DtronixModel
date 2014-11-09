@@ -23,22 +23,20 @@ using System.ComponentModel;
 using System.Windows.Documents;
 using System.Diagnostics;
 using DtxModeler.Generator.MySqlMwb;
+using DtxModeler.Generator.MySql;
 
 namespace DtxModeler.Xaml {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
 	/// </summary>
 	public partial class MainWindow : Window {
-		private TypeTransformer type_transformer = new SqliteTypeTransformer();
-		
+
+		private TypeTransformer type_transformer;
 
 		public MainWindow() {
 			InitializeComponent();
-			
-
-			ColumnDbType.ItemsSource = type_transformer.DbTypes();
-
 			ColumnNetType.ItemsSource = Enum.GetValues(typeof(NetTypes)).Cast<NetTypes>();
+			_CmbTargetDatabase.ItemsSource = Enum.GetValues(typeof(DbProvider)).Cast<DbProvider>();
 
 			BindCommand(Commands.NewDatabase, null, Command_NewDatabase);
 			BindCommand(ApplicationCommands.Open, new KeyGesture(Key.O, ModifierKeys.Control), Command_Open);
@@ -275,6 +273,16 @@ namespace DtxModeler.Xaml {
 
 			if (e.SelectionType != ExplorerControl.Selection.None) {
 				_DagConfigurations.ItemsSource = e.Database.Configuration;
+				switch (e.Database.TargetDb) {
+					case DbProvider.Sqlite:
+						type_transformer = new SqliteTypeTransformer();
+						break;
+					case DbProvider.MySQL:
+						type_transformer = new MySqlTypeTransformer();
+						break;
+				}
+				ColumnDbType.ItemsSource = type_transformer.DbTypes();
+				_CmbTargetDatabase.DataContext = e.Database;
 			}
 
 

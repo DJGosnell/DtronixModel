@@ -234,47 +234,69 @@
 							<GroupBox Grid.Row="1" Header="Table SQL">
 								<TextBox x:Name="_TxtTableSql" Text="{Binding DataContext.CustomSql, RelativeSource={RelativeSource AncestorType=TabItem}}" IsEnabled="{Binding ElementName=ChkCustomTableSql, Path=IsChecked}" AcceptsTab="True" AcceptsReturn="True" />
 							</GroupBox>
-							
+
 						</Grid>
 					</TabItem>
 				</TabControl>
 			</TabItem>
 			<TabItem Header="Database">
 				<TabControl VerticalAlignment="Stretch" BorderThickness="0,1">
-							<TabItem x:Name="_tabConfig" Header="Config">
+					<TabItem x:Name="_tabConfig" Header="Config">
+						<Grid>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="120"/>
+								<RowDefinition Height="*"/>
+							</Grid.RowDefinitions>
+							<GroupBox Header="Model Configurations" Grid.Row="0">
 								<Grid>
 									<Grid.RowDefinitions>
-										<RowDefinition Height="24"/>
+										<RowDefinition Height="22"/>
+										<RowDefinition Height="33*"/>
+									</Grid.RowDefinitions>
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="118*"/>
+										<ColumnDefinition Width="201*"/>
+										<ColumnDefinition Width="124*"/>
+										<ColumnDefinition Width="257*"/>
+									</Grid.ColumnDefinitions>
+									<TextBlock HorizontalAlignment="Right" Text="Target Database" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,3,200,3"/>
+									<ComboBox x:Name="_CmbTargetDatabase" SelectedValuePath="{Binding TargetDb}" Grid.Column="1" Grid.Row="0" Margin="3,0,3,0" />
+								</Grid>
+							</GroupBox>
+							<GroupBox Header="Database Values" Grid.Row="1">
+								<Grid>
+									<Grid.RowDefinitions>
+										<RowDefinition Height="27"/>
 										<RowDefinition Height="*"/>
 									</Grid.RowDefinitions>
-									<TextBox x:Name="_TxtConfigSearch" Grid.Row="0" TextChanged="_TxtConfigSearch_TextChanged" Text=" Search Configurations" VerticalContentAlignment="Center" GotFocus="_TxtConfigSearch_GotFocus" LostFocus="_TxtConfigSearch_LostFocus" />
-									<GroupBox Header="Configuration Values" Grid.Row="1">
-										<DataGrid x:Name="_DagConfigurations" AutoGenerateColumns="False" >
-											<DataGrid.Columns>
-												<DataGridTextColumn Binding="{Binding Name}" Width="250" Header="Configuration"/>
-												<DataGridTextColumn Binding="{Binding Value}" Width="200" Header="Value"/>
-												<DataGridHyperlinkColumn Binding="{Binding Description}" Width="*" Header="Description">
-													<DataGridHyperlinkColumn.ElementStyle>
-														<Style>
-															<EventSetter Event="Hyperlink.Click" Handler="_DagConfigurations_Hyperlink"/>
-														</Style>
-													</DataGridHyperlinkColumn.ElementStyle>
-												</DataGridHyperlinkColumn>
-											</DataGrid.Columns>
-											<DataGrid.RowStyle>
-												<Style TargetType="DataGridRow">
-													<Setter Property="Visibility" Value="{Binding Visibility}" />
-												</Style>
-											</DataGrid.RowStyle>
-										</DataGrid>
-									</GroupBox>
+									<TextBox x:Name="_TxtConfigSearch" Height="24" Grid.Row="0" TextChanged="_TxtConfigSearch_TextChanged" Text=" Search Configurations" VerticalContentAlignment="Center" GotFocus="_TxtConfigSearch_GotFocus" LostFocus="_TxtConfigSearch_LostFocus" />
+									<DataGrid x:Name="_DagConfigurations" AutoGenerateColumns="False" Grid.Row="1">
+										<DataGrid.Columns>
+											<DataGridTextColumn Binding="{Binding Name}" Width="250" Header="Configuration"/>
+											<DataGridTextColumn Binding="{Binding Value}" Width="200" Header="Value"/>
+											<DataGridHyperlinkColumn Binding="{Binding Description}" Width="*" Header="Description">
+												<DataGridHyperlinkColumn.ElementStyle>
+													<Style>
+														<EventSetter Event="Hyperlink.Click" Handler="_DagConfigurations_Hyperlink"/>
+													</Style>
+												</DataGridHyperlinkColumn.ElementStyle>
+											</DataGridHyperlinkColumn>
+										</DataGrid.Columns>
+										<DataGrid.RowStyle>
+											<Style TargetType="DataGridRow">
+												<Setter Property="Visibility" Value="{Binding Visibility}" />
+											</Style>
+										</DataGrid.RowStyle>
+									</DataGrid>
 								</Grid>
-							</TabItem>
-
-
-
-						</TabControl>
+							</GroupBox>
+						</Grid>
 					</TabItem>
+
+
+
+				</TabControl>
+			</TabItem>
 
 
 

@@ -34,6 +34,8 @@ namespace DtxModeler.Ddl {
         
         private string nameField;
         
+        private DbProvider targetDbField;
+        
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Database() {
@@ -154,6 +156,19 @@ namespace DtxModeler.Ddl {
                 else {
                     this.nameField = value;
                     this.OnPropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public DbProvider TargetDb {
+            get {
+                return this.targetDbField;
+            }
+            set {
+                if ((targetDbField.Equals(value) != true)) {
+                    this.targetDbField = value;
+                    this.OnPropertyChanged("TargetDb");
                 }
             }
         }
