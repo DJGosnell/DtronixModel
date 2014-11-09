@@ -55,7 +55,8 @@ namespace DtxModeler.Xaml {
 		private void Command_ImportMySqlMwb(object sender, ExecutedRoutedEventArgs e) {
 			var browse = new OpenFileDialog() {
 				CheckFileExists = true,
-				Multiselect = false
+				Multiselect = false,
+				Filter = "MySQL Workbench Files (*.mwb)|*.mwb"
 			};
 
 			if (browse.ShowDialog() != true) {
