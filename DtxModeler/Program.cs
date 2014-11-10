@@ -61,7 +61,7 @@ namespace DtxModeler.Generator {
 			CommandlineVisible = false;
 		}
 
-		public static void ExecuteOptions(ModelGenOptions options, Database input_database) {
+		public static async void ExecuteOptions(ModelGenOptions options, Database input_database) {
 			DdlGenerator generator = null;
 			TypeTransformer type_transformer = new SqliteTypeTransformer();
 
@@ -88,7 +88,7 @@ namespace DtxModeler.Generator {
 					writeLineColor("Required 'db-class' attribute not selected.", ConsoleColor.Red);
 				}
 
-				input_database = generator.GenerateDdl();
+				input_database = await generator.GenerateDdl();
 			}
 
 			// Ensure that the base database is initialized.

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DtxModeler.Generator {
 	public abstract class DdlGenerator {
@@ -15,7 +16,7 @@ namespace DtxModeler.Generator {
 			this.TypeTransformer = type_transformer;
 		}
 
-		public abstract Database GenerateDdl();
+		public abstract Task<Database> GenerateDdl();
 
 		protected Table getTableByName(string name) {
 			foreach (var table in database.Table) {

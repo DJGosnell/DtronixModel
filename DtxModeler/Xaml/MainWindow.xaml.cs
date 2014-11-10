@@ -50,7 +50,8 @@ namespace DtxModeler.Xaml {
 			_Status.SetStatus("Application Loaded And Ready", ColorStatusBar.Status.Completed);
 		}
 
-		private void Command_ImportMySqlMwb(object sender, ExecutedRoutedEventArgs e) {
+		private async void Command_ImportMySqlMwb(object sender, ExecutedRoutedEventArgs e) {
+			_Status.SetStatus("Importing MySQL Workbench model.", ColorStatusBar.Status.Working);
 			var browse = new OpenFileDialog() {
 				CheckFileExists = true,
 				Multiselect = false,
@@ -58,15 +59,17 @@ namespace DtxModeler.Xaml {
 			};
 
 			if (browse.ShowDialog() != true) {
+				_Status.SetStatus("Canceled importing database.", ColorStatusBar.Status.Completed);
 				return;
 			}
 
 			var generator = new MySqlMwbDdlGenerator(browse.FileName);
 
-			var database = generator.GenerateDdl();
+			var database = await generator.GenerateDdl();
 
 			if (database != null) {
 				_DatabaseExplorer.LoadDatabase(database);
+				_Status.SetStatus("Completed model import.", ColorStatusBar.Status.Completed);
 			}
 		}
 
@@ -140,14 +143,14 @@ namespace DtxModeler.Xaml {
 			
 		}
 
-		private void Command_Import(object obSender, ExecutedRoutedEventArgs e) {
+		private async void Command_Import(object obSender, ExecutedRoutedEventArgs e) {
 			_Status.SetStatus("Importing Database", ColorStatusBar.Status.Working);
 			var db_server = new DatabaseServer(){ 
 				Owner = this
 			};
 
 			if (db_server.ShowDialog() == true) {
-				var database = db_server.Database;
+				var database = await db_server.GetDatabase();
 				if (database != null) {
 					_DatabaseExplorer.LoadDatabase(database);
 				}
@@ -213,7 +216,9 @@ namespace DtxModeler.Xaml {
 					break;
 
 				case "NetType":
-					column.DbType = type_transformer.NetToDbType(column.NetType);
+					var type = type_transformer.NetType(column.NetType);
+					column.DbLength = type.length;
+					column.DbType = type.db_type;
 					break;
 
 				case "IsAutoIncrement":

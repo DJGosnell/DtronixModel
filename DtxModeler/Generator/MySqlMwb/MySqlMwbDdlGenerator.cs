@@ -23,8 +23,8 @@ namespace DtxModeler.Generator.MySqlMwb {
 				mwb_file_location = file_location;
 		}
 
-		public override Database GenerateDdl() {
-			Task.Run(() => {
+		public override async Task<Database> GenerateDdl() {
+			await Task.Run(() => {
 				var mwb_xml = new XmlDocument();
 				using (var mwb_archive = ZipFile.OpenRead(mwb_file_location)) {
 					var zip_mwb = mwb_archive.GetEntry("document.mwb.xml");
@@ -52,6 +52,8 @@ namespace DtxModeler.Generator.MySqlMwb {
 					/value");
 
 				database.Name = xml_db_schema.SelectSingleNode("value[@key='name']").InnerText;
+
+				database.TargetDb = DbProvider.MySQL;
 				//database.Name = Path.GetFileNameWithoutExtension(connection.DataSource);
 
 				// Get the tables.
@@ -71,7 +73,7 @@ namespace DtxModeler.Generator.MySqlMwb {
 						};
 
 						var auto_increment = xml_column.SelectSingleNode(@"value[@key='autoIncrement']").InnerText;
-						column.IsAutoIncrement = (auto_increment == "0" || auto_increment == null)? false : true;
+						column.IsAutoIncrement = (auto_increment == "0" || auto_increment == null) ? false : true;
 
 						var nullable = xml_column.SelectSingleNode(@"value[@key='isNotNull']").InnerText;
 						column.Nullable = (nullable == "0" || nullable == null) ? true : false;
@@ -97,18 +99,16 @@ namespace DtxModeler.Generator.MySqlMwb {
 						} catch {
 							throw new Exception("Unknown data type for column '" + column.Name + "' in table '" + table.Name + "'.");
 						}
-					
+
 						column.IsPrimaryKey = column.IsAutoIncrement;
 
 
 						table.Column.Add(column);
 					}
 
-
-
 					database.Table.Add(table);
 				}
-			}).Wait();
+			});
 
 			return database;
 

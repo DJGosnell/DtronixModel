@@ -12,10 +12,21 @@ namespace DtxModeler.Generator {
 		private string[] all_db_types = null;
 
 		public string NetToDbType(NetTypes net_type){
-			return types.FirstOrDefault(type => type.net_type == net_type).db_type;
+			return NetType(net_type).db_type;
 		}
+
+		public TypeTransformerType NetType(NetTypes net_type) {
+			return types.FirstOrDefault(type => type.net_type == net_type);
+		}
+
+
+
 		public NetTypes DbToNetType(string db_type) {
-			return types.FirstOrDefault(type => type.db_type == db_type).net_type;
+			return DbType(db_type).net_type;
+		}
+
+		public TypeTransformerType DbType(string db_type) {
+			return types.FirstOrDefault(type => type.db_type == db_type);
 		}
 
 		public string[] DbTypes() {

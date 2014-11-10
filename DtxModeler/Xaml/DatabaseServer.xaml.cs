@@ -9,6 +9,7 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -68,43 +69,42 @@ namespace DtxModeler.Xaml {
 		}
 
 
-		public Database Database {
-			get {
-				DdlGenerator generator = null;
-				string name = null;
+		public async Task<Database> GetDatabase() {
+			DdlGenerator generator = null;
+			string name = null;
 
-				switch (Provider) {
-					case DbProvider.Sqlite:
-						generator = new SqliteDdlGenerator(ConnectionString);
-						name = Path.GetFileName(_TxtServer.Text);
-						break;
-					default:
-						throw new NotImplementedException("MySQL servers not implimented yet.");
-				}
-
-				var database = generator.GenerateDdl();
-				database.Name = name;
-
-				if (sqlite_add_rowid) {
-					foreach (var table in database.Table) {
-						table.Column.Insert(0, new Column() {
-							Name = "rowid",
-							IsAutoIncrement = true,
-							IsReadOnly = true,
-							Nullable = false,
-							Description = "Auto generated SQLite rowid column.",
-							IsPrimaryKey = true,
-							DbType = "INTEGER",
-							NetType = NetTypes.Int64,
-						});
-					}
-				}
-
-				database.Initialize();
-				
-
-				return database;
+			switch (Provider) {
+				case DbProvider.Sqlite:
+					generator = new SqliteDdlGenerator(ConnectionString);
+					name = Path.GetFileName(_TxtServer.Text);
+					break;
+				default:
+					throw new NotImplementedException("MySQL servers not implimented yet.");
 			}
+
+			var database = await generator.GenerateDdl();
+			database.Name = name;
+
+			if (sqlite_add_rowid) {
+				foreach (var table in database.Table) {
+					table.Column.Insert(0, new Column() {
+						Name = "rowid",
+						IsAutoIncrement = true,
+						IsReadOnly = true,
+						Nullable = false,
+						Description = "Auto generated SQLite rowid column.",
+						IsPrimaryKey = true,
+						DbType = "INTEGER",
+						NetType = NetTypes.Int64,
+					});
+				}
+			}
+
+			database.Initialize();
+
+
+			return database;
+
 		}
 
 

@@ -667,6 +667,10 @@ namespace DtxModeler.Ddl {
         
         private string dbTypeField;
         
+        private int dbLengthField;
+        
+        private bool dbLengthFieldSpecified;
+        
         private bool isReadOnlyField;
         
         private bool isPrimaryKeyField;
@@ -769,6 +773,32 @@ namespace DtxModeler.Ddl {
                 else {
                     this.dbTypeField = value;
                     this.OnPropertyChanged("DbType");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public int DbLength {
+            get {
+                return this.dbLengthField;
+            }
+            set {
+                if ((dbLengthField.Equals(value) != true)) {
+                    this.dbLengthField = value;
+                    this.OnPropertyChanged("DbLength");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool DbLengthSpecified {
+            get {
+                return this.dbLengthFieldSpecified;
+            }
+            set {
+                if ((dbLengthFieldSpecified.Equals(value) != true)) {
+                    this.dbLengthFieldSpecified = value;
+                    this.OnPropertyChanged("DbLengthSpecified");
                 }
             }
         }
@@ -1014,12 +1044,6 @@ namespace DtxModeler.Ddl {
         
         /// <remarks/>
         Int32,
-        
-        /// <remarks/>
-        UInt32,
-        
-        /// <remarks/>
-        UInt64,
         
         /// <remarks/>
         ByteArray,

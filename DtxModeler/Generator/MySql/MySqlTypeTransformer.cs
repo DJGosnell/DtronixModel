@@ -8,8 +8,8 @@ namespace DtxModeler.Generator.MySql {
 	class MySqlTypeTransformer : TypeTransformer {
 		public MySqlTypeTransformer() {
 			types = new TypeTransformerType[]{
-				new TypeTransformerType(NetTypes.Boolean, "BOOL"),
-				new TypeTransformerType(NetTypes.Boolean, "BOOLEAN"),
+				new TypeTransformerType(NetTypes.Boolean, "BOOL", 1),
+				new TypeTransformerType(NetTypes.Boolean, "BOOLEAN", 1),
 
 				new TypeTransformerType(NetTypes.Int16, "TINYINT"),
 				new TypeTransformerType(NetTypes.Int16, "SMALLINT"),
@@ -29,6 +29,8 @@ namespace DtxModeler.Generator.MySql {
 				new TypeTransformerType(NetTypes.Decimal, "DECIMAL"),
 				new TypeTransformerType(NetTypes.Decimal, "NUMERIC"),
 
+				new TypeTransformerType(NetTypes.Byte, "BYTE", 1),
+
 				new TypeTransformerType(NetTypes.ByteArray, "BLOB"),
 				new TypeTransformerType(NetTypes.ByteArray, "MEDIMUMBLOB"),
 				new TypeTransformerType(NetTypes.ByteArray, "LONGBLOB"),
@@ -38,13 +40,15 @@ namespace DtxModeler.Generator.MySql {
 				new TypeTransformerType(NetTypes.DateTime, "TIME"),
 				new TypeTransformerType(NetTypes.DateTimeOffset, "DATETIME"),
 				
-				new TypeTransformerType(NetTypes.String, "CHAR"),
-				new TypeTransformerType(NetTypes.String, "VARCHAR"),
+				new TypeTransformerType(NetTypes.String, "CHAR", 32),
+				new TypeTransformerType(NetTypes.String, "VARCHAR", 32),
 
 				new TypeTransformerType(NetTypes.String, "TINYTEXT"),
 				new TypeTransformerType(NetTypes.String, "TEXT"),
 				new TypeTransformerType(NetTypes.String, "MEDIUMTEXT"),
-				new TypeTransformerType(NetTypes.String, "LONGTEXT")
+				new TypeTransformerType(NetTypes.String, "LONGTEXT"),
+
+				new TypeTransformerType(NetTypes.Char, "CHAR", 1)
 				
 			};
 		}
