@@ -245,26 +245,9 @@
 					<TabItem x:Name="_tabConfig" Header="Config">
 						<Grid>
 							<Grid.RowDefinitions>
-								<RowDefinition Height="120"/>
 								<RowDefinition Height="*"/>
 							</Grid.RowDefinitions>
-							<GroupBox Header="Model Configurations" Grid.Row="0">
-								<Grid>
-									<Grid.RowDefinitions>
-										<RowDefinition Height="22"/>
-										<RowDefinition Height="33*"/>
-									</Grid.RowDefinitions>
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="118*"/>
-										<ColumnDefinition Width="201*"/>
-										<ColumnDefinition Width="124*"/>
-										<ColumnDefinition Width="257*"/>
-									</Grid.ColumnDefinitions>
-									<TextBlock HorizontalAlignment="Right" Text="Target Database" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,3,200,3"/>
-									<ComboBox x:Name="_CmbTargetDatabase" SelectedValuePath="{Binding TargetDb}" Grid.Column="1" Grid.Row="0" Margin="3,0,3,0" />
-								</Grid>
-							</GroupBox>
-							<GroupBox Header="Database Values" Grid.Row="1">
+							<GroupBox Header="Database Values" Grid.Row="0">
 								<Grid>
 									<Grid.RowDefinitions>
 										<RowDefinition Height="27"/>
@@ -298,7 +281,25 @@
 
 				</TabControl>
 			</TabItem>
-
+			<TabItem Header="Output">
+				<GroupBox Header="Output Configurations" Grid.Row="0">
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="22"/>
+							<RowDefinition Height="22"/>
+							<RowDefinition Height="33*"/>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="118*"/>
+							<ColumnDefinition Width="201*"/>
+							<ColumnDefinition Width="124*"/>
+							<ColumnDefinition Width="257*"/>
+						</Grid.ColumnDefinitions>
+						<TextBlock HorizontalAlignment="Right" Text="Target Database" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,3,200,3"/>
+						<ComboBox x:Name="_CmbTargetDatabase" SelectedValue="{Binding TargetDb}" Grid.Column="1" Grid.Row="0" Margin="3,0,3,0" />
+					</Grid>
+				</GroupBox>
+			</TabItem>
 
 
 		</TabControl>
