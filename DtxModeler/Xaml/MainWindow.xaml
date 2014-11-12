@@ -285,8 +285,9 @@
 				<GroupBox Header="Output Configurations" Grid.Row="0">
 					<Grid>
 						<Grid.RowDefinitions>
-							<RowDefinition Height="22"/>
-							<RowDefinition Height="22"/>
+							<RowDefinition Height="30"/>
+							<RowDefinition Height="30"/>
+							<RowDefinition Height="30"/>
 							<RowDefinition Height="33*"/>
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
@@ -295,8 +296,18 @@
 							<ColumnDefinition Width="124*"/>
 							<ColumnDefinition Width="257*"/>
 						</Grid.ColumnDefinitions>
-						<TextBlock HorizontalAlignment="Right" Text="Target Database" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Margin="0,3,200,3"/>
-						<ComboBox x:Name="_CmbTargetDatabase" SelectedValue="{Binding TargetDb}" Grid.Column="1" Grid.Row="0" Margin="3,0,3,0" />
+						<TextBlock HorizontalAlignment="Right" Text="Target Database" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3"/>
+						<ComboBox x:Name="_CmbTargetDatabase" SelectedValue="{Binding DataContext.TargetDb, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Column="1" Grid.Row="0" Margin="3"/>
+
+						<TextBlock HorizontalAlignment="Right" Text="Namespace" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3"/>
+						<TextBox Text="{Binding DataContext.Namespace, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Column="1" Grid.Row="1" Margin="3"/>
+
+						<TextBlock HorizontalAlignment="Right" Text="Context Class" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3"/>
+						<TextBox Text="{Binding DataContext.ContextClass, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Column="1" Grid.Row="2" Margin="3"/>
+
+						<CheckBox Grid.Column="3" Grid.Row="0" IsChecked="{Binding DataContext.OutputSqlTables, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Output SQL Tables"/>
+
+						<CheckBox Grid.Column="3" Grid.Row="1" IsChecked="{Binding DataContext.OutputCsClasses, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Output C# Classes"/>
 					</Grid>
 				</GroupBox>
 			</TabItem>

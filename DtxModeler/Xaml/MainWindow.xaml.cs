@@ -45,7 +45,7 @@ namespace DtxModeler.Xaml {
 			BindCommand(ApplicationCommands.Save, new KeyGesture(Key.S, ModifierKeys.Control), Command_Save, Command_SaveCanExecute);
 			BindCommand(ApplicationCommands.SaveAs, new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt), Command_SaveAs, Command_SaveCanExecute);
 			BindCommand(Commands.Exit, new KeyGesture(Key.F4, ModifierKeys.Alt), Command_Exit);
-			BindCommand(Commands.GenerateAll, null, Command_GenerateAll, Command_GenerateAllCanExecute);
+			BindCommand(Commands.GenerateAll, new KeyGesture(Key.F5), Command_GenerateAll, Command_GenerateAllCanExecute);
 
 			_Status.SetStatus("Application Loaded And Ready", ColorStatusBar.Status.Completed);
 		}
@@ -106,12 +106,12 @@ namespace DtxModeler.Xaml {
 				Path.GetFileNameWithoutExtension(database._FileLocation));
 
 			// If we are set to output in the ddl, then set a default name.
-			if (database.GetConfiguration<bool>("output.sql_tables", false)) {
+			if (database.OutputSqlTables) {
 				options.SqlOutput = base_ddl_filename + ".sql";
 			}
 
 			// If we are set to output in the ddl, then set a default name.
-			if (database.GetConfiguration<bool>("output.cs_classes", true)) {
+			if (database.OutputCsClasses) {
 				options.CodeOutput = base_ddl_filename + ".cs";
 			}
 
@@ -287,7 +287,7 @@ namespace DtxModeler.Xaml {
 						break;
 				}
 				ColumnDbType.ItemsSource = type_transformer.DbTypes();
-				_CmbTargetDatabase.DataContext = e.Database;
+				this.DataContext = e.Database;
 			}
 
 

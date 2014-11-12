@@ -217,6 +217,8 @@ namespace DtxModeler.Xaml {
 				}
 			};
 
+			database.PropertyChanged += property_changed;
+
 			// Tables
 			Utilities.BindChangedCollection<Table>(database.Table, collection_changed, (prop_sender, prop_e) => {
 				property_changed(prop_sender, prop_e);

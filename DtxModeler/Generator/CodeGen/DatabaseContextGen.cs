@@ -18,9 +18,9 @@ namespace DtxModeler.Generator.CodeGen {
 			code.WriteLine("using System.Collections.Generic;");
 			code.WriteLine("using DtxModel;");
 			code.WriteLine();
-			code.BeginBlock("namespace ").Write(database.GetConfiguration<string>("database.namespace")).WriteLine(" {");
+			code.BeginBlock("namespace ").Write(database.Namespace).WriteLine(" {");
 			code.WriteLine();
-			code.BeginBlock("public partial class ").Write(database.GetConfiguration<string>("database.context_class")).WriteLine(" : Context {");
+			code.BeginBlock("public partial class ").Write(database.ContextClass).WriteLine(" : Context {");
 			code.WriteLine("private static Func<DbConnection> _default_connection = null;");
 			code.WriteLine();
 			code.WriteLine("/// <summary>");
@@ -52,14 +52,14 @@ namespace DtxModeler.Generator.CodeGen {
 			code.WriteLine("/// <summary>");
 			code.WriteLine("/// Create a new context of this database's type.  Can only be used if a default connection is specified.");
 			code.WriteLine("/// </summary>");
-			code.Write("public ").Write(database.GetConfiguration<string>("database.context_class")).WriteLine("() : base(_default_connection) { }");
+			code.Write("public ").Write(database.ContextClass).WriteLine("() : base(_default_connection) { }");
 			code.WriteLine();
 
 			code.WriteLine("/// <summary>");
 			code.WriteLine("/// Create a new context of this database's type with a specific connection.");
 			code.WriteLine("/// </summary>");
 			code.WriteLine("/// <param name=\"connection\">Existing open database connection to use.</param>");
-			code.Write("public ").Write(database.GetConfiguration<string>("database.context_class")).WriteLine("(DbConnection connection) : base(connection) { }");
+			code.Write("public ").Write(database.ContextClass).WriteLine("(DbConnection connection) : base(connection) { }");
 			code.EndBlock("}").WriteLine();
 
 			return code.ToString();

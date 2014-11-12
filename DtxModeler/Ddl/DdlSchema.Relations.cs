@@ -90,12 +90,13 @@ namespace DtxModeler.Ddl {
 			if (initialized == false) {
 				initialized = true;
 
-				SetConfiguration("database.namespace", "", false, "Namespace for all the generated classes.");
-				SetConfiguration("database.context_class", Name + "Context", false, "Name of the context class.");
-				SetConfiguration("output.sql_tables", false, false, "True to output the SQL database schematic tables.");
-				SetConfiguration("output.cs_classes", true, false, "True to output the C# classes.");
-
-
+				if (string.IsNullOrWhiteSpace(this.ContextClass)) {
+					if (string.IsNullOrWhiteSpace(Name)) {
+						this.ContextClass = "DatabaseContext";
+					} else {
+						this.ContextClass = Name + "Context";
+					}
+				}
 			}
 		}
 

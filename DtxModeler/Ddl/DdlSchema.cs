@@ -34,6 +34,14 @@ namespace DtxModeler.Ddl {
         
         private string nameField;
         
+        private string namespaceField;
+        
+        private string contextClassField;
+        
+        private bool outputSqlTablesField;
+        
+        private bool outputCsClassesField;
+        
         private DbProvider targetDbField;
         
         private static System.Xml.Serialization.XmlSerializer serializer;
@@ -44,6 +52,8 @@ namespace DtxModeler.Ddl {
             this.viewField = new ObservableCollection<View>();
             this.associationField = new ObservableCollection<Association>();
             this.tableField = new ObservableCollection<Table>();
+            this.outputSqlTablesField = true;
+            this.outputCsClassesField = true;
         }
         
         [System.Xml.Serialization.XmlElementAttribute("Table")]
@@ -156,6 +166,72 @@ namespace DtxModeler.Ddl {
                 else {
                     this.nameField = value;
                     this.OnPropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Namespace {
+            get {
+                return this.namespaceField;
+            }
+            set {
+                if ((this.namespaceField != null)) {
+                    if ((namespaceField.Equals(value) != true)) {
+                        this.namespaceField = value;
+                        this.OnPropertyChanged("Namespace");
+                    }
+                }
+                else {
+                    this.namespaceField = value;
+                    this.OnPropertyChanged("Namespace");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ContextClass {
+            get {
+                return this.contextClassField;
+            }
+            set {
+                if ((this.contextClassField != null)) {
+                    if ((contextClassField.Equals(value) != true)) {
+                        this.contextClassField = value;
+                        this.OnPropertyChanged("ContextClass");
+                    }
+                }
+                else {
+                    this.contextClassField = value;
+                    this.OnPropertyChanged("ContextClass");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        public bool OutputSqlTables {
+            get {
+                return this.outputSqlTablesField;
+            }
+            set {
+                if ((outputSqlTablesField.Equals(value) != true)) {
+                    this.outputSqlTablesField = value;
+                    this.OnPropertyChanged("OutputSqlTables");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(true)]
+        public bool OutputCsClasses {
+            get {
+                return this.outputCsClassesField;
+            }
+            set {
+                if ((outputCsClassesField.Equals(value) != true)) {
+                    this.outputCsClassesField = value;
+                    this.OnPropertyChanged("OutputCsClasses");
                 }
             }
         }
