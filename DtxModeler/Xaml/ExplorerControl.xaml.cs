@@ -84,12 +84,16 @@ namespace DtxModeler.Xaml {
 			string image_view = "pack://application:,,,/Xaml/Images/table_chart.png";
 			string image_function = "pack://application:,,,/Xaml/Images/function.png";
 
+			var last_selected_db = selected_database;
+			_TreDatabaseLayout.Items.Clear();
+			
+
 			foreach (var database in loaded_databases) {
 				var db_root = createTreeViewItem(database.Name, image_database);
 				db_root.Tag = database;
 				db_root.IsExpanded = true;
 
-				if (selected_database == database || _TreDatabaseLayout.SelectedItem == null) {
+				if (last_selected_db == database || _TreDatabaseLayout.SelectedItem == null) {
 					db_root.IsSelected = true;
 				}
 
@@ -118,7 +122,6 @@ namespace DtxModeler.Xaml {
 				functions_root.Tag = typeof(Function[]);
 				db_root.Items.Add(functions_root);
 
-				_TreDatabaseLayout.Items.Clear();
 				_TreDatabaseLayout.Items.Add(db_root);
 				database._TreeRoot = db_root;
 			}
