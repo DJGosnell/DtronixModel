@@ -642,7 +642,7 @@ namespace DtxModeler.Xaml {
 
 			if (selected_type == Selection.TableItem) {
 				InputDialogBox.Show("Rename Table", "Enter a new name for the table.", selected_table.Name, (value) => {
-					selected_table.Name = value;
+					selected_table.Rename(selected_database, value);
 					Refresh();
 				});
 

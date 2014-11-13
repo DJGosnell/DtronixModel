@@ -12,19 +12,26 @@ namespace DtxModeler.Ddl {
 	public partial class Table {
 
 		public void Rename(Database database, string new_name) {
-			Association.Reference assoc_ref = Association.Reference.None;
-			var association = database.Association.Where(a => {
-				assoc_ref = a.ReferencesTable(this);
-				return (assoc_ref != Association.Reference.None) ? true : false;
-			});
+			string old_name = this.nameField;
 
-			if (association != null) {
-				if (assoc_ref == Association.Reference.R1) {
-					//association.Table1Column = this.nameField;
-				} else {
-					//association.Table2Column = this.nameField;
+			foreach (var association in database.Association) {
+				var assoc_ref = association.ReferencesTable(this);
+				if (assoc_ref != Association.Reference.None) {
+					if (assoc_ref == Association.Reference.R1) {
+						association.Table1 = new_name;
+						if (association.Table1Name == old_name) {
+							association.Table1Name = new_name;
+						}
+					} else {
+						association.Table2 = new_name;
+						if (association.Table2Name == old_name) {
+							association.Table2Name = new_name;
+						}
+					}
 				}
 			}
+
+			this.Name = new_name;
 
 		}
 
@@ -201,7 +208,7 @@ namespace DtxModeler.Ddl {
 
 		public void Rename(Database database, string new_name) {
 			var old_name = this.nameField;
-			this.nameField = new_name;
+			this.Name= new_name;
 			PostRename(database, old_name);
 		}
 
