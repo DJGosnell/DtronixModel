@@ -33,6 +33,8 @@ namespace DtxModeler.Xaml {
 
 		private TypeTransformer type_transformer;
 
+		private Column previous_column = null;
+
 		public MainWindow() {
 			InitializeComponent();
 			ColumnNetType.ItemsSource = Enum.GetValues(typeof(NetTypes)).Cast<NetTypes>();
@@ -211,6 +213,10 @@ namespace DtxModeler.Xaml {
 
 
 			switch (e.PropertyName) {
+				case "Name":
+					column.Rename(_DatabaseExplorer.SelectedDatabase, previous_column.Name);
+					break;
+
 				case "DbType":
 					column.NetType = type_transformer.DbToNetType(column.DbType);
 					break;
@@ -249,8 +255,7 @@ namespace DtxModeler.Xaml {
 					break;
 			}
 
-
-
+			previous_column = column.Clone();
 
 
 			// Rebind this event to allow us to listen again.
@@ -272,7 +277,7 @@ namespace DtxModeler.Xaml {
 
 		private void _DatabaseExplorer_ChangedSelection(object sender, ExplorerControl.SelectionChangedEventArgs e) {
 			_DagColumnDefinitions.ItemsSource = null;
-			_LstAssociations.ItemsSource = null;
+			_DagTableAssociations.ItemsSource = null;
 			_TxtTableDescription.IsEnabled = false;
 			_TxtTableDescription.Text = _TxtColumnDescription.Text = "";
 
@@ -293,14 +298,13 @@ namespace DtxModeler.Xaml {
 
 			if (e.SelectionType == ExplorerControl.Selection.TableItem) {
 				_DagColumnDefinitions.ItemsSource = e.Table.Column;
-				_LstAssociations.ItemsSource = e.Database.Association;
 				_tabTableSql.DataContext = e.Table;
 				//_tabTable.IsSelected = true;
 
 				_TxtTableDescription.IsEnabled = true;
 				_TxtTableDescription.DataContext = e.Table;
 
-				_LstAssociations.ItemsSource = e.Database.GetAssociations(e.Table);
+				_DagTableAssociations.ItemsSource = e.Database.GetAssociations(e.Table);
 			} else if (e.SelectionType == ExplorerControl.Selection.Database) {
 				//_tabConfig.IsSelected = true;
 			}
@@ -423,14 +427,14 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void AssociationDelete_Click(object sender, RoutedEventArgs e) {
-			var association = _LstAssociations.SelectedItem as Association;
+			var association = _DagTableAssociations.SelectedItem as Association;
 			var database = _DatabaseExplorer.SelectedDatabase;
 
 			var result = MessageBox.Show("Are you sure you want to delete the association " + association.DisplayName + "?", "Confirm", MessageBoxButton.YesNo);
 
 			if (result == MessageBoxResult.Yes) {
 				database.Association.Remove(association);
-				_LstAssociations.ItemsSource = database.GetAssociations(_DatabaseExplorer.SelectedTable);
+				_DagTableAssociations.ItemsSource = database.GetAssociations(_DatabaseExplorer.SelectedTable);
 			}
 		}
 
@@ -475,12 +479,12 @@ namespace DtxModeler.Xaml {
 
 			if (association_window.ShowDialog() == true) {
 				database.Association.Add(association_window.Association);
-				_LstAssociations.ItemsSource = database.GetAssociations(_DatabaseExplorer.SelectedTable);
+				_DagTableAssociations.ItemsSource = database.GetAssociations(_DatabaseExplorer.SelectedTable);
 			}
 		}
 
 		private void AssociationEdit_Click(object sender, RoutedEventArgs e) {
-			var original_association = _LstAssociations.SelectedItem as Association;
+			var original_association = _DagTableAssociations.SelectedItem as Association;
 			var database = _DatabaseExplorer.SelectedDatabase;
 
 			var association_window = new AssociationWindow(database, original_association.Clone());
@@ -489,18 +493,18 @@ namespace DtxModeler.Xaml {
 			if (association_window.ShowDialog() == true) {
 				database.Association.Remove(original_association);
 				database.Association.Add(association_window.Association);
-				_LstAssociations.ItemsSource = database.GetAssociations(_DatabaseExplorer.SelectedTable);
+				_DagTableAssociations.ItemsSource = database.GetAssociations(_DatabaseExplorer.SelectedTable);
 			}
 		}
 
-		private void _LstAssociations_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
+		private void _DagTableAssociations_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
 			_CmiCreateAssociation.IsEnabled = _CmiDeleteAssociation.IsEnabled = _CmiEditAssociation.IsEnabled = false;
 
 			if (_DatabaseExplorer.SelectedTable != null) {
 				_CmiCreateAssociation.IsEnabled = true;
 			}
 
-			var association = _LstAssociations.SelectedItem as Association;
+			var association = _DagTableAssociations.SelectedItem as Association;
 
 			if (association != null) {
 				_CmiDeleteAssociation.IsEnabled = _CmiEditAssociation.IsEnabled = true;
@@ -512,6 +516,7 @@ namespace DtxModeler.Xaml {
 			if (columns.Length == 1) {
 				_TxtColumnDescription.IsEnabled = true;
 				_TxtColumnDescription.DataContext = columns[0];
+				previous_column = columns[0].Clone();
 			} else {
 				_TxtColumnDescription.IsEnabled = false;
 				_TxtColumnDescription.DataContext = null;

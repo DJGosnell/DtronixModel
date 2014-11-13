@@ -122,6 +122,12 @@ namespace DtxModeler.Ddl {
 
 	public partial class Association {
 
+		public enum Reference {
+			R1,
+			R2,
+			None
+		}
+
 		[XmlIgnore]
 		public string DisplayName {
 			get {
@@ -131,28 +137,75 @@ namespace DtxModeler.Ddl {
 			}
 		}
 
-		[XmlIgnore]
-		public Association ChildAssociation;
+		public Column GetReferenceColumn(Database database, Reference reference) {
+			string table_name = (reference == Reference.R1) ? table1Field : table2Field;
+			string column_name = (reference == Reference.R1) ? table1ColumnField : table2ColumnField;
 
-		[XmlIgnore]
-		public Association ParentAssociation;
+			var table = database.Table.FirstOrDefault(t => t.Name == table_name);
+			if (table == null) {
+				return null;
+			}
 
-		[XmlIgnore]
-		public Column OtherKeyColumn;
+			return table.Column.FirstOrDefault(c => c.Name == column_name);
+		}
 
-		[XmlIgnore]
-		public Column ThisKeyColumn;
+		public Reference ReferencesTable(Table table) {
+			if (this.table1Field == table.Name){
+				return Reference.R1;
 
-		[XmlIgnore]
-		public Table Table;
+			} else if (this.table2Field == table.Name) {
+				return Reference.R2;
+
+			} else {
+				return Reference.None;
+			}
+		}
+
+		public Reference ReferencesTableColumn(Table table, string column_name) {
+			var ref_table = ReferencesTable(table);
+			if (ref_table == Reference.None) {
+				return Reference.None;
+
+			} else if (ref_table == Reference.R1 && this.Table1Column == column_name) {
+				return Reference.R1;
+
+			} else if (ref_table == Reference.R2 && this.Table2Column == column_name) {
+				return Reference.R2;
+
+			} else {
+				return Reference.None;
+			}
+		}
+
 
 	}
 
 	public partial class Column {
 
-		/// <remarks/>
-		[XmlIgnore]
-		public Table Table;
+		public void Rename(Database database, string old_name) {
+			Table table = database.Table.FirstOrDefault(t => t.Column.Contains(this));
+			if (table == null) {
+				return;
+			}
+
+			// Rename associations.
+			Association.Reference assoc_ref = Association.Reference.None;
+			var association = database.Association.FirstOrDefault(a => {
+				assoc_ref = a.ReferencesTableColumn(table, old_name);
+				return (assoc_ref != Association.Reference.None) ? true : false;
+			});
+
+			if (association != null) {
+				if (assoc_ref == Association.Reference.R1) {
+					association.Table1Column = this.nameField;
+				} else {
+					association.Table2Column = this.nameField;
+				}
+			}
+
+			// TODO: Rename indexes.
+
+		}
 	}
 
 	public partial class Index {

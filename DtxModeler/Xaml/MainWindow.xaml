@@ -136,10 +136,21 @@
 								<TextBox x:Name="_TxtColumnDescription" Text="{Binding Description}" TextWrapping="Wrap" IsEnabled="False" SpellCheck.IsEnabled="True" AcceptsReturn="True" />
 							</GroupBox>
 							<GroupBox Grid.Row="3" Header="Associations">
-								<ListBox x:Name="_LstAssociations" DisplayMemberPath="DisplayName" ContextMenuOpening="_LstAssociations_ContextMenuOpening">
-									<ListBox.ContextMenu>
+								<DataGrid AutoGenerateColumns="False" x:Name="_DagTableAssociations"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_DagTableAssociations_ContextMenuOpening" IsReadOnly="True">
+									<DataGrid.Columns>
+										<DataGridTextColumn Header="Name 1" Width="*" Binding="{Binding Table1Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridTextColumn Header="Table 1" Width="*" Binding="{Binding Table1}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridTextColumn Header="Column 1" Width="*" Binding="{Binding Table1Column}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridTextColumn Header="Card1" Width="45" Binding="{Binding Table1Cardinality}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										
+										<DataGridTextColumn Header="Name 2" Width="*" Binding="{Binding Table2Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridTextColumn Header="Table 2" Width="*" Binding="{Binding Table2}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridTextColumn Header="Column 2" Width="*" Binding="{Binding Table2Column}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridTextColumn Header="Card2" Width="45" Binding="{Binding Table2Cardinality}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+									</DataGrid.Columns>
+									<DataGrid.ContextMenu>
 										<ContextMenu>
-											<MenuItem x:Name="_CmiCreateAssociation" Header="Create Association" Click="AssociationCreate_Click">
+											<MenuItem x:Name="_CmiCreateAssociation" Header="Create Association" Click="AssociationCreate_Click" IsEnabled="False">
 												<MenuItem.Icon>
 													<Image Source="Images/chart_line_add.png" />
 												</MenuItem.Icon>
@@ -156,8 +167,11 @@
 											</MenuItem>
 											<MenuItem x:Name="_CmiGoToOtherTable" Header="Go To Other Table" IsEnabled="False" Visibility="Collapsed" />
 										</ContextMenu>
-									</ListBox.ContextMenu>
-								</ListBox>
+									</DataGrid.ContextMenu>
+								</DataGrid>
+								<!-- <ListBox x:Name="_LstAssociations" DisplayMemberPath="DisplayName" ContextMenuOpening="_LstAssociations_ContextMenuOpening">
+									
+								</ListBox>-->
 							</GroupBox>
 						</Grid>
 					</TabItem>

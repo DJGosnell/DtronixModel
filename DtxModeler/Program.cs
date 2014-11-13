@@ -158,8 +158,6 @@ namespace DtxModeler.Generator {
 					var is_name_null = string.IsNullOrWhiteSpace(column.Name);
 					var is_member_null = string.IsNullOrWhiteSpace(column.Name);
 
-					column.Table = table;
-
 					// If the column name is empty, then assume that the database column name
 					// is the same as the member name and vice versa.
 					if (is_name_null) {
