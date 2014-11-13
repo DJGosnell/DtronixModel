@@ -11,7 +11,22 @@ using System.Xml.Serialization;
 namespace DtxModeler.Ddl {
 	public partial class Table {
 
+		public void Rename(Database database, string new_name) {
+			Association.Reference assoc_ref = Association.Reference.None;
+			var association = database.Association.Where(a => {
+				assoc_ref = a.ReferencesTable(this);
+				return (assoc_ref != Association.Reference.None) ? true : false;
+			});
 
+			if (association != null) {
+				if (assoc_ref == Association.Reference.R1) {
+					//association.Table1Column = this.nameField;
+				} else {
+					//association.Table2Column = this.nameField;
+				}
+			}
+
+		}
 
 	}
 
@@ -197,17 +212,14 @@ namespace DtxModeler.Ddl {
 			}
 
 			// Rename associations.
-			Association.Reference assoc_ref = Association.Reference.None;
-			var association = database.Association.FirstOrDefault(a => {
-				assoc_ref = a.ReferencesTableColumn(table, old_name);
-				return (assoc_ref != Association.Reference.None) ? true : false;
-			});
-
-			if (association != null) {
-				if (assoc_ref == Association.Reference.R1) {
-					association.Table1Column = this.nameField;
-				} else {
-					association.Table2Column = this.nameField;
+			foreach (var association in database.Association) {
+				var assoc_ref = association.ReferencesTableColumn(table, old_name);
+				if(assoc_ref != Association.Reference.None){
+					if (assoc_ref == Association.Reference.R1) {
+						association.Table1Column = this.nameField;
+					} else {
+						association.Table2Column = this.nameField;
+					}
 				}
 			}
 
