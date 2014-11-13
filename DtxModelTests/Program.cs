@@ -9,15 +9,30 @@ using System.Threading.Tasks;
 using DtxModelTests.Northwind;
 using DtxModelTests.Tome;
 using DtxModelTests.Models;
+using MySql.Data.MySqlClient;
+using DtxModelTests.MySql;
 
 namespace DtxModelTests {
     class Program {
         static void Main(string[] args) {
-			ThunderbirdTests();
+			//ThunderbirdTests();
+
+			MySqlTests();
         }
 
-		static Process proc = Process.GetCurrentProcess();
+		private static void MySqlTests() {
+			mep_liveContext.DefaultConnection = () => {
+				var connection = new MySqlConnection(@"Server=; Database=mep_live; Uid=; Pwd=;");
+				connection.Open();
+				return connection;
+			};
+			using (var context = new mep_liveContext()) {
+				var users = context.Users.Select().ExecuteFetchAll();
+			}
+		}
 
+		static Process proc = Process.GetCurrentProcess();
+		/*
 		static void ThunderbirdTests() {
 			ThunderbirdCalendarContext.DefaultConnection = () => {
 				var connection = new SQLiteConnection(@"Data Source=C:\Users\mepengadmin\Source\Workspaces\DtronixModel\DtxModel\DtxModelTests\Thunderbird\local.sqlite;Version=3;");
@@ -44,7 +59,7 @@ namespace DtxModelTests {
 
 				Console.ReadLine();
 			}
-		}
+		}*/
 
 
 		/*static void insertTests() {

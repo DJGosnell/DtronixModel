@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MySql\mep_live.cs" />
     <Compile Include="Northwind\Northwind.cs">
       <DependentUpon>Northwind.ddl</DependentUpon>
     </Compile>
@@ -77,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="MySql\mep_live.ddl" />
     <None Include="Northwind\Northwind.ddl">
       <SubType>Designer</SubType>
     </None>
@@ -92,9 +94,6 @@
     <None Include="Northwind\Tome.dbml.layout">
       <DependentUpon>Tome.ddl</DependentUpon>
     </None>
-    <None Include="Northwind\Tome2.dbml.layout">
-      <DependentUpon>Tome2.dbml</DependentUpon>
-    </None>
     <None Include="Northwind\Tome2.ddl" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -105,13 +104,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Northwind\Northwind.Sqlite3.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="MySql\mep_live.sql" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)packages\System.Data.SQLite.Core.1.0.94.0\build\net45\*.*" "$(TargetDir)*.*" /Y /I /E</PreBuildEvent>

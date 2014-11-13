@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DtxModeler.Ddl;
+using System.Data.SqlTypes;
 
 namespace DtxModeler.Generator.CodeGen {
 	class TableModelGen : CodeGenerator {
@@ -130,10 +131,12 @@ namespace DtxModeler.Generator.CodeGen {
 
 			foreach (var column in db_table.Column) {
 				string type = Enum.GetName(typeof(NetTypes), column.NetType);
+				string reader_get = type;
 				bool cast_as = false;
 				switch (column.NetType) {
 					case NetTypes.ByteArray:
 						type = "Byte[]";
+						reader_get = "Bytes";
 						cast_as = true;
 						break;
 					case NetTypes.String:
@@ -143,10 +146,14 @@ namespace DtxModeler.Generator.CodeGen {
 
 				code.Write("case \"").Write(column.Name).Write("\": _").Write(column.Name).Write(" = ");
 
-				if (cast_as) {
+				if (column.NetType == NetTypes.ByteArray) {
+					code.Write("(reader.IsDBNull(i)) ? default(").Write(type).Write(") : ").Write("reader.GetFieldValue<").Write(reader_get).Write(">(i)");
+				} else if (cast_as) {
 					code.Write("reader.GetValue(i) as ").Write(type);
+				}else if(column.Nullable){
+					code.Write("(reader.IsDBNull(i)) ? default(").Write(type).Write(") : ").Write("reader.Get").Write(reader_get).Write("(i)");
 				} else {
-					code.Write("(reader.IsDBNull(i)) ? default(").Write(type).Write(") : ").Write("reader.GetFieldValue<").Write(type).Write(">(i)");
+					code.Write("reader.Get").Write(reader_get).Write("(i)");
 				}
 				code.WriteLine("; break;");
 
