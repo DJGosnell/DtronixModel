@@ -13,7 +13,7 @@ namespace DtxModeler.Ddl {
 
 		public void Rename(Database database, string new_name) {
 			string old_name = this.nameField;
-
+			// Update associations
 			foreach (var association in database.Association) {
 				var assoc_ref = association.ReferencesTable(this);
 				if (assoc_ref != Association.Reference.None) {
@@ -207,12 +207,7 @@ namespace DtxModeler.Ddl {
 	public partial class Column {
 
 		public void Rename(Database database, string new_name) {
-			var old_name = this.nameField;
-			this.Name= new_name;
-			PostRename(database, old_name);
-		}
 
-		public void PostRename(Database database, string old_name) {
 			Table table = database.Table.FirstOrDefault(t => t.Column.Contains(this));
 			if (table == null) {
 				return;
@@ -220,18 +215,25 @@ namespace DtxModeler.Ddl {
 
 			// Rename associations.
 			foreach (var association in database.Association) {
-				var assoc_ref = association.ReferencesTableColumn(table, old_name);
-				if(assoc_ref != Association.Reference.None){
+				var assoc_ref = association.ReferencesTableColumn(table, this.nameField);
+				if (assoc_ref != Association.Reference.None) {
 					if (assoc_ref == Association.Reference.R1) {
-						association.Table1Column = this.nameField;
+						association.Table1Column = new_name;
 					} else {
-						association.Table2Column = this.nameField;
+						association.Table2Column = new_name;
 					}
 				}
 			}
 
-			// TODO: Rename indexes.
 
+			this.Name = new_name;
+		}
+
+		public void PostRename(Database database, string old_name) {
+			// Undo the change and don't notify the property listeners.
+			var new_name = this.nameField;
+			this.nameField = old_name;
+			Rename(database, new_name);
 		}
 	}
 
