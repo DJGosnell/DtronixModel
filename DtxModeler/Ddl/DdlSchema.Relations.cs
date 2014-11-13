@@ -11,6 +11,8 @@ using System.Xml.Serialization;
 namespace DtxModeler.Ddl {
 	public partial class Table {
 
+
+
 	}
 
 	public partial class Database {
@@ -182,7 +184,13 @@ namespace DtxModeler.Ddl {
 
 	public partial class Column {
 
-		public void Rename(Database database, string old_name) {
+		public void Rename(Database database, string new_name) {
+			var old_name = this.nameField;
+			this.nameField = new_name;
+			PostRename(database, old_name);
+		}
+
+		public void PostRename(Database database, string old_name) {
 			Table table = database.Table.FirstOrDefault(t => t.Column.Contains(this));
 			if (table == null) {
 				return;

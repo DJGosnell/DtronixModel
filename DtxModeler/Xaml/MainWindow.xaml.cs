@@ -214,7 +214,7 @@ namespace DtxModeler.Xaml {
 
 			switch (e.PropertyName) {
 				case "Name":
-					column.Rename(_DatabaseExplorer.SelectedDatabase, previous_column.Name);
+					column.PostRename(_DatabaseExplorer.SelectedDatabase, previous_column.Name);
 					break;
 
 				case "DbType":
