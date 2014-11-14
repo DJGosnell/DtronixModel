@@ -20,7 +20,6 @@ using DtxModeler.Generator;
 using System.IO;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Windows.Documents;
 using System.Diagnostics;
 using DtxModeler.Generator.MySqlMwb;
 using DtxModeler.Generator.MySql;
@@ -35,8 +34,11 @@ namespace DtxModeler.Xaml {
 
 		private Column previous_column = null;
 
+		public Table SelectedTable { get; set; }
+
 		public MainWindow() {
 			InitializeComponent();
+			DataContext = this;
 			ColumnNetType.ItemsSource = Enum.GetValues(typeof(NetTypes)).Cast<NetTypes>();
 			_CmbTargetDatabase.ItemsSource = Enum.GetValues(typeof(DbProvider)).Cast<DbProvider>();
 
@@ -51,6 +53,57 @@ namespace DtxModeler.Xaml {
 
 			_Status.SetStatus("Application Loaded And Ready", ColorStatusBar.Status.Completed);
 		}
+
+		private void BindCommand(ICommand command, KeyGesture gesture, ExecutedRoutedEventHandler execute) {
+			BindCommand(command, gesture, execute, null);
+		}
+
+		private void BindCommand(ICommand command, KeyGesture gesture, ExecutedRoutedEventHandler execute, CanExecuteRoutedEventHandler can_execute) {
+			
+			if (gesture != null) {
+				InputBindings.Add(new InputBinding(command, gesture));
+			}
+			
+			CommandBinding cb = new CommandBinding(command);
+			cb.Executed += execute;
+
+			if (can_execute != null) {
+				cb.CanExecute += can_execute;
+			}
+
+			CommandBindings.Add(cb);
+		}
+
+		#region General window events.
+
+		private void _MiCommandlineToggle_Click(object sender, RoutedEventArgs e) {
+			if (_MiCommandlineToggle.IsChecked) {
+				Program.CommandlineShow();
+			} else {
+				Program.CommandlineHide();
+			}
+
+		}
+
+		private void MenuItem_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
+			_MiCommandlineToggle.IsChecked = Program.CommandlineVisible;
+		}
+
+
+		private void Window_KeyUp(object sender, KeyEventArgs e) {
+			if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && e.Key == Key.S) {
+				_DatabaseExplorer.Save();
+				UpdateTitle();
+			}
+		}
+
+
+		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+			Exit(e);
+		}
+		#endregion
+
+		#region General Commands
 
 		private async void Command_ImportMySqlMwb(object sender, ExecutedRoutedEventArgs e) {
 			_Status.SetStatus("Importing MySQL Workbench model.", ColorStatusBar.Status.Working);
@@ -75,26 +128,6 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
-
-		private void BindCommand(ICommand command, KeyGesture gesture, ExecutedRoutedEventHandler execute) {
-			BindCommand(command, gesture, execute, null);
-		}
-
-		private void BindCommand(ICommand command, KeyGesture gesture, ExecutedRoutedEventHandler execute, CanExecuteRoutedEventHandler can_execute) {
-			
-			if (gesture != null) {
-				InputBindings.Add(new InputBinding(command, gesture));
-			}
-			
-			CommandBinding cb = new CommandBinding(command);
-			cb.Executed += execute;
-
-			if (can_execute != null) {
-				cb.CanExecute += can_execute;
-			}
-
-			CommandBindings.Add(cb);
-		}
 
 		private void Command_GenerateAll(object obSender, ExecutedRoutedEventArgs e) {
 			_Status.SetStatus("Beginning Code Generation", ColorStatusBar.Status.Working);
@@ -142,12 +175,12 @@ namespace DtxModeler.Xaml {
 			if (_DatabaseExplorer.LoadDatabase() == false) {
 				_Status.SetStatus("Canceled Opening Database", ColorStatusBar.Status.Completed);
 			}
-			
+
 		}
 
 		private async void Command_Import(object obSender, ExecutedRoutedEventArgs e) {
 			_Status.SetStatus("Importing Database", ColorStatusBar.Status.Working);
-			var db_server = new DatabaseServer(){ 
+			var db_server = new DatabaseServer() {
 				Owner = this
 			};
 
@@ -184,12 +217,84 @@ namespace DtxModeler.Xaml {
 			Exit(new System.ComponentModel.CancelEventArgs());
 		}
 
-		
+
 		private void Exit(System.ComponentModel.CancelEventArgs e) {
 			if (_DatabaseExplorer.CloseAllDatabases() == false) {
 				e.Cancel = true;
 			}
 		}
+
+		#endregion
+
+		#region Explorer control methods
+
+		private void _DatabaseExplorer_ChangedSelection(object sender, ExplorerControl.SelectionChangedEventArgs e) {
+			_DagColumnDefinitions.ItemsSource = null;
+			_DagTableAssociations.ItemsSource = null;
+			_TxtTableDescription.IsEnabled = false;
+			_TxtTableDescription.Text = _TxtColumnDescription.Text = "";
+
+			if (e.SelectionType != ExplorerControl.Selection.None) {
+				_DagConfigurations.ItemsSource = e.Database.Configuration;
+				switch (e.Database.TargetDb) {
+					case DbProvider.Sqlite:
+						type_transformer = new SqliteTypeTransformer();
+						break;
+					case DbProvider.MySQL:
+						type_transformer = new MySqlTypeTransformer();
+						break;
+				}
+				ColumnDbType.ItemsSource = type_transformer.DbTypes();
+				this.DataContext = e.Database;
+			}
+
+
+			if (e.SelectionType == ExplorerControl.Selection.TableItem) {
+				IndexControlTest.DataContext = this;
+
+				SelectedTable = e.Table;
+
+				var test = IndexControlTest;
+				_DagColumnDefinitions.ItemsSource = e.Table.Column;
+				_tabTableSql.DataContext = e.Table;
+				//_tabTable.IsSelected = true;
+
+				_TxtTableDescription.IsEnabled = true;
+				_TxtTableDescription.DataContext = e.Table;
+
+				_DagTableAssociations.ItemsSource = e.Database.GetAssociations(e.Table);
+			} else if (e.SelectionType == ExplorerControl.Selection.Database) {
+				//_tabConfig.IsSelected = true;
+			}
+
+			UpdateTitle();
+		}
+
+
+		private void _DatabaseExplorer_DatabaseModified(object sender, ExplorerControl.DatabaseEventArgs e) {
+			UpdateTitle();
+		}
+
+		private void UpdateTitle() {
+			var database = _DatabaseExplorer.SelectedDatabase;
+
+			if (database != null) {
+				if (database._FileLocation != null) {
+					this.Title = "Dtronix Modeler - " + database.Name + " (" + Path.GetFileName(database._FileLocation) + ")";
+				} else {
+					this.Title = "Dtronix Modeler - " + database.Name + "(Usaved)";
+				}
+
+				if (database._Modified) {
+					this.Title += " [Unsaved Changes]";
+				}
+			} else {
+				this.Title = "Dtronix Modeler";
+			}
+		}
+		#endregion
+
+		#region Table definition methods
 
 		private Column GetSelectedColumn() {
 			return _DagColumnDefinitions.SelectedItem as Column;
@@ -203,6 +308,7 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
+		
 
 		void TableColumn_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
 			Column column = sender as Column;
@@ -275,66 +381,6 @@ namespace DtxModeler.Xaml {
 			_DagConfigurations.ItemsSource = null;
 		}
 
-		private void _DatabaseExplorer_ChangedSelection(object sender, ExplorerControl.SelectionChangedEventArgs e) {
-			_DagColumnDefinitions.ItemsSource = null;
-			_DagTableAssociations.ItemsSource = null;
-			_TxtTableDescription.IsEnabled = false;
-			_TxtTableDescription.Text = _TxtColumnDescription.Text = "";
-
-			if (e.SelectionType != ExplorerControl.Selection.None) {
-				_DagConfigurations.ItemsSource = e.Database.Configuration;
-				switch (e.Database.TargetDb) {
-					case DbProvider.Sqlite:
-						type_transformer = new SqliteTypeTransformer();
-						break;
-					case DbProvider.MySQL:
-						type_transformer = new MySqlTypeTransformer();
-						break;
-				}
-				ColumnDbType.ItemsSource = type_transformer.DbTypes();
-				this.DataContext = e.Database;
-			}
-
-
-			if (e.SelectionType == ExplorerControl.Selection.TableItem) {
-				_DagColumnDefinitions.ItemsSource = e.Table.Column;
-				_tabTableSql.DataContext = e.Table;
-				//_tabTable.IsSelected = true;
-
-				_TxtTableDescription.IsEnabled = true;
-				_TxtTableDescription.DataContext = e.Table;
-
-				_DagTableAssociations.ItemsSource = e.Database.GetAssociations(e.Table);
-			} else if (e.SelectionType == ExplorerControl.Selection.Database) {
-				//_tabConfig.IsSelected = true;
-			}
-
-			UpdateTitle();
-		}
-
-
-		private void _DatabaseExplorer_DatabaseModified(object sender, ExplorerControl.DatabaseEventArgs e) {
-			UpdateTitle();
-		}
-
-		private void UpdateTitle() {
-			var database = _DatabaseExplorer.SelectedDatabase;
-
-			if(database != null){
-				if (database._FileLocation != null) {
-					this.Title = "Dtronix Modeler - " + database.Name + " (" + Path.GetFileName(database._FileLocation) + ")";
-				} else {
-					this.Title = "Dtronix Modeler - " + database.Name + "(Usaved)";
-				}
-
-				if (database._Modified) {
-					this.Title += " [Unsaved Changes]";
-				}
-			} else {
-				this.Title = "Dtronix Modeler";
-			}
-		}
-
 		private void _DagColumnDefinitions_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
 			var column = GetSelectedColumn();
 			_TxtColumnDescription.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = false;
@@ -353,25 +399,6 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
-
-		private void _CmiDeleteColumn_Click(object sender, RoutedEventArgs e) {
-			var columns = GetSelectedColumns();
-			string text_columns = "";
-			foreach (var column in columns) {
-				text_columns += column.Name + "\r\n";
-			}
-
-			var result = MessageBox.Show("Are you sure you want to delete the following columns? \r\n" + text_columns, "Confirm Column Deletion", MessageBoxButton.YesNo);
-
-			if (result != MessageBoxResult.Yes) {
-				return;
-			}
-
-			foreach (var column in columns) {
-				_DatabaseExplorer.SelectedTable.Column.Remove(column);
-			}
-
-		}
 
 		private void _CmiMoveColumnUp_Click(object sender, RoutedEventArgs e) {
 			var columns = GetSelectedColumns();
@@ -407,24 +434,76 @@ namespace DtxModeler.Xaml {
 		}
 
 
-
-		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
-			Exit(e);
-		}
-
-
-		private void _MiCommandlineToggle_Click(object sender, RoutedEventArgs e) {
-			if (_MiCommandlineToggle.IsChecked) {
-				Program.CommandlineShow();
+		private void _DagColumnDefinitions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+			var columns = GetSelectedColumns();
+			if (columns.Length == 1) {
+				_TxtColumnDescription.IsEnabled = true;
+				_TxtColumnDescription.DataContext = columns[0];
+				previous_column = columns[0].Clone();
 			} else {
-				Program.CommandlineHide();
+				_TxtColumnDescription.IsEnabled = false;
+				_TxtColumnDescription.DataContext = null;
 			}
-			
+
 		}
 
-		private void MenuItem_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
-			_MiCommandlineToggle.IsChecked = Program.CommandlineVisible;
+
+		private void _DagColumnDefinitions_PasteCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			// Only allow paste if the clipboard is valid XML.
+			if (Clipboard.ContainsText()) {
+				e.CanExecute = true;
+			} else {
+				e.CanExecute = false;
+				e.Handled = true;
+			}
 		}
+
+
+		private void _DagColumnDefinitions_Paste(object sender, ExecutedRoutedEventArgs e) {
+			Column[] columns = Utilities.XmlDeserializeString<DtxModeler.Ddl.Column[]>(Clipboard.GetText()) as Column[];
+			var all_columns = _DatabaseExplorer.SelectedTable.Column;
+
+			if (columns == null) {
+				return;
+			}
+
+			foreach (var column in columns) {
+				var found_column = all_columns.FirstOrDefault(col => col.Name.ToLower() == column.Name.ToLower());
+
+				if (found_column != null) {
+					InputDialogBox.Show("Column Naming Collision", "Enter a new name for the old \"" + found_column.Name + "\" Column.", found_column.Name, value => {
+						column.Name = value;
+					});
+
+					continue;
+				}
+
+			}
+
+			// Add in reverse order to allow for insertion in logical order.
+			for (int i = columns.Length - 1; i >= 0; i--) {
+				if (_DagColumnDefinitions.Items.Count > _DagColumnDefinitions.SelectedIndex + 1) {
+					_DatabaseExplorer.SelectedTable.Column.Insert(_DagColumnDefinitions.SelectedIndex + 1, columns[i]);
+				} else {
+					_DatabaseExplorer.SelectedTable.Column.Add(columns[i]);
+				}
+			}
+		}
+
+		private void _DagColumnDefinitions_CopyCanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			if (GetSelectedColumn() != null) {
+				e.CanExecute = true;
+			} else {
+				e.CanExecute = false;
+				e.Handled = true;
+			}
+		}
+
+		private void _DagColumnDefinitions_Copy(object sender, ExecutedRoutedEventArgs e) {
+			var text = Utilities.XmlSerializeObject(GetSelectedColumns());
+			Clipboard.SetText(text, TextDataFormat.UnicodeText);
+		}
+
 
 		private void AssociationDelete_Click(object sender, RoutedEventArgs e) {
 			var association = _DagTableAssociations.SelectedItem as Association;
@@ -511,83 +590,10 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
-		private void _DagColumnDefinitions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
-			var columns = GetSelectedColumns();
-			if (columns.Length == 1) {
-				_TxtColumnDescription.IsEnabled = true;
-				_TxtColumnDescription.DataContext = columns[0];
-				previous_column = columns[0].Clone();
-			} else {
-				_TxtColumnDescription.IsEnabled = false;
-				_TxtColumnDescription.DataContext = null;
-			}
 
-		}
+		#endregion
 
-		private void Window_KeyUp(object sender, KeyEventArgs e) {
-			if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && e.Key == Key.S) {
-				_DatabaseExplorer.Save();
-				UpdateTitle();
-			}
-		}
-
-		private void _DagColumnDefinitions_PasteCanExecute(object sender, CanExecuteRoutedEventArgs e) {
-			// Only allow paste if the clipboard is valid XML.
-			if (Clipboard.ContainsText()){ 
-				e.CanExecute = true;
-			} else {
-				e.CanExecute = false;
-				e.Handled = true;
-			}
-		}
-
-
-		private void _DagColumnDefinitions_Paste(object sender, ExecutedRoutedEventArgs e) {
-			Column[] columns = Utilities.XmlDeserializeString<DtxModeler.Ddl.Column[]>(Clipboard.GetText()) as Column[];
-			var all_columns = _DatabaseExplorer.SelectedTable.Column;
-
-			if (columns == null) {
-				return;
-			}
-
-			if (_MiValidateColumnsOnPaste.IsChecked) {
-				foreach (var column in columns) {
-					var found_column = all_columns.FirstOrDefault(col => col.Name.ToLower() == column.Name.ToLower());
-
-					if (found_column != null) {
-						InputDialogBox.Show("Column Naming Collision", "Enter a new name for the old \"" + found_column.Name + "\" Column.", found_column.Name, value => {
-							column.Name = value;
-						});
-
-						continue;
-					}
-				}
-			}
-
-			// Add in reverse order to allow for insertion in logical order.
-			for (int i = columns.Length - 1; i >= 0; i--) {
-				if (_DagColumnDefinitions.Items.Count > _DagColumnDefinitions.SelectedIndex + 1) {
-					_DatabaseExplorer.SelectedTable.Column.Insert(_DagColumnDefinitions.SelectedIndex + 1, columns[i]);
-				}else{
-					_DatabaseExplorer.SelectedTable.Column.Add(columns[i]);
-				}
-			}
-		}
-
-		private void _DagColumnDefinitions_CopyCanExecute(object sender, CanExecuteRoutedEventArgs e) {
-			if (GetSelectedColumn() != null) {
-				e.CanExecute = true;
-			} else {
-				e.CanExecute = false;
-				e.Handled = true;
-			}
-		}
-
-		private void _DagColumnDefinitions_Copy(object sender, ExecutedRoutedEventArgs e) {
-			var text = Utilities.XmlSerializeObject(GetSelectedColumns());
-			Clipboard.SetText(text, TextDataFormat.UnicodeText);
-		}
-
+		#region Database configurations.
 		private void _TxtConfigSearch_TextChanged(object sender, TextChangedEventArgs e) {
 			var database = _DatabaseExplorer.SelectedDatabase;
 
@@ -620,12 +626,12 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void _DagConfigurations_Hyperlink(object sender, RoutedEventArgs e) {
-			Hyperlink link = e.OriginalSource as Hyperlink;
+			var link = e.OriginalSource as System.Windows.Documents.Hyperlink;
 			if (link.NavigateUri.IsAbsoluteUri) {
 				Process.Start(link.NavigateUri.ToString());
 			}
-		} 
-
+		}
+		#endregion
 
 	}
 

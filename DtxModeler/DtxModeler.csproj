@@ -96,6 +96,9 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Xaml\IndexTabControl.xaml.cs">
+      <DependentUpon>IndexTabControl.xaml</DependentUpon>
+    </Compile>
     <Page Include="Xaml\AssociationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -111,6 +114,10 @@
     <Page Include="Xaml\ExplorerControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Xaml\IndexTabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Xaml\InputDialogBox.xaml">
       <SubType>Designer</SubType>

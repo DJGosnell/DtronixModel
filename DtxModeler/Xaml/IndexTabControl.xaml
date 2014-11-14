@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="DtxModeler.Xaml.IndexTabControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="478" d:DesignWidth="664">
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="36*"/>
+			<ColumnDefinition Width="65*"/>
+		</Grid.ColumnDefinitions>
+		<GroupBox Header="Indexes" Grid.Column="0" Margin="3">
+			<ListBox x:Name="_LstIndexes" ItemsSource="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=SelectedTable.Index}" DisplayMemberPath="Name">
+				<ListBox.ContextMenu>
+					<ContextMenu>
+						<MenuItem Command="New">
+							<MenuItem.Icon>
+								<Image Source="Images/add.png" />
+							</MenuItem.Icon>
+						</MenuItem>
+						<MenuItem Command="Delete">
+							<MenuItem.Icon>
+								<Image Source="Images/delete.png" />
+							</MenuItem.Icon>
+						</MenuItem>
+					</ContextMenu>
+				</ListBox.ContextMenu>
+				<ListBox.CommandBindings>
+					<CommandBinding Command="New" Executed="_LstIndexes_New" CanExecute="_LstIndexes_NewCanExecute" />
+					<CommandBinding Command="Delete" Executed="_LstIndexes_Delete" CanExecute="_LstIndexes_DeleteCanExecute" />
+				</ListBox.CommandBindings>
+			</ListBox>
+		</GroupBox>
+		<GridSplitter HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Grid.Column="1" Grid.RowSpan="1"/>
+		<GroupBox Grid.Column="1" Header="Index Definition" Margin="3">
+			<DataGrid x:Name="_DatIndexDefinition" ItemsSource="{Binding _LstIndexes.sel}">
+				<DataGrid.Columns>
+					<DataGridComboBoxColumn Width="*" Header="Column Name" SelectedValueBinding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding Name}" />
+					<DataGridComboBoxColumn Width="140" Header="Sort Direction" SelectedValueBinding="{Binding SortDirection, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding SortDirection}" />
+				</DataGrid.Columns>
+			</DataGrid>
+		</GroupBox>
+
+	</Grid>
+</UserControl>
