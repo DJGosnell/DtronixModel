@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DtxModeler.Ddl;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -8,6 +9,48 @@ using System.Windows;
 using System.Windows.Data;
 
 namespace DtxModeler.Xaml {
+	public class DataGridItemSelectedToBoolConverter : IValueConverter {
+		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+			if (value != null) {
+				return true;
+			}
+
+			return false;
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+			throw new NotImplementedException();
+		}
+	}
+
+	public class NotNullToBoolConverter : IValueConverter {
+		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+			if (value != null) {
+				return true;
+			}
+
+			return false;
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+			throw new NotImplementedException();
+		}
+	}
+
+	public class DataGridItemSelectedColumnToBoolConverter : IValueConverter {
+		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+			if (value != null && value is Column) {
+				return true;
+			}
+
+			return false;
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) {
+			throw new NotImplementedException();
+		}
+	}
+
 	public class BooleanToVisibiltyConverter : IValueConverter {
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
 			if (value == null)

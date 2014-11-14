@@ -47,13 +47,31 @@ namespace DtxModeler.Xaml {
 			}
 		}
 
+
+
 		public Database SelectedDatabase {
-			get { return selected_database; }
+			get { return (Database)GetValue(SelectedDatabaseProperty); }
+			set { SetValue(SelectedDatabaseProperty, value); }
 		}
 
+		// Using a DependencyProperty as the backing store for SelectedDatabase.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty SelectedDatabaseProperty =
+			DependencyProperty.Register("SelectedDatabase", typeof(Database), typeof(ExplorerControl), new PropertyMetadata((dp, c) => {
+				string objects = "";
+			}));
+
+
+
 		public Table SelectedTable {
-			get { return selected_table; }
+			get { return (Table)GetValue(SelectedTableProperty); }
+			set { SetValue(SelectedTableProperty, value); }
 		}
+
+		// Using a DependencyProperty as the backing store for SelectedTable.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty SelectedTableProperty =
+			DependencyProperty.Register("SelectedTable", typeof(Table), typeof(ExplorerControl), new PropertyMetadata((dp, c) => {
+				string objects = "";
+			}));
 
 		public event EventHandler<DatabaseEventArgs> DatabaseModified;
 		public event EventHandler<SelectionChangedEventArgs> ChangedSelection;
@@ -492,6 +510,8 @@ namespace DtxModeler.Xaml {
 				}
 			}
 
+			SelectedDatabase = selected_database;
+			SelectedTable = selected_table;
 
 			if (ChangedSelection != null) {
 				ChangedSelection(sender, new SelectionChangedEventArgs() {

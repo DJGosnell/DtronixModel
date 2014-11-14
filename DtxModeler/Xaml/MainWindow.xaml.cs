@@ -34,11 +34,35 @@ namespace DtxModeler.Xaml {
 
 		private Column previous_column = null;
 
-		public Table SelectedTable { get; set; }
+		//public Database SelectedDatabase { get; set; }
+
+
+
+		public Table SelectedTable {
+			get { return (Table)GetValue(SelectedTableProperty); }
+			set { SetValue(SelectedTableProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for SelectedTable.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty SelectedTableProperty =
+			DependencyProperty.Register("SelectedTable", typeof(Table), typeof(MainWindow));
+
+
+		public Database SelectedDatabase {
+			get { return (Database)GetValue(SelectedDatabaseProperty); }
+			set { SetValue(SelectedDatabaseProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for SelectedDatabase.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty SelectedDatabaseProperty =
+			DependencyProperty.Register("SelectedDatabase", typeof(Database), typeof(MainWindow), new PropertyMetadata((dp, c) => {
+				string objects = "";	
+			}));
+
+
 
 		public MainWindow() {
 			InitializeComponent();
-			DataContext = this;
 			ColumnNetType.ItemsSource = Enum.GetValues(typeof(NetTypes)).Cast<NetTypes>();
 			_CmbTargetDatabase.ItemsSource = Enum.GetValues(typeof(DbProvider)).Cast<DbProvider>();
 
@@ -229,13 +253,10 @@ namespace DtxModeler.Xaml {
 		#region Explorer control methods
 
 		private void _DatabaseExplorer_ChangedSelection(object sender, ExplorerControl.SelectionChangedEventArgs e) {
-			_DagColumnDefinitions.ItemsSource = null;
-			_DagTableAssociations.ItemsSource = null;
-			_TxtTableDescription.IsEnabled = false;
-			_TxtTableDescription.Text = _TxtColumnDescription.Text = "";
+			//SelectedDatabase = e.Database;
+			//SelectedTable = e.Table;
 
 			if (e.SelectionType != ExplorerControl.Selection.None) {
-				_DagConfigurations.ItemsSource = e.Database.Configuration;
 				switch (e.Database.TargetDb) {
 					case DbProvider.Sqlite:
 						type_transformer = new SqliteTypeTransformer();
@@ -245,23 +266,10 @@ namespace DtxModeler.Xaml {
 						break;
 				}
 				ColumnDbType.ItemsSource = type_transformer.DbTypes();
-				this.DataContext = e.Database;
 			}
 
 
 			if (e.SelectionType == ExplorerControl.Selection.TableItem) {
-				IndexControlTest.DataContext = this;
-
-				SelectedTable = e.Table;
-
-				var test = IndexControlTest;
-				_DagColumnDefinitions.ItemsSource = e.Table.Column;
-				_tabTableSql.DataContext = e.Table;
-				//_tabTable.IsSelected = true;
-
-				_TxtTableDescription.IsEnabled = true;
-				_TxtTableDescription.DataContext = e.Table;
-
 				_DagTableAssociations.ItemsSource = e.Database.GetAssociations(e.Table);
 			} else if (e.SelectionType == ExplorerControl.Selection.Database) {
 				//_tabConfig.IsSelected = true;
@@ -378,12 +386,11 @@ namespace DtxModeler.Xaml {
 
 
 		private void _DatabaseExplorer_UnloadedDatabase(object sender, ExplorerControl.DatabaseEventArgs e) {
-			_DagConfigurations.ItemsSource = null;
 		}
 
 		private void _DagColumnDefinitions_ContextMenuOpening(object sender, ContextMenuEventArgs e) {
 			var column = GetSelectedColumn();
-			_TxtColumnDescription.IsEnabled = _CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = false;
+			_CmiMoveColumnDown.IsEnabled = _CmiMoveColumnUp.IsEnabled = false;
 			
 			if (column != null) {
 
@@ -437,12 +444,12 @@ namespace DtxModeler.Xaml {
 		private void _DagColumnDefinitions_SelectionChanged(object sender, SelectionChangedEventArgs e) {
 			var columns = GetSelectedColumns();
 			if (columns.Length == 1) {
-				_TxtColumnDescription.IsEnabled = true;
-				_TxtColumnDescription.DataContext = columns[0];
+				//_TxtColumnDescription.IsEnabled = true;
+				//_TxtColumnDescription.DataContext = columns[0];
 				previous_column = columns[0].Clone();
 			} else {
-				_TxtColumnDescription.IsEnabled = false;
-				_TxtColumnDescription.DataContext = null;
+				//_TxtColumnDescription.IsEnabled = false;
+				//_TxtColumnDescription.DataContext = null;
 			}
 
 		}
@@ -622,13 +629,6 @@ namespace DtxModeler.Xaml {
 		private void _TxtConfigSearch_LostFocus(object sender, RoutedEventArgs e) {
 			if (string.IsNullOrWhiteSpace(_TxtConfigSearch.Text)) {
 				_TxtConfigSearch.Text = " Search Configurations";
-			}
-		}
-
-		private void _DagConfigurations_Hyperlink(object sender, RoutedEventArgs e) {
-			var link = e.OriginalSource as System.Windows.Documents.Hyperlink;
-			if (link.NavigateUri.IsAbsoluteUri) {
-				Process.Start(link.NavigateUri.ToString());
 			}
 		}
 		#endregion

@@ -3,8 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Xaml="clr-namespace:DtxModeler.Xaml" x:Class="DtxModeler.Xaml.MainWindow"
 		xmlns:dxaml="clr-namespace:DtxModeler.Xaml"
-        Title="Dtronix Modeler" Height="700" Width="930" MinHeight="450" MinWidth="700" Icon="Images/database_table.png" Closing="Window_Closing" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp">
+        Title="Dtronix Modeler" Height="700" Width="930" MinHeight="450" MinWidth="700" Icon="Images/database_table.png" Closing="Window_Closing" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp"
+		DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+
 	<Window.Resources>
+		
 		<Style TargetType="FrameworkElement" x:Key="MiddleCenter">
 			<Setter Property="VerticalAlignment" Value="Center" />
 			<Setter Property="HorizontalAlignment" Value="Center" />
@@ -12,8 +15,11 @@
 		<Style TargetType="FrameworkElement" x:Key="VerticalCenter">
 			<Setter Property="VerticalAlignment" Value="Center" />
 		</Style>
+		<dxaml:DataGridItemSelectedColumnToBoolConverter x:Key="DataGridItemSelectedColumnToBoolConverter" />
+		<dxaml:DataGridItemSelectedToBoolConverter x:Key="DataGridItemSelectedToBoolConverter" />
+		<dxaml:NotNullToBoolConverter x:Key="NotNullToBoolConverter" />
 	</Window.Resources>
-	<Grid>
+		<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="22"/>
 			<RowDefinition/>
@@ -58,7 +64,7 @@
 				<MenuItem x:Name="_MiCommandlineToggle" Header="Show Commandline" VerticalAlignment="Top" IsCheckable="True" IsChecked="false" Click="_MiCommandlineToggle_Click"/>
 			</MenuItem>
 		</Menu>
-		<Xaml:ExplorerControl x:Name="_DatabaseExplorer"  Grid.Row="1" ChangedSelection="_DatabaseExplorer_ChangedSelection" LoadedDatabase="_DatabaseExplorer_LoadedDatabase" UnloadedDatabase="_DatabaseExplorer_UnloadedDatabase" DatabaseModified="_DatabaseExplorer_DatabaseModified" />
+		<Xaml:ExplorerControl x:Name="_DatabaseExplorer" SelectedDatabase="{Binding SelectedDatabase, Mode=OneWayToSource}" SelectedTable="{Binding SelectedTable, Mode=OneWayToSource}" Grid.Row="1" ChangedSelection="_DatabaseExplorer_ChangedSelection" LoadedDatabase="_DatabaseExplorer_LoadedDatabase" UnloadedDatabase="_DatabaseExplorer_UnloadedDatabase" DatabaseModified="_DatabaseExplorer_DatabaseModified" />
 		<TabControl Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,0,0" BorderThickness="1,1,0,0" Grid.ColumnSpan="1" Padding="0,4">
 			<TabItem Header="Tables">
 				<TabControl x:Name="_tbcDatabaseView" VerticalAlignment="Stretch" BorderThickness="0,1">
@@ -71,10 +77,10 @@
 								<RowDefinition Height="150"/>
 							</Grid.RowDefinitions>
 							<GroupBox Grid.Row="0" Header="Table Description">
-								<TextBox x:Name="_TxtTableDescription" IsEnabled="False" Text="{Binding Description}" TextWrapping="Wrap" SpellCheck.IsEnabled="True" AcceptsReturn="True" />
+								<TextBox Text="{Binding SelectedTable.Description}" IsEnabled="{Binding SelectedTable, Converter={StaticResource NotNullToBoolConverter}}" TextWrapping="Wrap" SpellCheck.IsEnabled="True" AcceptsReturn="True" />
 							</GroupBox>
 							<GroupBox Grid.Row="1" Header="Colum Definitions">
-								<DataGrid AutoGenerateColumns="False" x:Name="_DagColumnDefinitions"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_DagColumnDefinitions_ContextMenuOpening" SelectionChanged="_DagColumnDefinitions_SelectionChanged">
+								<DataGrid AutoGenerateColumns="False" x:Name="_DagColumnDefinitions" ItemsSource="{Binding SelectedTable.Column}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_DagColumnDefinitions_ContextMenuOpening" SelectionChanged="_DagColumnDefinitions_SelectionChanged">
 									<DataGrid.Columns>
 										<DataGridTextColumn Header="Name" Width="100*" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
 										<DataGridComboBoxColumn Width="140" x:Name="ColumnNetType" Header=".Net Type" SelectedValueBinding="{Binding NetType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding NetType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
@@ -129,7 +135,7 @@
 								</DataGrid>
 							</GroupBox>
 							<GroupBox Grid.Row="2" Header="Column Description" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-								<TextBox x:Name="_TxtColumnDescription" Text="{Binding Description}" TextWrapping="Wrap" IsEnabled="False" SpellCheck.IsEnabled="True" AcceptsReturn="True" />
+								<TextBox x:Name="_TxtColumnDescription" DataContext="{Binding ElementName=_DagColumnDefinitions, Path=SelectedItem}" Text="{Binding Description}" TextWrapping="Wrap" SpellCheck.IsEnabled="True" AcceptsReturn="True" IsEnabled="{Binding SelectedItem, ElementName=_DagColumnDefinitions, Converter={StaticResource DataGridItemSelectedColumnToBoolConverter}}"/>
 							</GroupBox>
 							<GroupBox Grid.Row="3" Header="Associations">
 								<DataGrid AutoGenerateColumns="False" x:Name="_DagTableAssociations"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_DagTableAssociations_ContextMenuOpening" IsReadOnly="True">
@@ -173,7 +179,8 @@
 					</TabItem>
 
 					<TabItem x:Name="_tabIndexes" Header="Indexes">
-						<Xaml:IndexTabControl x:Name="IndexControlTest" SelectedTable="{Binding SelectedTable}"/>
+						<Xaml:IndexTabControl x:Name="IndexControlTest" SelectedTable="{Binding SelectedTable, Mode=TwoWay}"/>
+						<!--<TextBlock x:Name="TestTextBlock" Tag="{Binding SelectedTable}"></TextBlock>-->
 					</TabItem>
 
 					<TabItem x:Name="_tabEnums" Header="Enums" IsEnabled="False">
@@ -206,11 +213,11 @@
 							</Grid.RowDefinitions>
 							<GroupBox Grid.Row="0" Header="Options">
 								<StackPanel Orientation="Vertical" HorizontalAlignment="Left">
-									<CheckBox Name="ChkCustomTableSql" IsChecked="{Binding DataContext.UseCustomSql, RelativeSource={RelativeSource AncestorType=TabItem}}">Custom Table SQL</CheckBox>
+									<CheckBox Name="ChkCustomTableSql" IsChecked="{Binding SelectedTable.UseCustomSql}" IsEnabled="{Binding SelectedTable, Converter={StaticResource NotNullToBoolConverter}}">Custom Table SQL</CheckBox>
 								</StackPanel>
 							</GroupBox>
 							<GroupBox Grid.Row="1" Header="Table SQL">
-								<TextBox x:Name="_TxtTableSql" Text="{Binding DataContext.CustomSql, RelativeSource={RelativeSource AncestorType=TabItem}}" IsEnabled="{Binding ElementName=ChkCustomTableSql, Path=IsChecked}" AcceptsTab="True" AcceptsReturn="True" />
+								<TextBox Text="{Binding SelectedTable.CustomSql}" IsEnabled="{Binding ElementName=ChkCustomTableSql, Path=IsChecked}" AcceptsTab="True" AcceptsReturn="True" />
 							</GroupBox>
 
 						</Grid>
@@ -231,17 +238,11 @@
 										<RowDefinition Height="*"/>
 									</Grid.RowDefinitions>
 									<TextBox x:Name="_TxtConfigSearch" Height="24" Grid.Row="0" TextChanged="_TxtConfigSearch_TextChanged" Text=" Search Configurations" VerticalContentAlignment="Center" GotFocus="_TxtConfigSearch_GotFocus" LostFocus="_TxtConfigSearch_LostFocus" />
-									<DataGrid x:Name="_DagConfigurations" AutoGenerateColumns="False" Grid.Row="1">
+									<DataGrid ItemsSource="{Binding SelectedDatabase.Configuration}" AutoGenerateColumns="False" Grid.Row="1">
 										<DataGrid.Columns>
 											<DataGridTextColumn Binding="{Binding Name}" Width="250" Header="Configuration"/>
 											<DataGridTextColumn Binding="{Binding Value}" Width="200" Header="Value"/>
-											<DataGridHyperlinkColumn Binding="{Binding Description}" Width="*" Header="Description">
-												<DataGridHyperlinkColumn.ElementStyle>
-													<Style>
-														<EventSetter Event="Hyperlink.Click" Handler="_DagConfigurations_Hyperlink"/>
-													</Style>
-												</DataGridHyperlinkColumn.ElementStyle>
-											</DataGridHyperlinkColumn>
+											<DataGridTextColumn Binding="{Binding Description}" Width="*" Header="Description" />
 										</DataGrid.Columns>
 										<DataGrid.RowStyle>
 											<Style TargetType="DataGridRow">
@@ -274,17 +275,17 @@
 							<ColumnDefinition Width="257*"/>
 						</Grid.ColumnDefinitions>
 						<TextBlock HorizontalAlignment="Right" Text="Target Database" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3"/>
-						<ComboBox x:Name="_CmbTargetDatabase" SelectedValue="{Binding DataContext.TargetDb, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Column="1" Grid.Row="0" Margin="3"/>
+						<ComboBox x:Name="_CmbTargetDatabase" SelectedValue="{Binding SelectedDatabase.TargetDb}" Grid.Column="1" Grid.Row="0" Margin="3"/>
 
 						<TextBlock HorizontalAlignment="Right" Text="Namespace" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3"/>
-						<TextBox Text="{Binding DataContext.Namespace, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Column="1" Grid.Row="1" Margin="3"/>
+						<TextBox Text="{Binding SelectedDatabase.Namespace}" Grid.Column="1" Grid.Row="1" Margin="3"/>
 
 						<TextBlock HorizontalAlignment="Right" Text="Context Class" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3"/>
-						<TextBox Text="{Binding DataContext.ContextClass, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Column="1" Grid.Row="2" Margin="3"/>
+						<TextBox Text="{Binding SelectedDatabase.ContextClass}" Grid.Column="1" Grid.Row="2" Margin="3"/>
 
-						<CheckBox Grid.Column="3" Grid.Row="0" IsChecked="{Binding DataContext.OutputSqlTables, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Output SQL Tables"/>
+						<CheckBox Grid.Column="3" Grid.Row="0" IsChecked="{Binding SelectedDatabase.OutputSqlTables}" VerticalAlignment="Center" Content="Output SQL Tables"/>
 
-						<CheckBox Grid.Column="3" Grid.Row="1" IsChecked="{Binding DataContext.OutputCsClasses, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Output C# Classes"/>
+						<CheckBox Grid.Column="3" Grid.Row="1" IsChecked="{Binding SelectedDatabase.OutputCsClasses}" VerticalAlignment="Center" Content="Output C# Classes"/>
 					</Grid>
 				</GroupBox>
 			</TabItem>
