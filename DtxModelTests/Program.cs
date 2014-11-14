@@ -11,6 +11,7 @@ using DtxModelTests.Tome;
 using DtxModelTests.Models;
 using MySql.Data.MySqlClient;
 using DtxModelTests.MySql;
+using System.IO;
 
 namespace DtxModelTests {
     class Program {
@@ -21,13 +22,26 @@ namespace DtxModelTests {
         }
 
 		private static void MySqlTests() {
+			string server;
+			string username;
+			string password;
+			using (var reader = new StreamReader(@"C:\server-passwords.txt")) {
+				server = reader.ReadLine();
+				username = reader.ReadLine();
+				password = reader.ReadLine();
+			}
+
 			mep_liveContext.DefaultConnection = () => {
-				var connection = new MySqlConnection(@"Server=; Database=mep_live; Uid=; Pwd=;");
+				var connection = new MySqlConnection(@"Server=" + server + "; Database=mep_live; Uid=" + username + "; Pwd=" + password + ";");
 				connection.Open();
 				return connection;
 			};
 			using (var context = new mep_liveContext()) {
-				var users = context.Users.Select().ExecuteFetchAll();
+				var users = context.Users.Select().ExecuteFetch();
+
+				users.username += "Test";
+
+				context.Users.Update(users);
 			}
 		}
 
