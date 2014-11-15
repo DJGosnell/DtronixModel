@@ -630,7 +630,6 @@ namespace DtxModeler.Xaml {
 		}
 
 		private void _TreDatabaseLayout_New(object sender, ExecutedRoutedEventArgs e) {
-
 			if (selected_type == Selection.Tables || selected_type == Selection.TableItem) {
 				InputDialogBox.Show("Table Name", "Enter a new name for the table.", "", (value) => {
 					var table = new Table() {

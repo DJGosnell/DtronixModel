@@ -20,10 +20,9 @@ namespace DtxModeler.Xaml {
 	public partial class IndexTabControl : UserControl {
 		public IndexTabControl() {
 			InitializeComponent();
+
+			
 		}
-
-
-		private Table _SelectedTable = null;
 
 		public Table SelectedTable {
 			get { return (Table)GetValue(SelectedTableProperty); }
@@ -32,20 +31,14 @@ namespace DtxModeler.Xaml {
 
 		// Using a DependencyProperty as the backing store for SelectedTable2.  This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty SelectedTableProperty =
-			DependencyProperty.Register("SelectedTable", typeof(Table), typeof(IndexTabControl), new PropertyMetadata(SelectedTable_PropertyChanged));
+			DependencyProperty.Register("SelectedTable", typeof(Table), typeof(IndexTabControl));
 
-		private static void SelectedTable_PropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-			((IndexTabControl)d).Refresh();
-		}
+
 
 		public void Refresh() {
-			_SelectedTable = SelectedTable;
-			if (_SelectedTable == null) {
-				return;
-			}
 			var idx = new Index() {
 				Description = "Test Index Description",
-				Name = "Test Index " + _SelectedTable.Index.Count.ToString()
+				Name = "Test Index " + SelectedTable.Index.Count.ToString()
 			};
 
 			idx.IndexColumn.Add(new IndexColumn() {
@@ -57,23 +50,29 @@ namespace DtxModeler.Xaml {
 				Name = "Column 2"
 			});
 
-			_SelectedTable.Index.Add(idx);
+			SelectedTable.Index.Add(idx);
 		}
 
 		private void _LstIndexes_New(object sender, ExecutedRoutedEventArgs e) {
-
+			SelectedTable.Index.Add(new Index() {
+				Name = "ix_" + SelectedTable.Name + (SelectedTable.Index.Count + 1).ToString() 
+			});
 		}
 
 		private void _LstIndexes_NewCanExecute(object sender, CanExecuteRoutedEventArgs e) {
-			e.CanExecute = _LstIndexes.SelectedItem != null;
+			e.CanExecute = SelectedTable != null;
 		}
 
 		private void _LstIndexes_Delete(object sender, ExecutedRoutedEventArgs e) {
-
+			SelectedTable.Index.Remove(_LstIndexes.SelectedItem as Index);
 		}
 
 		private void _LstIndexes_DeleteCanExecute(object sender, CanExecuteRoutedEventArgs e) {
 			e.CanExecute = _LstIndexes.SelectedItem != null;
+		}
+
+		private void _LstIndexes_MouseRightButtonDown(object sender, MouseButtonEventArgs e) {
+			_LstIndexes.Focus();
 		}
 
 	}

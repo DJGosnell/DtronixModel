@@ -11,7 +11,7 @@
 			<ColumnDefinition Width="65*"/>
 		</Grid.ColumnDefinitions>
 		<GroupBox Header="Indexes" Grid.Column="0" Margin="3">
-			<ListBox x:Name="_LstIndexes" ItemsSource="{Binding SelectedTable.Index}" DisplayMemberPath="Name">
+			<ListBox x:Name="_LstIndexes" ItemsSource="{Binding SelectedTable.Index}" DisplayMemberPath="Name" MouseRightButtonDown="_LstIndexes_MouseRightButtonDown">
 				<ListBox.ContextMenu>
 					<ContextMenu>
 						<MenuItem Command="New">
@@ -36,7 +36,7 @@
 		<GroupBox Grid.Column="1" Header="Index Definition" Margin="3">
 			<DataGrid x:Name="_DatIndexDefinition" ItemsSource="{Binding SelectedItem.IndexColumn, ElementName=_LstIndexes}" AutoGenerateColumns="False">
 				<DataGrid.Columns>
-					<DataGridComboBoxColumn Width="*" Header="Column Name" SelectedValueBinding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding Name}" />
+					<DataGridComboBoxColumn Width="*" Header="Column Name" SelectedValueBinding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" ItemsSource="{Binding SelectedTable.Column}" />
 					<DataGridComboBoxColumn Width="140" Header="Sort Direction" SelectedValueBinding="{Binding SortDirection, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding SortDirection}" />
 				</DataGrid.Columns>
 			</DataGrid>

@@ -179,7 +179,7 @@
 					</TabItem>
 
 					<TabItem x:Name="_tabIndexes" Header="Indexes">
-						<Xaml:IndexTabControl x:Name="IndexControlTest" SelectedTable="{Binding SelectedTable, Mode=TwoWay}"/>
+						<Xaml:IndexTabControl x:Name="IndexControlTest" SelectedTable="{Binding SelectedTable, Mode=TwoWay}" Focusable="True"/>
 						<!--<TextBlock x:Name="TestTextBlock" Tag="{Binding SelectedTable}"></TextBlock>-->
 					</TabItem>
 
