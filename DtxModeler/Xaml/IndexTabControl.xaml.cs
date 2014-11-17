@@ -23,6 +23,19 @@ namespace DtxModeler.Xaml {
 			_ColCmbSortDirection.ItemsSource = Enum.GetValues(typeof(Order)).Cast<Order>();
 		}
 
+
+
+		public string[] SelectedTableColumns {
+			get { return (string[])GetValue(SelectedTableColumnsProperty); }
+			set { SetValue(SelectedTableColumnsProperty, value); }
+		}
+
+		// Using a DependencyProperty as the backing store for SelectedTableColumns.  This enables animation, styling, binding, etc...
+		public static readonly DependencyProperty SelectedTableColumnsProperty =
+			DependencyProperty.Register("SelectedTableColumns", typeof(string[]), typeof(IndexTabControl));
+
+
+
 		public Table SelectedTable {
 			get { return (Table)GetValue(SelectedTableProperty); }
 			set { SetValue(SelectedTableProperty, value); }
@@ -35,13 +48,16 @@ namespace DtxModeler.Xaml {
 
 		public static void SelectedTablePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
 			((IndexTabControl)d).UpdateColumnList();
+
+			
 		}
 
 		private void UpdateColumnList() {
 			if (SelectedTable == null) {
-				_ColCmbColumnNames.ItemsSource = null;
+				SelectedTableColumns = null;
 				return;
 			}
+
 			var columns = SelectedTable.Column;
 			string[] column_names = new string[columns.Count];
 
@@ -49,7 +65,9 @@ namespace DtxModeler.Xaml {
 				column_names[i] = columns[i].Name;
 			}
 
-			_ColCmbColumnNames.ItemsSource = column_names;
+			SelectedTableColumns = column_names;
+
+			var s = this.col;
 		}
 
 		private void _LstIndexes_New(object sender, ExecutedRoutedEventArgs e) {
@@ -72,6 +90,10 @@ namespace DtxModeler.Xaml {
 
 		private void _LstIndexes_MouseRightButtonDown(object sender, MouseButtonEventArgs e) {
 			_LstIndexes.Focus();
+		}
+
+		private void _LstIndexes_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+
 		}
 
 	}

@@ -11,7 +11,7 @@
 			<ColumnDefinition Width="65*"/>
 		</Grid.ColumnDefinitions>
 		<GroupBox Header="Indexes" Grid.Column="0" Margin="3">
-			<ListBox x:Name="_LstIndexes" ItemsSource="{Binding SelectedTable.Index}" DisplayMemberPath="Name" MouseRightButtonDown="_LstIndexes_MouseRightButtonDown">
+			<ListBox x:Name="_LstIndexes" ItemsSource="{Binding SelectedTable.Index}" DisplayMemberPath="Name" MouseRightButtonDown="_LstIndexes_MouseRightButtonDown" SelectionChanged="_LstIndexes_SelectionChanged">
 				<ListBox.ContextMenu>
 					<ContextMenu>
 						<MenuItem Command="New">
@@ -36,8 +36,8 @@
 		<GroupBox Grid.Column="1" Header="Index Definition" Margin="3">
 			<DataGrid ItemsSource="{Binding SelectedItem.IndexColumn, ElementName=_LstIndexes}" AutoGenerateColumns="False">
 				<DataGrid.Columns>
-					<DataGridComboBoxColumn x:Name="_ColCmbColumnNames" Width="*" Header="Column Name" SelectedValueBinding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-					<DataGridComboBoxColumn x:Name="_ColCmbSortDirection" Width="140" Header="Sort Direction" SelectedValueBinding="{Binding SortDirection, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding SortDirection}" />
+					<DataGridComboBoxColumn x:Name="_ColCmbColumnNames" Width="*" Header="Column Name" SelectedValueBinding="{Binding Name, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+					<DataGridComboBoxColumn x:Name="_ColCmbSortDirection" Width="140" Header="Sort Direction" SelectedValueBinding="{Binding Direction, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding Direction}" />
 				</DataGrid.Columns>
 			</DataGrid>
 		</GroupBox>
