@@ -100,7 +100,7 @@ namespace DtxModeler.Xaml {
 			_Status.SetStatus("Beginning Code Generation", ColorStatusBar.Status.Working);
 			var database = _DatabaseExplorer.SelectedDatabase;
 			var options = new ModelGenOptions(null) {
-				OutputDbType = "sqlite",
+				OutputDbType = DbProvider.Sqlite,
 				InputType = "ddl"
 			};
 

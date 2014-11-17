@@ -134,8 +134,8 @@
     <Compile Include="Generator\MySqlMwb\MySqlMwbDdlGenerator.cs" />
     <Compile Include="Generator\MySql\MySqlTypeTransformer.cs" />
     <Compile Include="Generator\OptionAttribute.cs" />
-    <Compile Include="Generator\Options.cs" />
     <Compile Include="Generator\Sqlite\SqliteConfigurations.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Generator\Sqlite\SqliteDdlGenerator.cs" />
     <Compile Include="Generator\Sqlite\SqliteTypeTransformer.cs" />

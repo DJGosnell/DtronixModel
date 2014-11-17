@@ -42,12 +42,14 @@ namespace DtxModeler.Generator {
 
 
 			// Verify that the parsing was successful.
-			if (options.ParseSuccess == false) {
+			/*if (options.ParseSuccess == false) {
 				writeLineColor("Invalid input parameters.", ConsoleColor.Red);
 				return;
-			}
+			}*/
 
-			ExecuteOptions(options, null);
+			//ExecuteOptions(options, null);
+
+			Console.ReadLine();
 
 		}
 
@@ -83,10 +85,6 @@ namespace DtxModeler.Generator {
 
 			} else if (options.InputType == "database-sqlite") {
 				generator = new SqliteDdlGenerator(@"Data Source=" + options.Input + ";Version=3;");
-
-				if (options.DbClass == null) {
-					writeLineColor("Required 'db-class' attribute not selected.", ConsoleColor.Red);
-				}
 
 				input_database = await generator.GenerateDdl();
 			}
