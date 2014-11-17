@@ -34,10 +34,10 @@
 		</GroupBox>
 		<GridSplitter HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Grid.Column="1" Grid.RowSpan="1"/>
 		<GroupBox Grid.Column="1" Header="Index Definition" Margin="3">
-			<DataGrid x:Name="_DatIndexDefinition" ItemsSource="{Binding SelectedItem.IndexColumn, ElementName=_LstIndexes}" AutoGenerateColumns="False">
+			<DataGrid ItemsSource="{Binding SelectedItem.IndexColumn, ElementName=_LstIndexes}" AutoGenerateColumns="False">
 				<DataGrid.Columns>
-					<DataGridComboBoxColumn Width="*" Header="Column Name" SelectedValueBinding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" ItemsSource="{Binding SelectedTable.Column}" />
-					<DataGridComboBoxColumn Width="140" Header="Sort Direction" SelectedValueBinding="{Binding SortDirection, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding SortDirection}" />
+					<DataGridComboBoxColumn x:Name="_ColCmbColumnNames" Width="*" Header="Column Name" SelectedValueBinding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+					<DataGridComboBoxColumn x:Name="_ColCmbSortDirection" Width="140" Header="Sort Direction" SelectedValueBinding="{Binding SortDirection, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding SortDirection}" />
 				</DataGrid.Columns>
 			</DataGrid>
 		</GroupBox>

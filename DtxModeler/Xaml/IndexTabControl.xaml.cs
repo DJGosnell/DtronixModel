@@ -20,37 +20,36 @@ namespace DtxModeler.Xaml {
 	public partial class IndexTabControl : UserControl {
 		public IndexTabControl() {
 			InitializeComponent();
-
-			
+			_ColCmbSortDirection.ItemsSource = Enum.GetValues(typeof(Order)).Cast<Order>();
 		}
 
 		public Table SelectedTable {
 			get { return (Table)GetValue(SelectedTableProperty); }
 			set { SetValue(SelectedTableProperty, value); }
 		}
+		
 
 		// Using a DependencyProperty as the backing store for SelectedTable2.  This enables animation, styling, binding, etc...
 		public static readonly DependencyProperty SelectedTableProperty =
-			DependencyProperty.Register("SelectedTable", typeof(Table), typeof(IndexTabControl));
+			DependencyProperty.Register("SelectedTable", typeof(Table), typeof(IndexTabControl), new PropertyMetadata(SelectedTablePropertyChanged));
 
+		public static void SelectedTablePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+			((IndexTabControl)d).UpdateColumnList();
+		}
 
+		private void UpdateColumnList() {
+			if (SelectedTable == null) {
+				_ColCmbColumnNames.ItemsSource = null;
+				return;
+			}
+			var columns = SelectedTable.Column;
+			string[] column_names = new string[columns.Count];
 
-		public void Refresh() {
-			var idx = new Index() {
-				Description = "Test Index Description",
-				Name = "Test Index " + SelectedTable.Index.Count.ToString()
-			};
+			for (int i = 0; i < columns.Count; i++) {
+				column_names[i] = columns[i].Name;
+			}
 
-			idx.IndexColumn.Add(new IndexColumn() {
-				Direction = Order.Ascending,
-				Name = "Column 1"
-			});
-			idx.IndexColumn.Add(new IndexColumn() {
-				Direction = Order.Ascending,
-				Name = "Column 2"
-			});
-
-			SelectedTable.Index.Add(idx);
+			_ColCmbColumnNames.ItemsSource = column_names;
 		}
 
 		private void _LstIndexes_New(object sender, ExecutedRoutedEventArgs e) {
