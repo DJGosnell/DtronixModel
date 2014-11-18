@@ -11,6 +11,8 @@ using System.Xml.Serialization;
 using DtxModeler.Xaml;
 using System.Windows;
 using System.Runtime.InteropServices;
+using NDesk.Options;
+using DtxModeler.Generator.MySqlMwb;
 
 namespace DtxModeler.Generator {
 	class Program {
@@ -28,26 +30,37 @@ namespace DtxModeler.Generator {
 
 		[STAThread]
 		static void Main(string[] args) {
+
 			// Get and hide the console and show the UI if there are no arguments passed.
 			if (args.Length == 0) {
 				CommandlineHide();
-
 				// Show the UI and start the main loop.
 				var app = new Application();
 				app.Run(new MainWindow());
 				return;
 			}
 
-			ModelGenOptions options = new ModelGenOptions(args);
+			ModelerCommandOptions options = new ModelerCommandOptions(args, Console.Out);
 
 
 			// Verify that the parsing was successful.
-			/*if (options.ParseSuccess == false) {
+			if (options.ParseSuccess == false) {
 				writeLineColor("Invalid input parameters.", ConsoleColor.Red);
 				return;
-			}*/
+			}
 
-			//ExecuteOptions(options, null);
+			try {
+				Task.Run(async () => {
+					await ExecuteOptions(options, null);
+				}).Wait();				
+			} catch (AggregateException e) {
+				Console.WriteLine("Error in executing specified options. Error:");
+				foreach (var ex in e.InnerExceptions) {
+					Console.WriteLine(ex.Message);
+				}
+				
+			}
+			
 
 			Console.ReadLine();
 
@@ -63,11 +76,11 @@ namespace DtxModeler.Generator {
 			CommandlineVisible = false;
 		}
 
-		public static async void ExecuteOptions(ModelGenOptions options, Database input_database) {
+		public static async Task ExecuteOptions(ModelerCommandOptions options, Database input_database) {
 			DdlGenerator generator = null;
 			TypeTransformer type_transformer = new SqliteTypeTransformer();
 
-			if (options.InputType == "ddl") {
+			if (options.InputType == ModelerCommandOptions.InType.Ddl) {
 				if (input_database == null) {
 					try {
 						using (FileStream stream = new FileStream(options.Input, FileMode.Open)) {
@@ -83,8 +96,18 @@ namespace DtxModeler.Generator {
 					Console.WriteLine("Using database passed.");
 				}
 
-			} else if (options.InputType == "database-sqlite") {
+			} else if (options.InputType == ModelerCommandOptions.InType.DatabaseSqlite) {
 				generator = new SqliteDdlGenerator(@"Data Source=" + options.Input + ";Version=3;");
+
+				input_database = await generator.GenerateDdl();
+			} else if (options.InputType == ModelerCommandOptions.InType.Mwb) {
+
+				if (File.Exists(options.Input) == false) {
+					throw new OptionException("MWB file '" + options.Input + "' specified does not exist.", "input");
+				}
+
+
+				generator = new MySqlMwbDdlGenerator(options.Input);
 
 				input_database = await generator.GenerateDdl();
 			}
