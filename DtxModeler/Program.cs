@@ -40,7 +40,7 @@ namespace DtxModeler.Generator {
 				return;
 			}
 
-			ModelerCommandOptions options = new ModelerCommandOptions(args, Console.Out);
+			CommandOptions options = new CommandOptions(args, Console.Out);
 
 
 			// Verify that the parsing was successful.
@@ -76,11 +76,11 @@ namespace DtxModeler.Generator {
 			CommandlineVisible = false;
 		}
 
-		public static async Task ExecuteOptions(ModelerCommandOptions options, Database input_database) {
+		public static async Task ExecuteOptions(CommandOptions options, Database input_database) {
 			DdlGenerator generator = null;
 			TypeTransformer type_transformer = new SqliteTypeTransformer();
 
-			if (options.InputType == ModelerCommandOptions.InType.Ddl) {
+			if (options.InputType == CommandOptions.InType.Ddl) {
 				if (input_database == null) {
 					try {
 						using (FileStream stream = new FileStream(options.Input, FileMode.Open)) {
@@ -96,11 +96,11 @@ namespace DtxModeler.Generator {
 					Console.WriteLine("Using database passed.");
 				}
 
-			} else if (options.InputType == ModelerCommandOptions.InType.DatabaseSqlite) {
+			} else if (options.InputType == CommandOptions.InType.DatabaseSqlite) {
 				generator = new SqliteDdlGenerator(@"Data Source=" + options.Input + ";Version=3;");
 
 				input_database = await generator.GenerateDdl();
-			} else if (options.InputType == ModelerCommandOptions.InType.Mwb) {
+			} else if (options.InputType == CommandOptions.InType.Mwb) {
 
 				if (File.Exists(options.Input) == false) {
 					throw new OptionException("MWB file '" + options.Input + "' specified does not exist.", "input");

@@ -99,9 +99,9 @@ namespace DtxModeler.Xaml {
 		private void Command_GenerateAll(object obSender, ExecutedRoutedEventArgs e) {
 			_Status.SetStatus("Beginning Code Generation", ColorStatusBar.Status.Working);
 			var database = _DatabaseExplorer.SelectedDatabase;
-			var options = new ModelerCommandOptions() {
+			var options = new CommandOptions() {
 				DbProvider = DbProvider.Sqlite,
-				InputType =  ModelerCommandOptions.InType.Ddl
+				InputType =  CommandOptions.InType.Ddl
 			};
 
 			string base_ddl_filename = Path.Combine(Path.GetDirectoryName(database._FileLocation),

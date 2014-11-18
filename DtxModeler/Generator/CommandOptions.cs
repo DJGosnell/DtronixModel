@@ -8,7 +8,7 @@ using DtxModeler.Ddl;
 using NDesk.Options;
 using System.Windows;
 namespace DtxModeler.Generator {
-	class ModelerCommandOptions {
+	class CommandOptions {
 
 		public enum InType {
 			Ddl,
@@ -35,9 +35,9 @@ namespace DtxModeler.Generator {
 
 		public DbProvider? DbProvider { get; set; }
 
-		public ModelerCommandOptions() { }
+		public CommandOptions() { }
 
-		public ModelerCommandOptions(string[] args, TextWriter writer){
+		public CommandOptions(string[] args, TextWriter writer){
 			ParseSuccess = false;
 			this.writer = writer;
 			bool help = false;
