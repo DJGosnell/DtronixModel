@@ -27,13 +27,15 @@ namespace DtxModeler.Generator {
 
 		public InType? InputType { get; set; }
 
+		public DbProvider? DbProvider { get; set; }
+
 		public string CodeOutput { get; set; }
 
 		public string SqlOutput { get; set; }
 
 		public string DdlOutput { get; set; }
 
-		public DbProvider? DbProvider { get; set; }
+		
 
 		public CommandOptions() { }
 
@@ -45,11 +47,11 @@ namespace DtxModeler.Generator {
 			
 			option_set.Add("i=|input=", "(Required) Input which will be used to open or generate a model.", v => Input = v);
 			option_set.Add<InType?>("t=|input-type=", "(Required) The type of datatabase we are dealing with. " + EnumValues<InType>(), v => InputType = v);
-
-			option_set.Add("code-output=", "The C# file to output the generated code to.", v => CodeOutput = v);
-			option_set.Add("sql-output=", "The sql file to output the generated SQL table code to.", v => SqlOutput = v);
-			option_set.Add("ddl-output=", "The ddl file to output the generated DDL to.", v => DdlOutput = v);
 			option_set.Add<DbProvider?>("db-provider=", "The type of datatabase we are dealing with. " + EnumValues<DbProvider>(), v => DbProvider = v);
+
+			option_set.Add("code-output:", "The C# file to output the generated code to.", v => CodeOutput = (v == null) ? "" : v);
+			option_set.Add("sql-output:", "The sql file to output the generated SQL table code to.", v => SqlOutput = (v == null)? "" : v);
+			option_set.Add("ddl-output:", "The ddl file to output the generated DDL to.", v => DdlOutput = (v == null) ? "" : v);
 
 			option_set.Add("h|?|help", "Displays this help menu.", v => {
 				help = true;
@@ -69,11 +71,11 @@ namespace DtxModeler.Generator {
 				}
 
 				if (Input == null) {
-					throw new OptionException("Required value for input was not specified.", "input");
+					throw new OptionException("Required value for --input was not specified.", "input");
 				}
 
 				if (InputType.HasValue == false) {
-					throw new OptionException("Required value for input type was not specified.", "input-type");
+					throw new OptionException("Required value for --input-type was not specified.", "input-type");
 				}
 
 			} catch (OptionException e) {

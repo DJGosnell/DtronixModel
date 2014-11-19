@@ -100,7 +100,7 @@ namespace DtxModeler.Xaml {
 			_Status.SetStatus("Beginning Code Generation", ColorStatusBar.Status.Working);
 			var database = _DatabaseExplorer.SelectedDatabase;
 			var options = new CommandOptions() {
-				DbProvider = DbProvider.Sqlite,
+				DbProvider = database.TargetDb,
 				InputType =  CommandOptions.InType.Ddl
 			};
 
@@ -118,7 +118,19 @@ namespace DtxModeler.Xaml {
 			}
 
 			_Status.SetStatus("Generating Code...", ColorStatusBar.Status.Working);
-			Program.ExecuteOptions(options, _DatabaseExplorer.SelectedDatabase);
+
+
+			try {
+				Task.Run(async () => {
+					await Program.ExecuteOptions(options, _DatabaseExplorer.SelectedDatabase);
+				}).Wait();
+			} catch (AggregateException ex) {
+				Console.WriteLine("Error in executing specified options. Error:");
+				foreach (var inner_ex in ex.InnerExceptions) {
+					Console.WriteLine(inner_ex.Message);
+				}
+			}
+			
 
 			_Status.SetStatus("Completed Generating Code", ColorStatusBar.Status.Completed);
 		}
