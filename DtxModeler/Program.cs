@@ -11,6 +11,8 @@ using System.Xml.Serialization;
 using DtxModeler.Xaml;
 using System.Windows;
 using System.Runtime.InteropServices;
+using NDesk.Options;
+using DtxModeler.Generator.MySqlMwb;
 
 namespace DtxModeler.Generator {
 	class Program {
@@ -28,26 +30,37 @@ namespace DtxModeler.Generator {
 
 		[STAThread]
 		static void Main(string[] args) {
+
 			// Get and hide the console and show the UI if there are no arguments passed.
 			if (args.Length == 0) {
 				CommandlineHide();
-
 				// Show the UI and start the main loop.
 				var app = new Application();
 				app.Run(new MainWindow());
 				return;
 			}
 
-			ModelGenOptions options = new ModelGenOptions(args);
+			CommandOptions options = new CommandOptions(args, Console.Out);
 
 
 			// Verify that the parsing was successful.
 			if (options.ParseSuccess == false) {
-				writeLineColor("Invalid input parameters.", ConsoleColor.Red);
+				//writeLineColor("Invalid input parameters.", ConsoleColor.Red);
+				Console.ReadLine();
 				return;
 			}
 
-			ExecuteOptions(options, null);
+			try {
+				Task.Run(async () => {
+					await ExecuteOptions(options, null);
+				}).Wait();				
+			} catch (AggregateException e) {
+				Console.WriteLine("Error in executing specified options. Error:");
+				foreach (var ex in e.InnerExceptions) {
+					Console.WriteLine(ex.Message);
+				}
+				
+			}
 
 		}
 
@@ -61,11 +74,13 @@ namespace DtxModeler.Generator {
 			CommandlineVisible = false;
 		}
 
-		public static async void ExecuteOptions(ModelGenOptions options, Database input_database) {
+		public static async Task ExecuteOptions(CommandOptions options, Database input_database) {
 			DdlGenerator generator = null;
 			TypeTransformer type_transformer = new SqliteTypeTransformer();
+			bool rooted_path = Path.IsPathRooted(options.SqlOutput);
+			
 
-			if (options.InputType == "ddl") {
+			if (options.InputType == CommandOptions.InType.Ddl) {
 				if (input_database == null) {
 					try {
 						using (FileStream stream = new FileStream(options.Input, FileMode.Open)) {
@@ -81,12 +96,18 @@ namespace DtxModeler.Generator {
 					Console.WriteLine("Using database passed.");
 				}
 
-			} else if (options.InputType == "database-sqlite") {
+			} else if (options.InputType == CommandOptions.InType.DatabaseSqlite) {
 				generator = new SqliteDdlGenerator(@"Data Source=" + options.Input + ";Version=3;");
 
-				if (options.DbClass == null) {
-					writeLineColor("Required 'db-class' attribute not selected.", ConsoleColor.Red);
+				input_database = await generator.GenerateDdl();
+			} else if (options.InputType == CommandOptions.InType.Mwb) {
+
+				if (File.Exists(options.Input) == false) {
+					throw new OptionException("MWB file '" + options.Input + "' specified does not exist.", "input");
 				}
+
+
+				generator = new MySqlMwbDdlGenerator(options.Input);
 
 				input_database = await generator.GenerateDdl();
 			}
@@ -104,6 +125,13 @@ namespace DtxModeler.Generator {
 			if (options.SqlOutput != null) {
 				var sql_code_writer = new SqlDatabaseGen(input_database, type_transformer);
 
+				if (options.SqlOutput == "") {
+					options.SqlOutput = Path.GetFileNameWithoutExtension(input_database.Name);
+				}
+
+				if (Path.HasExtension(options.SqlOutput) == false) {
+					options.SqlOutput = Path.ChangeExtension(options.SqlOutput, ".sql");
+				}
 				using (var fs = new FileStream(options.SqlOutput, FileMode.Create)) {
 					using (var sw = new StreamWriter(fs)) {
 						sw.Write(sql_code_writer.generate());
@@ -116,6 +144,14 @@ namespace DtxModeler.Generator {
 			if (options.CodeOutput != null) {
 				var table_code_writer = new TableModelGen(input_database);
 				var database_code_writer = new DatabaseContextGen(input_database);
+
+				if (options.CodeOutput == "") {
+					options.CodeOutput = Path.ChangeExtension(Path.GetFileNameWithoutExtension(input_database.Name), ".cs");
+				}
+
+				if (Path.HasExtension(options.CodeOutput) == false) {
+					options.CodeOutput = Path.ChangeExtension(options.CodeOutput, ".cs");
+				}
 
 				// Output code file if required.
 				using (var fs = new FileStream(options.CodeOutput, FileMode.Create)) {
@@ -136,6 +172,14 @@ namespace DtxModeler.Generator {
 
 			// Output Ddl if required.
 			if (options.DdlOutput != null) {
+				if (options.DdlOutput == "") {
+					options.DdlOutput = Path.GetFileNameWithoutExtension(input_database.Name);
+				}
+
+				if (Path.HasExtension(options.DdlOutput) == false) {
+					options.DdlOutput = Path.ChangeExtension(options.DdlOutput, ".ddl");
+				}
+
 				// Output code file if required.
 				using (var fs = new FileStream(options.DdlOutput, FileMode.Create)) {
 					var serializer = new XmlSerializer(typeof(Database));
@@ -149,102 +193,18 @@ namespace DtxModeler.Generator {
 
 			foreach (var table in database.Table) {
 
-				// Member / Name.
-				if (string.IsNullOrWhiteSpace(table.Name) && string.IsNullOrWhiteSpace(table.Name) == false) {
-					table.Name = table.Name;
-				}
-
 				foreach (var column in table.Column) {
 					var is_name_null = string.IsNullOrWhiteSpace(column.Name);
 					var is_member_null = string.IsNullOrWhiteSpace(column.Name);
 
 					// If the column name is empty, then assume that the database column name
 					// is the same as the member name and vice versa.
-					if (is_name_null) {
-						column.Name = column.Name;
-
-					} else if (is_member_null) {
-						column.Name = column.Name;
-
-					} else if (is_member_null && is_name_null) {
-						writeLineColor("Column on table " + table.Name + "Does not have a name or member.", ConsoleColor.Red);
+					if (is_member_null && is_name_null) {
+						writeLineColor("Column on table " + table.Name + "Does not have a name.", ConsoleColor.Red);
 						return false;
 					}
-
-					// Default values.
-					/*if (column.IsReadOnlySpecified == false) {
-						column.IsReadOnly = false;
-					}
-
-					if (column.IsDbGeneratedSpecified == false) {
-						column.IsDbGenerated = false;
-					}
-
-					if (column.IsPrimaryKeySpecified == false) {
-						column.IsPrimaryKey = false;
-					}*/
 				}
-
-				/*
-				foreach (var association in database.Association) {
-					association.Table = table;
-
-					// Determine if we already have this association in the list
-					if (associations.ContainsKey(association.Name)) {
-						var other = associations[association.Name];
-
-						if (other.IsForeignKey) {
-							// This is the child table
-							other.ParentAssociation = association;
-							association.ChildAssociation = other;
-						} else {
-							// This is the parent association.
-							other.ChildAssociation = association;
-							association.ParentAssociation = other;
-						}
-
-						// Get the colums for the associations.
-						Column this_column = null;
-						Column other_column = null;
-
-						// Get the association's corrisponding columns
-						foreach (var assoc_col in association.Table.Column) {
-							if (assoc_col.Name == association.ThisKey) {
-								this_column = assoc_col;
-								break;
-							}
-						}
-
-						foreach (var assoc_col in other.Table.Column) {
-							if (assoc_col.Name == association.OtherKey) {
-								other_column = assoc_col;
-								break;
-							}
-						}
-
-						association.OtherKeyColumn = other.ThisKeyColumn = other_column;
-						association.ThisKeyColumn = other.OtherKeyColumn = this_column;
-
-						associations.Remove(association.Name);
-
-					} else {
-						// Add the association to the list for later.
-						associations.Add(association.Name, association);
-					}
-
-					/*
-					if (association.IsForeignKeySpecified == false) {
-						association.IsForeignKey = false;
-					}
-
-					if (association.CardinalitySpecified == false && association.IsForeignKey == false) {
-						association.Cardinality = Cardinality.Many;
-					} else {
-						association.Cardinality = Cardinality.One;
-					}
-				}*/
 			}
-
 
 			return true;
 
