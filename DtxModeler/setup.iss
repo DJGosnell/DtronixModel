@@ -14,7 +14,6 @@
 AppId={{D516E71D-8297-41AC-9CB4-123FC50072AD}
 AppName=DtronixModel
 AppVersion={#ShortAppVersion}
-;AppVerName=DtronixModel 0.8.1
 AppPublisher=Dtronix
 AppPublisherURL=http://dtronix.com
 AppSupportURL=http://dtronix.com
@@ -26,6 +25,7 @@ OutputBaseFilename=DtronixModeler-{#ShortAppVersion}
 SetupIconFile=C:\Program Files (x86)\Inno Setup 5\Examples\Setup.ico
 Compression=lzma
 SolidCompression=yes
+ArchitecturesInstallIn64BitMode=x64
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
