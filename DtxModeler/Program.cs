@@ -45,8 +45,6 @@ namespace DtxModeler.Generator {
 
 			// Verify that the parsing was successful.
 			if (options.ParseSuccess == false) {
-				//writeLineColor("Invalid input parameters.", ConsoleColor.Red);
-				Console.ReadLine();
 				return;
 			}
 
@@ -78,7 +76,6 @@ namespace DtxModeler.Generator {
 			DdlGenerator generator = null;
 			TypeTransformer type_transformer = new SqliteTypeTransformer();
 			bool rooted_path = Path.IsPathRooted(options.SqlOutput);
-			
 
 			if (options.InputType == CommandOptions.InType.Ddl) {
 				if (input_database == null) {
@@ -114,6 +111,16 @@ namespace DtxModeler.Generator {
 
 			// Ensure that the base database is initialized.
 			input_database.Initialize();
+
+			// Overrides for database variables.
+			if (string.IsNullOrWhiteSpace(options.Namespace) == false) {
+				input_database.Namespace = options.Namespace;
+			}
+
+			if (string.IsNullOrWhiteSpace(options.ContextClass) == false) {
+				input_database.ContextClass = options.ContextClass;
+			}
+			
 
 			// Clean up the DDL
 			if (normalizeDatabase(input_database) == false) {
@@ -223,7 +230,6 @@ namespace DtxModeler.Generator {
 			Console.ForegroundColor = color;
 			Console.WriteLine(text);
 			Console.ForegroundColor = original_color;
-			Console.Read();
 		}
 	}
 }

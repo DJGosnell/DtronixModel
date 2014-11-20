@@ -35,7 +35,9 @@ namespace DtxModeler.Generator {
 
 		public string DdlOutput { get; set; }
 
-		
+		public string Namespace { get; set; }
+
+		public string ContextClass { get; set; }
 
 		public CommandOptions() { }
 
@@ -52,6 +54,9 @@ namespace DtxModeler.Generator {
 			option_set.Add("code-output:", "The C# file to output the generated code to.", v => CodeOutput = (v == null) ? "" : v);
 			option_set.Add("sql-output:", "The sql file to output the generated SQL table code to.", v => SqlOutput = (v == null)? "" : v);
 			option_set.Add("ddl-output:", "The ddl file to output the generated DDL to.", v => DdlOutput = (v == null) ? "" : v);
+
+			option_set.Add("namespace=", "Namespace used to contain all of the code objects & classes.", v => Namespace = (v == null) ? "" : v);
+			option_set.Add("context-class=", "Class name for the main context.", v => ContextClass = (v == null) ? "" : v);
 
 			option_set.Add("h|?|help", "Displays this help menu.", v => {
 				help = true;
@@ -81,6 +86,8 @@ namespace DtxModeler.Generator {
 			} catch (OptionException e) {
 				writer.Write("Error: ");
 				writer.WriteLine(e.Message);
+				writer.Write("Option: ");
+				writer.WriteLine(e.OptionName);
 				writer.WriteLine("Type '--help' for more information about program usage.");
 
 				return;
