@@ -150,7 +150,6 @@
     </Compile>
     <Compile Include="Xaml\Commands.cs" />
     <Compile Include="Xaml\Converters.cs" />
-    <Compile Include="Xaml\DatabaseTree.cs" />
     <Compile Include="Xaml\DatabaseServer.xaml.cs">
       <DependentUpon>DatabaseServer.xaml</DependentUpon>
     </Compile>
