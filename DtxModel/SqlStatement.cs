@@ -48,7 +48,7 @@ namespace DtxModel {
 		public SqlStatement(Mode mode, Context context) {
 			this.context = context;
 			this.mode = mode;
-			command = context.connection.CreateCommand();
+			command = context.Connection.CreateCommand();
 
 			try {
 				table_name = AttributeCache<T, TableAttribute>.GetAttribute().Name;
@@ -292,7 +292,7 @@ namespace DtxModel {
 			}
 
 			if (mode == Mode.Update) {
-				using (var transaction = context.connection.BeginTransaction()) {
+				using (var transaction = context.Connection.BeginTransaction()) {
 
 					for (int i = 0; i < sql_models.Length; i++) {
 						Where(sql_models[i]);
@@ -485,7 +485,7 @@ namespace DtxModel {
 		/// If one of the inserts fails, then all of the inserts are rolled back.
 		/// </remarks>
 		/// <param name="models">Models to insert.</param>
-		public void Insert(T[] models) {
+		public ulong[] Insert(T[] models) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -505,7 +505,7 @@ namespace DtxModel {
 
 			// Add all the column names.
 			foreach (var column in columns) {
-				sb_sql.Append("'").Append(column).Append("', ");
+				sb_sql.Append("").Append(column).Append(", ");
 			}
 
 			// Remove the last ", " from the query.
@@ -519,11 +519,17 @@ namespace DtxModel {
 
 			// Remove the last ", " from the query.
 			sb_sql.Remove(sb_sql.Length - 2, 2);
-			sb_sql.Append(")");
+			sb_sql.Append(");");
 
+			ulong[] new_row_ids = null;
+
+			if (context.LastInsertIdQuery != null) {
+				sb_sql.Append(context.LastInsertIdQuery);
+				new_row_ids = new ulong[models.Length];
+			}
 
 			// Start a transaction to enable for fast bulk inserts.
-			using (var transaction = context.connection.BeginTransaction()) {
+			using (var transaction = context.Connection.BeginTransaction()) {
 
 				try {
 
@@ -537,18 +543,31 @@ namespace DtxModel {
 					}
 
 					// Loop through wach of the provided models.
-					foreach (var model in models) {
-						var values = model.GetAllValues();
+					for (int i = 0; i < models.Length; i++) {
+						var values = models[i].GetAllValues();
 
-						for (int i = 0; i < values.Length; i++) {
-							command.Parameters[i].Value = values[i];
+						for (int x = 0; x < values.Length; x++) {
+							command.Parameters[x].Value = values[x];
 						}
 
-						if (command.ExecuteNonQuery() != 1) {
-							throw new Exception("Unable to insert row");
+						if (context.LastInsertIdQuery != null) {
+							object new_row = command.ExecuteScalar();
+							if (new_row == null) {
+								throw new Exception("Unable to insert row");
+							} else {
+								new_row_ids[i] = (ulong)new_row;
+							}
+						} else {
+							if (command.ExecuteNonQuery() != 1) {
+								throw new Exception("Unable to insert row");
+							}
 						}
+
+						
 					}
 
+					// Commit all inserts.
+					transaction.Commit();
 				} catch (Exception e) {
 					// If we incountered an error, rollback the transaction.
 					transaction.Rollback();
@@ -556,9 +575,10 @@ namespace DtxModel {
 					throw e;
 				}
 
-				// Commit all inserts.
-				transaction.Commit();
+				
 			}
+
+			return new_row_ids;
 		}
 
 		public void Dispose() {

@@ -31,10 +31,26 @@ namespace DtxModeler.Generator {
 			return this;
 		}
 
+		public CodeWriter BeginBlockLine(string value) {
+			indent();
+			code.AppendLine(value);
+			fresh_line = true;
+			indent_level++;
+			return this;
+		}
+
 		public CodeWriter EndBlock(string value) {
 			indent_level--;
 			indent();
 			code.Append(value);
+			return this;
+		}
+
+		public CodeWriter EndBlockLine(string value = null) {
+			indent_level--;
+			indent();
+			code.AppendLine(value);
+			fresh_line = true;
 			return this;
 		}
 

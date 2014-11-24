@@ -74,6 +74,16 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Install|AnyCPU'">
+    <OutputPath>bin\Install\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -307,6 +317,11 @@
   <PropertyGroup>
     <PostBuildEvent>if "Installer" == "$(ConfigurationName)" (
 "C:\Program Files (x86)\Inno Setup 5\iscc.exe" /q setup.iss 
+)
+
+if "Install" == "$(ConfigurationName)" (
+"C:\Program Files (x86)\Inno Setup 5\iscc.exe" /q setup.iss 
+For /R "$(TargetDir)" %25%25G IN ("DtronixModeler-*.exe") do "%25%25~G" /verysilent
 )</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets')" />

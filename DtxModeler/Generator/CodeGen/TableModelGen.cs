@@ -10,9 +10,34 @@ namespace DtxModeler.Generator.CodeGen {
 
 		public TableModelGen(Database database) : base(database) { }
 
-		public string generate(Table db_table) {
-			code.clear();
+		private string ColumnNetType(Column column) {
+			if (column.NetType == NetTypes.ByteArray) {
+				return "byte[]";
+			}
 
+			string type = Enum.GetName(typeof(NetTypes), column.NetType);
+
+			if (column.Nullable) {
+				switch (column.NetType) {
+					case NetTypes.Int64:
+					case NetTypes.Int16:
+					case NetTypes.Int32:
+					case NetTypes.Byte:
+					case NetTypes.Decimal:
+					case NetTypes.Float:
+					case NetTypes.Double:
+					case NetTypes.Boolean:
+					case NetTypes.Char:
+						type += "?";
+						break;
+				}
+			}
+
+			return type;
+		}
+
+		public string Generate(Table db_table) {
+			code.clear();
 			Column pk_column = null;
 
 			foreach (var column in db_table.Column) {
@@ -35,12 +60,7 @@ namespace DtxModeler.Generator.CodeGen {
 				}
 
 				// Determine type of field.
-				string type = null;
-				if (column.NetType == NetTypes.ByteArray) {
-					type = "byte[]";
-				} else {
-					type = Enum.GetName(typeof(NetTypes), column.NetType);
-				}
+				string type = ColumnNetType(column);
 
 				// Field Value
 				code.Write("private ").Write(type).Write(" _").Write(column.Name).WriteLine(";");
@@ -130,15 +150,10 @@ namespace DtxModeler.Generator.CodeGen {
 			// Read fields
 
 			foreach (var column in db_table.Column) {
-				string type = Enum.GetName(typeof(NetTypes), column.NetType);
-				string reader_get = type;
+				string type = ColumnNetType(column);
+				string reader_get = Enum.GetName(typeof(NetTypes), column.NetType);
 				bool cast_as = false;
 				switch (column.NetType) {
-					case NetTypes.ByteArray:
-						type = "Byte[]";
-						reader_get = "Bytes";
-						cast_as = true;
-						break;
 					case NetTypes.String:
 						cast_as = true;
 						break;
@@ -147,7 +162,7 @@ namespace DtxModeler.Generator.CodeGen {
 				code.Write("case \"").Write(column.Name).Write("\": _").Write(column.Name).Write(" = ");
 
 				if (column.NetType == NetTypes.ByteArray) {
-					code.Write("(reader.IsDBNull(i)) ? default(").Write(type).Write(") : ").Write("reader.GetFieldValue<").Write(reader_get).Write(">(i)");
+					code.Write("(reader.IsDBNull(i)) ? default(Byte[]) : ").Write("reader.GetFieldValue<").Write(reader_get).Write(">(i)");
 				} else if (cast_as) {
 					code.Write("reader.GetValue(i) as ").Write(type);
 				}else if(column.Nullable){

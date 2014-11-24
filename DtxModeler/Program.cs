@@ -166,7 +166,7 @@ namespace DtxModeler.Generator {
 						sw.Write(database_code_writer.Generate());
 
 						foreach (var db_table in input_database.Table) {
-							sw.Write(table_code_writer.generate(db_table));
+							sw.Write(table_code_writer.Generate(db_table));
 						}
 
 						// Final closing namespace
