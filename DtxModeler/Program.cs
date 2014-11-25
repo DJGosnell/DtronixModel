@@ -32,16 +32,21 @@ namespace DtxModeler.Generator {
 		static void Main(string[] args) {
 
 			// Get and hide the console and show the UI if there are no arguments passed.
-			if (args.Length == 0) {
+			if (args.Length == 0 ||
+				(args.Length == 1 && Path.GetExtension(args[0]) == ".ddl")) {
 				CommandlineHide();
 				// Show the UI and start the main loop.
 				var app = new Application();
-				app.Run(new MainWindow());
+
+				if (args.Length == 1) {
+					app.Run(new MainWindow(args[0]));
+				} else {
+					app.Run(new MainWindow());
+				}
 				return;
 			}
 
 			CommandOptions options = new CommandOptions(args, Console.Out);
-
 
 			// Verify that the parsing was successful.
 			if (options.ParseSuccess == false) {

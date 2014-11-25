@@ -35,7 +35,11 @@ namespace DtxModeler.Xaml {
 
 		private Column previous_column = null;
 
-		public MainWindow() {
+		public MainWindow() : this(null) {
+			
+		}
+
+		public MainWindow(string open_file) {
 			InitializeComponent();
 			ColumnNetType.ItemsSource = Enum.GetValues(typeof(NetTypes)).Cast<NetTypes>();
 			_CmbTargetDatabase.ItemsSource = Enum.GetValues(typeof(DbProvider)).Cast<DbProvider>();
@@ -50,6 +54,17 @@ namespace DtxModeler.Xaml {
 			BindCommand(Commands.GenerateAll, new KeyGesture(Key.F5), Command_GenerateAll, Command_GenerateAllCanExecute);
 
 			_Status.SetStatus("Application Loaded And Ready", ColorStatusBar.Status.Completed);
+
+			if (open_file != null) {
+				try {
+					Database db = Database.LoadFromFile(open_file);
+					db._FileLocation = open_file;
+					_DatabaseExplorer.LoadDatabase(db);
+
+				} catch (Exception e) {
+					MessageBox.Show("Error opening database:\r\n" + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				}
+			}
 		}
 
 		private async void Command_ImportMySqlMwb(object sender, ExecutedRoutedEventArgs e) {
