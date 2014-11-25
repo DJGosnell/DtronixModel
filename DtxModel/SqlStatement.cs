@@ -563,7 +563,7 @@ namespace DtxModel {
 							if (new_row == null) {
 								throw new Exception("Unable to insert row");
 							} else {
-								new_row_ids[i] = (ulong)new_row;
+								new_row_ids[i] = Convert.ToUInt64(new_row);
 							}
 						} else {
 							if (command.ExecuteNonQuery() != 1) {
