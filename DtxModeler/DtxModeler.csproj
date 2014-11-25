@@ -316,12 +316,17 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>if "Installer" == "$(ConfigurationName)" (
+echo Building installer...
 "C:\Program Files (x86)\Inno Setup 5\iscc.exe" /q setup.iss 
+echo Installer built.
 )
 
 if "Install" == "$(ConfigurationName)" (
-"C:\Program Files (x86)\Inno Setup 5\iscc.exe" /q setup.iss 
+echo Building installer...
+"C:\Program Files (x86)\Inno Setup 5\iscc.exe" /q setup.iss
+echo Installer built. Silently installing DtronixModeler...
 For /R "$(TargetDir)" %25%25G IN ("DtronixModeler-*.exe") do "%25%25~G" /verysilent
+echo DtronixModel installed.
 )</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets')" />
