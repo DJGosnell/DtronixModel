@@ -150,6 +150,15 @@ namespace DtxModel {
 			Execute();
 		}
 
+		public void Delete(ulong[] primary_ids) {
+			if (mode == Mode.Execute) {
+				throw new InvalidOperationException("Can not use all functions in Execute mode.");
+			}
+
+			WhereIn(new T().GetPKName(), primary_ids.Cast<object>().ToArray());
+			Execute();
+		}
+
 		public SqlStatement<T> WhereIn(string column, params object[] values) {
 			ValidateWhere();
 
@@ -207,7 +216,6 @@ namespace DtxModel {
 
 			return this;
 		}
-
 
 		public SqlStatement<T> Where(string where, params object[] parameters) {
 			ValidateWhere();

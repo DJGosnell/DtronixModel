@@ -93,5 +93,21 @@ namespace DtxModel {
 		public void Delete(T[] models) {
 			new SqlStatement<T>(SqlStatement<T>.Mode.Delete, context).Delete(models);
 		}
+
+		/// <summary>
+		/// Deletes a single row in the database based upon the primary row id.
+		/// </summary>
+		/// <param name="id">Row id to delete.</param>
+		public void Delete(ulong id) {
+			Delete(new ulong[] { id });
+		}
+
+		/// <summary>
+		/// Delete multiple rows in the database based upon the primary row ids.
+		/// </summary>
+		/// <param name="ids">Row ids to delete.</param>
+		public void Delete(ulong[] ids) {
+			new SqlStatement<T>(SqlStatement<T>.Mode.Delete, context).Delete(ids);
+		}
 	}
 }
