@@ -11,5 +11,5 @@
     <Column Name="Users_rowid" Description="User which created this log item." NetType="Int64" DbType="INTEGER" />
     <Column Name="text" NetType="String" DbType="TEXT" />
   </Table>
-  <Association Table1Name="Logs" Table1="Logs" Table1Column="Users_rowid" Table1Cardinality="Many" Table2Name="Users" Table2="Users" Table2Column="rowid" Table2Cardinality="One" />
+  <Association Table1Name="Logs" Table1="Logs" Table1Column="Users_rowid" Table1Cardinality="Many" Table2Name="User" Table2="Users" Table2Column="rowid" Table2Cardinality="One" />
 </Database>

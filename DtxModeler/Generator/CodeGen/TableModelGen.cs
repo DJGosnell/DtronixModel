@@ -124,12 +124,12 @@ namespace DtxModeler.Generator.CodeGen {
 				} else if(reference == Association.Reference.R2) {
 					assoc.ThisAssociationName = db_assoc.Table2Name;
 					assoc.ThisColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R2);
-					assoc.ThisTable = database.Table.Single(t => t.Name == db_assoc.Table2);
+					assoc.ThisTable = db_table;
 					assoc.ThisCardinality = db_assoc.Table2Cardinality;
 
 					assoc.OtherAssociationName = db_assoc.Table1Name;
 					assoc.OtherColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R1);
-					assoc.OtherTable = db_table;
+					assoc.OtherTable = database.Table.Single(t => t.Name == db_assoc.Table1);
 					assoc.OtherCardinality = db_assoc.Table1Cardinality;
 
 				} else {
@@ -152,7 +152,7 @@ namespace DtxModeler.Generator.CodeGen {
 				code.BeginBlockLine("get {");
 				code.BeginBlock("if(_").Write(assoc.OtherAssociationName).WriteLine(" == null){ ");
 				code.BeginBlockLine("try {");
-				code.Write("_").Write(assoc.OtherAssociationName).Write(" = ((").Write(assoc.OtherTable.Name).Write(")context).")
+				code.Write("_").Write(assoc.OtherAssociationName).Write(" = ((").Write(database.ContextClass).Write(")context).")
 					.Write(assoc.OtherTable.Name).Write(".Select().WhereIn(\"").Write(assoc.OtherColumn.Name).Write("\", _").Write(assoc.ThisColumn.Name).Write(").ExecuteFetch");
 
 				if (assoc.OtherCardinality == Cardinality.Many) {

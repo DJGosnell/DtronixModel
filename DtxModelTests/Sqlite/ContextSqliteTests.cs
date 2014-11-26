@@ -91,5 +91,32 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
+		[TestMethod]
+		public void DatabaseRowForeignKeyAssociationAccess() {
+			CreateUser();
+			ulong log_rowid = 0;
+			using (var context = new TestDatabaseContext()) {
+				var user = context.Users.Select().ExecuteFetch();
+
+				log_rowid = context.Logs.Insert(new Logs() {
+					text = "This is log item one.",
+					Users_rowid = user.rowid
+				});
+
+				var log = context.Logs.Select().ExecuteFetch();
+
+				var user_fk = log.User;
+
+				Assert.IsNotNull(user_fk);
+				Assert.AreEqual(user.rowid, user_fk.rowid);
+				Assert.AreEqual(user.password, user_fk.password);
+				Assert.AreEqual(user.username, user_fk.username);
+				Assert.AreEqual(user.last_logged, user_fk.last_logged);
+			}
+
+		}
+
+
+
 	}
 }

@@ -125,6 +125,21 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
+		private Logs[] _Logs;
+		public Logs[] Logs {
+			get {
+				if(_Logs == null){ 
+					try {
+						_Logs = ((TestDatabaseContext)context).Logs.Select().WhereIn("Users_rowid", _rowid).ExecuteFetchAll();
+					} catch {
+						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+						_Logs = null;
+					}
+				}
+				return _Logs;
+			}
+		}
+
 		public Users() : this(null, null) { }
 
 		public Users(DbDataReader reader, Context context) {
@@ -217,6 +232,21 @@ namespace DtxModelTests.Sqlite {
 			set {
 				_text = value;
 				_textChanged = true;
+			}
+		}
+
+		private Users _User;
+		public Users User {
+			get {
+				if(_User == null){ 
+					try {
+						_User = ((TestDatabaseContext)context).Users.Select().WhereIn("rowid", _Users_rowid).ExecuteFetch();
+					} catch {
+						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+						_User = null;
+					}
+				}
+				return _User;
 			}
 		}
 
