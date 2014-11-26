@@ -31,6 +31,13 @@ namespace DtxModel {
 		/// </remarks>
 		public string LastInsertIdQuery;
 
+		private bool _TransactionStarted;
+
+		public bool TransactionStarted {
+			get { return _TransactionStarted; }
+		}
+
+
 		/// <summary>
 		/// Create a new context of this database's type.  Can only be used if a default connection is specified.
 		/// </summary>
@@ -85,6 +92,14 @@ namespace DtxModel {
 		/// <returns>The number of rows affected.</returns>
 		public void QueryRead(string sql, object[] binding, Action<DbDataReader> on_read) {
 			new SqlStatement<Model>(SqlStatement<Model>.Mode.Execute, this).QueryRead(sql, binding, on_read);
+		}
+
+		public DtxTransaction BeginTransaction() {
+			if (_TransactionStarted) {
+				throw new InvalidOperationException("Transaction has already been created.  Can not create nested transactions.");
+			}
+			_TransactionStarted = true;
+			return new DtxTransaction(Connection.BeginTransaction(), () => { _TransactionStarted = false; });
 		}
 
 		/// <summary>

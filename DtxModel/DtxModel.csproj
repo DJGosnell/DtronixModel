@@ -68,6 +68,7 @@
     <Compile Include="AttributeCache.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Converters.cs" />
+    <Compile Include="DtxTransaction.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SortDirection.cs" />

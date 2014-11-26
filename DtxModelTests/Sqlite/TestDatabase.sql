@@ -15,3 +15,21 @@ CREATE TABLE Logs (
 
 
 
+CREATE TABLE AllTypes (
+	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
+	db_int16 SMALLINT NOT NULL ,
+	db_int32 INTEGER NOT NULL ,
+	db_byte_array BLOB NOT NULL ,
+	db_byte BLOB NOT NULL ,
+	db_date_time DATETIME NOT NULL ,
+	db_date_time_offset DATETIME NOT NULL ,
+	db_decimal REAL NOT NULL ,
+	db_float FLOAT NOT NULL ,
+	db_double DOUBLE NOT NULL ,
+	db_bool BOOLEAN NOT NULL ,
+	db_string TEXT NOT NULL ,
+	db_char CHAR NOT NULL 
+);
+
+
+

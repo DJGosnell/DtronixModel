@@ -55,6 +55,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Performancer.cs" />
     <Compile Include="Sqlite\TestDatabase.cs" />
     <Compile Include="Sqlite\ContextSqliteTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
