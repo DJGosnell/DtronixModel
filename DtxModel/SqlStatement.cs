@@ -300,7 +300,12 @@ namespace DtxModel {
 			}
 
 			if (mode == Mode.Update) {
-				using (var transaction = context.Connection.BeginTransaction()) {
+				DtxTransaction transaction = null;
+				try {
+					// Start a transaction if one does not already exist.
+					if (context.TransactionStarted == false) {
+						transaction = context.BeginTransaction();
+					}
 
 					for (int i = 0; i < sql_models.Length; i++) {
 						Where(sql_models[i]);
@@ -310,7 +315,13 @@ namespace DtxModel {
 						command.ExecuteNonQuery();
 					}
 
-					transaction.Commit();
+					if (transaction != null) {
+						transaction.Commit();
+					}
+				} finally {
+					if (transaction != null) {
+						transaction.Dispose();
+					}
 				}
 
 			} else {
@@ -535,59 +546,72 @@ namespace DtxModel {
 				sb_sql.Append(context.LastInsertIdQuery);
 				new_row_ids = new ulong[models.Length];
 			}
+			DtxTransaction transaction = null;
 
-			// Start a transaction to enable for fast bulk inserts.
-			using (var transaction = context.Connection.BeginTransaction()) {
+			try {
 
-				try {
-
-					command.CommandText = sb_sql.ToString();
-
-					// Create the parameters for bulk inerts.
-					for (int i = 0; i < columns.Length; i++) {
-						var parameter = command.CreateParameter();
-						parameter.ParameterName = "@v" + i;
-						command.Parameters.Add(parameter);
-					}
-
-					// Loop through wach of the provided models.
-					for (int i = 0; i < models.Length; i++) {
-						var values = models[i].GetAllValues();
-
-						for (int x = 0; x < values.Length; x++) {
-							command.Parameters[x].Value = values[x];
-						}
-
-						if (context.LastInsertIdQuery != null) {
-							object new_row = command.ExecuteScalar();
-							if (new_row == null) {
-								throw new Exception("Unable to insert row");
-							} else {
-								new_row_ids[i] = Convert.ToUInt64(new_row);
-							}
-						} else {
-							if (command.ExecuteNonQuery() != 1) {
-								throw new Exception("Unable to insert row");
-							}
-						}
-
-						
-					}
-
-					// Commit all inserts.
-					transaction.Commit();
-				} catch (Exception e) {
-					// If we incountered an error, rollback the transaction.
-					transaction.Rollback();
-
-					throw e;
+				// Start a transaction if one does not already exist for fast bulk inserts.
+				if (context.TransactionStarted == false) {
+					transaction = context.BeginTransaction();
 				}
 
-				
-			}
+				command.CommandText = sb_sql.ToString();
 
+				// Create the parameters for bulk inerts.
+				for (int i = 0; i < columns.Length; i++) {
+					var parameter = command.CreateParameter();
+					parameter.ParameterName = "@v" + i;
+					command.Parameters.Add(parameter);
+				}
+
+				// Loop through wach of the provided models.
+				for (int i = 0; i < models.Length; i++) {
+					var values = models[i].GetAllValues();
+
+					for (int x = 0; x < values.Length; x++) {
+						command.Parameters[x].Value = values[x];
+					}
+
+					if (context.LastInsertIdQuery != null) {
+						object new_row = command.ExecuteScalar();
+						if (new_row == null) {
+							throw new Exception("Unable to insert row");
+						} else {
+							new_row_ids[i] = Convert.ToUInt64(new_row);
+						}
+					} else {
+						if (command.ExecuteNonQuery() != 1) {
+							throw new Exception("Unable to insert row");
+						}
+					}
+
+
+				}
+
+				// Commit all inserts.
+				if (transaction != null) {
+					transaction.Commit();
+				}
+			} catch (Exception e) {
+				// If we incountered an error, rollback the transaction.
+
+				if (transaction != null) {
+					transaction.Rollback();
+				}
+				
+
+				throw e;
+			} finally {
+				if (transaction != null) {
+					transaction.Dispose();
+				}
+			}
 			return new_row_ids;
+
 		}
+
+			
+
 
 		public void Dispose() {
 			this.command.Dispose();

@@ -8,6 +8,20 @@ using System.Data.SqlTypes;
 namespace DtxModeler.Generator.CodeGen {
 	class TableModelGen : CodeGenerator {
 
+
+		private class AssociationCodeGenerator {
+			public Table ThisTable { get; set; }
+			public Column ThisColumn { get; set; }
+			public string ThisAssociationName { get; set; }
+			public Cardinality ThisCardinality { get; set; }
+
+			public Table OtherTable { get; set; }
+			public Column OtherColumn { get; set; }
+			public string OtherAssociationName { get; set; }
+			public Cardinality OtherCardinality { get; set; }
+		}
+
+
 		public TableModelGen(Database database) : base(database) { }
 
 		private string ColumnNetType(Column column) {
@@ -16,6 +30,10 @@ namespace DtxModeler.Generator.CodeGen {
 			}
 
 			string type = Enum.GetName(typeof(NetTypes), column.NetType);
+
+			if (column.NetType == NetTypes.Float) {
+				type = "float";
+			}
 
 			if (column.Nullable) {
 				switch (column.NetType) {
@@ -80,50 +98,82 @@ namespace DtxModeler.Generator.CodeGen {
 
 				// Set
 				if (column.IsReadOnly == false) {
-					code.BeginBlock("set {").WriteLine();
+					code.BeginBlockLine("set {");
 					code.Write("_").Write(column.Name).WriteLine(" = value;");
 					code.Write("_").Write(column.Name).WriteLine("Changed = true;");
-					code.EndBlock("}").WriteLine();
+					code.EndBlockLine("}");
 				}
-				code.EndBlock("}").WriteLine();
+				code.EndBlockLine("}");
 
 				code.WriteLine();
 			}
 
 			// Table Associations;
-			/*foreach (var association in database.Association) {
+			foreach (var db_assoc in database.Association) {
+				var reference = db_assoc.ReferencesTable(db_table);
+				var assoc = new AssociationCodeGenerator();
 
-				string field_type = association.Type;
-				if (association.ParentAssociation != null && association.ParentAssociation.Cardinality == Cardinality.Many) {
+				if (reference == Association.Reference.R1) {
+					assoc.ThisAssociationName = db_assoc.Table1Name;
+					assoc.ThisColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R1);
+					assoc.ThisTable = db_table;
+					assoc.ThisCardinality = db_assoc.Table1Cardinality;
+
+					assoc.OtherAssociationName = db_assoc.Table2Name;
+					assoc.OtherColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R2);
+					assoc.OtherTable = database.Table.Single(t => t.Name == db_assoc.Table2);
+					assoc.OtherCardinality = db_assoc.Table2Cardinality;
+					
+
+				} else if(reference == Association.Reference.R2) {
+					assoc.ThisAssociationName = db_assoc.Table2Name;
+					assoc.ThisColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R2);
+					assoc.ThisTable = db_table;
+					assoc.ThisCardinality = db_assoc.Table2Cardinality;
+
+					assoc.OtherAssociationName = db_assoc.Table1Name;
+					assoc.OtherColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R1);
+					assoc.OtherTable = database.Table.Single(t => t.Name == db_assoc.Table1);
+					assoc.OtherCardinality = db_assoc.Table1Cardinality;
+
+				} else {
+					continue;
+				}
+
+
+
+
+				string field_type = assoc.OtherTable.Name;
+				if (assoc.OtherCardinality == Cardinality.Many) {
 					field_type += "[]";
 				}
 
 				// Caching Field Value
-				code.write("private ").write(field_type).write(" _").write(association.Name).writeLine(";");
+				code.Write("private ").Write(field_type).Write(" _").Write(assoc.OtherAssociationName).WriteLine(";");
 
 				// Association Property
-				code.beginBlock("public ").write(field_type).write(" ").write(association.Name).writeLine(" {");
-				code.beginBlock("get {").writeLine();
-				code.beginBlock("if(_").write(association.Name).writeLine(" == null){ ");
-				code.beginBlock("try {").writeLine("");
-				code.write("_").write(association.Name).write(" = ((").write(database.Class).write(")context).")
-					.write(association.Type).write(".select().whereIn(\"").write(association.OtherKeyColumn.Name).write("\", _").write(association.ThisKey).write(").executeFetch");
+				code.BeginBlock("public ").Write(field_type).Write(" ").Write(assoc.OtherAssociationName).WriteLine(" {");
+				code.BeginBlockLine("get {");
+				code.BeginBlock("if(_").Write(assoc.OtherAssociationName).WriteLine(" == null){ ");
+				code.BeginBlockLine("try {");
+				code.Write("_").Write(assoc.OtherAssociationName).Write(" = ((").Write(database.ContextClass).Write(")context).")
+					.Write(assoc.OtherTable.Name).Write(".Select().WhereIn(\"").Write(assoc.OtherColumn.Name).Write("\", _").Write(assoc.ThisColumn.Name).Write(").ExecuteFetch");
 
-				if (association.ParentAssociation != null && association.ParentAssociation.Cardinality == Cardinality.Many) {
-					code.writeLine("All();");
+				if (assoc.OtherCardinality == Cardinality.Many) {
+					code.WriteLine("All();");
 				} else {
-					code.writeLine("();");
+					code.WriteLine("();");
 				}
-				code.endBlock("} catch {").beginBlock("").writeLine();
-				code.writeLine("//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.");
-				code.write("_").write(association.Name).writeLine(" = null;");
-				code.endBlock("}").writeLine(); // Try/Catch
-				code.endBlock("}").writeLine(); // If
-				code.write("return _").write(association.Name).writeLine(";");
-				code.endBlock("}").writeLine(); // Get
-				code.endBlock("}").writeLine(); // Property
-				code.writeLine();
-			}*/
+				code.EndBlock("} catch {").BeginBlockLine("");
+				code.WriteLine("//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.");
+				code.Write("_").Write(assoc.OtherAssociationName).WriteLine(" = null;");
+				code.EndBlockLine("}"); // Try/Catch
+				code.EndBlockLine("}"); // If
+				code.Write("return _").Write(assoc.OtherAssociationName).WriteLine(";");
+				code.EndBlockLine("}"); // Get
+				code.EndBlockLine("}"); // Property
+				code.WriteLine();
+			}
 			/*
 			 * } catch (Exception e ) {
 				throw new InvalidOperationException("SQL operations are not allowed outside of the Database Context.", e);
@@ -162,7 +212,7 @@ namespace DtxModeler.Generator.CodeGen {
 				code.Write("case \"").Write(column.Name).Write("\": _").Write(column.Name).Write(" = ");
 
 				if (column.NetType == NetTypes.ByteArray) {
-					code.Write("(reader.IsDBNull(i)) ? default(Byte[]) : ").Write("reader.GetFieldValue<").Write(reader_get).Write(">(i)");
+					code.Write("(reader.IsDBNull(i)) ? default(byte[]) : ").Write("reader.GetFieldValue<byte[]>(i)");
 				} else if (cast_as) {
 					code.Write("reader.GetValue(i) as ").Write(type);
 				}else if(column.Nullable){
