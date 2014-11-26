@@ -85,6 +85,7 @@ namespace DtxModelTests.Sqlite {
 
 				Assert.AreEqual<string>("MyNewUsername", user.username);
 
+				context.Users.Delete(user);
 
 
 			}
