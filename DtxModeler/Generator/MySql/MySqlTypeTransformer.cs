@@ -38,7 +38,6 @@ namespace DtxModeler.Generator.MySql {
 				new TypeTransformerType(NetTypes.DateTime, "DATE"),
 				new TypeTransformerType(NetTypes.DateTime, "DATETIME"),
 				new TypeTransformerType(NetTypes.DateTime, "TIME"),
-				new TypeTransformerType(NetTypes.DateTimeOffset, "DATETIME"),
 				
 				new TypeTransformerType(NetTypes.String, "CHAR", 32),
 				new TypeTransformerType(NetTypes.String, "VARCHAR", 32),

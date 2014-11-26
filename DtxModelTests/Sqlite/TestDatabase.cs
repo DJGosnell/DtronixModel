@@ -137,6 +137,21 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
+		private Logs[] _Logs;
+		public Logs[] Logs {
+			get {
+				if(_Logs == null){ 
+					try {
+						_Logs = ((TestDatabaseContext)context).Logs.Select().WhereIn("Users_rowid", _rowid).ExecuteFetchAll();
+					} catch {
+						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+						_Logs = null;
+					}
+				}
+				return _Logs;
+			}
+		}
+
 		public Users() : this(null, null) { }
 
 		public Users(DbDataReader reader, Context context) {
@@ -232,6 +247,21 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
+		private Users _User;
+		public Users User {
+			get {
+				if(_User == null){ 
+					try {
+						_User = ((TestDatabaseContext)context).Users.Select().WhereIn("rowid", _Users_rowid).ExecuteFetch();
+					} catch {
+						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+						_User = null;
+					}
+				}
+				return _User;
+			}
+		}
+
 		public Logs() : this(null, null) { }
 
 		public Logs(DbDataReader reader, Context context) {
@@ -319,6 +349,16 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
+		private bool _db_int64Changed = false;
+		private Int64 _db_int64;
+		public Int64 db_int64 {
+			get { return _db_int64; }
+			set {
+				_db_int64 = value;
+				_db_int64Changed = true;
+			}
+		}
+
 		private bool _db_byte_arrayChanged = false;
 		private byte[] _db_byte_array;
 		public byte[] db_byte_array {
@@ -349,16 +389,6 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private bool _db_date_time_offsetChanged = false;
-		private DateTimeOffset _db_date_time_offset;
-		public DateTimeOffset db_date_time_offset {
-			get { return _db_date_time_offset; }
-			set {
-				_db_date_time_offset = value;
-				_db_date_time_offsetChanged = true;
-			}
-		}
-
 		private bool _db_decimalChanged = false;
 		private Decimal _db_decimal;
 		public Decimal db_decimal {
@@ -370,8 +400,8 @@ namespace DtxModelTests.Sqlite {
 		}
 
 		private bool _db_floatChanged = false;
-		private Float _db_float;
-		public Float db_float {
+		private float _db_float;
+		public float db_float {
 			get { return _db_float; }
 			set {
 				_db_float = value;
@@ -435,10 +465,10 @@ namespace DtxModelTests.Sqlite {
 					case "id": _id = reader.GetInt64(i); break;
 					case "db_int16": _db_int16 = reader.GetInt16(i); break;
 					case "db_int32": _db_int32 = reader.GetInt32(i); break;
-					case "db_byte_array": _db_byte_array = (reader.IsDBNull(i)) ? default(Byte[]) : reader.GetFieldValue<ByteArray>(i); break;
+					case "db_int64": _db_int64 = reader.GetInt64(i); break;
+					case "db_byte_array": _db_byte_array = (reader.IsDBNull(i)) ? default(byte[]) : reader.GetFieldValue<byte[]>(i); break;
 					case "db_byte": _db_byte = reader.GetByte(i); break;
 					case "db_date_time": _db_date_time = reader.GetDateTime(i); break;
-					case "db_date_time_offset": _db_date_time_offset = reader.GetDateTimeOffset(i); break;
 					case "db_decimal": _db_decimal = reader.GetDecimal(i); break;
 					case "db_float": _db_float = reader.GetFloat(i); break;
 					case "db_double": _db_double = reader.GetDouble(i); break;
@@ -456,14 +486,14 @@ namespace DtxModelTests.Sqlite {
 				changed.Add("db_int16", _db_int16);
 			if (_db_int32Changed)
 				changed.Add("db_int32", _db_int32);
+			if (_db_int64Changed)
+				changed.Add("db_int64", _db_int64);
 			if (_db_byte_arrayChanged)
 				changed.Add("db_byte_array", _db_byte_array);
 			if (_db_byteChanged)
 				changed.Add("db_byte", _db_byte);
 			if (_db_date_timeChanged)
 				changed.Add("db_date_time", _db_date_time);
-			if (_db_date_time_offsetChanged)
-				changed.Add("db_date_time_offset", _db_date_time_offset);
 			if (_db_decimalChanged)
 				changed.Add("db_decimal", _db_decimal);
 			if (_db_floatChanged)
@@ -484,10 +514,10 @@ namespace DtxModelTests.Sqlite {
 			return new object[] {
 				_db_int16,
 				_db_int32,
+				_db_int64,
 				_db_byte_array,
 				_db_byte,
 				_db_date_time,
-				_db_date_time_offset,
 				_db_decimal,
 				_db_float,
 				_db_double,
@@ -501,10 +531,10 @@ namespace DtxModelTests.Sqlite {
 			return new string[] {
 				"db_int16",
 				"db_int32",
+				"db_int64",
 				"db_byte_array",
 				"db_byte",
 				"db_date_time",
-				"db_date_time_offset",
 				"db_decimal",
 				"db_float",
 				"db_double",

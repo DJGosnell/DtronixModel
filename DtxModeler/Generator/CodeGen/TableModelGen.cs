@@ -31,6 +31,10 @@ namespace DtxModeler.Generator.CodeGen {
 
 			string type = Enum.GetName(typeof(NetTypes), column.NetType);
 
+			if (column.NetType == NetTypes.Float) {
+				type = "float";
+			}
+
 			if (column.Nullable) {
 				switch (column.NetType) {
 					case NetTypes.Int64:
@@ -94,12 +98,12 @@ namespace DtxModeler.Generator.CodeGen {
 
 				// Set
 				if (column.IsReadOnly == false) {
-					code.BeginBlock("set {").WriteLine();
+					code.BeginBlockLine("set {");
 					code.Write("_").Write(column.Name).WriteLine(" = value;");
 					code.Write("_").Write(column.Name).WriteLine("Changed = true;");
-					code.EndBlock("}").WriteLine();
+					code.EndBlockLine("}");
 				}
-				code.EndBlock("}").WriteLine();
+				code.EndBlockLine("}");
 
 				code.WriteLine();
 			}
@@ -208,7 +212,7 @@ namespace DtxModeler.Generator.CodeGen {
 				code.Write("case \"").Write(column.Name).Write("\": _").Write(column.Name).Write(" = ");
 
 				if (column.NetType == NetTypes.ByteArray) {
-					code.Write("(reader.IsDBNull(i)) ? default(Byte[]) : ").Write("reader.GetFieldValue<").Write(reader_get).Write(">(i)");
+					code.Write("(reader.IsDBNull(i)) ? default(byte[]) : ").Write("reader.GetFieldValue<byte[]>(i)");
 				} else if (cast_as) {
 					code.Write("reader.GetValue(i) as ").Write(type);
 				}else if(column.Nullable){
