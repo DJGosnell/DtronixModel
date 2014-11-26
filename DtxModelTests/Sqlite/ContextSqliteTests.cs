@@ -48,9 +48,6 @@ namespace DtxModelTests.Sqlite {
 				Assert.AreEqual(Converters.DateTimeToUnix(new DateTime(2014, 11, 25)), user.last_logged);
 
 				context.Users.Delete(user);
-				user = context.Users.Select().ExecuteFetch();
-
-				Assert.IsNull(user, "Database is not empty");
 			}
 		}
 
