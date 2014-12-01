@@ -106,8 +106,8 @@ namespace <#= this.database.Namespace #> {
 <# if (column.IsReadOnly == false) { #>
 			set {
 <# if (column.DbLength != 0 && column.NetType == NetTypes.String) { #>
-				if(value.Length > <#= column.DbLength #>) 
-					throw new ArgumentOutOfRangeException(<#= column.Name #>, "String <#= column.Name #> is too long. Max length allowed is <#= column.DbLength #> characters. Passed string is " + value.Length.ToString() + " characters.");
+				if(value != null && value.Length > <#= column.DbLength #>) 
+					throw new ArgumentOutOfRangeException("<#= column.Name #>", "String <#= column.Name #> is too long. Max length allowed is <#= column.DbLength #> characters. Passed string is " + value.Length.ToString() + " characters.");
 <# } #>
 				_<#= column.Name #> = value;
 				_<#= column.Name #>Changed = true;
