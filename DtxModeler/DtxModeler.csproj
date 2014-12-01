@@ -134,10 +134,13 @@
       <DependentUpon>DdlSchema.xsd</DependentUpon>
     </Compile>
     <Compile Include="Ddl\DdlSchema.Relations.cs" />
-    <Compile Include="Generator\CodeGen\CodeGenerator.cs" />
-    <Compile Include="Generator\CodeGen\DatabaseContextGen.cs" />
-    <Compile Include="Generator\CodeGen\SqlDatabaseGen.cs" />
-    <Compile Include="Generator\CodeGen\TableModelGen.cs" />
+    <Compile Include="Generator\Output\CSharpCodeGenerator.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharpCodeGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Output\CSharpCodeGenerator.Constructor.cs" />
+    <Compile Include="Generator\Output\SqlTableCreateGenerator.cs" />
     <Compile Include="Generator\CodeWriter.cs" />
     <Compile Include="Generator\CommandOptions.cs" />
     <Compile Include="Generator\DdlGenerator.cs" />
@@ -194,6 +197,10 @@
     </EmbeddedResource>
     <None Include="Ddl\Build.bat" />
     <None Include="Ddl\DdlSchema.xsd" />
+    <None Include="Generator\Output\CSharpCodeGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CSharpCodeGenerator.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -228,9 +235,7 @@
   <ItemGroup>
     <Resource Include="Xaml\Images\table_chart.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Generator\CodeGen\Sqlite\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Xaml\Images\database_connect.png" />
   </ItemGroup>
@@ -309,6 +314,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

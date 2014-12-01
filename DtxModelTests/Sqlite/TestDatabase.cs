@@ -1,3 +1,4 @@
+
 using System;
 using System.Data.Common;
 using System.Collections.Generic;
@@ -51,7 +52,7 @@ namespace DtxModelTests.Sqlite {
 
 		public Table<Users> Users {
 			get {
-				if(_Users == null) {
+				if (_Users == null) {
 					_Users = new Table<Users>(this);
 				}
 
@@ -63,7 +64,7 @@ namespace DtxModelTests.Sqlite {
 
 		public Table<Logs> Logs {
 			get {
-				if(_Logs == null) {
+				if (_Logs == null) {
 					_Logs = new Table<Logs>(this);
 				}
 
@@ -75,7 +76,7 @@ namespace DtxModelTests.Sqlite {
 
 		public Table<AllTypes> AllTypes {
 			get {
-				if(_AllTypes == null) {
+				if (_AllTypes == null) {
 					_AllTypes = new Table<AllTypes>(this);
 				}
 
@@ -97,6 +98,7 @@ namespace DtxModelTests.Sqlite {
 
 	[TableAttribute(Name = "Users")]
 	public partial class Users : Model {
+
 		private bool _rowidChanged = false;
 		private Int64 _rowid;
 		public Int64 rowid {
@@ -137,21 +139,21 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private Logs[] _Logs;
-		public Logs[] Logs {
-			get {
-				if(_Logs == null){ 
-					try {
-						_Logs = ((TestDatabaseContext)context).Logs.Select().WhereIn("Users_rowid", _rowid).ExecuteFetchAll();
-					} catch {
-						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
-						_Logs = null;
-					}
+	private Logs[] _Logs;
+	public Logs[] Logs {
+		get {
+			if (_Logs == null) {
+				try {
+					_Logs = ((TestDatabaseContext)context).Logs.Select().WhereIn("Users_rowid", _rowid).ExecuteFetchAll();
+				} catch {
+					//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+					_Logs = null;
 				}
-				return _Logs;
 			}
+			return _Logs;
 		}
-
+	}
+		
 		public Users() : this(null, null) { }
 
 		public Users(DbDataReader reader, Context context) {
@@ -161,15 +163,14 @@ namespace DtxModelTests.Sqlite {
 		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
-
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
 					case "rowid": _rowid = reader.GetInt64(i); break;
-					case "username": _username = reader.GetValue(i) as String; break;
-					case "password": _password = reader.GetValue(i) as String; break;
+					case "username": _username = reader.GetValue(i) as string; break;
+					case "password": _password = reader.GetValue(i) as string; break;
 					case "last_logged": _last_logged = reader.GetInt64(i); break;
-					default: break;
+					default: additional_values.Add(reader.GetName(i), reader.GetValue(i)); break;
 				}
 			}
 		}
@@ -209,11 +210,11 @@ namespace DtxModelTests.Sqlite {
 		public override object GetPKValue() {
 			return _rowid;
 		}
-
 	}
 
 	[TableAttribute(Name = "Logs")]
 	public partial class Logs : Model {
+
 		private bool _rowidChanged = false;
 		private Int64 _rowid;
 		public Int64 rowid {
@@ -247,21 +248,21 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private Users _User;
-		public Users User {
-			get {
-				if(_User == null){ 
-					try {
-						_User = ((TestDatabaseContext)context).Users.Select().WhereIn("rowid", _Users_rowid).ExecuteFetch();
-					} catch {
-						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
-						_User = null;
-					}
+	private Users _User;
+	public Users User {
+		get {
+			if (_User == null) {
+				try {
+					_User = ((TestDatabaseContext)context).Users.Select().WhereIn("rowid", _Users_rowid).ExecuteFetch();
+				} catch {
+					//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+					_User = null;
 				}
-				return _User;
 			}
+			return _User;
 		}
-
+	}
+		
 		public Logs() : this(null, null) { }
 
 		public Logs(DbDataReader reader, Context context) {
@@ -271,14 +272,13 @@ namespace DtxModelTests.Sqlite {
 		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
-
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
 					case "rowid": _rowid = reader.GetInt64(i); break;
 					case "Users_rowid": _Users_rowid = reader.GetInt64(i); break;
-					case "text": _text = reader.GetValue(i) as String; break;
-					default: break;
+					case "text": _text = reader.GetValue(i) as string; break;
+					default: additional_values.Add(reader.GetName(i), reader.GetValue(i)); break;
 				}
 			}
 		}
@@ -314,11 +314,11 @@ namespace DtxModelTests.Sqlite {
 		public override object GetPKValue() {
 			return _rowid;
 		}
-
 	}
 
 	[TableAttribute(Name = "AllTypes")]
 	public partial class AllTypes : Model {
+
 		private bool _idChanged = false;
 		private Int64 _id;
 		public Int64 id {
@@ -458,7 +458,6 @@ namespace DtxModelTests.Sqlite {
 		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
-
 			int length = reader.FieldCount;
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
@@ -466,16 +465,16 @@ namespace DtxModelTests.Sqlite {
 					case "db_int16": _db_int16 = reader.GetInt16(i); break;
 					case "db_int32": _db_int32 = reader.GetInt32(i); break;
 					case "db_int64": _db_int64 = reader.GetInt64(i); break;
-					case "db_byte_array": _db_byte_array = (reader.IsDBNull(i)) ? default(byte[]) : reader.GetFieldValue<byte[]>(i); break;
+					case "db_byte_array": _db_byte_array = (reader.IsDBNull(i)) ? null : reader.GetFieldValue<byte[]>(i); break;
 					case "db_byte": _db_byte = reader.GetByte(i); break;
 					case "db_date_time": _db_date_time = reader.GetDateTime(i); break;
 					case "db_decimal": _db_decimal = reader.GetDecimal(i); break;
 					case "db_float": _db_float = reader.GetFloat(i); break;
 					case "db_double": _db_double = reader.GetDouble(i); break;
 					case "db_bool": _db_bool = reader.GetBoolean(i); break;
-					case "db_string": _db_string = reader.GetValue(i) as String; break;
+					case "db_string": _db_string = reader.GetValue(i) as string; break;
 					case "db_char": _db_char = reader.GetChar(i); break;
-					default: break;
+					default: additional_values.Add(reader.GetName(i), reader.GetValue(i)); break;
 				}
 			}
 		}
@@ -551,6 +550,5 @@ namespace DtxModelTests.Sqlite {
 		public override object GetPKValue() {
 			return _id;
 		}
-
 	}
 }

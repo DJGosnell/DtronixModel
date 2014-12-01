@@ -1,4 +1,4 @@
-﻿using DtxModeler.Generator.CodeGen;
+﻿using DtxModeler.Generator.Output;
 using DtxModeler.Ddl;
 using DtxModeler.Generator.Sqlite;
 using System;
@@ -135,7 +135,7 @@ namespace DtxModeler.Generator {
 
 			// Output SQL file if required.
 			if (options.SqlOutput != null) {
-				var sql_code_writer = new SqlDatabaseGen(input_database, type_transformer);
+				var sql_code_writer = new SqlTableCreateGenerator(input_database, type_transformer);
 
 				if (options.SqlOutput == "") {
 					options.SqlOutput = Path.GetFileNameWithoutExtension(input_database.Name);
@@ -146,7 +146,7 @@ namespace DtxModeler.Generator {
 				}
 				using (var fs = new FileStream(options.SqlOutput, FileMode.Create)) {
 					using (var sw = new StreamWriter(fs)) {
-						sw.Write(sql_code_writer.generate());
+						sw.Write(sql_code_writer.Generate());
 						sw.Flush();
 					}
 				}
@@ -154,9 +154,6 @@ namespace DtxModeler.Generator {
 
 			// Output code if required.
 			if (options.CodeOutput != null) {
-				var table_code_writer = new TableModelGen(input_database);
-				var database_code_writer = new DatabaseContextGen(input_database);
-
 				if (options.CodeOutput == "") {
 					options.CodeOutput = Path.ChangeExtension(Path.GetFileNameWithoutExtension(input_database.Name), ".cs");
 				}
@@ -168,14 +165,7 @@ namespace DtxModeler.Generator {
 				// Output code file if required.
 				using (var fs = new FileStream(options.CodeOutput, FileMode.Create)) {
 					using (var sw = new StreamWriter(fs)) {
-						sw.Write(database_code_writer.Generate());
-
-						foreach (var db_table in input_database.Table) {
-							sw.Write(table_code_writer.Generate(db_table));
-						}
-
-						// Final closing namespace
-						sw.Write("}");
+						sw.Write(new CSharpCodeGenerator(input_database).TransformText());
 						sw.Flush();
 
 					}

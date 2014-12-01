@@ -1,19 +1,31 @@
 ﻿using DtxModeler.Ddl;
+using DtxModeler.Generator.MySql;
+using DtxModeler.Generator.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DtxModeler.Generator.CodeGen {
-	class SqlDatabaseGen : CodeGenerator {
+namespace DtxModeler.Generator.Output {
+	class SqlTableCreateGenerator {
+		private Database database;
+		private TypeTransformer type_transformer;
+		private CodeWriter code = new CodeWriter();
 
-		public SqlDatabaseGen(Database database, TypeTransformer type_transformer) : base(database) {
+		public SqlTableCreateGenerator(Database database, TypeTransformer type_transformer) { 
+
+			this.database = database;
 			this.type_transformer = type_transformer;
 		}
 
-		public string generate() {
+		/// <summary>
+		/// Generates and returns the SQL CREATE TABLE statements along with the indexes to generate the database.
+		/// </summary>
+		/// <returns>SQL string representing the table.</returns>
+		public string Generate() {
 			code.clear();
 
+			// Loop through each of the tables.
 			foreach (var table in database.Table) {
 
 				if (table.UseCustomSql) {
