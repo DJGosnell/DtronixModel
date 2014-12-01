@@ -25,8 +25,8 @@ namespace DtxModelTests.Sqlite {
 			Assert.IsTrue(File.Exists("test_database.sqlite"));
 		}
 
-		private void CreateUser(TestDatabaseContext context) {
-			context.Users.Insert(new Users() {
+		private ulong CreateUser(TestDatabaseContext context) {
+			return context.Users.Insert(new Users() {
 				username = "djgosnell",
 				password = "my_hashed_password",
 				last_logged = Converters.DateTimeToUnix(new DateTime(2014, 11, 25))
@@ -34,7 +34,7 @@ namespace DtxModelTests.Sqlite {
 		}
 
 		[TestMethod]
-		public void DatabaseRowIsCreated() {
+		public void RowIsCreated() {
 			
 
 			using (var context = new TestDatabaseContext()) {
@@ -51,7 +51,7 @@ namespace DtxModelTests.Sqlite {
 		}
 
 		[TestMethod]
-		public void DatabaseRowIsDeleted() {
+		public void RowDeleteModel() {
 			using (var context = new TestDatabaseContext()) {
 				CreateUser(context);
 				var user = context.Users.Select().ExecuteFetch();
@@ -68,7 +68,62 @@ namespace DtxModelTests.Sqlite {
 		}
 
 		[TestMethod]
-		public void DatabaseRowIsUpdated() {
+		public void RowDeleteModels() {
+			using (var context = new TestDatabaseContext()) {
+				CreateUser(context);
+				CreateUser(context);
+				var users = context.Users.Select().ExecuteFetchAll();
+
+				Assert.IsNotNull(users);
+				Assert.AreEqual(2, users.Length);
+
+				context.Users.Delete(users);
+
+				var user = context.Users.Select().ExecuteFetch();
+
+				Assert.IsNull(user, "Users were not deleted.");
+
+			}
+		}
+
+		[TestMethod]
+		public void RowDeleteRowId() {
+			using (var context = new TestDatabaseContext()) {
+				ulong id = CreateUser(context);
+
+				Assert.AreNotEqual(0, id);
+
+				context.Users.Delete(id);
+
+				var user = context.Users.Select().ExecuteFetch();
+
+				Assert.IsNull(user, "User was not deleted.");
+
+			}
+		}
+
+		[TestMethod]
+		public void RowDeleteRowIds() {
+			using (var context = new TestDatabaseContext()) {
+				ulong[] ids = new ulong[2];
+				ids[0] = CreateUser(context);
+				ids[1] = CreateUser(context);
+
+				Assert.AreNotEqual(0, ids[0]);
+				Assert.AreNotEqual(0, ids[1]);
+
+				context.Users.Delete(ids);
+
+				var user = context.Users.Select().ExecuteFetch();
+
+				Assert.IsNull(user, "Users were not deleted.");
+
+			}
+		}
+
+
+		[TestMethod]
+		public void RowIsUpdated() {
 			using (var context = new TestDatabaseContext()) {
 				CreateUser(context);
 				var user = context.Users.Select().ExecuteFetch();
@@ -86,7 +141,7 @@ namespace DtxModelTests.Sqlite {
 		}
 
 		[TestMethod]
-		public void DatabaseRowForeignKeyAssociationAccess() {
+		public void RowForeignKeyAssociationAccess() {
 			ulong log_rowid = 0;
 			using (var context = new TestDatabaseContext()) {
 				CreateUser(context);
@@ -115,7 +170,7 @@ namespace DtxModelTests.Sqlite {
 		}
 
 		[TestMethod]
-		public void DatabaseRowAssociationAccess() {
+		public void RowAssociationAccess() {
 			var logger = new Performancer();
 
 			using (var context = new TestDatabaseContext()) {
@@ -149,14 +204,12 @@ namespace DtxModelTests.Sqlite {
 				Assert.AreEqual("This is log item 0", logs_assoc[0].text);
 				Assert.AreEqual("This is log item 1", logs_assoc[1].text);
 				logger.OutputTraceLog();
-
-				
 			}
 
 		}
 
 		[TestMethod]
-		public void DatabaseRowBaseTypesStoreAndRetrieve() {
+		public void RowBaseTypesStoreAndRetrieve() {
 			var logger = new Performancer();
 
 			using (var context = new TestDatabaseContext()) {
@@ -208,6 +261,74 @@ namespace DtxModelTests.Sqlite {
 				logger.Log("Deleted row.");
 
 				logger.OutputTraceLog();
+			}
+		}
+
+		[TestMethod]
+		public void TransactionRollbackAuto() {
+			using (var context = new TestDatabaseContext()) {
+				using (var transaction = context.BeginTransaction()) {
+					CreateUser(context);
+				}
+
+				var user = context.Users.Select().ExecuteFetch();
+
+				Assert.IsNull(user);
+
+			}
+		}
+
+		[TestMethod]
+		public void TransactionRollbackManual() {
+			using (var context = new TestDatabaseContext()) {
+				using (var transaction = context.BeginTransaction()) {
+					CreateUser(context);
+					transaction.Rollback();
+				}
+
+				var user = context.Users.Select().ExecuteFetch();
+
+				Assert.IsNull(user);
+
+			}
+		}
+
+		[TestMethod]
+		public void TransactionCommit() {
+			using (var context = new TestDatabaseContext()) {
+				using (var transaction = context.BeginTransaction()) {
+					CreateUser(context);
+					transaction.Commit();
+				}
+
+				var user = context.Users.Select().ExecuteFetch();
+
+				Assert.IsNotNull(user);
+
+				context.Users.Delete(user);
+
+			}
+		}
+
+		[TestMethod]
+		public void TransactionCommitMultipleInserts() {
+			using (var context = new TestDatabaseContext()) {
+				using (var transaction = context.BeginTransaction()) {
+					CreateUser(context);
+					CreateUser(context);
+					CreateUser(context);
+					CreateUser(context);
+					CreateUser(context);
+
+					transaction.Commit();
+				}
+
+				var users = context.Users.Select().ExecuteFetchAll();
+
+				Assert.AreEqual(5, users.Length);
+
+				context.Users.Delete(users);
+
 			}
 		}
 
