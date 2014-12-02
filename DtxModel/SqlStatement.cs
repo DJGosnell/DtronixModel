@@ -20,6 +20,9 @@ namespace DtxModel {
 
 		private bool _auto_close_command = true;
 
+		/// <summary>
+		/// True to close the command 
+		/// </summary>
 		public bool AutoCloseCommand {
 			get { return _auto_close_command; }
 			set { _auto_close_command = value; }
@@ -34,7 +37,7 @@ namespace DtxModel {
 		private string table_name;
 
 		private string sql_select = "*";
-		private int sql_limit_start = -1;
+		private int sql_limit_offset = -1;
 		private int sql_limit_count = -1;
 		private string sql_where;
 		private Dictionary<string, SortDirection> sql_orders;
@@ -45,10 +48,15 @@ namespace DtxModel {
 
 		//public SqlStatement(Mode mode) : this(mode, null) { }
 
+		/// <summary>
+		/// Starts a Statement in the specified mode of operation.
+		/// </summary>
+		/// <param name="mode">Mode that this query will operate in. Prevents invalid operations.</param>
+		/// <param name="context">Context that this query will operate inside of.</param>
 		public SqlStatement(Mode mode, Context context) {
 			this.context = context;
 			this.mode = mode;
-			command = context.connection.CreateCommand();
+			command = context.Connection.CreateCommand();
 
 			try {
 				table_name = AttributeCache<T, TableAttribute>.GetAttribute().Name;
@@ -101,24 +109,11 @@ namespace DtxModel {
 		}
 
 
-
-		private string SqlBindParameters(string sql, object[] binding){
-			if (binding == null) {
-				return sql;
-			}
-
-			string[] sql_param_holder = new string[binding.Length];
-			for (int i = 0; i < binding.Length; i++) {
-				sql_param_holder[i] = BindParameter(binding[i]);
-			}
-
-			try {
-				return string.Format(sql, sql_param_holder);
-			} catch (Exception e) {
-				throw new Exception("Invalid number of placement parameters for the WHERE statement.", e);
-			}
-		}
-
+		/// <summary>
+		/// Begins selection process and the specifies columns to return from the database.
+		/// </summary>
+		/// <param name="select">Columns to select.  Selecting "*" will select all the columns in the table</param>
+		/// <returns>Current statement for chaining.</returns>
 		public SqlStatement<T> Select(string select) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
@@ -128,6 +123,10 @@ namespace DtxModel {
 			return this;
 		}
 
+		/// <summary>
+		/// Updates the specified rows in the database. The rows must have their primary keys set.
+		/// </summary>
+		/// <param name="models">Rows to update with their new values.</param>
 		public void Update(T[] models) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
@@ -139,6 +138,10 @@ namespace DtxModel {
 		}
 
 
+		/// <summary>
+		/// Deletes the specified rows from the database. The rows must have their primary keys set.
+		/// </summary>
+		/// <param name="models">Rows to delete.</param>
 		public void Delete(T[] models) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
@@ -150,6 +153,25 @@ namespace DtxModel {
 			Execute();
 		}
 
+		/// <summary>
+		/// Deletes the specified primary keys from the table.
+		/// </summary>
+		/// <param name="primary_ids">Ids to delete.</param>
+		public void Delete(ulong[] primary_ids) {
+			if (mode == Mode.Execute) {
+				throw new InvalidOperationException("Can not use all functions in Execute mode.");
+			}
+
+			WhereIn(new T().GetPKName(), primary_ids.Cast<object>().ToArray());
+			Execute();
+		}
+
+		/// <summary>
+		/// Specifies a column to match the specified values.
+		/// </summary>
+		/// <param name="column">Column to match against.</param>
+		/// <param name="values">Values to check against the specified column.</param>
+		/// <returns>Current statement for chaining.</returns>
 		public SqlStatement<T> WhereIn(string column, params object[] values) {
 			ValidateWhere();
 
@@ -171,18 +193,18 @@ namespace DtxModel {
 		}
 
 		/// <summary>
-		/// Sets where to the provided model's primary key.
+		/// Sets where to the provided rows's primary key.
 		/// </summary>
-		/// <param name="model">Model to provide the primary key for.</param>
+		/// <param name="model">Row to provide the primary key for.</param>
 		/// <returns>Current statement for chaining.</returns>
 		public SqlStatement<T> Where(T model) {
 			return Where(new T[] { model });
 		}
 
 		/// <summary>
-		/// Sets where to the provided models primary keys.
+		/// Sets where to the provided row's primary keys.
 		/// </summary>
-		/// <param name="models">Models to provide the primary key for.</param>
+		/// <param name="models">Row to provide the primary key for.</param>
 		/// <returns>Current statement for chaining.</returns>
 		public SqlStatement<T> Where(T[] models) {
 			ValidateWhere();
@@ -209,6 +231,12 @@ namespace DtxModel {
 		}
 
 
+		/// <summary>
+		/// Specifies a custom where string to be applied to the query. Use the String.Format type arguments for this method.
+		/// </summary>
+		/// <param name="where">Where string to apply to the query. Use String.Format holders ({0}, {1}, etc...) for the bound parameters.</param>
+		/// <param name="parameters">Parameters to bind to the query.</param>
+		/// <returns>Current statement for chaining.</returns>
 		public SqlStatement<T> Where(string where, params object[] parameters) {
 			ValidateWhere();
 
@@ -217,25 +245,22 @@ namespace DtxModel {
 			return this;
 		}
 
-		private void ValidateWhere() {
-			if (mode == Mode.Execute) {
-				throw new InvalidOperationException("Can not use all functions in Execute mode.");
-			}
-
-			if (mode == Mode.Insert) {
-				throw new InvalidOperationException("Can not use the WHERE method in INSERT mode.");
-			}
-
-			if (sql_where != null) {
-				throw new InvalidOperationException("The WHERE statement has already been defined.");
-			}
-		}
-
+		/// <summary>
+		/// Limits the rows returned by the server.
+		/// </summary>
+		/// <param name="count">Number of rows to return.</param>
+		/// <returns>Current statement for chaining.</returns>
 		public SqlStatement<T> Limit(int count) {
 			return Limit(count, -1);
 		}
 
-		public SqlStatement<T> Limit(int count, int start) {
+		/// <summary>
+		/// Limits the rows returned by the server.
+		/// </summary>
+		/// <param name="count">Number of rows to return.</param>
+		/// <param name="offset">Number of rows offset the counter into the return set.</param>
+		/// <returns>Current statement for chaining.</returns>
+		public SqlStatement<T> Limit(int count, int offset) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -244,12 +269,18 @@ namespace DtxModel {
 				throw new InvalidOperationException("Can not use the LIMIT method except in SELECT mode.");
 			}
 
-			sql_limit_start = start;
+			sql_limit_offset = offset;
 			sql_limit_count = count;
 
 			return this;
 		}
 
+		/// <summary>
+		/// Orders the found results by the specified column.  Call multple times to specify multiple orders.
+		/// </summary>
+		/// <param name="column">Column to order.</param>
+		/// <param name="direction">Direction to order the specified column.</param>
+		/// <returns>Current statement for chaining.</returns>
 		public SqlStatement<T> OrderBy(string column, SortDirection direction) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
@@ -268,6 +299,11 @@ namespace DtxModel {
 			return this;
 		}
 
+		/// <summary>
+		/// Groups the statement by the specified column.  Call multiple times to specify multiple groups.
+		/// </summary>
+		/// <param name="column">Column to add to the group statement.</param>
+		/// <returns>Current statement for chaining.</returns>
 		public SqlStatement<T> GroupBy(string column) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
@@ -292,9 +328,15 @@ namespace DtxModel {
 			}
 
 			if (mode == Mode.Update) {
-				using (var transaction = context.connection.BeginTransaction()) {
+				DtxTransaction transaction = null;
+				try {
+					// Start a transaction if one does not already exist.
+					if (context.TransactionStarted == false) {
+						transaction = context.BeginTransaction();
+					}
 
 					for (int i = 0; i < sql_models.Length; i++) {
+						sql_where = null;
 						Where(sql_models[i]);
 						BuildSql(sql_models[i]);
 
@@ -302,7 +344,13 @@ namespace DtxModel {
 						command.ExecuteNonQuery();
 					}
 
-					transaction.Commit();
+					if (transaction != null) {
+						transaction.Commit();
+					}
+				} finally {
+					if (transaction != null) {
+						transaction.Dispose();
+					}
 				}
 
 			} else {
@@ -446,8 +494,8 @@ namespace DtxModel {
 			if (mode == Mode.Select && sql_limit_count != -1) {
 				sql.Append("LIMIT ");
 
-				if (sql_limit_start != -1) {
-					sql.Append(sql_limit_start).Append(", ");
+				if (sql_limit_offset != -1) {
+					sql.Append(sql_limit_offset).Append(", ");
 				}
 
 				sql.Append(sql_limit_count);
@@ -478,14 +526,14 @@ namespace DtxModel {
 		}
 
 		/// <summary>
-		/// Insert multiple models into the database.
+		/// Inserts multiple rows into the database.
 		/// </summary>
 		/// <remarks>
 		/// This method by default wraps all inserts into a transaction.
 		/// If one of the inserts fails, then all of the inserts are rolled back.
 		/// </remarks>
-		/// <param name="models">Models to insert.</param>
-		public void Insert(T[] models) {
+		/// <param name="models">Rows to insert.</param>
+		public ulong[] Insert(T[] models) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -505,7 +553,7 @@ namespace DtxModel {
 
 			// Add all the column names.
 			foreach (var column in columns) {
-				sb_sql.Append("'").Append(column).Append("', ");
+				sb_sql.Append("").Append(column).Append(", ");
 			}
 
 			// Remove the last ", " from the query.
@@ -519,45 +567,116 @@ namespace DtxModel {
 
 			// Remove the last ", " from the query.
 			sb_sql.Remove(sb_sql.Length - 2, 2);
-			sb_sql.Append(")");
+			sb_sql.Append(");");
 
+			ulong[] new_row_ids = null;
 
-			// Start a transaction to enable for fast bulk inserts.
-			using (var transaction = context.connection.BeginTransaction()) {
+			if (context.LastInsertIdQuery != null) {
+				sb_sql.Append(context.LastInsertIdQuery);
+				new_row_ids = new ulong[models.Length];
+			}
+			DtxTransaction transaction = null;
 
-				try {
+			try {
 
-					command.CommandText = sb_sql.ToString();
+				// Start a transaction if one does not already exist for fast bulk inserts.
+				if (context.TransactionStarted == false) {
+					transaction = context.BeginTransaction();
+				}
 
-					// Create the parameters for bulk inerts.
-					for (int i = 0; i < columns.Length; i++) {
-						var parameter = command.CreateParameter();
-						parameter.ParameterName = "@v" + i;
-						command.Parameters.Add(parameter);
+				command.CommandText = sb_sql.ToString();
+
+				// Create the parameters for bulk inerts.
+				for (int i = 0; i < columns.Length; i++) {
+					var parameter = command.CreateParameter();
+					parameter.ParameterName = "@v" + i;
+					command.Parameters.Add(parameter);
+				}
+
+				// Loop through wach of the provided models.
+				for (int i = 0; i < models.Length; i++) {
+					var values = models[i].GetAllValues();
+
+					for (int x = 0; x < values.Length; x++) {
+						command.Parameters[x].Value = values[x];
 					}
 
-					// Loop through wach of the provided models.
-					foreach (var model in models) {
-						var values = model.GetAllValues();
-
-						for (int i = 0; i < values.Length; i++) {
-							command.Parameters[i].Value = values[i];
+					if (context.LastInsertIdQuery != null) {
+						object new_row = command.ExecuteScalar();
+						if (new_row == null) {
+							throw new Exception("Unable to insert row");
+						} else {
+							new_row_ids[i] = Convert.ToUInt64(new_row);
 						}
-
+					} else {
 						if (command.ExecuteNonQuery() != 1) {
 							throw new Exception("Unable to insert row");
 						}
 					}
 
-				} catch (Exception e) {
-					// If we incountered an error, rollback the transaction.
-					transaction.Rollback();
 
-					throw e;
 				}
 
 				// Commit all inserts.
-				transaction.Commit();
+				if (transaction != null) {
+					transaction.Commit();
+				}
+			} catch (Exception e) {
+				// If we incountered an error, rollback the transaction.
+
+				if (transaction != null) {
+					transaction.Rollback();
+				}
+				
+
+				throw e;
+			} finally {
+				if (transaction != null) {
+					transaction.Dispose();
+				}
+			}
+			return new_row_ids;
+
+		}
+
+
+		/// <summary>
+		/// Binds the specified parameters to the partial SQL statement.
+		/// </summary>
+		/// <param name="sql">SQL to bind the parameters to.</param>
+		/// <param name="binding">Objects to bind to the partial SQL statement.</param>
+		/// <returns>Formatted SQL string to put into the final SQL query.</returns>
+		private string SqlBindParameters(string sql, object[] binding) {
+			if (binding == null) {
+				return sql;
+			}
+
+			string[] sql_param_holder = new string[binding.Length];
+			for (int i = 0; i < binding.Length; i++) {
+				sql_param_holder[i] = BindParameter(binding[i]);
+			}
+
+			try {
+				return string.Format(sql, sql_param_holder);
+			} catch (Exception e) {
+				throw new Exception("Invalid number of placement parameters for the WHERE statement.", e);
+			}
+		}
+
+		/// <summary>
+		/// Validates the current state of the class and checks to see if a where statement is allowed to be called.
+		/// </summary>
+		private void ValidateWhere() {
+			if (mode == Mode.Execute) {
+				throw new InvalidOperationException("Can not use all functions in Execute mode.");
+			}
+
+			if (mode == Mode.Insert) {
+				throw new InvalidOperationException("Can not use the WHERE method in INSERT mode.");
+			}
+
+			if (sql_where != null) {
+				throw new InvalidOperationException("The WHERE statement has already been defined.");
 			}
 		}
 

@@ -106,7 +106,7 @@ namespace DtxModeler.Generator.Sqlite {
 							while (reader.Read()) {
 								var index = new Index() {
 									Name = reader.GetString(0),
-									Table = getTableByName(table.Name)
+									Table = database.Table.First(t => t.Name == table.Name)
 								};
 
 								table.Index.Add(index);

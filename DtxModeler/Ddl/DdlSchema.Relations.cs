@@ -143,7 +143,6 @@ namespace DtxModeler.Ddl {
 	}
 
 
-
 	public partial class Association {
 
 		public enum Reference {

@@ -59,9 +59,11 @@ namespace DtxModeler.Xaml {
 				string objects = "";	
 			}));
 
+		public MainWindow() : this(null) {
+			
+		}
 
-
-		public MainWindow() {
+		public MainWindow(string open_file) {
 			InitializeComponent();
 			ColumnNetType.ItemsSource = Enum.GetValues(typeof(NetTypes)).Cast<NetTypes>();
 			_CmbTargetDatabase.ItemsSource = Enum.GetValues(typeof(DbProvider)).Cast<DbProvider>();
@@ -76,6 +78,17 @@ namespace DtxModeler.Xaml {
 			BindCommand(Commands.GenerateAll, new KeyGesture(Key.F5), Command_GenerateAll, Command_GenerateAllCanExecute);
 
 			_Status.SetStatus("Application Loaded And Ready", ColorStatusBar.Status.Completed);
+
+			if (open_file != null) {
+				try {
+					Database db = Database.LoadFromFile(open_file);
+					db._FileLocation = open_file;
+					_DatabaseExplorer.LoadDatabase(db);
+
+				} catch (Exception e) {
+					MessageBox.Show("Error opening database:\r\n" + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				}
+			}
 		}
 
 		private void BindCommand(ICommand command, KeyGesture gesture, ExecutedRoutedEventHandler execute) {
@@ -156,9 +169,9 @@ namespace DtxModeler.Xaml {
 		private void Command_GenerateAll(object obSender, ExecutedRoutedEventArgs e) {
 			_Status.SetStatus("Beginning Code Generation", ColorStatusBar.Status.Working);
 			var database = _DatabaseExplorer.SelectedDatabase;
-			var options = new ModelGenOptions(null) {
-				OutputDbType = "sqlite",
-				InputType = "ddl"
+			var options = new CommandOptions() {
+				DbProvider = database.TargetDb,
+				InputType =  CommandOptions.InType.Ddl
 			};
 
 			string base_ddl_filename = Path.Combine(Path.GetDirectoryName(database._FileLocation),
@@ -175,7 +188,19 @@ namespace DtxModeler.Xaml {
 			}
 
 			_Status.SetStatus("Generating Code...", ColorStatusBar.Status.Working);
-			Program.ExecuteOptions(options, _DatabaseExplorer.SelectedDatabase);
+
+
+			try {
+				Task.Run(async () => {
+					await Program.ExecuteOptions(options, _DatabaseExplorer.SelectedDatabase);
+				}).Wait();
+			} catch (AggregateException ex) {
+				Console.WriteLine("Error in executing specified options. Error:");
+				foreach (var inner_ex in ex.InnerExceptions) {
+					Console.WriteLine(inner_ex.Message);
+				}
+			}
+			
 
 			_Status.SetStatus("Completed Generating Code", ColorStatusBar.Status.Completed);
 		}

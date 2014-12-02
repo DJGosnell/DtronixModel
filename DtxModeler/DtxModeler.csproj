@@ -74,6 +74,16 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Install|AnyCPU'">
+    <OutputPath>bin\Install\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>ManagedMinimumRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -131,18 +141,21 @@
       <DependentUpon>DdlSchema.xsd</DependentUpon>
     </Compile>
     <Compile Include="Ddl\DdlSchema.Relations.cs" />
-    <Compile Include="Generator\CodeGen\CodeGenerator.cs" />
-    <Compile Include="Generator\CodeGen\DatabaseContextGen.cs" />
-    <Compile Include="Generator\CodeGen\SqlDatabaseGen.cs" />
-    <Compile Include="Generator\CodeGen\TableModelGen.cs" />
+    <Compile Include="Generator\Output\CSharpCodeGenerator.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CSharpCodeGenerator.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Generator\Output\CSharpCodeGenerator.Constructor.cs" />
+    <Compile Include="Generator\Output\SqlTableCreateGenerator.cs" />
     <Compile Include="Generator\CodeWriter.cs" />
     <Compile Include="Generator\CommandOptions.cs" />
     <Compile Include="Generator\DdlGenerator.cs" />
     <Compile Include="Generator\MySqlMwb\MySqlMwbDdlGenerator.cs" />
     <Compile Include="Generator\MySql\MySqlTypeTransformer.cs" />
     <Compile Include="Generator\OptionAttribute.cs" />
-    <Compile Include="Generator\Options.cs" />
     <Compile Include="Generator\Sqlite\SqliteConfigurations.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Generator\Sqlite\SqliteDdlGenerator.cs" />
     <Compile Include="Generator\Sqlite\SqliteTypeTransformer.cs" />
@@ -157,7 +170,6 @@
     </Compile>
     <Compile Include="Xaml\Commands.cs" />
     <Compile Include="Xaml\Converters.cs" />
-    <Compile Include="Xaml\DatabaseTree.cs" />
     <Compile Include="Xaml\DatabaseServer.xaml.cs">
       <DependentUpon>DatabaseServer.xaml</DependentUpon>
     </Compile>
@@ -192,6 +204,10 @@
     </EmbeddedResource>
     <None Include="Ddl\Build.bat" />
     <None Include="Ddl\DdlSchema.xsd" />
+    <None Include="Generator\Output\CSharpCodeGenerator.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CSharpCodeGenerator.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -226,9 +242,7 @@
   <ItemGroup>
     <Resource Include="Xaml\Images\table_chart.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Generator\CodeGen\Sqlite\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Xaml\Images\database_connect.png" />
   </ItemGroup>
@@ -308,13 +322,26 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>xcopy "$(SolutionDir)packages\System.Data.SQLite.Core.1.0.94.0\build\net45\*.*" "$(TargetDir)*.*" /Y /I /E</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>if "Installer" == "$(ConfigurationName)" (
+echo Building installer...
 "C:\Program Files (x86)\Inno Setup 5\iscc.exe" /q setup.iss 
+echo Installer built.
+)
+
+if "Install" == "$(ConfigurationName)" (
+echo Building installer...
+"C:\Program Files (x86)\Inno Setup 5\iscc.exe" /q setup.iss
+echo Installer built. Silently installing DtronixModeler...
+For /R "$(TargetDir)" %25%25G IN ("DtronixModeler-*.exe") do "%25%25~G" /verysilent
+echo DtronixModel installed.
 )</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets')" />

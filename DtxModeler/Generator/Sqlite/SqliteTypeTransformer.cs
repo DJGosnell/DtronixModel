@@ -16,14 +16,13 @@ namespace DtxModeler.Generator.Sqlite {
 				new TypeTransformerType(NetTypes.UInt64, "BIGINT"),*/
 				new TypeTransformerType(NetTypes.ByteArray, "BLOB"),
 				new TypeTransformerType(NetTypes.Byte, "BLOB"),
-				new TypeTransformerType(NetTypes.DateTime, "DATETIME"),
-				new TypeTransformerType(NetTypes.DateTimeOffset, "DATETIME"),
 				new TypeTransformerType(NetTypes.Decimal, "REAL"),
 				new TypeTransformerType(NetTypes.Decimal, "NUMERIC"),
 				new TypeTransformerType(NetTypes.Float, "FLOAT"),
 				new TypeTransformerType(NetTypes.Double, "DOUBLE"),
 				new TypeTransformerType(NetTypes.Boolean, "BOOLEAN"),
 				new TypeTransformerType(NetTypes.String, "TEXT"),
+				new TypeTransformerType(NetTypes.DateTime, "TEXT"),
 				new TypeTransformerType(NetTypes.Char, "CHAR")
 			};
 		}

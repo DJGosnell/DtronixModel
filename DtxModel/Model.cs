@@ -15,6 +15,13 @@ namespace DtxModel {
 
 		protected Context context;
 
+		protected Dictionary<string, object> additional_values;
+
+		public Dictionary<string, object> AdditionalValues {
+			get { return additional_values; }
+		}
+
+
 		public Model() { }
 
 		public virtual void Read(DbDataReader reader, Context context) {
