@@ -67,7 +67,7 @@ namespace DtxModeler.Xaml {
 
 			SelectedTableColumns = column_names;
 
-			var s = this.col;
+			//var s = this.col;
 		}
 
 		private void _LstIndexes_New(object sender, ExecutedRoutedEventArgs e) {
