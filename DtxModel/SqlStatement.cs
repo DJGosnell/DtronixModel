@@ -308,6 +308,7 @@ namespace DtxModel {
 					}
 
 					for (int i = 0; i < sql_models.Length; i++) {
+						sql_where = null;
 						Where(sql_models[i]);
 						BuildSql(sql_models[i]);
 

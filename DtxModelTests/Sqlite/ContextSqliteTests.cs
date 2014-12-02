@@ -3,56 +3,247 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.SQLite;
 using System.IO;
 using DtxModel;
+using System.Reflection;
 
 namespace DtxModelTests.Sqlite {
 	[TestClass]
 	public class ContextSqliteTests {
-
 		static ContextSqliteTests() {
-			File.Delete("test_database.sqlite");
 			TestDatabaseContext.DatabaseType = DtxModel.Context.TargetDb.Sqlite;
-			TestDatabaseContext.DefaultConnection = () => new SQLiteConnection(@"Data Source=test_database.sqlite;Version=3;");
-
-			string create_script = Utilities.GetFileContents("Sqlite.TestDatabase.sql");
-
-			using (var context = new TestDatabaseContext()) {
-				context.Query(Utilities.GetFileContents("Sqlite.TestDatabase.sql"), null);
-			}
+			Directory.CreateDirectory("sqlite_dbs");
 		}
 
-		[TestMethod]
-		public void DatabaseIsCreated() {
-			Assert.IsTrue(File.Exists("test_database.sqlite"));
+		private TestDatabaseContext CreateContext(string method_name) {
+			
+			string class_name = this.GetType().Name;
+			string database_name = class_name + "_" + method_name + ".sqlite";
+			string path = Path.Combine(Directory.GetCurrentDirectory(), "sqlite_dbs", database_name);
+			File.Delete(path);
+
+			var connection = new SQLiteConnection("Data Source=\"" + path + "\";Version=3;");
+			connection.Open();
+
+			var context = new TestDatabaseContext(connection);
+			context.Query(Utilities.GetFileContents("Sqlite.TestDatabase.sql"), null);
+
+			return context;
+
+
+
 		}
 
-		private ulong CreateUser(TestDatabaseContext context) {
+		private ulong CreateUser(TestDatabaseContext context, string append = null) {
 			return context.Users.Insert(new Users() {
-				username = "djgosnell",
-				password = "my_hashed_password",
+				username = "user_name" + append,
+				password = "my_hashed_password" + append,
 				last_logged = Converters.DateTimeToUnix(new DateTime(2014, 11, 25))
 			});
 		}
 
 		[TestMethod]
-		public void RowIsCreated() {
-			
-
-			using (var context = new TestDatabaseContext()) {
+		public void SelectedRow() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
 				var user = context.Users.Select().ExecuteFetch();
 
-				Assert.AreNotEqual(0, user.rowid);
-				Assert.AreEqual("djgosnell", user.username);
-				Assert.AreEqual("my_hashed_password", user.password);
-				Assert.AreEqual(Converters.DateTimeToUnix(new DateTime(2014, 11, 25)), user.last_logged);
-
-				context.Users.Delete(user);
+				Assert.IsNotNull(user);
 			}
 		}
 
 		[TestMethod]
-		public void RowDeleteModel() {
-			using (var context = new TestDatabaseContext()) {
+		public void SelectedRows() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context);
+				CreateUser(context);
+				var users = context.Users.Select().ExecuteFetchAll();
+
+				Assert.AreEqual(2, users.Length);
+			}
+		}
+
+		[TestMethod]
+		public void SelectedSpecifiedRows() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context);
+				var user = context.Users.Select("username, last_logged").ExecuteFetch();
+
+				Assert.AreEqual("user_name", user.username);
+				Assert.AreEqual(new DateTime(2014, 11, 25), Converters.UnixToDateTime(user.last_logged));
+				Assert.IsNull(user.password);
+			}
+		}
+
+		[TestMethod]
+		public void SelectedLimitCount() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context, "1");
+				CreateUser(context, "2");
+				CreateUser(context, "3");
+				var users = context.Users.Select().Limit(2).ExecuteFetchAll();
+
+				Assert.AreEqual(2, users.Length);
+				Assert.AreEqual("user_name1", users[0].username);
+				Assert.AreEqual("user_name2", users[1].username);
+			}
+		}
+
+
+		[TestMethod]
+		public void SelectedLimitCountStart() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context, "1");
+				CreateUser(context, "2");
+				CreateUser(context, "3");
+				CreateUser(context, "4");
+				var users = context.Users.Select().Limit(2, 1).ExecuteFetchAll();
+
+				Assert.AreEqual(2, users.Length);
+				Assert.AreEqual("user_name2", users[0].username);
+				Assert.AreEqual("user_name3", users[1].username);
+			}
+		}
+
+		[TestMethod]
+		public void SelectedOrderByDescending() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context, "1");
+				CreateUser(context, "2");
+				CreateUser(context, "3");
+				CreateUser(context, "4");
+				var users = context.Users.Select().OrderBy("username", SortDirection.Descending).ExecuteFetchAll();
+
+				Assert.AreEqual(4, users.Length);
+				Assert.AreEqual("user_name4", users[0].username);
+				Assert.AreEqual("user_name3", users[1].username);
+				Assert.AreEqual("user_name2", users[2].username);
+				Assert.AreEqual("user_name1", users[3].username);
+			}
+		}
+
+		[TestMethod]
+		public void SelectedWhereModel() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context, "1");
+				CreateUser(context, "2");
+
+				var user_where = context.Users.Select().ExecuteFetch();
+
+				var users = context.Users.Select().Where(user_where).ExecuteFetchAll();
+
+				Assert.AreEqual(1, users.Length);
+				Assert.AreEqual("user_name1", users[0].username);
+			}
+		}
+
+		[TestMethod]
+		public void SelectedWhereModels() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context, "1");
+				CreateUser(context, "2");
+				CreateUser(context, "3");
+
+				var users_where = context.Users.Select().Limit(2).ExecuteFetchAll();
+
+				var users = context.Users.Select().Where(users_where).ExecuteFetchAll();
+
+				Assert.AreEqual(2, users.Length);
+				Assert.AreEqual("user_name1", users[0].username);
+				Assert.AreEqual("user_name2", users[1].username);
+			}
+		}
+
+		[TestMethod]
+		public void SelectedWhereCustom() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context, "1");
+				CreateUser(context, "2");
+				CreateUser(context, "3");
+
+				var users = context.Users.Select().Where("username = {0} AND password = {1}", "user_name1", "my_hashed_password1").ExecuteFetchAll();
+
+				Assert.AreEqual(1, users.Length);
+				Assert.AreEqual("user_name1", users[0].username);
+			}
+		}
+
+		[TestMethod]
+		public void SelectedWhereIn() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context, "1");
+				CreateUser(context, "2");
+				CreateUser(context, "3");
+
+				var users = context.Users.Select().WhereIn("username", "user_name1", "user_name3").ExecuteFetchAll();
+
+				Assert.AreEqual(2, users.Length);
+				Assert.AreEqual("user_name1", users[0].username);
+				Assert.AreEqual("user_name3", users[1].username);
+			}
+		}
+
+		[TestMethod]
+		public void QueryTables() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context, "1");
+				CreateUser(context, "2");
+				CreateUser(context, "3");
+
+				context.QueryRead(@"SELECT * FROM Users WHERE username LIKE {0} LIMIT 1", new[] { "%name2" }, reader => {
+					int count = 0;
+					while (reader.Read()) {
+						Assert.AreEqual(1, ++count);
+						Assert.AreEqual("user_name2", reader.GetString(reader.GetOrdinal("username")));
+						Assert.AreEqual("my_hashed_password2", reader.GetString(reader.GetOrdinal("password")));
+					}
+				});
+			}
+		}
+
+
+		[TestMethod]
+		public void SelectedOrderByAscending() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context, "1");
+				CreateUser(context, "2");
+				CreateUser(context, "3");
+				CreateUser(context, "4");
+				var users = context.Users.Select().OrderBy("username", SortDirection.Ascending).ExecuteFetchAll();
+
+				Assert.AreEqual(4, users.Length);
+				Assert.AreEqual("user_name1", users[0].username);
+				Assert.AreEqual("user_name2", users[1].username);
+				Assert.AreEqual("user_name3", users[2].username);
+				Assert.AreEqual("user_name4", users[3].username);
+			}
+		}
+
+		[TestMethod]
+		public void SelectEmptyTable() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				var user = context.Users.Select().ExecuteFetch();
+				var users = context.Users.Select().ExecuteFetchAll();
+
+				Assert.IsNull(user);
+				Assert.AreEqual(0, users.Length);
+			}
+		}
+
+		[TestMethod]
+		public void RowIsCreated() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context);
+				var user = context.Users.Select().ExecuteFetch();
+
+				Assert.AreNotEqual(0, user.rowid);
+				Assert.AreEqual("user_name", user.username);
+				Assert.AreEqual("my_hashed_password", user.password);
+				Assert.AreEqual(Converters.DateTimeToUnix(new DateTime(2014, 11, 25)), user.last_logged);
+			}
+		}
+
+		[TestMethod]
+		public void RowIsDeletedByModel() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
 				var user = context.Users.Select().ExecuteFetch();
 
@@ -63,13 +254,12 @@ namespace DtxModelTests.Sqlite {
 				user = context.Users.Select().ExecuteFetch();
 
 				Assert.IsNull(user, "User was not deleted.");
-
 			}
 		}
 
 		[TestMethod]
-		public void RowDeleteModels() {
-			using (var context = new TestDatabaseContext()) {
+		public void RowIsDeletedByModels() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
 				CreateUser(context);
 				var users = context.Users.Select().ExecuteFetchAll();
@@ -87,8 +277,8 @@ namespace DtxModelTests.Sqlite {
 		}
 
 		[TestMethod]
-		public void RowDeleteRowId() {
-			using (var context = new TestDatabaseContext()) {
+		public void RowIsDeletedByRowId() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				ulong id = CreateUser(context);
 
 				Assert.AreNotEqual(0, id);
@@ -103,8 +293,8 @@ namespace DtxModelTests.Sqlite {
 		}
 
 		[TestMethod]
-		public void RowDeleteRowIds() {
-			using (var context = new TestDatabaseContext()) {
+		public void RowIsDeletedByRowIds() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				ulong[] ids = new ulong[2];
 				ids[0] = CreateUser(context);
 				ids[1] = CreateUser(context);
@@ -124,7 +314,7 @@ namespace DtxModelTests.Sqlite {
 
 		[TestMethod]
 		public void RowIsUpdated() {
-			using (var context = new TestDatabaseContext()) {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
 				var user = context.Users.Select().ExecuteFetch();
 				user.username = "MyNewUsername";
@@ -133,17 +323,31 @@ namespace DtxModelTests.Sqlite {
 				user = context.Users.Select().ExecuteFetch();
 
 				Assert.AreEqual<string>("MyNewUsername", user.username);
+			}
+		}
 
-				context.Users.Delete(user);
+		[TestMethod]
+		public void RowsAreUpdated() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context);
+				CreateUser(context);
 
+				var users = context.Users.Select().ExecuteFetchAll();
+				users[0].username = "MyNewUsernameFirst";
+				users[1].username = "MyNewUsernameSecond";
+				context.Users.Update(users);
 
+				users = context.Users.Select().ExecuteFetchAll();
+
+				Assert.AreEqual<string>("MyNewUsernameFirst", users[0].username);
+				Assert.AreEqual<string>("MyNewUsernameSecond", users[1].username);
 			}
 		}
 
 		[TestMethod]
 		public void RowForeignKeyAssociationAccess() {
 			ulong log_rowid = 0;
-			using (var context = new TestDatabaseContext()) {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
 
 				var user = context.Users.Select().ExecuteFetch();
@@ -156,9 +360,6 @@ namespace DtxModelTests.Sqlite {
 				var log = context.Logs.Select().ExecuteFetch();
 
 				var user_fk = log.User;
-
-				context.Logs.Delete(log);
-				context.Users.Delete(user);
 
 				Assert.IsNotNull(user_fk);
 				Assert.AreEqual(user.rowid, user_fk.rowid);
@@ -173,7 +374,7 @@ namespace DtxModelTests.Sqlite {
 		public void RowAssociationAccess() {
 			var logger = new Performancer();
 
-			using (var context = new TestDatabaseContext()) {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				logger.Log("Connected to database.");
 
 				CreateUser(context);
@@ -195,11 +396,6 @@ namespace DtxModelTests.Sqlite {
 				var logs_assoc = user.Logs;
 				logger.Log("Accessed user/log association.");
 
-				context.Logs.Delete(logs_assoc);
-				context.Users.Delete(user);
-
-				logger.Log("Deleted new rows.");
-
 				Assert.IsNotNull(logs_assoc);
 				Assert.AreEqual("This is log item 0", logs_assoc[0].text);
 				Assert.AreEqual("This is log item 1", logs_assoc[1].text);
@@ -212,7 +408,7 @@ namespace DtxModelTests.Sqlite {
 		public void RowBaseTypesStoreAndRetrieve() {
 			var logger = new Performancer();
 
-			using (var context = new TestDatabaseContext()) {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				logger.Log("Connected to database.");
 
 				byte[] initial_byte_array = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255, 254, 243, 252, 251, 250, 249, 248, 247, 246, 245 };
@@ -257,16 +453,13 @@ namespace DtxModelTests.Sqlite {
 				Assert.AreEqual("Database String With \nNewline\nSpecial Chars: ♥♦♣♠", all_types.db_string);
 				logger.Log("Completed tests.");
 
-				context.AllTypes.Delete(all_types);
-				logger.Log("Deleted row.");
-
 				logger.OutputTraceLog();
 			}
 		}
 
 		[TestMethod]
 		public void TransactionRollbackAuto() {
-			using (var context = new TestDatabaseContext()) {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				using (var transaction = context.BeginTransaction()) {
 					CreateUser(context);
 				}
@@ -280,7 +473,7 @@ namespace DtxModelTests.Sqlite {
 
 		[TestMethod]
 		public void TransactionRollbackManual() {
-			using (var context = new TestDatabaseContext()) {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				using (var transaction = context.BeginTransaction()) {
 					CreateUser(context);
 					transaction.Rollback();
@@ -295,7 +488,7 @@ namespace DtxModelTests.Sqlite {
 
 		[TestMethod]
 		public void TransactionCommit() {
-			using (var context = new TestDatabaseContext()) {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				using (var transaction = context.BeginTransaction()) {
 					CreateUser(context);
 					transaction.Commit();
@@ -312,7 +505,7 @@ namespace DtxModelTests.Sqlite {
 
 		[TestMethod]
 		public void TransactionCommitMultipleInserts() {
-			using (var context = new TestDatabaseContext()) {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				using (var transaction = context.BeginTransaction()) {
 					CreateUser(context);
 					CreateUser(context);
@@ -326,9 +519,6 @@ namespace DtxModelTests.Sqlite {
 				var users = context.Users.Select().ExecuteFetchAll();
 
 				Assert.AreEqual(5, users.Length);
-
-				context.Users.Delete(users);
-
 			}
 		}
 

@@ -18,7 +18,7 @@ namespace DtxModeler.Generator {
 
 		public abstract Task<Database> GenerateDdl();
 
-		protected Table getTableByName(string name) {
+		protected Table GetTableByName(string name) {
 			foreach (var table in database.Table) {
 				if (table.Name == name) {
 					return table;
