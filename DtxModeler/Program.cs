@@ -125,13 +125,6 @@ namespace DtxModeler.Generator {
 			if (string.IsNullOrWhiteSpace(options.ContextClass) == false) {
 				input_database.ContextClass = options.ContextClass;
 			}
-			
-
-			// Clean up the DDL
-			if (normalizeDatabase(input_database) == false) {
-				writeLineColor("Could not normalize input database.", ConsoleColor.Red);
-				return;
-			}
 
 			// Output SQL file if required.
 			if (options.SqlOutput != null) {
@@ -189,29 +182,6 @@ namespace DtxModeler.Generator {
 				}
 			}
 		}
-
-		private static bool normalizeDatabase(Database database) {
-			Dictionary<string, Association> associations = new Dictionary<string, Association>();
-
-			foreach (var table in database.Table) {
-
-				foreach (var column in table.Column) {
-					var is_name_null = string.IsNullOrWhiteSpace(column.Name);
-					var is_member_null = string.IsNullOrWhiteSpace(column.Name);
-
-					// If the column name is empty, then assume that the database column name
-					// is the same as the member name and vice versa.
-					if (is_member_null && is_name_null) {
-						writeLineColor("Column on table " + table.Name + "Does not have a name.", ConsoleColor.Red);
-						return false;
-					}
-				}
-			}
-
-			return true;
-
-		}
-
 
 		public static void writeColor(string text, ConsoleColor color) {
 			var original_color = Console.ForegroundColor;

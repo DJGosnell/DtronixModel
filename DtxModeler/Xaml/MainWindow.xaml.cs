@@ -137,7 +137,7 @@ namespace DtxModeler.Xaml {
 
 			try {
 				Task.Run(async () => {
-					await Program.ExecuteOptions(options, _DatabaseExplorer.SelectedDatabase);
+					await Program.ExecuteOptions(options, database);
 				}).Wait();
 			} catch (AggregateException ex) {
 				Console.WriteLine("Error in executing specified options. Error:");
