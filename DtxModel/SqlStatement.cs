@@ -627,9 +627,8 @@ namespace DtxModel {
 				if (transaction != null) {
 					transaction.Rollback();
 				}
-				
 
-				throw e;
+				throw;
 			} finally {
 				if (transaction != null) {
 					transaction.Dispose();
