@@ -45,6 +45,7 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 Source: {#MainBinaryName}; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: "DtxModel.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "DtxModel.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "System.Data.SQLite.dll"; DestDir: "{app}"
 Source: "x86\SQLite.Interop.dll"; DestDir: "{app}\x86"
 Source: "x64\SQLite.Interop.dll"; DestDir: "{app}\x64"
