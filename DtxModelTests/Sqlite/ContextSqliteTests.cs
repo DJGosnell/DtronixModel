@@ -1,12 +1,11 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Data.SQLite;
 using System.IO;
 using DtxModel;
 using System.Reflection;
+using Xunit;
 
 namespace DtxModelTests.Sqlite {
-	[TestClass]
 	public class ContextSqliteTests {
 		static ContextSqliteTests() {
 			TestDatabaseContext.DatabaseType = DtxModel.Context.TargetDb.Sqlite;
@@ -14,7 +13,7 @@ namespace DtxModelTests.Sqlite {
 		}
 
 		private TestDatabaseContext CreateContext(string method_name) {
-			
+
 			string class_name = this.GetType().Name;
 			string database_name = class_name + "_" + method_name + ".sqlite";
 			string path = Path.Combine(Directory.GetCurrentDirectory(), "sqlite_dbs", database_name);
@@ -40,40 +39,39 @@ namespace DtxModelTests.Sqlite {
 			});
 		}
 
-		[TestMethod]
+		[Fact]
 		public void SelectedRow() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
 				var user = context.Users.Select().ExecuteFetch();
-
-				Assert.IsNotNull(user);
+				Assert.NotNull(user);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void SelectedRows() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
 				CreateUser(context);
 				var users = context.Users.Select().ExecuteFetchAll();
 
-				Assert.AreEqual(2, users.Length);
+				Assert.Equal(2, users.Length);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void SelectedSpecifiedRows() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
 				var user = context.Users.Select("username, last_logged").ExecuteFetch();
 
-				Assert.AreEqual("user_name", user.username);
-				Assert.AreEqual(new DateTime(2014, 11, 25), Converters.UnixToDateTime(user.last_logged));
-				Assert.IsNull(user.password);
+				Assert.Equal("user_name", user.username);
+				Assert.Equal(new DateTime(2014, 11, 25), Converters.UnixToDateTime(user.last_logged));
+				Assert.Null(user.password);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void SelectedLimitCount() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context, "1");
@@ -81,14 +79,14 @@ namespace DtxModelTests.Sqlite {
 				CreateUser(context, "3");
 				var users = context.Users.Select().Limit(2).ExecuteFetchAll();
 
-				Assert.AreEqual(2, users.Length);
-				Assert.AreEqual("user_name1", users[0].username);
-				Assert.AreEqual("user_name2", users[1].username);
+				Assert.Equal(2, users.Length);
+				Assert.Equal("user_name1", users[0].username);
+				Assert.Equal("user_name2", users[1].username);
 			}
 		}
 
 
-		[TestMethod]
+		[Fact]
 		public void SelectedLimitCountStart() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context, "1");
@@ -97,13 +95,13 @@ namespace DtxModelTests.Sqlite {
 				CreateUser(context, "4");
 				var users = context.Users.Select().Limit(2, 1).ExecuteFetchAll();
 
-				Assert.AreEqual(2, users.Length);
-				Assert.AreEqual("user_name2", users[0].username);
-				Assert.AreEqual("user_name3", users[1].username);
+				Assert.Equal(2, users.Length);
+				Assert.Equal("user_name2", users[0].username);
+				Assert.Equal("user_name3", users[1].username);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void SelectedOrderByDescending() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context, "1");
@@ -112,15 +110,15 @@ namespace DtxModelTests.Sqlite {
 				CreateUser(context, "4");
 				var users = context.Users.Select().OrderBy("username", SortDirection.Descending).ExecuteFetchAll();
 
-				Assert.AreEqual(4, users.Length);
-				Assert.AreEqual("user_name4", users[0].username);
-				Assert.AreEqual("user_name3", users[1].username);
-				Assert.AreEqual("user_name2", users[2].username);
-				Assert.AreEqual("user_name1", users[3].username);
+				Assert.Equal(4, users.Length);
+				Assert.Equal("user_name4", users[0].username);
+				Assert.Equal("user_name3", users[1].username);
+				Assert.Equal("user_name2", users[2].username);
+				Assert.Equal("user_name1", users[3].username);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void SelectedWhereModel() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context, "1");
@@ -130,12 +128,12 @@ namespace DtxModelTests.Sqlite {
 
 				var users = context.Users.Select().Where(user_where).ExecuteFetchAll();
 
-				Assert.AreEqual(1, users.Length);
-				Assert.AreEqual("user_name1", users[0].username);
+				Assert.Equal(1, users.Length);
+				Assert.Equal("user_name1", users[0].username);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void SelectedWhereModels() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context, "1");
@@ -146,13 +144,13 @@ namespace DtxModelTests.Sqlite {
 
 				var users = context.Users.Select().Where(users_where).ExecuteFetchAll();
 
-				Assert.AreEqual(2, users.Length);
-				Assert.AreEqual("user_name1", users[0].username);
-				Assert.AreEqual("user_name2", users[1].username);
+				Assert.Equal(2, users.Length);
+				Assert.Equal("user_name1", users[0].username);
+				Assert.Equal("user_name2", users[1].username);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void SelectedWhereCustom() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context, "1");
@@ -161,12 +159,12 @@ namespace DtxModelTests.Sqlite {
 
 				var users = context.Users.Select().Where("username = {0} AND password = {1}", "user_name1", "my_hashed_password1").ExecuteFetchAll();
 
-				Assert.AreEqual(1, users.Length);
-				Assert.AreEqual("user_name1", users[0].username);
+				Assert.Equal(1, users.Length);
+				Assert.Equal("user_name1", users[0].username);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void SelectedWhereIn() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context, "1");
@@ -175,13 +173,13 @@ namespace DtxModelTests.Sqlite {
 
 				var users = context.Users.Select().WhereIn("username", "user_name1", "user_name3").ExecuteFetchAll();
 
-				Assert.AreEqual(2, users.Length);
-				Assert.AreEqual("user_name1", users[0].username);
-				Assert.AreEqual("user_name3", users[1].username);
+				Assert.Equal(2, users.Length);
+				Assert.Equal("user_name1", users[0].username);
+				Assert.Equal("user_name3", users[1].username);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void QueryTables() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context, "1");
@@ -191,16 +189,16 @@ namespace DtxModelTests.Sqlite {
 				context.QueryRead(@"SELECT * FROM Users WHERE username LIKE {0} LIMIT 1", new[] { "%name2" }, reader => {
 					int count = 0;
 					while (reader.Read()) {
-						Assert.AreEqual(1, ++count);
-						Assert.AreEqual("user_name2", reader.GetString(reader.GetOrdinal("username")));
-						Assert.AreEqual("my_hashed_password2", reader.GetString(reader.GetOrdinal("password")));
+						Assert.Equal(1, ++count);
+						Assert.Equal("user_name2", reader.GetString(reader.GetOrdinal("username")));
+						Assert.Equal("my_hashed_password2", reader.GetString(reader.GetOrdinal("password")));
 					}
 				});
 			}
 		}
 
 
-		[TestMethod]
+		[Fact]
 		public void SelectedOrderByAscending() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context, "1");
@@ -209,110 +207,110 @@ namespace DtxModelTests.Sqlite {
 				CreateUser(context, "4");
 				var users = context.Users.Select().OrderBy("username", SortDirection.Ascending).ExecuteFetchAll();
 
-				Assert.AreEqual(4, users.Length);
-				Assert.AreEqual("user_name1", users[0].username);
-				Assert.AreEqual("user_name2", users[1].username);
-				Assert.AreEqual("user_name3", users[2].username);
-				Assert.AreEqual("user_name4", users[3].username);
+				Assert.Equal(4, users.Length);
+				Assert.Equal("user_name1", users[0].username);
+				Assert.Equal("user_name2", users[1].username);
+				Assert.Equal("user_name3", users[2].username);
+				Assert.Equal("user_name4", users[3].username);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void SelectEmptyTable() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				var user = context.Users.Select().ExecuteFetch();
 				var users = context.Users.Select().ExecuteFetchAll();
 
-				Assert.IsNull(user);
-				Assert.AreEqual(0, users.Length);
+				Assert.Null(user);
+				Assert.Equal(0, users.Length);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void RowIsCreated() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
 				var user = context.Users.Select().ExecuteFetch();
 
-				Assert.AreNotEqual(0, user.rowid);
-				Assert.AreEqual("user_name", user.username);
-				Assert.AreEqual("my_hashed_password", user.password);
-				Assert.AreEqual(Converters.DateTimeToUnix(new DateTime(2014, 11, 25)), user.last_logged);
+				Assert.NotEqual(0, user.rowid);
+				Assert.Equal("user_name", user.username);
+				Assert.Equal("my_hashed_password", user.password);
+				Assert.Equal(Converters.DateTimeToUnix(new DateTime(2014, 11, 25)), user.last_logged);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void RowIsDeletedByModel() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
 				var user = context.Users.Select().ExecuteFetch();
 
-				Assert.IsNotNull(user);
+				Assert.NotNull(user);
 
 				context.Users.Delete(user);
 
 				user = context.Users.Select().ExecuteFetch();
 
-				Assert.IsNull(user, "User was not deleted.");
+				Assert.Null(user);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void RowIsDeletedByModels() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
 				CreateUser(context);
 				var users = context.Users.Select().ExecuteFetchAll();
 
-				Assert.IsNotNull(users);
-				Assert.AreEqual(2, users.Length);
+				Assert.NotNull(users);
+				Assert.Equal(2, users.Length);
 
 				context.Users.Delete(users);
 
 				var user = context.Users.Select().ExecuteFetch();
 
-				Assert.IsNull(user, "Users were not deleted.");
+				Assert.Null(user);
 
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void RowIsDeletedByRowId() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				ulong id = CreateUser(context);
 
-				Assert.AreNotEqual(0, id);
+				Assert.NotEqual<ulong>(0, id);
 
 				context.Users.Delete(id);
 
 				var user = context.Users.Select().ExecuteFetch();
 
-				Assert.IsNull(user, "User was not deleted.");
+				Assert.Null(user);
 
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void RowIsDeletedByRowIds() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				ulong[] ids = new ulong[2];
 				ids[0] = CreateUser(context);
 				ids[1] = CreateUser(context);
 
-				Assert.AreNotEqual(0, ids[0]);
-				Assert.AreNotEqual(0, ids[1]);
+				Assert.NotEqual<ulong>(0, ids[0]);
+				Assert.NotEqual<ulong>(0, ids[1]);
 
 				context.Users.Delete(ids);
 
 				var user = context.Users.Select().ExecuteFetch();
 
-				Assert.IsNull(user, "Users were not deleted.");
+				Assert.Null(user);
 
 			}
 		}
 
 
-		[TestMethod]
+		[Fact]
 		public void RowIsUpdated() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
@@ -322,11 +320,11 @@ namespace DtxModelTests.Sqlite {
 
 				user = context.Users.Select().ExecuteFetch();
 
-				Assert.AreEqual<string>("MyNewUsername", user.username);
+				Assert.Equal<string>("MyNewUsername", user.username);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void RowsAreUpdated() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
@@ -339,12 +337,12 @@ namespace DtxModelTests.Sqlite {
 
 				users = context.Users.Select().ExecuteFetchAll();
 
-				Assert.AreEqual<string>("MyNewUsernameFirst", users[0].username);
-				Assert.AreEqual<string>("MyNewUsernameSecond", users[1].username);
+				Assert.Equal<string>("MyNewUsernameFirst", users[0].username);
+				Assert.Equal<string>("MyNewUsernameSecond", users[1].username);
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void RowForeignKeyAssociationAccess() {
 			ulong log_rowid = 0;
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
@@ -361,16 +359,16 @@ namespace DtxModelTests.Sqlite {
 
 				var user_fk = log.User;
 
-				Assert.IsNotNull(user_fk);
-				Assert.AreEqual(user.rowid, user_fk.rowid);
-				Assert.AreEqual(user.password, user_fk.password);
-				Assert.AreEqual(user.username, user_fk.username);
-				Assert.AreEqual(user.last_logged, user_fk.last_logged);
+				Assert.NotNull(user_fk);
+				Assert.Equal(user.rowid, user_fk.rowid);
+				Assert.Equal(user.password, user_fk.password);
+				Assert.Equal(user.username, user_fk.username);
+				Assert.Equal(user.last_logged, user_fk.last_logged);
 			}
 
 		}
 
-		[TestMethod]
+		[Fact]
 		public void RowAssociationAccess() {
 			var logger = new Performancer();
 
@@ -379,7 +377,7 @@ namespace DtxModelTests.Sqlite {
 
 				CreateUser(context);
 				logger.Log("Created user.");
-				
+
 				var user = context.Users.Select().ExecuteFetch();
 
 				logger.Log("Fetched user.");
@@ -392,26 +390,26 @@ namespace DtxModelTests.Sqlite {
 				}
 				context.Logs.Insert(logs);
 				logger.Log("Inserted logs.");
-				
+
 				var logs_assoc = user.Logs;
 				logger.Log("Accessed user/log association.");
 
-				Assert.IsNotNull(logs_assoc);
-				Assert.AreEqual("This is log item 0", logs_assoc[0].text);
-				Assert.AreEqual("This is log item 1", logs_assoc[1].text);
+				Assert.NotNull(logs_assoc);
+				Assert.Equal("This is log item 0", logs_assoc[0].text);
+				Assert.Equal("This is log item 1", logs_assoc[1].text);
 				logger.OutputTraceLog();
 			}
 
 		}
 
-		[TestMethod]
+		[Fact]
 		public void RowBaseTypesStoreAndRetrieve() {
 			var logger = new Performancer();
 
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				logger.Log("Connected to database.");
 
-				byte[] initial_byte_array = new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255, 254, 243, 252, 251, 250, 249, 248, 247, 246, 245 };
+				byte[] initial_byte_array = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255, 254, 243, 252, 251, 250, 249, 248, 247, 246, 245 };
 				var date_time = DateTime.Now;
 
 				context.AllTypes.Insert(new AllTypes() {
@@ -433,31 +431,31 @@ namespace DtxModelTests.Sqlite {
 				var all_types = context.AllTypes.Select().ExecuteFetch();
 				logger.Log("Retrieved new row from db.");
 
-				Assert.AreEqual(true, all_types.db_bool);
-				Assert.AreEqual(157, all_types.db_byte);
+				Assert.Equal(true, all_types.db_bool);
+				Assert.Equal(157, all_types.db_byte);
 
 				// Test the contents of the byte array.
-				Assert.AreEqual(initial_byte_array.Length, all_types.db_byte_array.Length);
+				Assert.Equal(initial_byte_array.Length, all_types.db_byte_array.Length);
 				for (int i = 0; i < initial_byte_array.Length; i++) {
-					Assert.AreEqual(initial_byte_array[i], all_types.db_byte_array[i]);
+					Assert.Equal(initial_byte_array[i], all_types.db_byte_array[i]);
 				}
 
-				Assert.AreEqual('D', all_types.db_char);
-				Assert.AreEqual(date_time, all_types.db_date_time);
-				Assert.AreEqual(3456789.986543M, all_types.db_decimal);
-				Assert.AreEqual(12345.54321D, all_types.db_double);
-				Assert.AreEqual(123.321F, all_types.db_float);
-				Assert.AreEqual(32767, all_types.db_int16);
-				Assert.AreEqual(2147483647, all_types.db_int32);
-				Assert.AreEqual(9223372036854775807, all_types.db_int64);
-				Assert.AreEqual("Database String With \nNewline\nSpecial Chars: ♥♦♣♠", all_types.db_string);
+				Assert.Equal('D', all_types.db_char);
+				Assert.Equal(date_time, all_types.db_date_time);
+				Assert.Equal(3456789.986543M, all_types.db_decimal);
+				Assert.Equal(12345.54321D, all_types.db_double);
+				Assert.Equal(123.321F, all_types.db_float);
+				Assert.Equal(32767, all_types.db_int16);
+				Assert.Equal(2147483647, all_types.db_int32);
+				Assert.Equal(9223372036854775807, all_types.db_int64);
+				Assert.Equal("Database String With \nNewline\nSpecial Chars: ♥♦♣♠", all_types.db_string);
 				logger.Log("Completed tests.");
 
 				logger.OutputTraceLog();
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void TransactionRollbackAuto() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				using (var transaction = context.BeginTransaction()) {
@@ -466,12 +464,12 @@ namespace DtxModelTests.Sqlite {
 
 				var user = context.Users.Select().ExecuteFetch();
 
-				Assert.IsNull(user);
+				Assert.Null(user);
 
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void TransactionRollbackManual() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				using (var transaction = context.BeginTransaction()) {
@@ -481,12 +479,12 @@ namespace DtxModelTests.Sqlite {
 
 				var user = context.Users.Select().ExecuteFetch();
 
-				Assert.IsNull(user);
+				Assert.Null(user);
 
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void TransactionCommit() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				using (var transaction = context.BeginTransaction()) {
@@ -496,14 +494,14 @@ namespace DtxModelTests.Sqlite {
 
 				var user = context.Users.Select().ExecuteFetch();
 
-				Assert.IsNotNull(user);
+				Assert.NotNull(user);
 
 				context.Users.Delete(user);
 
 			}
 		}
 
-		[TestMethod]
+		[Fact]
 		public void TransactionCommitMultipleInserts() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				using (var transaction = context.BeginTransaction()) {
@@ -518,7 +516,7 @@ namespace DtxModelTests.Sqlite {
 
 				var users = context.Users.Select().ExecuteFetchAll();
 
-				Assert.AreEqual(5, users.Length);
+				Assert.Equal(5, users.Length);
 			}
 		}
 
