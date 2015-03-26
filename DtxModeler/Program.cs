@@ -102,14 +102,14 @@ namespace DtxModeler.Generator {
 				generator = new SqliteDdlGenerator(@"Data Source=" + options.Input + ";Version=3;");
 
 				input_database = await generator.GenerateDdl();
-			} else if (options.InputType == CommandOptions.InType.Mwb) {
+			} else if (options.InputType == CommandOptions.InType.Mwb || options.InputType == CommandOptions.InType.MwbXml) {
 
 				if (File.Exists(options.Input) == false) {
 					throw new OptionException("MWB file '" + options.Input + "' specified does not exist.", "input");
 				}
 
 
-				generator = new MySqlMwbDdlGenerator(options.Input);
+				generator = new MySqlMwbDdlGenerator(options.Input, (options.InputType == CommandOptions.InType.MwbXml));
 
 				input_database = await generator.GenerateDdl();
 			}

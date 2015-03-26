@@ -14,7 +14,8 @@ namespace DtxModeler.Generator {
 			Ddl,
 			DatabaseSqlite,
 			//DatabaseMysql,
-			Mwb
+			Mwb,
+			MwbXml
 		}
 
 		private TextWriter writer;

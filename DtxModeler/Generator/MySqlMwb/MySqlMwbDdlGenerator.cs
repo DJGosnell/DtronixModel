@@ -18,25 +18,33 @@ namespace DtxModeler.Generator.MySqlMwb {
 		List<Configuration> configurations = new List<Configuration>();
 		private string mwb_file_location;
 
-		public MySqlMwbDdlGenerator(string file_location)
+		private bool xml_format;
+
+		public MySqlMwbDdlGenerator(string file_location, bool xml_format)
 			: base(new MySqlTypeTransformer()) {
 				mwb_file_location = file_location;
+				this.xml_format = xml_format;
 		}
 
 		public override async Task<Database> GenerateDdl() {
 			await Task.Run(() => {
 				var mwb_xml = new XmlDocument();
-				using (var mwb_archive = ZipFile.OpenRead(mwb_file_location)) {
-					var zip_mwb = mwb_archive.GetEntry("document.mwb.xml");
 
-					if (zip_mwb == null) {
-						throw new FileNotFoundException("Could not find the 'document.mwb.xml' inside the specified MWB file.");
+				if (xml_format) {
+					mwb_xml.Load(mwb_file_location);
+				} else {
+					using (var mwb_archive = ZipFile.OpenRead(mwb_file_location)) {
+						var zip_mwb = mwb_archive.GetEntry("document.mwb.xml");
+
+						if (zip_mwb == null) {
+							throw new FileNotFoundException("Could not find the 'document.mwb.xml' inside the specified MWB file.");
+						}
+
+						using (var stream = zip_mwb.Open()) {
+							mwb_xml.Load(stream);
+						}
+
 					}
-
-					using (var stream = zip_mwb.Open()) {
-						mwb_xml.Load(stream);
-					}
-
 				}
 
 				var xml_db_schema = mwb_xml.SelectSingleNode(@"/data

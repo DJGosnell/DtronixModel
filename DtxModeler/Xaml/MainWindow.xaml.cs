@@ -80,7 +80,7 @@ namespace DtxModeler.Xaml {
 				return;
 			}
 
-			var generator = new MySqlMwbDdlGenerator(browse.FileName);
+			var generator = new MySqlMwbDdlGenerator(browse.FileName, false);
 
 			var database = await generator.GenerateDdl();
 
