@@ -26,6 +26,9 @@ namespace DtxModeler.Generator.Output
         /// </summary>
         public virtual string TransformText()
         {
+ 
+string[] reserved_words = new string[] {"for", "with", "while"};
+
             this.Write("\r\nusing System;\r\nusing System.Data.Common;\r\nusing System.Collections.Generic;\r\nus" +
                     "ing DtxModel;\r\n\r\nnamespace ");
             this.Write(this.ToStringHelper.ToStringWithCulture(this.database.Namespace));
@@ -137,6 +140,7 @@ namespace DtxModeler.Generator.Output
             this.Write("\t\tpublic ");
             this.Write(this.ToStringHelper.ToStringWithCulture(ColumnNetType(column)));
             this.Write(" ");
+ if(reserved_words.Contains(column.Name)){ this.Write("@"); } 
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write(" {\r\n\t\t\tget { return _");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));

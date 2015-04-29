@@ -4,6 +4,9 @@
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="DtxModeler.Ddl" #>
+<# 
+string[] reserved_words = new string[] {"for", "with", "while"};
+#>
 
 using System;
 using System.Data.Common;
@@ -101,7 +104,7 @@ namespace <#= this.database.Namespace #> {
 		/// <#= column.Description #>
 		/// </summary>
 <# } #>
-		public <#= ColumnNetType(column) #> <#= column.Name #> {
+		public <#= ColumnNetType(column) #> <# if(reserved_words.Contains(column.Name)){ this.Write("@"); } #><#= column.Name #> {
 			get { return _<#= column.Name #>; }
 <# if (column.IsReadOnly == false) { #>
 			set {
