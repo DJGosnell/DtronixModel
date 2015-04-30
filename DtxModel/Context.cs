@@ -14,6 +14,24 @@ namespace DtxModel {
 		}
 
 		/// <summary>
+		/// Enum to toggle each option to debug and output to the console.
+		/// </summary>
+		public enum DebugLevel {
+			None,
+			Queries,
+			BoundParameters,
+			All = Queries | BoundParameters
+		}
+
+		private DebugLevel _debug = DebugLevel.None;
+
+		public DebugLevel Debug {
+			get { return _debug; }
+			set { _debug = value; }
+		}
+
+
+		/// <summary>
 		/// If true, the connection will be closed at this class destructor's call.
 		/// </summary>
 		protected bool owned_connection;

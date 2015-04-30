@@ -77,8 +77,15 @@ namespace DtxModel {
 			if (mode != Mode.Execute) {
 				throw new InvalidOperationException("Need to be in Execute mode to use this method.");
 			}
+
 			command.Parameters.Clear();
 			command.CommandText = SqlBindParameters(sql, binding);
+
+			// Logging to output queries to stdout.
+			if (context.Debug.HasFlag(Context.DebugLevel.Queries)) {
+				Console.Out.WriteLine("Query: \r\n" + command.CommandText);
+			}
+
 			int result = command.ExecuteNonQuery();
 			
 			command.Dispose();
@@ -97,9 +104,15 @@ namespace DtxModel {
 		public void QueryRead(string sql, object[] binding, Action<DbDataReader> on_read) {
 			if (mode != Mode.Execute) {
 				throw new InvalidOperationException("Need to be in Execute mode to use this method.");
-			}
+			}			
+			
 			command.Parameters.Clear();
 			command.CommandText = SqlBindParameters(sql, binding);
+
+			// Logging to output queries to stdout.
+			if (context.Debug.HasFlag(Context.DebugLevel.Queries)) {
+				Console.Out.WriteLine("Query: \r\n" + command.CommandText);
+			}
 
 			using (var reader = command.ExecuteReader()) {
 				on_read(reader);
@@ -503,6 +516,9 @@ namespace DtxModel {
 			}
 
 			command.CommandText = sql.ToString();
+			if (context.Debug.HasFlag(Context.DebugLevel.Queries)) {
+				Console.Out.WriteLine("Query: \r\n" + command.CommandText);
+			}
 		}
 
 
@@ -516,6 +532,11 @@ namespace DtxModel {
 			var param = command.CreateParameter();
 			param.ParameterName = key;
 			param.Value = value;
+
+			// Logging to output bound paramaters to stdout.
+			if (context.Debug.HasFlag(Context.DebugLevel.BoundParameters)) {
+				Console.Out.WriteLine("Parameter: " + key + " = " + value.ToString());
+			}
 
 			if (parameter_list != null) {
 				parameter_list.Add(param);
