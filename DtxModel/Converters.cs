@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DtxModel {
+
+	/// <summary>
+	/// Utility class to translate database values to Net Types.
+	/// </summary>
 	public class Converters {
 		/// <summary>
 		/// Converts a given DateTime into a Unix timestamp

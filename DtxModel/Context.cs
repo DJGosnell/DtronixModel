@@ -5,8 +5,20 @@ using System.Linq;
 using System.Text;
 
 namespace DtxModel {
+
+	/// <summary>
+	/// Context to be derived into a specific database context. To be used inside a "using" statement.
+	/// </summary>
+	/// <example>
+	/// using(var context = new Context()) {
+	///		var result = context.Table.Select().Where("id = {0}", 1).ExecuteFetch();
+	/// }
+	/// </example>
 	public class Context : IDisposable {
 
+		/// <summary>
+		/// The default list of database targets for this context.
+		/// </summary>
 		public enum TargetDb {
 			MySql,
 			Sqlite,
@@ -14,17 +26,35 @@ namespace DtxModel {
 		}
 
 		/// <summary>
-		/// Enum to toggle each option to debug and output to the console.
+		/// Enumeration to toggle each option to debug and output to the console.
 		/// </summary>
 		public enum DebugLevel {
+			/// <summary>
+			/// (Default) No output is generated.
+			/// </summary>
 			None,
+
+			/// <summary>
+			/// Logs the executed queries to the stdout
+			/// </summary>
 			Queries,
+
+			/// <summary>
+			/// Logs the parameters as they are being bound to stdout.
+			/// </summary>
 			BoundParameters,
+
+			/// <summary>
+			/// Logs every option above to stdout.
+			/// </summary>
 			All = Queries | BoundParameters
 		}
 
 		private DebugLevel _debug = DebugLevel.None;
 
+		/// <summary>
+		/// Set to the level of debugging to output.  
+		/// </summary>
 		public DebugLevel Debug {
 			get { return _debug; }
 			set { _debug = value; }
@@ -49,8 +79,14 @@ namespace DtxModel {
 		/// </remarks>
 		public string LastInsertIdQuery;
 
+		/// <summary>
+		/// True if a transaction has been started.
+		/// </summary>
 		private bool _TransactionStarted;
 
+		/// <summary>
+		/// Retrieves if this context is in a transaction or not.
+		/// </summary>
 		public bool TransactionStarted {
 			get { return _TransactionStarted; }
 		}
@@ -112,6 +148,15 @@ namespace DtxModel {
 			new SqlStatement<Model>(SqlStatement<Model>.Mode.Execute, this).QueryRead(sql, binding, on_read);
 		}
 
+		/// <summary>
+		/// Begins a transaction on this context. Use within a "using" statement
+		/// </summary>
+		/// <example>
+		/// using (var transaction = context.BeginTransaction()) {
+		///		Normal query/updates/inserts.
+		/// }
+		/// </example>
+		/// <returns>Wrapped transaction.</returns>
 		public DtxTransaction BeginTransaction() {
 			if (_TransactionStarted) {
 				throw new InvalidOperationException("Transaction has already been created.  Can not create nested transactions.");

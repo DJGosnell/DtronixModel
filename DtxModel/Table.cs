@@ -1,14 +1,8 @@
-﻿using DtxModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Common;
-
+﻿
 namespace DtxModel {
 
 	/// <summary>
-	/// Genaric class to wrap individual table models.
+	/// Generic class to wrap individual table models.
 	/// </summary>
 	/// <typeparam name="T">Table model to wrap.</typeparam>
 	public class Table<T> where T : Model, new() {

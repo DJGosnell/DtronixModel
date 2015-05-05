@@ -3,13 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.Common;
-using System.Data.SqlClient;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace DtxModel {
 
+	/// <summary>
+	/// Class to help in quick and simple CRUD operations on a database table.
+	/// </summary>
+	/// <typeparam name="T">Model this class will be working with.</typeparam>
 	public class SqlStatement<T> : IDisposable where T : Model, new() {
+
+		/// <summary>
+		/// Mode this statement will be bound to.
+		/// </summary>
 		public enum Mode {
 			Execute,
 			Select,
@@ -21,7 +26,7 @@ namespace DtxModel {
 		private bool _auto_close_command = true;
 
 		/// <summary>
-		/// True to close the command 
+		/// True to close the command at the end of the query.
 		/// </summary>
 		public bool AutoCloseCommand {
 			get { return _auto_close_command; }
@@ -29,24 +34,54 @@ namespace DtxModel {
 		}
 
 
-		public Context context;
-		public DbCommand command;
+		private Context context;
+		private DbCommand command;
 
+		/// <summary>
+		/// Internal mode that the statement was setup with.
+		/// </summary>
 		private Mode mode;
 
+		/// <summary>
+		/// Name of the table this statement is querying.
+		/// </summary>
 		private string table_name;
 
+		/// <summary>
+		/// Holds the columns to select.
+		/// </summary>
 		private string sql_select = "*";
+
+		/// <summary>
+		/// Offset for the query limits. -1 for no offset.
+		/// </summary>
 		private int sql_limit_offset = -1;
+
+		/// <summary>
+		/// Limits the number of returned rows in the query. -1 for no limits.
+		/// </summary>
 		private int sql_limit_count = -1;
+
+		/// <summary>
+		/// Contains the bound where portion of the query.
+		/// </summary>
 		private string sql_where;
+
+		/// <summary>
+		/// Contains a dictionary list of the sort orders for this query.
+		/// </summary>
 		private Dictionary<string, SortDirection> sql_orders;
+
+		/// <summary>
+		/// List containing groupings for the query.
+		/// </summary>
 		private List<string> sql_groups;
+
+		/// <summary>
+		/// Model array of the current rows to be inserted, deleted or updated.
+		/// </summary>
 		private T[] sql_models;
 
-		//private 
-
-		//public SqlStatement(Mode mode) : this(mode, null) { }
 
 		/// <summary>
 		/// Starts a Statement in the specified mode of operation.
@@ -87,7 +122,7 @@ namespace DtxModel {
 			}
 
 			int result = command.ExecuteNonQuery();
-			
+
 			command.Dispose();
 
 			return result;
@@ -104,8 +139,8 @@ namespace DtxModel {
 		public void QueryRead(string sql, object[] binding, Action<DbDataReader> on_read) {
 			if (mode != Mode.Execute) {
 				throw new InvalidOperationException("Need to be in Execute mode to use this method.");
-			}			
-			
+			}
+
 			command.Parameters.Clear();
 			command.CommandText = SqlBindParameters(sql, binding);
 
@@ -223,7 +258,7 @@ namespace DtxModel {
 			ValidateWhere();
 
 			// Set the update by the primary key.
-			if(models == null || models.Length == 0){
+			if (models == null || models.Length == 0) {
 				throw new ArgumentException("Models parameter can not be null or empty.");
 			}
 
@@ -233,7 +268,7 @@ namespace DtxModel {
 			StringBuilder sql = new StringBuilder();
 			sql.Append(pk_name).Append(" IN(");
 
-			foreach(var model in models){
+			foreach (var model in models) {
 				sql.Append(BindParameter(model.GetPKValue())).Append(",");
 			}
 			sql.Remove(sql.Length - 1, 1).Append(")");
@@ -289,7 +324,7 @@ namespace DtxModel {
 		}
 
 		/// <summary>
-		/// Orders the found results by the specified column.  Call multple times to specify multiple orders.
+		/// Orders the found results by the specified column.  Call multiple times to specify multiple orders.
 		/// </summary>
 		/// <param name="column">Column to order.</param>
 		/// <param name="direction">Direction to order the specified column.</param>
@@ -335,6 +370,9 @@ namespace DtxModel {
 			return this;
 		}
 
+		/// <summary>
+		/// Executes the query built.
+		/// </summary>
 		public void Execute() {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
@@ -377,7 +415,10 @@ namespace DtxModel {
 
 		}
 
-
+		/// <summary>
+		/// Executes the query built and returns the associated rows with the query. Synchronous.
+		/// </summary>
+		/// <returns>On success, returns rows with the result of the query; Otherwise returns null.</returns>
 		public T ExecuteFetch() {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
@@ -406,6 +447,10 @@ namespace DtxModel {
 			return model;
 		}
 
+		/// <summary>
+		/// Executes the query built and returns the associated rows with the query. Synchronous.
+		/// </summary>
+		/// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
 		public T[] ExecuteFetchAll() {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
@@ -433,6 +478,10 @@ namespace DtxModel {
 			return results.ToArray();
 		}
 
+		/// <summary>
+		/// Builds the SQL statement that this class currently represents.
+		/// </summary>
+		/// <param name="model">Model to base this query on.</param>
 		private void BuildSql(T model) {
 			var sql = new StringBuilder();
 
@@ -533,7 +582,7 @@ namespace DtxModel {
 			param.ParameterName = key;
 			param.Value = value;
 
-			// Logging to output bound paramaters to stdout.
+			// Logging to output bound parameters to stdout.
 			if (context.Debug.HasFlag(Context.DebugLevel.BoundParameters)) {
 				Console.Out.WriteLine("Parameter: " + key + " = " + value.ToString());
 			}
@@ -607,14 +656,14 @@ namespace DtxModel {
 
 				command.CommandText = sb_sql.ToString();
 
-				// Create the parameters for bulk inerts.
+				// Create the parameters for bulk inserts.
 				for (int i = 0; i < columns.Length; i++) {
 					var parameter = command.CreateParameter();
 					parameter.ParameterName = "@v" + i;
 					command.Parameters.Add(parameter);
 				}
 
-				// Loop through wach of the provided models.
+				// Loop through watch of the provided models.
 				for (int i = 0; i < models.Length; i++) {
 					var values = models[i].GetAllValues();
 
@@ -643,7 +692,7 @@ namespace DtxModel {
 					transaction.Commit();
 				}
 			} catch (Exception e) {
-				// If we incountered an error, rollback the transaction.
+				// If we encountered an error, rollback the transaction.
 
 				if (transaction != null) {
 					transaction.Rollback();

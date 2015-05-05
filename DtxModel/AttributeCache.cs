@@ -4,7 +4,12 @@ using System.Linq;
 using System.Text;
 
 namespace DtxModel {
-	public static class AttributeCache<TObject, TAttribute> {
+	/// <summary>
+	/// Class to handle attribute retrieval and caching of results.
+	/// </summary>
+	/// <typeparam name="TObject">Main class that the attribute is attached to.</typeparam>
+	/// <typeparam name="TAttribute">Attribute type to retrieve.</typeparam>
+	static class AttributeCache<TObject, TAttribute> {
 		private readonly static TAttribute[] attributes;
 
 		static AttributeCache() {
@@ -18,10 +23,18 @@ namespace DtxModel {
 			attributes = att_objects as TAttribute[];
 		}
 
-		public static TAttribute GetAttribute(){
+		/// <summary>
+		/// Gets the first attribute.
+		/// </summary>
+		/// <returns>TAttribute</returns>
+		public static TAttribute GetAttribute() {
 			return attributes[0];
 		}
 
+		/// <summary>
+		/// Retrieves all the attributes.
+		/// </summary>
+		/// <returns>Array of TAttributes</returns>
 		public static TAttribute[] GetAttributes() {
 			return attributes;
 		}

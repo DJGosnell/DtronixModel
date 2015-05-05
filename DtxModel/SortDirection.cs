@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace DtxModel {
+	/// <summary>
+	/// Direction to sort query results by.
+	/// </summary>
 	public enum SortDirection {
 		Ascending,
 		Descending

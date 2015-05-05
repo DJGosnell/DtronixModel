@@ -10,7 +10,7 @@ namespace DtxModelTests.Sqlite {
 		private static Func<DbConnection> _DefaultConnection = null;
 
 		/// <summary>
-		/// Set a default constructor to allow use of parameterless context calling.
+		/// Set a default constructor to allow use of parameter-less context calling.
 		/// </summary>
 		public static Func<DbConnection> DefaultConnection {
 			get { return _DefaultConnection; }
@@ -20,7 +20,7 @@ namespace DtxModelTests.Sqlite {
 		private static string _LastInsertIdQuery = null;
 
 		/// <summary>
-		/// Sets the querty string to retrieve the last insert ID.
+		/// Sets the query string to retrieve the last insert ID.
 		/// </summary>
 		public static new string LastInsertIdQuery {
 			get { return _LastInsertIdQuery; }
