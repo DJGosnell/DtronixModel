@@ -31,6 +31,7 @@ namespace DtxModeler.Generator.MySql {
 
 				new TypeTransformerType(NetTypes.Byte, "BYTE", 1),
 
+				new TypeTransformerType(NetTypes.ByteArray, "BINARY"),
 				new TypeTransformerType(NetTypes.ByteArray, "BLOB"),
 				new TypeTransformerType(NetTypes.ByteArray, "MEDIMUMBLOB"),
 				new TypeTransformerType(NetTypes.ByteArray, "LONGBLOB"),
