@@ -520,5 +520,52 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
+		[Fact]
+		public void GetsOnlyModifiedChanges() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context);
+				var user = context.Users.Select().ExecuteFetch();
+
+				Assert.Equal(0, user.GetChangedValues().Count);
+
+				user.username = "New Username";
+
+				Assert.Equal(1, user.GetChangedValues().Count);
+				Assert.Equal("New Username", user.GetChangedValues()["username"]);
+			}
+		}
+
+		[Fact]
+		public void ClonesAllValues() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context);
+				var user = context.Users.Select().ExecuteFetch();
+
+				var cloned = new Users(user, false);
+
+				Assert.Equal(user.username, cloned.username);
+				Assert.Equal(user.password, cloned.password);
+				Assert.Equal(user.last_logged, cloned.last_logged);
+			}
+		}
+
+		[Fact]
+		public void ClonesOnlyChangedValues() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				CreateUser(context);
+				var user = context.Users.Select().ExecuteFetch();
+
+				user.username = "New Username";
+
+				var cloned = new Users(user, true);
+
+				Assert.Equal(user.username, cloned.username);
+				Assert.Equal(null, cloned.password);
+				Assert.Equal(default(long), cloned.last_logged);
+			}
+		}
+
+
+
 	}
 }

@@ -11,6 +11,7 @@ string[] reserved_words = new string[] {"for", "with", "while"};
 using System;
 using System.Data.Common;
 using System.Collections.Generic;
+using System.Collections;
 using DtxModel;
 
 namespace <#= this.database.Namespace #> {
@@ -93,27 +94,23 @@ namespace <#= this.database.Namespace #> {
 
 	[TableAttribute(Name = "<#= table.Name #>")]
 	public partial class <#= table.Name #> : Model {
-
-<# foreach (var column in table.Column) { #>
-<# if (column.IsReadOnly == false) { #>
-		private bool _<#= column.Name #>Changed = false;
-<# } #>
-		private <#= ColumnNetType(column) #> _<#= column.Name #>;
-<# if (string.IsNullOrWhiteSpace(column.Description) == false) { #>
+<# for(int i = 0; i < table.Column.Count(); i++) { #>
+		private <#= ColumnNetType(table.Column[i]) #> _<#= table.Column[i].Name #>;
+<# if (string.IsNullOrWhiteSpace(table.Column[i].Description) == false) { #>
 		/// <summary>
-		/// <#= column.Description #>
+		/// <#= table.Column[i].Description #>
 		/// </summary>
 <# } #>
-		public <#= ColumnNetType(column) #> <# if(reserved_words.Contains(column.Name)){ this.Write("@"); } #><#= column.Name #> {
-			get { return _<#= column.Name #>; }
-<# if (column.IsReadOnly == false) { #>
+		public <#= ColumnNetType(table.Column[i]) #> <# if(reserved_words.Contains(table.Column[i].Name)){ this.Write("@"); } #><#= table.Column[i].Name #> {
+			get { return _<#= table.Column[i].Name #>; }
+<# if (table.Column[i].IsReadOnly == false) { #>
 			set {
-<# if (column.DbLength != 0 && column.NetType == NetTypes.String) { #>
-				if(value != null && value.Length > <#= column.DbLength #>) 
-					throw new ArgumentOutOfRangeException("<#= column.Name #>", "String <#= column.Name #> is too long. Max length allowed is <#= column.DbLength #> characters. Passed string is " + value.Length.ToString() + " characters.");
+<# if (table.Column[i].DbLength != 0 && table.Column[i].NetType == NetTypes.String) { #>
+				if(value != null && value.Length > <#= table.Column[i].DbLength #>) 
+					throw new ArgumentOutOfRangeException("<#= table.Column[i].Name #>", "String <#= table.Column[i].Name #> is too long. Max length allowed is <#= table.Column[i].DbLength #> characters. Passed string is " + value.Length.ToString() + " characters.");
 <# } #>
-				_<#= column.Name #> = value;
-				_<#= column.Name #>Changed = true;
+				_<#= table.Column[i].Name #> = value;
+				changed_flags.Set(<#= i #>, true);
 			}
 <#			} #>
 		}
@@ -162,28 +159,58 @@ foreach (var db_assoc in database.Association) {
 	} else {
 		fetch_type = "ExecuteFetch();";
 	} #>
-	private <#= field_type #> _<#= assoc.OtherAssociationName #>;
-	public <#= field_type #> <#= assoc.OtherAssociationName #> {
-		get {
-			if (_<#= assoc.OtherAssociationName #> == null) {
-				try {
-					_<#= assoc.OtherAssociationName #> = ((<#= database.ContextClass #>)context).<#= assoc.OtherTable.Name #>.Select().WhereIn("<#= assoc.OtherColumn.Name #>", _<#= assoc.ThisColumn.Name #>).<#= fetch_type #>
-				} catch {
-					//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
-					_<#= assoc.OtherAssociationName #> = null;
+		private <#= field_type #> _<#= assoc.OtherAssociationName #>;
+		public <#= field_type #> <#= assoc.OtherAssociationName #> {
+			get {
+				if (_<#= assoc.OtherAssociationName #> == null) {
+					try {
+						_<#= assoc.OtherAssociationName #> = ((<#= database.ContextClass #>)context).<#= assoc.OtherTable.Name #>.Select().WhereIn("<#= assoc.OtherColumn.Name #>", _<#= assoc.ThisColumn.Name #>).<#= fetch_type #>
+					} catch {
+						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+						_<#= assoc.OtherAssociationName #> = null;
+					}
 				}
+				return _<#= assoc.OtherAssociationName #>;
 			}
-			return _<#= assoc.OtherAssociationName #>;
 		}
-	}
 		
 <# } #>
+		/// <summary>
+		/// Clones a <#= table.Name #> model.
+		/// </summary>
+		/// <param name="source">Source <#= table.Name #> model to clone from.</param>
+		/// <param name="only_changes">True to only clone the changes from the source. False to clone all the values reguardless of changed or unchanged.</param>
+		public <#= table.Name #>(<#= table.Name #> source, bool only_changes = false) { 
+<# for(int i = 0; i < table.Column.Count(); i++) { 
+			if (table.Column[i].IsPrimaryKey) { #>
+			_<#= table.Column[i].Name #> = source._<#= table.Column[i].Name #>;
+<# } #>
+			if (only_changes == false || source.changed_flags.Get(<#= i #>))
+				_<#= table.Column[i].Name #> = source._<#= table.Column[i].Name #>;
+<# } #>
+			changed_flags = new BitArray(source.changed_flags);
+		}
+		
+		/// <summary>
+		/// Creates a empty <#= table.Name #> model. Use this for creating a new row and insertting into the database.
+		/// </summary>
 		public <#= table.Name #>() : this(null, null) { }
 
+		/// <summary>
+		/// Creates a <#= table.Name #> model and reads the row information from the table into this model.
+		/// </summary>
+		/// <param name="reader">Instance of a live data reader for this model's table.</param>
+		/// <param name="context">The current context of the database.</param>
 		public <#= table.Name #>(DbDataReader reader, Context context) {
+			changed_flags = new BitArray(<#= table.Column.Count() #>);
 			Read(reader, context);
 		}
 
+		/// <summary>
+		/// Reads the row information from the table into this model.
+		/// </summary>
+		/// <param name="reader">Instance of a live data reader for this model's table.</param>
+		/// <param name="context">The current context of the database.</param>
 		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
@@ -209,19 +236,27 @@ foreach (var db_assoc in database.Association) {
 			}
 		}
 
+		/// <summary>
+		/// Gets all the instance values in the model which have been changed.
+		/// </summary>
+		/// <returns>Dictionary with the keys of the column names and values of the properties.</returns>
 		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
-<# foreach (var column in table.Column) { 
-	if (column.IsPrimaryKey) {
+<# for(int i = 0; i < table.Column.Count(); i++) { 
+	if (table.Column[i].IsPrimaryKey) {
 		 continue;
 	} #>
-			if (_<#= column.Name #>Changed)
-				changed.Add("<#= column.Name #>", _<#= column.Name #>);
+			if (changed_flags.Get(<#= i #>))
+				changed.Add("<#= table.Column[i].Name #>", _<#= table.Column[i].Name #>);
 <# } #>
 
 			return changed;
 		}
 
+		/// <summary>
+		/// Return all the instance values for the entire model.
+		/// </summary>
+		/// <returns>An object array with all the values of this model.</returns>
 		public override object[] GetAllValues() {
 			return new object[] {
 <# foreach (var column in table.Column) {
@@ -233,6 +268,10 @@ foreach (var db_assoc in database.Association) {
 			};
 		}
 
+		/// <summary>
+		/// Returns all the columns in this model.
+		/// </summary>
+		/// <returns>A string array with all the columns in this model.</returns>
 		public override string[] GetColumns() {
 			return new string[] {
 <# foreach (var column in table.Column) { 
@@ -245,10 +284,18 @@ foreach (var db_assoc in database.Association) {
 		}
 
 <# if (pk_column != null) { #>
+		/// <summary>
+		/// Gets the name of the model primary key.
+		/// </summary>
+		/// <returns>The name of the primary key</returns>
 		public override string GetPKName() {
 			return "<#= pk_column.Name #>";
 		}
 
+		/// <summary>
+		/// Gets the value of the primary key.
+		/// </summary>
+		/// <returns>The value of the primary key.</returns>
 		public override object GetPKValue() {
 			return _<#= pk_column.Name #>;
 		}

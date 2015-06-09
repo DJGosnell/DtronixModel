@@ -2,6 +2,7 @@
 using System;
 using System.Data.Common;
 using System.Collections.Generic;
+using System.Collections;
 using DtxModel;
 
 namespace DtxModelTests.Sqlite {
@@ -98,68 +99,95 @@ namespace DtxModelTests.Sqlite {
 
 	[TableAttribute(Name = "Users")]
 	public partial class Users : Model {
-
-		private bool _rowidChanged = false;
 		private Int64 _rowid;
 		public Int64 rowid {
 			get { return _rowid; }
 			set {
 				_rowid = value;
-				_rowidChanged = true;
+				changed_flags.Set(0, true);
 			}
 		}
 
-		private bool _usernameChanged = false;
 		private String _username;
 		public String username {
 			get { return _username; }
 			set {
 				_username = value;
-				_usernameChanged = true;
+				changed_flags.Set(1, true);
 			}
 		}
 
-		private bool _passwordChanged = false;
 		private String _password;
 		public String password {
 			get { return _password; }
 			set {
 				_password = value;
-				_passwordChanged = true;
+				changed_flags.Set(2, true);
 			}
 		}
 
-		private bool _last_loggedChanged = false;
 		private Int64 _last_logged;
 		public Int64 last_logged {
 			get { return _last_logged; }
 			set {
 				_last_logged = value;
-				_last_loggedChanged = true;
+				changed_flags.Set(3, true);
 			}
 		}
 
-	private Logs[] _Logs;
-	public Logs[] Logs {
-		get {
-			if (_Logs == null) {
-				try {
-					_Logs = ((TestDatabaseContext)context).Logs.Select().WhereIn("Users_rowid", _rowid).ExecuteFetchAll();
-				} catch {
-					//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
-					_Logs = null;
+		private Logs[] _Logs;
+		public Logs[] Logs {
+			get {
+				if (_Logs == null) {
+					try {
+						_Logs = ((TestDatabaseContext)context).Logs.Select().WhereIn("Users_rowid", _rowid).ExecuteFetchAll();
+					} catch {
+						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+						_Logs = null;
+					}
 				}
+				return _Logs;
 			}
-			return _Logs;
 		}
-	}
 		
+		/// <summary>
+		/// Clones a Users model.
+		/// </summary>
+		/// <param name="source">Source Users model to clone from.</param>
+		/// <param name="only_changes">True to only clone the changes from the source. False to clone all the values reguardless of changed or unchanged.</param>
+		public Users(Users source, bool only_changes = false) { 
+			_rowid = source._rowid;
+			if (only_changes == false || source.changed_flags.Get(0))
+				_rowid = source._rowid;
+			if (only_changes == false || source.changed_flags.Get(1))
+				_username = source._username;
+			if (only_changes == false || source.changed_flags.Get(2))
+				_password = source._password;
+			if (only_changes == false || source.changed_flags.Get(3))
+				_last_logged = source._last_logged;
+			changed_flags = new BitArray(source.changed_flags);
+		}
+		
+		/// <summary>
+		/// Creates a empty Users model. Use this for creating a new row and insertting into the database.
+		/// </summary>
 		public Users() : this(null, null) { }
 
+		/// <summary>
+		/// Creates a Users model and reads the row information from the table into this model.
+		/// </summary>
+		/// <param name="reader">Instance of a live data reader for this model's table.</param>
+		/// <param name="context">The current context of the database.</param>
 		public Users(DbDataReader reader, Context context) {
+			changed_flags = new BitArray(4);
 			Read(reader, context);
 		}
 
+		/// <summary>
+		/// Reads the row information from the table into this model.
+		/// </summary>
+		/// <param name="reader">Instance of a live data reader for this model's table.</param>
+		/// <param name="context">The current context of the database.</param>
 		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
@@ -175,18 +203,26 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
+		/// <summary>
+		/// Gets all the instance values in the model which have been changed.
+		/// </summary>
+		/// <returns>Dictionary with the keys of the column names and values of the properties.</returns>
 		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_usernameChanged)
+			if (changed_flags.Get(1))
 				changed.Add("username", _username);
-			if (_passwordChanged)
+			if (changed_flags.Get(2))
 				changed.Add("password", _password);
-			if (_last_loggedChanged)
+			if (changed_flags.Get(3))
 				changed.Add("last_logged", _last_logged);
 
 			return changed;
 		}
 
+		/// <summary>
+		/// Return all the instance values for the entire model.
+		/// </summary>
+		/// <returns>An object array with all the values of this model.</returns>
 		public override object[] GetAllValues() {
 			return new object[] {
 				_username,
@@ -195,6 +231,10 @@ namespace DtxModelTests.Sqlite {
 			};
 		}
 
+		/// <summary>
+		/// Returns all the columns in this model.
+		/// </summary>
+		/// <returns>A string array with all the columns in this model.</returns>
 		public override string[] GetColumns() {
 			return new string[] {
 				"username",
@@ -203,10 +243,18 @@ namespace DtxModelTests.Sqlite {
 			};
 		}
 
+		/// <summary>
+		/// Gets the name of the model primary key.
+		/// </summary>
+		/// <returns>The name of the primary key</returns>
 		public override string GetPKName() {
 			return "rowid";
 		}
 
+		/// <summary>
+		/// Gets the value of the primary key.
+		/// </summary>
+		/// <returns>The value of the primary key.</returns>
 		public override object GetPKValue() {
 			return _rowid;
 		}
@@ -214,18 +262,15 @@ namespace DtxModelTests.Sqlite {
 
 	[TableAttribute(Name = "Logs")]
 	public partial class Logs : Model {
-
-		private bool _rowidChanged = false;
 		private Int64 _rowid;
 		public Int64 rowid {
 			get { return _rowid; }
 			set {
 				_rowid = value;
-				_rowidChanged = true;
+				changed_flags.Set(0, true);
 			}
 		}
 
-		private bool _Users_rowidChanged = false;
 		private Int64 _Users_rowid;
 		/// <summary>
 		/// User which created this log item.
@@ -234,41 +279,70 @@ namespace DtxModelTests.Sqlite {
 			get { return _Users_rowid; }
 			set {
 				_Users_rowid = value;
-				_Users_rowidChanged = true;
+				changed_flags.Set(1, true);
 			}
 		}
 
-		private bool _textChanged = false;
 		private String _text;
 		public String text {
 			get { return _text; }
 			set {
 				_text = value;
-				_textChanged = true;
+				changed_flags.Set(2, true);
 			}
 		}
 
-	private Users _User;
-	public Users User {
-		get {
-			if (_User == null) {
-				try {
-					_User = ((TestDatabaseContext)context).Users.Select().WhereIn("rowid", _Users_rowid).ExecuteFetch();
-				} catch {
-					//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
-					_User = null;
+		private Users _User;
+		public Users User {
+			get {
+				if (_User == null) {
+					try {
+						_User = ((TestDatabaseContext)context).Users.Select().WhereIn("rowid", _Users_rowid).ExecuteFetch();
+					} catch {
+						//Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+						_User = null;
+					}
 				}
+				return _User;
 			}
-			return _User;
 		}
-	}
 		
+		/// <summary>
+		/// Clones a Logs model.
+		/// </summary>
+		/// <param name="source">Source Logs model to clone from.</param>
+		/// <param name="only_changes">True to only clone the changes from the source. False to clone all the values reguardless of changed or unchanged.</param>
+		public Logs(Logs source, bool only_changes = false) { 
+			_rowid = source._rowid;
+			if (only_changes == false || source.changed_flags.Get(0))
+				_rowid = source._rowid;
+			if (only_changes == false || source.changed_flags.Get(1))
+				_Users_rowid = source._Users_rowid;
+			if (only_changes == false || source.changed_flags.Get(2))
+				_text = source._text;
+			changed_flags = new BitArray(source.changed_flags);
+		}
+		
+		/// <summary>
+		/// Creates a empty Logs model. Use this for creating a new row and insertting into the database.
+		/// </summary>
 		public Logs() : this(null, null) { }
 
+		/// <summary>
+		/// Creates a Logs model and reads the row information from the table into this model.
+		/// </summary>
+		/// <param name="reader">Instance of a live data reader for this model's table.</param>
+		/// <param name="context">The current context of the database.</param>
 		public Logs(DbDataReader reader, Context context) {
+			changed_flags = new BitArray(3);
 			Read(reader, context);
 		}
 
+		/// <summary>
+		/// Reads the row information from the table into this model.
+		/// </summary>
+		/// <param name="reader">Instance of a live data reader for this model's table.</param>
+		/// <param name="context">The current context of the database.</param>
 		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
@@ -283,16 +357,24 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
+		/// <summary>
+		/// Gets all the instance values in the model which have been changed.
+		/// </summary>
+		/// <returns>Dictionary with the keys of the column names and values of the properties.</returns>
 		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_Users_rowidChanged)
+			if (changed_flags.Get(1))
 				changed.Add("Users_rowid", _Users_rowid);
-			if (_textChanged)
+			if (changed_flags.Get(2))
 				changed.Add("text", _text);
 
 			return changed;
 		}
 
+		/// <summary>
+		/// Return all the instance values for the entire model.
+		/// </summary>
+		/// <returns>An object array with all the values of this model.</returns>
 		public override object[] GetAllValues() {
 			return new object[] {
 				_Users_rowid,
@@ -300,6 +382,10 @@ namespace DtxModelTests.Sqlite {
 			};
 		}
 
+		/// <summary>
+		/// Returns all the columns in this model.
+		/// </summary>
+		/// <returns>A string array with all the columns in this model.</returns>
 		public override string[] GetColumns() {
 			return new string[] {
 				"Users_rowid",
@@ -307,10 +393,18 @@ namespace DtxModelTests.Sqlite {
 			};
 		}
 
+		/// <summary>
+		/// Gets the name of the model primary key.
+		/// </summary>
+		/// <returns>The name of the primary key</returns>
 		public override string GetPKName() {
 			return "rowid";
 		}
 
+		/// <summary>
+		/// Gets the value of the primary key.
+		/// </summary>
+		/// <returns>The value of the primary key.</returns>
 		public override object GetPKValue() {
 			return _rowid;
 		}
@@ -318,143 +412,179 @@ namespace DtxModelTests.Sqlite {
 
 	[TableAttribute(Name = "AllTypes")]
 	public partial class AllTypes : Model {
-
-		private bool _idChanged = false;
 		private Int64 _id;
 		public Int64 id {
 			get { return _id; }
 			set {
 				_id = value;
-				_idChanged = true;
+				changed_flags.Set(0, true);
 			}
 		}
 
-		private bool _db_int16Changed = false;
 		private Int16 _db_int16;
 		public Int16 db_int16 {
 			get { return _db_int16; }
 			set {
 				_db_int16 = value;
-				_db_int16Changed = true;
+				changed_flags.Set(1, true);
 			}
 		}
 
-		private bool _db_int32Changed = false;
 		private Int32 _db_int32;
 		public Int32 db_int32 {
 			get { return _db_int32; }
 			set {
 				_db_int32 = value;
-				_db_int32Changed = true;
+				changed_flags.Set(2, true);
 			}
 		}
 
-		private bool _db_int64Changed = false;
 		private Int64 _db_int64;
 		public Int64 db_int64 {
 			get { return _db_int64; }
 			set {
 				_db_int64 = value;
-				_db_int64Changed = true;
+				changed_flags.Set(3, true);
 			}
 		}
 
-		private bool _db_byte_arrayChanged = false;
 		private byte[] _db_byte_array;
 		public byte[] db_byte_array {
 			get { return _db_byte_array; }
 			set {
 				_db_byte_array = value;
-				_db_byte_arrayChanged = true;
+				changed_flags.Set(4, true);
 			}
 		}
 
-		private bool _db_byteChanged = false;
 		private Byte _db_byte;
 		public Byte db_byte {
 			get { return _db_byte; }
 			set {
 				_db_byte = value;
-				_db_byteChanged = true;
+				changed_flags.Set(5, true);
 			}
 		}
 
-		private bool _db_date_timeChanged = false;
 		private DateTime _db_date_time;
 		public DateTime db_date_time {
 			get { return _db_date_time; }
 			set {
 				_db_date_time = value;
-				_db_date_timeChanged = true;
+				changed_flags.Set(6, true);
 			}
 		}
 
-		private bool _db_decimalChanged = false;
 		private Decimal _db_decimal;
 		public Decimal db_decimal {
 			get { return _db_decimal; }
 			set {
 				_db_decimal = value;
-				_db_decimalChanged = true;
+				changed_flags.Set(7, true);
 			}
 		}
 
-		private bool _db_floatChanged = false;
 		private float _db_float;
 		public float db_float {
 			get { return _db_float; }
 			set {
 				_db_float = value;
-				_db_floatChanged = true;
+				changed_flags.Set(8, true);
 			}
 		}
 
-		private bool _db_doubleChanged = false;
 		private Double _db_double;
 		public Double db_double {
 			get { return _db_double; }
 			set {
 				_db_double = value;
-				_db_doubleChanged = true;
+				changed_flags.Set(9, true);
 			}
 		}
 
-		private bool _db_boolChanged = false;
 		private Boolean _db_bool;
 		public Boolean db_bool {
 			get { return _db_bool; }
 			set {
 				_db_bool = value;
-				_db_boolChanged = true;
+				changed_flags.Set(10, true);
 			}
 		}
 
-		private bool _db_stringChanged = false;
 		private String _db_string;
 		public String db_string {
 			get { return _db_string; }
 			set {
 				_db_string = value;
-				_db_stringChanged = true;
+				changed_flags.Set(11, true);
 			}
 		}
 
-		private bool _db_charChanged = false;
 		private Char _db_char;
 		public Char db_char {
 			get { return _db_char; }
 			set {
 				_db_char = value;
-				_db_charChanged = true;
+				changed_flags.Set(12, true);
 			}
 		}
 
+		/// <summary>
+		/// Clones a AllTypes model.
+		/// </summary>
+		/// <param name="source">Source AllTypes model to clone from.</param>
+		/// <param name="only_changes">True to only clone the changes from the source. False to clone all the values reguardless of changed or unchanged.</param>
+		public AllTypes(AllTypes source, bool only_changes = false) { 
+			_id = source._id;
+			if (only_changes == false || source.changed_flags.Get(0))
+				_id = source._id;
+			if (only_changes == false || source.changed_flags.Get(1))
+				_db_int16 = source._db_int16;
+			if (only_changes == false || source.changed_flags.Get(2))
+				_db_int32 = source._db_int32;
+			if (only_changes == false || source.changed_flags.Get(3))
+				_db_int64 = source._db_int64;
+			if (only_changes == false || source.changed_flags.Get(4))
+				_db_byte_array = source._db_byte_array;
+			if (only_changes == false || source.changed_flags.Get(5))
+				_db_byte = source._db_byte;
+			if (only_changes == false || source.changed_flags.Get(6))
+				_db_date_time = source._db_date_time;
+			if (only_changes == false || source.changed_flags.Get(7))
+				_db_decimal = source._db_decimal;
+			if (only_changes == false || source.changed_flags.Get(8))
+				_db_float = source._db_float;
+			if (only_changes == false || source.changed_flags.Get(9))
+				_db_double = source._db_double;
+			if (only_changes == false || source.changed_flags.Get(10))
+				_db_bool = source._db_bool;
+			if (only_changes == false || source.changed_flags.Get(11))
+				_db_string = source._db_string;
+			if (only_changes == false || source.changed_flags.Get(12))
+				_db_char = source._db_char;
+			changed_flags = new BitArray(source.changed_flags);
+		}
+		
+		/// <summary>
+		/// Creates a empty AllTypes model. Use this for creating a new row and insertting into the database.
+		/// </summary>
 		public AllTypes() : this(null, null) { }
 
+		/// <summary>
+		/// Creates a AllTypes model and reads the row information from the table into this model.
+		/// </summary>
+		/// <param name="reader">Instance of a live data reader for this model's table.</param>
+		/// <param name="context">The current context of the database.</param>
 		public AllTypes(DbDataReader reader, Context context) {
+			changed_flags = new BitArray(13);
 			Read(reader, context);
 		}
 
+		/// <summary>
+		/// Reads the row information from the table into this model.
+		/// </summary>
+		/// <param name="reader">Instance of a live data reader for this model's table.</param>
+		/// <param name="context">The current context of the database.</param>
 		public override void Read(DbDataReader reader, Context context) {
 			this.context = context;
 			if (reader == null) { return; }
@@ -479,36 +609,44 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
+		/// <summary>
+		/// Gets all the instance values in the model which have been changed.
+		/// </summary>
+		/// <returns>Dictionary with the keys of the column names and values of the properties.</returns>
 		public override Dictionary<string, object> GetChangedValues() {
 			var changed = new Dictionary<string, object>();
-			if (_db_int16Changed)
+			if (changed_flags.Get(1))
 				changed.Add("db_int16", _db_int16);
-			if (_db_int32Changed)
+			if (changed_flags.Get(2))
 				changed.Add("db_int32", _db_int32);
-			if (_db_int64Changed)
+			if (changed_flags.Get(3))
 				changed.Add("db_int64", _db_int64);
-			if (_db_byte_arrayChanged)
+			if (changed_flags.Get(4))
 				changed.Add("db_byte_array", _db_byte_array);
-			if (_db_byteChanged)
+			if (changed_flags.Get(5))
 				changed.Add("db_byte", _db_byte);
-			if (_db_date_timeChanged)
+			if (changed_flags.Get(6))
 				changed.Add("db_date_time", _db_date_time);
-			if (_db_decimalChanged)
+			if (changed_flags.Get(7))
 				changed.Add("db_decimal", _db_decimal);
-			if (_db_floatChanged)
+			if (changed_flags.Get(8))
 				changed.Add("db_float", _db_float);
-			if (_db_doubleChanged)
+			if (changed_flags.Get(9))
 				changed.Add("db_double", _db_double);
-			if (_db_boolChanged)
+			if (changed_flags.Get(10))
 				changed.Add("db_bool", _db_bool);
-			if (_db_stringChanged)
+			if (changed_flags.Get(11))
 				changed.Add("db_string", _db_string);
-			if (_db_charChanged)
+			if (changed_flags.Get(12))
 				changed.Add("db_char", _db_char);
 
 			return changed;
 		}
 
+		/// <summary>
+		/// Return all the instance values for the entire model.
+		/// </summary>
+		/// <returns>An object array with all the values of this model.</returns>
 		public override object[] GetAllValues() {
 			return new object[] {
 				_db_int16,
@@ -526,6 +664,10 @@ namespace DtxModelTests.Sqlite {
 			};
 		}
 
+		/// <summary>
+		/// Returns all the columns in this model.
+		/// </summary>
+		/// <returns>A string array with all the columns in this model.</returns>
 		public override string[] GetColumns() {
 			return new string[] {
 				"db_int16",
@@ -543,10 +685,18 @@ namespace DtxModelTests.Sqlite {
 			};
 		}
 
+		/// <summary>
+		/// Gets the name of the model primary key.
+		/// </summary>
+		/// <returns>The name of the primary key</returns>
 		public override string GetPKName() {
 			return "id";
 		}
 
+		/// <summary>
+		/// Gets the value of the primary key.
+		/// </summary>
+		/// <returns>The value of the primary key.</returns>
 		public override object GetPKValue() {
 			return _id;
 		}
