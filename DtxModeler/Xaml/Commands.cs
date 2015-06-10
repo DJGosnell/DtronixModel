@@ -15,6 +15,7 @@ namespace DtxModeler.Xaml {
 		public static readonly RoutedUICommand RenameDatabaseItem = new RoutedUICommand("Rename", "RenameDatabaseItem", typeof(Commands));
 		public static readonly RoutedUICommand GenerateAll = new RoutedUICommand("Generate All", "GenerateAll", typeof(Commands));
 		public static readonly RoutedUICommand Exit = new RoutedUICommand("Exit", "Exit", typeof(Commands));
+		public static readonly RoutedUICommand About = new RoutedUICommand("About", "About", typeof(Commands));
 
 		static Commands() {
 			Exit.InputGestures.Add(new KeyGesture(Key.F4, ModifierKeys.Alt));

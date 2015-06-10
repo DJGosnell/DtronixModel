@@ -68,6 +68,7 @@
   <ItemGroup>
     <Compile Include="AssociationAttribute.cs" />
     <Compile Include="AttributeCache.cs" />
+    <Compile Include="Properties\CommonAssemblyInfo.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="Converters.cs" />
     <Compile Include="DtxTransaction.cs" />

@@ -61,6 +61,7 @@
 				</MenuItem>
 				<MenuItem x:Name="_MiCommandlineToggle" Header="Show Commandline" VerticalAlignment="Top" IsCheckable="True" IsChecked="false" Click="_MiCommandlineToggle_Click"/>
 			</MenuItem>
+			<MenuItem Command="dxaml:Commands.About" />
 		</Menu>
 		<Xaml:ExplorerControl x:Name="_DatabaseExplorer"  Grid.Row="1" ChangedSelection="_DatabaseExplorer_ChangedSelection" LoadedDatabase="_DatabaseExplorer_LoadedDatabase" UnloadedDatabase="_DatabaseExplorer_UnloadedDatabase" DatabaseModified="_DatabaseExplorer_DatabaseModified" />
 		<TabControl Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,0,0" BorderThickness="1,1,0,0" Grid.ColumnSpan="1" Padding="0,4">

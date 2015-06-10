@@ -52,6 +52,7 @@ namespace DtxModeler.Xaml {
 			BindCommand(ApplicationCommands.SaveAs, new KeyGesture(Key.S, ModifierKeys.Control | ModifierKeys.Alt), Command_SaveAs, Command_SaveCanExecute);
 			BindCommand(Commands.Exit, new KeyGesture(Key.F4, ModifierKeys.Alt), Command_Exit);
 			BindCommand(Commands.GenerateAll, new KeyGesture(Key.F5), Command_GenerateAll, Command_GenerateAllCanExecute);
+			BindCommand(Commands.About, null, (sender, e) => new AboutWindow().ShowDialog(), (sender, e) => e.CanExecute = true);
 
 			_Status.SetStatus("Application Loaded And Ready", ColorStatusBar.Status.Completed);
 
