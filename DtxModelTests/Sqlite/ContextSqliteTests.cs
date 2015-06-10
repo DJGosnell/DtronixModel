@@ -9,26 +9,16 @@ namespace DtxModelTests.Sqlite {
 	public class ContextSqliteTests {
 		static ContextSqliteTests() {
 			TestDatabaseContext.DatabaseType = DtxModel.Context.TargetDb.Sqlite;
-			Directory.CreateDirectory("sqlite_dbs");
 		}
 
 		private TestDatabaseContext CreateContext(string method_name) {
-
-			string class_name = this.GetType().Name;
-			string database_name = class_name + "_" + method_name + ".sqlite";
-			string path = Path.Combine(Directory.GetCurrentDirectory(), "sqlite_dbs", database_name);
-			File.Delete(path);
-
-			var connection = new SQLiteConnection("Data Source=\"" + path + "\";Version=3;");
+			var connection = new SQLiteConnection("Data Source=:memory:;Version=3;");
 			connection.Open();
 
 			var context = new TestDatabaseContext(connection);
 			context.Query(Utilities.GetFileContents("Sqlite.TestDatabase.sql"), null);
 
 			return context;
-
-
-
 		}
 
 		private ulong CreateUser(TestDatabaseContext context, string append = null) {
