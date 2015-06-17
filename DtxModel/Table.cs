@@ -30,8 +30,8 @@ namespace DtxModel {
 		/// </summary>
 		/// <param name="model">Row to insert.</param>
 		/// <returns>If the "LastInsertIdQuery" property is set on the database context, will return the newly inserted row id.  Otherwise will return 0.</returns>
-		public ulong Insert(T model) {
-			ulong[] result = Insert(new T[] { model });
+		public long Insert(T model) {
+			long[] result = Insert(new T[] { model });
 			return (result == null) ? 0 : result[0];
 		}
 
@@ -43,7 +43,7 @@ namespace DtxModel {
 		/// </remarks>
 		/// <param name="model">Row to insert.</param>
 		/// <returns>If the "LastInsertIdQuery" property is set on the database context, will return the newly inserted row ids in a long[].  Otherwise will return null.</returns>
-		public ulong[] Insert(T[] model) {
+		public long[] Insert(T[] model) {
 			return new SqlStatement<T>(SqlStatement<T>.Mode.Insert, context).Insert(model);
 		}
 
@@ -92,15 +92,15 @@ namespace DtxModel {
 		/// Deletes a single row in the database based upon the primary row id.
 		/// </summary>
 		/// <param name="id">Row id to delete.</param>
-		public void Delete(ulong id) {
-			Delete(new ulong[] { id });
+		public void Delete(long id) {
+			Delete(new long[] { id });
 		}
 
 		/// <summary>
 		/// Delete multiple rows in the database based upon the primary row ids.
 		/// </summary>
 		/// <param name="ids">Row ids to delete.</param>
-		public void Delete(ulong[] ids) {
+		public void Delete(long[] ids) {
 			new SqlStatement<T>(SqlStatement<T>.Mode.Delete, context).Delete(ids);
 		}
 	}

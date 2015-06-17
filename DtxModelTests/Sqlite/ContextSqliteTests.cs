@@ -21,7 +21,7 @@ namespace DtxModelTests.Sqlite {
 			return context;
 		}
 
-		private ulong CreateUser(TestDatabaseContext context, string append = null) {
+		private long CreateUser(TestDatabaseContext context, string append = null) {
 			return context.Users.Insert(new Users() {
 				username = "user_name" + append,
 				password = "my_hashed_password" + append,
@@ -267,9 +267,9 @@ namespace DtxModelTests.Sqlite {
 		[Fact]
 		public void RowIsDeletedByRowId() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
-				ulong id = CreateUser(context);
+				long id = CreateUser(context);
 
-				Assert.NotEqual<ulong>(0, id);
+				Assert.NotEqual(0, id);
 
 				context.Users.Delete(id);
 
@@ -283,12 +283,12 @@ namespace DtxModelTests.Sqlite {
 		[Fact]
 		public void RowIsDeletedByRowIds() {
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
-				ulong[] ids = new ulong[2];
+				long[] ids = new long[2];
 				ids[0] = CreateUser(context);
 				ids[1] = CreateUser(context);
 
-				Assert.NotEqual<ulong>(0, ids[0]);
-				Assert.NotEqual<ulong>(0, ids[1]);
+				Assert.NotEqual(0, ids[0]);
+				Assert.NotEqual(0, ids[1]);
 
 				context.Users.Delete(ids);
 
@@ -334,7 +334,7 @@ namespace DtxModelTests.Sqlite {
 
 		[Fact]
 		public void RowForeignKeyAssociationAccess() {
-			ulong log_rowid = 0;
+			long log_rowid = 0;
 			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
 				CreateUser(context);
 
@@ -552,6 +552,16 @@ namespace DtxModelTests.Sqlite {
 				Assert.Equal(user.username, cloned.username);
 				Assert.Equal(null, cloned.password);
 				Assert.Equal(default(long), cloned.last_logged);
+			}
+		}
+
+		[Fact]
+		public void InsertReturnsNewRowId() {
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				long id = CreateUser(context);
+				var user = context.Users.Select().ExecuteFetch();
+
+				Assert.Equal(id, user.rowid);
 			}
 		}
 

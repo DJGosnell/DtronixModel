@@ -134,7 +134,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Properties\CommonAssemblyInfo.cs" />
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Ddl\DdlSchema.cs">
       <DependentUpon>DdlSchema.xsd</DependentUpon>
     </Compile>

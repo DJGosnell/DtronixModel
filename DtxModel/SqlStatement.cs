@@ -205,7 +205,7 @@ namespace DtxModel {
 		/// Deletes the specified primary keys from the table.
 		/// </summary>
 		/// <param name="primary_ids">Ids to delete.</param>
-		public void Delete(ulong[] primary_ids) {
+		public void Delete(long[] primary_ids) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -603,7 +603,7 @@ namespace DtxModel {
 		/// If one of the inserts fails, then all of the inserts are rolled back.
 		/// </remarks>
 		/// <param name="models">Rows to insert.</param>
-		public ulong[] Insert(T[] models) {
+		public long[] Insert(T[] models) {
 			if (mode == Mode.Execute) {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
@@ -639,11 +639,11 @@ namespace DtxModel {
 			sb_sql.Remove(sb_sql.Length - 2, 2);
 			sb_sql.Append(");");
 
-			ulong[] new_row_ids = null;
+			long[] new_row_ids = null;
 
 			if (context.LastInsertIdQuery != null) {
 				sb_sql.Append(context.LastInsertIdQuery);
-				new_row_ids = new ulong[models.Length];
+				new_row_ids = new long[models.Length];
 			}
 			DtxTransaction transaction = null;
 
@@ -676,7 +676,7 @@ namespace DtxModel {
 						if (new_row == null) {
 							throw new Exception("Unable to insert row");
 						} else {
-							new_row_ids[i] = Convert.ToUInt64(new_row);
+							new_row_ids[i] = Convert.ToInt64(new_row);
 						}
 					} else {
 						if (command.ExecuteNonQuery() != 1) {
