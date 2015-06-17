@@ -393,6 +393,10 @@ namespace DtxModel {
 
 						// Execute the update command.
 						command.ExecuteNonQuery();
+
+						if (context.Debug.HasFlag(Context.DebugLevel.Updates)) {
+							Console.Out.WriteLine("Update: \r\n" + command.CommandText);
+						}
 					}
 
 					if (transaction != null) {
@@ -684,6 +688,10 @@ namespace DtxModel {
 						}
 					}
 
+					if (context.Debug.HasFlag(Context.DebugLevel.Inserts)) {
+						Console.Out.WriteLine("Insert: \r\n" + command.CommandText);
+					}
+
 
 				}
 
@@ -704,6 +712,11 @@ namespace DtxModel {
 					transaction.Dispose();
 				}
 			}
+
+			if (context.Debug.HasFlag(Context.DebugLevel.Inserts)) {
+				Console.Out.WriteLine("Insert new Row IDs: \r\n" + string.Join(", ", new_row_ids));
+			}
+
 			return new_row_ids;
 
 		}

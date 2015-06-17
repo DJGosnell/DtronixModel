@@ -32,22 +32,32 @@ namespace DtxModel {
 			/// <summary>
 			/// (Default) No output is generated.
 			/// </summary>
-			None,
+			None = 0,
 
 			/// <summary>
 			/// Logs the executed queries to the stdout
 			/// </summary>
-			Queries,
+			Queries = 1 << 1,
 
 			/// <summary>
 			/// Logs the parameters as they are being bound to stdout.
 			/// </summary>
-			BoundParameters,
+			BoundParameters = 1 << 2,
+
+			/// <summary>
+			/// Logs the rows as they are inserted to stdout.
+			/// </summary>
+			Inserts = 1 << 3,
+
+			/// <summary>
+			/// Logs the rows as they are updated to stdout.
+			/// </summary>
+			Updates = 1 << 4,
 
 			/// <summary>
 			/// Logs every option above to stdout.
 			/// </summary>
-			All = Queries | BoundParameters
+			All = Queries | BoundParameters | Inserts | Updates
 		}
 
 		private DebugLevel _debug = DebugLevel.None;
