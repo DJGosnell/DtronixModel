@@ -17,7 +17,7 @@ namespace DtxModel {
 		}
 
 		/// <summary>
-		/// Begins a select query.
+		/// Begins a select query. Ensure to dispose of SqlStatement
 		/// </summary>
 		/// <param name="select"></param>
 		/// <returns>SqlStatement to chain up following query modifiers.</returns>
@@ -44,8 +44,10 @@ namespace DtxModel {
 		/// <param name="model">Row to insert.</param>
 		/// <returns>If the "LastInsertIdQuery" property is set on the database context, will return the newly inserted row ids in a long[].  Otherwise will return null.</returns>
 		public long[] Insert(T[] model) {
-			return new SqlStatement<T>(SqlStatement<T>.Mode.Insert, context).Insert(model);
-		}
+			using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Insert, context)) {
+				return statement.Insert(model);
+            }
+        }
 
 		/// <summary>
 		/// Updates a single row in the database. Must have its primary key set.
@@ -66,7 +68,9 @@ namespace DtxModel {
 		/// </remarks>
 		/// <param name="model">Rows to update.</param>
 		public void Update(T[] model) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Update, context).Update(model);
+			using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Update, context)) {
+				statement.Update(model);
+			}
 		}
 
 		/// <summary>
@@ -85,7 +89,9 @@ namespace DtxModel {
 		/// </summary>
 		/// <param name="models">Rows to delete.</param>
 		public void Delete(T[] models) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Delete, context).Delete(models);
+			using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Delete, context)) {
+				statement.Delete(models);
+			}
 		}
 
 		/// <summary>
@@ -101,7 +107,9 @@ namespace DtxModel {
 		/// </summary>
 		/// <param name="ids">Row ids to delete.</param>
 		public void Delete(long[] ids) {
-			new SqlStatement<T>(SqlStatement<T>.Mode.Delete, context).Delete(ids);
+			using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Delete, context)) {
+				statement.Delete(ids);
+			}
 		}
 	}
 }

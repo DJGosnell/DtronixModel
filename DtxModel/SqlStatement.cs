@@ -84,7 +84,7 @@ namespace DtxModel {
 
 
 		/// <summary>
-		/// Starts a Statement in the specified mode of operation.
+		/// Starts a Statement in the specified mode of operation. Always dispose of the statement to ensure underlying DbCommand is disposed and prevent memory leaks.
 		/// </summary>
 		/// <param name="mode">Mode that this query will operate in. Prevents invalid operations.</param>
 		/// <param name="context">Context that this query will operate inside of.</param>
