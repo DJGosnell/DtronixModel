@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Database xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="TestDatabase" Namespace="DtxModelTests.Sqlite" ContextClass="TestDatabaseContext" TargetDb="Sqlite">
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="TestDatabase" Namespace="DtxModelTests.Sqlite" ContextClass="TestDatabaseContext" TargetDb="Sqlite">
   <Table Name="Users">
     <Column Name="rowid" NetType="Int64" DbType="INTEGER" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="username" NetType="String" DbType="TEXT" />
@@ -24,7 +24,6 @@
     <Column Name="db_double" NetType="Double" DbType="DOUBLE" />
     <Column Name="db_bool" NetType="Boolean" DbType="BOOLEAN" />
     <Column Name="db_string" NetType="String" DbType="TEXT" />
-    <Column Name="db_char" NetType="Char" DbType="CHAR" />
   </Table>
   <Association Table1Name="Logs" Table1="Logs" Table1Column="Users_rowid" Table1Cardinality="Many" Table2Name="User" Table2="Users" Table2Column="rowid" Table2Cardinality="One" />
 </Database>

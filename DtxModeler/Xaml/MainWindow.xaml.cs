@@ -232,7 +232,7 @@ namespace DtxModeler.Xaml {
 		}
 
 
-		void TableColumn_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e) {
+		void TableColumn_PropertyChanged(object sender, PropertyChangedEventArgs e) {
 			Column column = sender as Column;
 			_DatabaseExplorer.SelectedDatabase._Modified = true;
 
@@ -250,9 +250,14 @@ namespace DtxModeler.Xaml {
 					break;
 
 				case "NetType":
-					var type = type_transformer.NetType(column.NetType);
-					column.DbLength = type.length;
-					column.DbType = type.db_type;
+					try {
+						var type = type_transformer.NetType(column.NetType);
+						column.DbLength = type.length;
+						column.DbType = type.db_type;
+					} catch (Exception) {
+						MessageBox.Show("Type is not allowed in the selected database type.", "Invalid Option");
+					}
+					
 					break;
 
 				case "IsAutoIncrement":

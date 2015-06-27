@@ -27,8 +27,7 @@ CREATE TABLE AllTypes (
 	db_float FLOAT NOT NULL ,
 	db_double DOUBLE NOT NULL ,
 	db_bool BOOLEAN NOT NULL ,
-	db_string TEXT NOT NULL ,
-	db_char CHAR NOT NULL 
+	db_string TEXT NOT NULL 
 );
 
 

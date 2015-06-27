@@ -401,12 +401,11 @@ namespace DtxModelTests.Sqlite {
 
 				byte[] initial_byte_array = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255, 254, 243, 252, 251, 250, 249, 248, 247, 246, 245 };
 				var date_time = DateTime.Now;
-
+				int ch = (int)'D';
 				context.AllTypes.Insert(new AllTypes() {
 					db_bool = true,
 					db_byte = 157,
 					db_byte_array = initial_byte_array,
-					db_char = 'D',
 					db_date_time = date_time,
 					db_decimal = 3456789.986543M,
 					db_double = 12345.54321D,
@@ -416,7 +415,7 @@ namespace DtxModelTests.Sqlite {
 					db_int64 = 9223372036854775807,
 					db_string = "Database String With \nNewline\nSpecial Chars: ♥♦♣♠"
 				});
-				logger.Log("Insertted new row into db.");
+				logger.Log("Inserted new row into db.");
 
 				var all_types = context.AllTypes.Select().ExecuteFetch();
 				logger.Log("Retrieved new row from db.");
@@ -430,7 +429,6 @@ namespace DtxModelTests.Sqlite {
 					Assert.Equal(initial_byte_array[i], all_types.db_byte_array[i]);
 				}
 
-				Assert.Equal('D', all_types.db_char);
 				Assert.Equal(date_time, all_types.db_date_time);
 				Assert.Equal(3456789.986543M, all_types.db_decimal);
 				Assert.Equal(12345.54321D, all_types.db_double);

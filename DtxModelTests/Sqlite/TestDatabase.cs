@@ -520,15 +520,6 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private Char _db_char;
-		public Char db_char {
-			get { return _db_char; }
-			set {
-				_db_char = value;
-				changed_flags.Set(12, true);
-			}
-		}
-
 		/// <summary>
 		/// Clones a AllTypes model.
 		/// </summary>
@@ -560,8 +551,6 @@ namespace DtxModelTests.Sqlite {
 				_db_bool = source._db_bool;
 			if (only_changes == false || source.changed_flags.Get(11))
 				_db_string = source._db_string;
-			if (only_changes == false || source.changed_flags.Get(12))
-				_db_char = source._db_char;
 			changed_flags = new BitArray(source.changed_flags);
 		}
 		
@@ -576,7 +565,7 @@ namespace DtxModelTests.Sqlite {
 		/// <param name="reader">Instance of a live data reader for this model's table.</param>
 		/// <param name="context">The current context of the database.</param>
 		public AllTypes(DbDataReader reader, Context context) {
-			changed_flags = new BitArray(13);
+			changed_flags = new BitArray(12);
 			Read(reader, context);
 		}
 
@@ -603,7 +592,6 @@ namespace DtxModelTests.Sqlite {
 					case "db_double": _db_double = reader.GetDouble(i); break;
 					case "db_bool": _db_bool = reader.GetBoolean(i); break;
 					case "db_string": _db_string = reader.GetValue(i) as string; break;
-					case "db_char": _db_char = reader.GetChar(i); break;
 					default: additional_values.Add(reader.GetName(i), reader.GetValue(i)); break;
 				}
 			}
@@ -637,8 +625,6 @@ namespace DtxModelTests.Sqlite {
 				changed.Add("db_bool", _db_bool);
 			if (changed_flags.Get(11))
 				changed.Add("db_string", _db_string);
-			if (changed_flags.Get(12))
-				changed.Add("db_char", _db_char);
 
 			return changed;
 		}
@@ -660,7 +646,6 @@ namespace DtxModelTests.Sqlite {
 				_db_double,
 				_db_bool,
 				_db_string,
-				_db_char,
 			};
 		}
 
@@ -681,7 +666,6 @@ namespace DtxModelTests.Sqlite {
 				"db_double",
 				"db_bool",
 				"db_string",
-				"db_char",
 			};
 		}
 

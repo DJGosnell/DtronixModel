@@ -23,7 +23,7 @@ namespace DtxModeler.Generator.Sqlite {
 				new TypeTransformerType(NetTypes.Boolean, "BOOLEAN"),
 				new TypeTransformerType(NetTypes.String, "TEXT"),
 				new TypeTransformerType(NetTypes.DateTime, "TEXT"),
-				new TypeTransformerType(NetTypes.Char, "CHAR")
+				//new TypeTransformerType(NetTypes.Char, "CHAR")
 			};
 		}
 	}
