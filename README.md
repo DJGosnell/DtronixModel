@@ -14,7 +14,7 @@ The Ddl schema is geenrated from an XSD  file with the program "xsd2code communi
 
 ### Installation
 
-On Windows, run the "install.ps1" in PowerShell and this will restore the NuGet packages, create the installer and silently install the DtronixModeler application.
+On Windows, run the "install.bat" in PowerShell and this will restore the NuGet packages, create the installer and silently install the DtronixModeler application.
 
 ### License
 Released under [MIT license](http://opensource.org/licenses/MIT).
