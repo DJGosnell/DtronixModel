@@ -239,8 +239,8 @@ foreach (var db_assoc in database.Association) {
             this.Write(" model.\r\n\t\t/// </summary>\r\n\t\t/// <param name=\"source\">Source ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             this.Write(" model to clone from.</param>\r\n\t\t/// <param name=\"only_changes\">True to only clon" +
-                    "e the changes from the source. False to clone all the values reguardless of chan" +
-                    "ged or unchanged.</param>\r\n\t\tpublic ");
+                    "e the changes from the source. False to clone all the values regardless of chang" +
+                    "ed or unchanged.</param>\r\n\t\tpublic ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             this.Write("(");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
@@ -264,8 +264,8 @@ foreach (var db_assoc in database.Association) {
             this.Write("\t\t\tchanged_flags = new BitArray(source.changed_flags);\r\n\t\t}\r\n\t\t\r\n\t\t/// <summary>\r" +
                     "\n\t\t/// Creates a empty ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(" model. Use this for creating a new row and insertting into the database.\r\n\t\t/// " +
-                    "</summary>\r\n\t\tpublic ");
+            this.Write(" model. Use this for creating a new row and inserting into the database.\r\n\t\t/// <" +
+                    "/summary>\r\n\t\tpublic ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             this.Write("() : this(null, null) { }\r\n\r\n\t\t/// <summary>\r\n\t\t/// Creates a ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
@@ -296,6 +296,10 @@ foreach (var db_assoc in database.Association) {
  foreach (var column in table.Column) {
 		string type = ColumnNetType(column);
 		string reader_get = Enum.GetName(typeof(NetTypes), column.NetType);
+
+		if(reader_get == "DateTimeOffset") {
+			reader_get = "DateTime";
+		}
 
 		if (column.NetType == NetTypes.ByteArray) { 
             this.Write("\t\t\t\t\tcase \"");

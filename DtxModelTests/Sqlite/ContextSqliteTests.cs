@@ -25,7 +25,7 @@ namespace DtxModelTests.Sqlite {
 			return context.Users.Insert(new Users() {
 				username = "user_name" + append,
 				password = "my_hashed_password" + append,
-				last_logged = Converters.DateTimeToUnix(new DateTime(2014, 11, 25))
+				last_logged = Converters.ToUnixTimeSeconds(new DateTimeOffset(2014, 11, 25, 0, 0, 0, TimeSpan.Zero))
 			});
 		}
 
@@ -56,7 +56,7 @@ namespace DtxModelTests.Sqlite {
 				var user = context.Users.Select("username, last_logged").ExecuteFetch();
 
 				Assert.Equal("user_name", user.username);
-				Assert.Equal(new DateTime(2014, 11, 25), Converters.UnixToDateTime(user.last_logged));
+				Assert.Equal(new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero), Converters.FromUnixTimeSeconds(user.last_logged));
 				Assert.Null(user.password);
 			}
 		}
@@ -225,7 +225,7 @@ namespace DtxModelTests.Sqlite {
 				Assert.NotEqual(0, user.rowid);
 				Assert.Equal("user_name", user.username);
 				Assert.Equal("my_hashed_password", user.password);
-				Assert.Equal(Converters.DateTimeToUnix(new DateTime(2014, 11, 25)), user.last_logged);
+				Assert.Equal(Converters.ToUnixTimeSeconds(new DateTime(2014, 11, 25)), user.last_logged);
 			}
 		}
 
@@ -400,7 +400,7 @@ namespace DtxModelTests.Sqlite {
 				logger.Log("Connected to database.");
 
 				byte[] initial_byte_array = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255, 254, 243, 252, 251, 250, 249, 248, 247, 246, 245 };
-				var date_time = DateTime.Now;
+				var date_time = DateTimeOffset.Now;
 				int ch = (int)'D';
 				context.AllTypes.Insert(new AllTypes() {
 					db_bool = true,

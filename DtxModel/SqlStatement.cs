@@ -584,6 +584,10 @@ namespace DtxModel {
 			string key = "@p" + command.Parameters.Count;
 			var param = command.CreateParameter();
 			param.ParameterName = key;
+
+			if(value is DateTimeOffset) {
+				value = value.ToString();
+            }
 			param.Value = value;
 
 			// Logging to output bound parameters to stdout.

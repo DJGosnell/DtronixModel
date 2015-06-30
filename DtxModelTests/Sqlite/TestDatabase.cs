@@ -154,7 +154,7 @@ namespace DtxModelTests.Sqlite {
 		/// Clones a Users model.
 		/// </summary>
 		/// <param name="source">Source Users model to clone from.</param>
-		/// <param name="only_changes">True to only clone the changes from the source. False to clone all the values reguardless of changed or unchanged.</param>
+		/// <param name="only_changes">True to only clone the changes from the source. False to clone all the values regardless of changed or unchanged.</param>
 		public Users(Users source, bool only_changes = false) { 
 			_rowid = source._rowid;
 			if (only_changes == false || source.changed_flags.Get(0))
@@ -169,7 +169,7 @@ namespace DtxModelTests.Sqlite {
 		}
 		
 		/// <summary>
-		/// Creates a empty Users model. Use this for creating a new row and insertting into the database.
+		/// Creates a empty Users model. Use this for creating a new row and inserting into the database.
 		/// </summary>
 		public Users() : this(null, null) { }
 
@@ -311,7 +311,7 @@ namespace DtxModelTests.Sqlite {
 		/// Clones a Logs model.
 		/// </summary>
 		/// <param name="source">Source Logs model to clone from.</param>
-		/// <param name="only_changes">True to only clone the changes from the source. False to clone all the values reguardless of changed or unchanged.</param>
+		/// <param name="only_changes">True to only clone the changes from the source. False to clone all the values regardless of changed or unchanged.</param>
 		public Logs(Logs source, bool only_changes = false) { 
 			_rowid = source._rowid;
 			if (only_changes == false || source.changed_flags.Get(0))
@@ -324,7 +324,7 @@ namespace DtxModelTests.Sqlite {
 		}
 		
 		/// <summary>
-		/// Creates a empty Logs model. Use this for creating a new row and insertting into the database.
+		/// Creates a empty Logs model. Use this for creating a new row and inserting into the database.
 		/// </summary>
 		public Logs() : this(null, null) { }
 
@@ -466,8 +466,8 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private DateTime _db_date_time;
-		public DateTime db_date_time {
+		private DateTimeOffset _db_date_time;
+		public DateTimeOffset db_date_time {
 			get { return _db_date_time; }
 			set {
 				_db_date_time = value;
@@ -524,7 +524,7 @@ namespace DtxModelTests.Sqlite {
 		/// Clones a AllTypes model.
 		/// </summary>
 		/// <param name="source">Source AllTypes model to clone from.</param>
-		/// <param name="only_changes">True to only clone the changes from the source. False to clone all the values reguardless of changed or unchanged.</param>
+		/// <param name="only_changes">True to only clone the changes from the source. False to clone all the values regardless of changed or unchanged.</param>
 		public AllTypes(AllTypes source, bool only_changes = false) { 
 			_id = source._id;
 			if (only_changes == false || source.changed_flags.Get(0))
@@ -555,7 +555,7 @@ namespace DtxModelTests.Sqlite {
 		}
 		
 		/// <summary>
-		/// Creates a empty AllTypes model. Use this for creating a new row and insertting into the database.
+		/// Creates a empty AllTypes model. Use this for creating a new row and inserting into the database.
 		/// </summary>
 		public AllTypes() : this(null, null) { }
 
@@ -586,7 +586,10 @@ namespace DtxModelTests.Sqlite {
 					case "db_int64": _db_int64 = reader.GetInt64(i); break;
 					case "db_byte_array": _db_byte_array = (reader.IsDBNull(i)) ? null : reader.GetFieldValue<byte[]>(i); break;
 					case "db_byte": _db_byte = reader.GetByte(i); break;
-					case "db_date_time": _db_date_time = reader.GetDateTime(i); break;
+					case "db_date_time":
+						_db_date_time = DateTimeOffset.Parse(reader.GetString(i));
+
+						break;
 					case "db_decimal": _db_decimal = reader.GetDecimal(i); break;
 					case "db_float": _db_float = reader.GetFloat(i); break;
 					case "db_double": _db_double = reader.GetDouble(i); break;

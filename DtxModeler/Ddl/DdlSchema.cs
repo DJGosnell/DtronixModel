@@ -1128,7 +1128,7 @@ namespace DtxModeler.Ddl {
         Byte,
         
         /// <remarks/>
-        DateTime,
+        DateTimeOffset,
         
         /// <remarks/>
         Decimal,

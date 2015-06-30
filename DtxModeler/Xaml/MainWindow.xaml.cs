@@ -57,13 +57,8 @@ namespace DtxModeler.Xaml {
 			_Status.SetStatus("Application Loaded And Ready", ColorStatusBar.Status.Completed);
 
 			if (open_file != null) {
-				try {
-					Database db = Database.LoadFromFile(open_file);
-					db._FileLocation = open_file;
-					_DatabaseExplorer.LoadDatabase(db);
-
-				} catch (Exception e) {
-					MessageBox.Show("Error opening database:\r\n" + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				if (_DatabaseExplorer.LoadDatabase(open_file) == false) {
+					_Status.SetStatus("Could not load database file specified: " + open_file, ColorStatusBar.Status.Error);
 				}
 			}
 		}

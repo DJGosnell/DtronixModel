@@ -179,7 +179,7 @@ foreach (var db_assoc in database.Association) {
 		/// Clones a <#= table.Name #> model.
 		/// </summary>
 		/// <param name="source">Source <#= table.Name #> model to clone from.</param>
-		/// <param name="only_changes">True to only clone the changes from the source. False to clone all the values reguardless of changed or unchanged.</param>
+		/// <param name="only_changes">True to only clone the changes from the source. False to clone all the values regardless of changed or unchanged.</param>
 		public <#= table.Name #>(<#= table.Name #> source, bool only_changes = false) { 
 <# for(int i = 0; i < table.Column.Count(); i++) { 
 			if (table.Column[i].IsPrimaryKey) { #>
@@ -192,7 +192,7 @@ foreach (var db_assoc in database.Association) {
 		}
 		
 		/// <summary>
-		/// Creates a empty <#= table.Name #> model. Use this for creating a new row and insertting into the database.
+		/// Creates a empty <#= table.Name #> model. Use this for creating a new row and inserting into the database.
 		/// </summary>
 		public <#= table.Name #>() : this(null, null) { }
 
@@ -220,6 +220,10 @@ foreach (var db_assoc in database.Association) {
 <# foreach (var column in table.Column) {
 		string type = ColumnNetType(column);
 		string reader_get = Enum.GetName(typeof(NetTypes), column.NetType);
+
+		if(reader_get == "DateTimeOffset") {
+			reader_get = "DateTime";
+		}
 
 		if (column.NetType == NetTypes.ByteArray) { #>
 					case "<#= column.Name #>": _<#= column.Name #> = (reader.IsDBNull(i)) ? null : reader.GetFieldValue<byte[]>(i); break;

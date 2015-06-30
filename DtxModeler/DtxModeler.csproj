@@ -177,6 +177,7 @@
     <Compile Include="Generator\Sqlite\SqliteTypeTransformer.cs" />
     <Compile Include="Generator\TypeTransformer.cs" />
     <Compile Include="Generator\TypeTransformerType.cs" />
+    <Compile Include="RecoverDatabase.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="Xaml\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>

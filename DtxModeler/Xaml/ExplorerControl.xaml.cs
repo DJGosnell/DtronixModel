@@ -71,7 +71,7 @@ namespace DtxModeler.Xaml {
 		}
 
 		/// <summary>
-		/// Refreshes the control to display the current loaded databases and selectes the specified database.
+		/// Refreshes the control to display the current loaded databases and selects the specified database.
 		/// </summary>
 		/// <param name="select_db">If a database is provided, it will be automatically selected in the tree.</param>
 		private void Refresh() {
@@ -156,11 +156,9 @@ namespace DtxModeler.Xaml {
 
 
 		/// <summary>
-		/// Promps the user to select a database and then loads and opens it.
+		/// Prompts the user to select a database and then loads and opens it.
 		/// </summary>
 		public bool LoadDatabase() {
-			Database database = null;
-
 			var dialog = new OpenFileDialog() {
 				Filter = "DDL files (*.ddl)|*.ddl", //Text Files (*.txt)|*.txt|All Files (*.*)|*.*
 				Multiselect = true
@@ -173,25 +171,48 @@ namespace DtxModeler.Xaml {
 
 			Task.Run(() => {
 				for (int i = 0; i < dialog.FileNames.Length; i++) {
-					try {
-						database = Database.LoadFromFile(dialog.FileNames[i]);
-						database._FileLocation = dialog.FileNames[i];
-
-					} catch (Exception e) {
-						this.Dispatcher.Invoke(new Action(() => {
-							MessageBox.Show("Unable to load selected Ddl file. \r\n" + e.ToString());
-						}), null);
-						return;
-					}
+					LoadDatabase(dialog.FileNames[i]);
 				}
-
-				this.Dispatcher.BeginInvoke(new Action(() => {
-					LoadDatabase(database);
-				}), null);
 			});
 
 			return true;
 
+		}
+
+		/// <summary>
+		/// Loads a specified filename as a database.
+		/// </summary>
+		/// <param name="file_name">Database file to load.</param>
+		/// <returns>True on success, false otherwise.</returns>
+		public bool LoadDatabase(string file_name) {
+			Database db = null;
+			try {
+				try {
+					db = Database.LoadFromFile(file_name);
+				} catch (Exception e) {
+					// See if we can fix any XML issues.
+					RecoverDatabase recover = new RecoverDatabase(file_name);
+					db = recover.Recover();
+
+					MessageBox.Show("Error opening database:\r\n" + e.Message + ".\r\n Attempting to recover the file.\r\n\r\nRecovery Log:\r\n" + recover.Log, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					if (db == null) {
+						throw e;
+					} else {
+						db._Modified = true;
+					}
+				}
+
+				db._FileLocation = file_name;
+				Dispatcher.BeginInvoke(new Action(() => {
+					LoadDatabase(db);
+				}), null);
+
+			} catch (Exception e) {
+				MessageBox.Show("Error opening database:\r\n" + e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				return false;
+			}
+
+			return true;
 		}
 
 		/// <summary>

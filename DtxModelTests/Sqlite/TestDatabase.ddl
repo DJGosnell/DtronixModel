@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="TestDatabase" Namespace="DtxModelTests.Sqlite" ContextClass="TestDatabaseContext" TargetDb="Sqlite">
+<Database xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="TestDatabase" Namespace="DtxModelTests.Sqlite" ContextClass="TestDatabaseContext" TargetDb="Sqlite">
   <Table Name="Users">
     <Column Name="rowid" NetType="Int64" DbType="INTEGER" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="username" NetType="String" DbType="TEXT" />
@@ -18,7 +18,7 @@
     <Column Name="db_int64" NetType="Int64" DbType="INTEGER" />
     <Column Name="db_byte_array" NetType="ByteArray" DbType="BLOB" />
     <Column Name="db_byte" NetType="Byte" DbType="BLOB" />
-    <Column Name="db_date_time" NetType="DateTime" DbType="TEXT" />
+    <Column Name="db_date_time" NetType="DateTimeOffset" DbType="DATETIME" />
     <Column Name="db_decimal" NetType="Decimal" DbType="REAL" />
     <Column Name="db_float" NetType="Float" DbType="FLOAT" />
     <Column Name="db_double" NetType="Double" DbType="DOUBLE" />

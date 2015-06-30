@@ -71,6 +71,7 @@
     <Compile Include="Sqlite\TestDatabase.cs" />
     <Compile Include="Sqlite\ContextSqliteTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DateConverterTests.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
