@@ -1,4 +1,8 @@
-(New-Object Net.WebClient).DownloadFile('https://www.nuget.org/nuget.exe', 'nuget.exe')
+if (-Not (Test-Path nuget.exe)){
+	"Downloading newest nuget.exe."
+	(New-Object Net.WebClient).DownloadFile('https://www.nuget.org/nuget.exe', 'nuget.exe')
+	"Finished downloading nuget.exe."
+}
 .\nuget.exe restore DtronixModel.sln
 
 if ([System.IntPtr]::Size -eq 4) { 
