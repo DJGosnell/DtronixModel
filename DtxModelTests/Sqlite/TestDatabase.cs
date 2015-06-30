@@ -1,4 +1,3 @@
-
 using System;
 using System.Data.Common;
 using System.Collections.Generic;
@@ -421,8 +420,8 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private Int16 _db_int16;
-		public Int16 db_int16 {
+		private Int16? _db_int16;
+		public Int16? db_int16 {
 			get { return _db_int16; }
 			set {
 				_db_int16 = value;
@@ -430,8 +429,8 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private Int32 _db_int32;
-		public Int32 db_int32 {
+		private Int32? _db_int32;
+		public Int32? db_int32 {
 			get { return _db_int32; }
 			set {
 				_db_int32 = value;
@@ -439,8 +438,8 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private Int64 _db_int64;
-		public Int64 db_int64 {
+		private Int64? _db_int64;
+		public Int64? db_int64 {
 			get { return _db_int64; }
 			set {
 				_db_int64 = value;
@@ -457,8 +456,8 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private Byte _db_byte;
-		public Byte db_byte {
+		private Byte? _db_byte;
+		public Byte? db_byte {
 			get { return _db_byte; }
 			set {
 				_db_byte = value;
@@ -475,8 +474,8 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private Decimal _db_decimal;
-		public Decimal db_decimal {
+		private Decimal? _db_decimal;
+		public Decimal? db_decimal {
 			get { return _db_decimal; }
 			set {
 				_db_decimal = value;
@@ -484,8 +483,8 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private float _db_float;
-		public float db_float {
+		private float? _db_float;
+		public float? db_float {
 			get { return _db_float; }
 			set {
 				_db_float = value;
@@ -493,8 +492,8 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private Double _db_double;
-		public Double db_double {
+		private Double? _db_double;
+		public Double? db_double {
 			get { return _db_double; }
 			set {
 				_db_double = value;
@@ -502,8 +501,8 @@ namespace DtxModelTests.Sqlite {
 			}
 		}
 
-		private Boolean _db_bool;
-		public Boolean db_bool {
+		private Boolean? _db_bool;
+		public Boolean? db_bool {
 			get { return _db_bool; }
 			set {
 				_db_bool = value;
@@ -581,20 +580,17 @@ namespace DtxModelTests.Sqlite {
 			for (int i = 0; i < length; i++) {
 				switch (reader.GetName(i)) {
 					case "id": _id = reader.GetInt64(i); break;
-					case "db_int16": _db_int16 = reader.GetInt16(i); break;
-					case "db_int32": _db_int32 = reader.GetInt32(i); break;
-					case "db_int64": _db_int64 = reader.GetInt64(i); break;
+					case "db_int16": _db_int16 = (reader.IsDBNull(i)) ? default(Int16?) : reader.GetInt16(i); break;
+					case "db_int32": _db_int32 = (reader.IsDBNull(i)) ? default(Int32?) : reader.GetInt32(i); break;
+					case "db_int64": _db_int64 = (reader.IsDBNull(i)) ? default(Int64?) : reader.GetInt64(i); break;
 					case "db_byte_array": _db_byte_array = (reader.IsDBNull(i)) ? null : reader.GetFieldValue<byte[]>(i); break;
-					case "db_byte": _db_byte = reader.GetByte(i); break;
-					case "db_date_time":
-						_db_date_time = DateTimeOffset.Parse(reader.GetString(i));
-
-						break;
-					case "db_decimal": _db_decimal = reader.GetDecimal(i); break;
-					case "db_float": _db_float = reader.GetFloat(i); break;
-					case "db_double": _db_double = reader.GetDouble(i); break;
-					case "db_bool": _db_bool = reader.GetBoolean(i); break;
-					case "db_string": _db_string = reader.GetValue(i) as string; break;
+					case "db_byte": _db_byte = (reader.IsDBNull(i)) ? default(Byte?) : reader.GetByte(i); break;
+					case "db_date_time": _db_date_time = (reader.IsDBNull(i)) ? default(DateTimeOffset) : reader.GetDateTime(i); break;
+					case "db_decimal": _db_decimal = (reader.IsDBNull(i)) ? default(Decimal?) : reader.GetDecimal(i); break;
+					case "db_float": _db_float = (reader.IsDBNull(i)) ? default(float?) : reader.GetFloat(i); break;
+					case "db_double": _db_double = (reader.IsDBNull(i)) ? default(Double?) : reader.GetDouble(i); break;
+					case "db_bool": _db_bool = (reader.IsDBNull(i)) ? default(Boolean?) : reader.GetBoolean(i); break;
+					case "db_string": _db_string = (reader.IsDBNull(i)) ? default(String) : reader.GetString(i); break;
 					default: additional_values.Add(reader.GetName(i), reader.GetValue(i)); break;
 				}
 			}

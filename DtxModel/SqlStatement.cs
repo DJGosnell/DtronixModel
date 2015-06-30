@@ -584,11 +584,7 @@ namespace DtxModel {
 			string key = "@p" + command.Parameters.Count;
 			var param = command.CreateParameter();
 			param.ParameterName = key;
-
-			if(value is DateTimeOffset) {
-				value = value.ToString();
-            }
-			param.Value = value;
+			param.Value = PrepareParameterValue(value);
 
 			// Logging to output bound parameters to stdout.
 			if (context.Debug.HasFlag(Context.DebugLevel.BoundParameters)) {
@@ -601,6 +597,19 @@ namespace DtxModel {
 
 			command.Parameters.Add(param);
 			return key;
+		}
+
+		/// <summary>
+		/// Prepares parameter values by translating them into their proper value types.
+		/// </summary>
+		/// <param name="value">Parameter to prepare.</param>
+		/// <returns>Prepared parameter.</returns>
+		private object PrepareParameterValue(object value) {
+			if (value is DateTimeOffset) {
+				value = ((DateTimeOffset)value).ToString("o");
+			}
+
+			return value;
 		}
 
 		/// <summary>
@@ -676,7 +685,7 @@ namespace DtxModel {
 					var values = models[i].GetAllValues();
 
 					for (int x = 0; x < values.Length; x++) {
-						command.Parameters[x].Value = values[x];
+						command.Parameters[x].Value = PrepareParameterValue(values[x]);
 					}
 
 					if (context.LastInsertIdQuery != null) {

@@ -29,8 +29,8 @@ namespace DtxModeler.Generator.Output
  
 string[] reserved_words = new string[] {"for", "with", "while"};
 
-            this.Write("\r\nusing System;\r\nusing System.Data.Common;\r\nusing System.Collections.Generic;\r\nus" +
-                    "ing System.Collections;\r\nusing DtxModel;\r\n\r\nnamespace ");
+            this.Write("using System;\r\nusing System.Data.Common;\r\nusing System.Collections.Generic;\r\nusin" +
+                    "g System.Collections;\r\nusing DtxModel;\r\n\r\nnamespace ");
             this.Write(this.ToStringHelper.ToStringWithCulture(this.database.Namespace));
             this.Write(" {\r\n\r\n\tpublic partial class ");
             this.Write(this.ToStringHelper.ToStringWithCulture(this.database.ContextClass));
@@ -402,7 +402,7 @@ foreach (var db_assoc in database.Association) {
  } 
             this.Write("\t}\r\n");
  } 
-            this.Write("}");
+            this.Write("}\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }

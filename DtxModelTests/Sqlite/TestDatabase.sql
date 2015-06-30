@@ -17,17 +17,17 @@ CREATE TABLE Logs (
 
 CREATE TABLE AllTypes (
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
-	db_int16 SMALLINT NOT NULL ,
-	db_int32 INTEGER NOT NULL ,
-	db_int64 INTEGER NOT NULL ,
-	db_byte_array BLOB NOT NULL ,
-	db_byte BLOB NOT NULL ,
-	db_date_time TEXT NOT NULL ,
-	db_decimal REAL NOT NULL ,
-	db_float FLOAT NOT NULL ,
-	db_double DOUBLE NOT NULL ,
-	db_bool BOOLEAN NOT NULL ,
-	db_string TEXT NOT NULL 
+	db_int16 SMALLINT ,
+	db_int32 INTEGER ,
+	db_int64 INTEGER ,
+	db_byte_array BLOB ,
+	db_byte BLOB ,
+	db_date_time DATETIME ,
+	db_decimal REAL ,
+	db_float FLOAT ,
+	db_double DOUBLE ,
+	db_bool BOOLEAN ,
+	db_string TEXT 
 );
 
 
