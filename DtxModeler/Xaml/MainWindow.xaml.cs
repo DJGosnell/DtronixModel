@@ -237,7 +237,14 @@ namespace DtxModeler.Xaml {
 
 			switch (e.PropertyName) {
 				case "Name":
-					column.PostRename(_DatabaseExplorer.SelectedDatabase, previous_column.Name);
+					ColumnReservedWords reserved_word_match;
+					
+					if(Enum.TryParse(column.Name, true, out reserved_word_match)) {
+						column.Name = "FIX_COLUMN_NAME";
+						MessageBox.Show("Can not use reserved word '" + reserved_word_match.ToString() + "' for a column name.", "Column Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+					} else {
+						column.PostRename(_DatabaseExplorer.SelectedDatabase, previous_column.Name);
+                    }
 					break;
 
 				case "DbType":

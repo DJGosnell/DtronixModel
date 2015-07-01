@@ -3482,4 +3482,382 @@ namespace DtxModeler.Ddl {
         /// <remarks/>
         Abstract,
     }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
+    public enum ColumnReservedWords {
+        
+        /// <remarks/>
+        ABORT,
+        
+        /// <remarks/>
+        ACTION,
+        
+        /// <remarks/>
+        ADD,
+        
+        /// <remarks/>
+        AFTER,
+        
+        /// <remarks/>
+        ALL,
+        
+        /// <remarks/>
+        ALTER,
+        
+        /// <remarks/>
+        ANALYZE,
+        
+        /// <remarks/>
+        AND,
+        
+        /// <remarks/>
+        AS,
+        
+        /// <remarks/>
+        ASC,
+        
+        /// <remarks/>
+        ATTACH,
+        
+        /// <remarks/>
+        AUTOINCREMENT,
+        
+        /// <remarks/>
+        BEFORE,
+        
+        /// <remarks/>
+        BEGIN,
+        
+        /// <remarks/>
+        BETWEEN,
+        
+        /// <remarks/>
+        BY,
+        
+        /// <remarks/>
+        CASCADE,
+        
+        /// <remarks/>
+        CASE,
+        
+        /// <remarks/>
+        CAST,
+        
+        /// <remarks/>
+        CHECK,
+        
+        /// <remarks/>
+        COLLATE,
+        
+        /// <remarks/>
+        COLUMN,
+        
+        /// <remarks/>
+        COMMIT,
+        
+        /// <remarks/>
+        CONFLICT,
+        
+        /// <remarks/>
+        CONSTRAINT,
+        
+        /// <remarks/>
+        CREATE,
+        
+        /// <remarks/>
+        CROSS,
+        
+        /// <remarks/>
+        CURRENT_DATE,
+        
+        /// <remarks/>
+        CURRENT_TIME,
+        
+        /// <remarks/>
+        CURRENT_TIMESTAMP,
+        
+        /// <remarks/>
+        DATABASE,
+        
+        /// <remarks/>
+        DEFAULT,
+        
+        /// <remarks/>
+        DEFERRABLE,
+        
+        /// <remarks/>
+        DEFERRED,
+        
+        /// <remarks/>
+        DELETE,
+        
+        /// <remarks/>
+        DESC,
+        
+        /// <remarks/>
+        DETACH,
+        
+        /// <remarks/>
+        DISTINCT,
+        
+        /// <remarks/>
+        DROP,
+        
+        /// <remarks/>
+        EACH,
+        
+        /// <remarks/>
+        ELSE,
+        
+        /// <remarks/>
+        END,
+        
+        /// <remarks/>
+        ESCAPE,
+        
+        /// <remarks/>
+        EXCEPT,
+        
+        /// <remarks/>
+        EXCLUSIVE,
+        
+        /// <remarks/>
+        EXISTS,
+        
+        /// <remarks/>
+        EXPLAIN,
+        
+        /// <remarks/>
+        FAIL,
+        
+        /// <remarks/>
+        FOR,
+        
+        /// <remarks/>
+        FOREIGN,
+        
+        /// <remarks/>
+        FROM,
+        
+        /// <remarks/>
+        FULL,
+        
+        /// <remarks/>
+        GLOB,
+        
+        /// <remarks/>
+        GROUP,
+        
+        /// <remarks/>
+        HAVING,
+        
+        /// <remarks/>
+        IF,
+        
+        /// <remarks/>
+        IGNORE,
+        
+        /// <remarks/>
+        IMMEDIATE,
+        
+        /// <remarks/>
+        IN,
+        
+        /// <remarks/>
+        INDEX,
+        
+        /// <remarks/>
+        INDEXED,
+        
+        /// <remarks/>
+        INITIALLY,
+        
+        /// <remarks/>
+        INNER,
+        
+        /// <remarks/>
+        INSERT,
+        
+        /// <remarks/>
+        INSTEAD,
+        
+        /// <remarks/>
+        INTERSECT,
+        
+        /// <remarks/>
+        INTO,
+        
+        /// <remarks/>
+        IS,
+        
+        /// <remarks/>
+        ISNULL,
+        
+        /// <remarks/>
+        JOIN,
+        
+        /// <remarks/>
+        KEY,
+        
+        /// <remarks/>
+        LEFT,
+        
+        /// <remarks/>
+        LIKE,
+        
+        /// <remarks/>
+        LIMIT,
+        
+        /// <remarks/>
+        MATCH,
+        
+        /// <remarks/>
+        NATURAL,
+        
+        /// <remarks/>
+        NO,
+        
+        /// <remarks/>
+        NOT,
+        
+        /// <remarks/>
+        NOTNULL,
+        
+        /// <remarks/>
+        NULL,
+        
+        /// <remarks/>
+        OF,
+        
+        /// <remarks/>
+        OFFSET,
+        
+        /// <remarks/>
+        ON,
+        
+        /// <remarks/>
+        OR,
+        
+        /// <remarks/>
+        ORDER,
+        
+        /// <remarks/>
+        OUTER,
+        
+        /// <remarks/>
+        PLAN,
+        
+        /// <remarks/>
+        PRAGMA,
+        
+        /// <remarks/>
+        PRIMARY,
+        
+        /// <remarks/>
+        QUERY,
+        
+        /// <remarks/>
+        RAISE,
+        
+        /// <remarks/>
+        RECURSIVE,
+        
+        /// <remarks/>
+        REFERENCES,
+        
+        /// <remarks/>
+        REGEXP,
+        
+        /// <remarks/>
+        REINDEX,
+        
+        /// <remarks/>
+        RELEASE,
+        
+        /// <remarks/>
+        RENAME,
+        
+        /// <remarks/>
+        REPLACE,
+        
+        /// <remarks/>
+        RESTRICT,
+        
+        /// <remarks/>
+        RIGHT,
+        
+        /// <remarks/>
+        ROLLBACK,
+        
+        /// <remarks/>
+        ROW,
+        
+        /// <remarks/>
+        SAVEPOINT,
+        
+        /// <remarks/>
+        SELECT,
+        
+        /// <remarks/>
+        SET,
+        
+        /// <remarks/>
+        TABLE,
+        
+        /// <remarks/>
+        TEMP,
+        
+        /// <remarks/>
+        TEMPORARY,
+        
+        /// <remarks/>
+        THEN,
+        
+        /// <remarks/>
+        TO,
+        
+        /// <remarks/>
+        TRANSACTION,
+        
+        /// <remarks/>
+        TRIGGER,
+        
+        /// <remarks/>
+        UNION,
+        
+        /// <remarks/>
+        UNIQUE,
+        
+        /// <remarks/>
+        UPDATE,
+        
+        /// <remarks/>
+        USING,
+        
+        /// <remarks/>
+        VACUUM,
+        
+        /// <remarks/>
+        VALUES,
+        
+        /// <remarks/>
+        VIEW,
+        
+        /// <remarks/>
+        VIRTUAL,
+        
+        /// <remarks/>
+        WHEN,
+        
+        /// <remarks/>
+        WHERE,
+        
+        /// <remarks/>
+        WITH,
+        
+        /// <remarks/>
+        WITHOUT,
+    }
 }
