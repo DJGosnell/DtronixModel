@@ -248,7 +248,7 @@
 								</StackPanel>
 							</GroupBox>
 							<GroupBox Grid.Row="1" Header="Table SQL">
-								<TextBox x:Name="_TxtTableSql" Text="{Binding DataContext.CustomSql, RelativeSource={RelativeSource AncestorType=TabItem}}" IsEnabled="{Binding ElementName=ChkCustomTableSql, Path=IsChecked}" AcceptsTab="True" AcceptsReturn="True" />
+								<TextBox x:Name="_TxtTableSql" Text="{Binding DataContext.CustomSql, RelativeSource={RelativeSource AncestorType=TabItem}, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding ElementName=ChkCustomTableSql, Path=IsChecked}" AcceptsTab="True" AcceptsReturn="True" />
 							</GroupBox>
 
 						</Grid>
