@@ -1,0 +1,46 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DtronixModeler.Xaml" x:Class="DtronixModeler.Xaml.ColorStatusBar" 
+             mc:Ignorable="d" 
+             d:DesignHeight="28" d:DesignWidth="633" Height="28" PreviewKeyDown="UserControl_PreviewKeyDown">
+	<Border x:Name="_BdrStatusColor" Grid.Row="2" Grid.ColumnSpan="3" BorderThickness="0,4,0,0" Background="{DynamicResource {x:Static SystemColors.MenuBarBrushKey}}" BorderBrush="#FF2893EC" MouseDown="_BdrStatusColor_MouseDown">
+		<Grid>
+			<Popup x:Name="_PopHistory" Placement="Top" StaysOpen="False">
+				<Border BorderThickness="0,1,1,0" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}">
+					<ItemsControl x:Name="_ItmHistory"  Width="500" Height="200" ScrollViewer.CanContentScroll="True">
+						<ItemsControl.Template>
+							<ControlTemplate>
+								<ScrollViewer x:Name="_ScrScroller">
+									<ItemsPresenter />
+								</ScrollViewer>
+							</ControlTemplate>
+						</ItemsControl.Template>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<StackPanel Orientation="Horizontal" Margin="2,0,0,0">
+									<Rectangle Width="4" Height="15" Fill="{Binding Color}"/>
+									<TextBlock Width="310" Text="{Binding Text}" />
+									<TextBlock Width="130" Text="{Binding Time}" />
+									<TextBlock Width="40" Text="{Binding Progress}" />
+								</StackPanel>
+
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+
+				</Border>
+				<Popup.ContextMenu>
+					<ContextMenu>
+						<MenuItem Header="Copy Log" Click="CopyLog_Click" />
+					</ContextMenu>
+				</Popup.ContextMenu>
+			</Popup>
+			<TextBlock x:Name="_TxbStatus" Text="Ready" Padding="5,0,0,0" VerticalAlignment="Center" Margin="0,0,0,2"/>
+			<ProgressBar x:Name="_PrbProgress" Height="15" Width="100" HorizontalAlignment="Right" Margin="0,0,5,0" Visibility="Collapsed" />
+		</Grid>
+
+	</Border>
+</UserControl>
