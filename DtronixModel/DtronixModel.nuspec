@@ -8,7 +8,7 @@
     <owners>$author$</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/DJGosnell/DtronixModel</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/DJGosnell/DtronixModel/v0.3.1/DtxModeler/Xaml/Images/database_blue32.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/DJGosnell/DtronixModel/master/DtronixModeler/Xaml/Images/database_blue32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Small .net tool aiding in sql data modeling.</description>
     <copyright>Copyright 2015</copyright>
