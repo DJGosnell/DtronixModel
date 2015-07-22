@@ -233,7 +233,12 @@ foreach (var db_assoc in database.Association) {
 					case "<#= column.Name #>": _<#= column.Name #> = reader.Get<#= reader_get #>(i); break;
 <# } #>
 <# } #>
-					default: additional_values.Add(reader.GetName(i), reader.GetValue(i)); break;
+					default: 
+						if(additional_values == null) {
+							additional_values = new Dictionary<string, object>();
+						}
+						additional_values.Add(reader.GetName(i), reader.GetValue(i)); 
+						break;
 				}
 			}
 		}

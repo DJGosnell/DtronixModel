@@ -333,7 +333,12 @@ foreach (var db_assoc in database.Association) {
             this.Write("(i); break;\r\n");
  } 
  } 
-            this.Write(@"					default: additional_values.Add(reader.GetName(i), reader.GetValue(i)); break;
+            this.Write(@"					default: 
+						if(additional_values == null) {
+							additional_values = new Dictionary<string, object>();
+						}
+						additional_values.Add(reader.GetName(i), reader.GetValue(i)); 
+						break;
 				}
 			}
 		}
