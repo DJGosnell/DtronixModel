@@ -32,7 +32,6 @@ DefaultDirName={pf}\DtronixModeler
 DefaultGroupName=DtronixModeler
 OutputDir=/
 OutputBaseFilename=DtronixModeler-{#ShortAppVersion}
-SetupIconFile=C:\Program Files (x86)\Inno Setup 5\Examples\Setup.ico
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64
