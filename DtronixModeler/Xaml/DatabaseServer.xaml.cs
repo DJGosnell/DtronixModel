@@ -79,7 +79,7 @@ namespace DtronixModeler.Xaml {
 					name = Path.GetFileName(_TxtServer.Text);
 					break;
 				default:
-					throw new NotImplementedException("MySQL servers not implimented yet.");
+					throw new NotImplementedException("MySQL servers not implemented yet.");
 			}
 
 			var database = await generator.GenerateDdl();
@@ -95,7 +95,7 @@ namespace DtronixModeler.Xaml {
 						Description = "Auto generated SQLite rowid column.",
 						IsPrimaryKey = true,
 						DbType = "INTEGER",
-						NetType = NetTypes.Int64,
+						NetType = "Int64",
 					});
 				}
 			}

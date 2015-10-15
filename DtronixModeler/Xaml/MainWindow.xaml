@@ -82,7 +82,7 @@
 								<DataGrid AutoGenerateColumns="False" x:Name="_DagColumnDefinitions"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_DagColumnDefinitions_ContextMenuOpening" SelectionChanged="_DagColumnDefinitions_SelectionChanged">
 									<DataGrid.Columns>
 										<DataGridTextColumn Header="Name" Width="100*" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-										<DataGridComboBoxColumn Width="140" x:Name="ColumnNetType" Header=".Net Type" SelectedValueBinding="{Binding NetType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding NetType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+                                        <DataGridComboBoxColumn Width="140" x:Name="ColumnNetType" Header=".Net Type" SelectedValueBinding="{Binding NetType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding NetType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
 										<DataGridComboBoxColumn Width="140" x:Name="ColumnDbType" Header="Database Type" SelectedValueBinding="{Binding DbType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding DbType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
 										<DataGridTextColumn Header="Length" Width="50" Binding="{Binding DbLength}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
 										<DataGridTextColumn Header="Default Value" Width="100" Binding="{Binding DefaultValue, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
@@ -214,28 +214,7 @@
 						</Grid>
 					</TabItem>
 
-					<TabItem x:Name="_tabEnums" Header="Enums" IsEnabled="False">
-						<Grid>
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="200"/>
-								<ColumnDefinition/>
-							</Grid.ColumnDefinitions>
-							<GroupBox Grid.Column="0" Header="Enum List" >
-								<TextBox />
-							</GroupBox>
-							<GroupBox Grid.Column="1" Header="Values" >
-								<DataGrid x:Name="_DatEnumList">
-									<DataGrid.Columns>
-										<DataGridTextColumn Header="Name" Width="150" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-										<DataGridComboBoxColumn Header="Type" Width="140"  SelectedValueBinding="{Binding DbType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding DbType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-										<DataGridTextColumn Header="Value" Width="150" Binding="{Binding Value}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-									</DataGrid.Columns>
-								</DataGrid>
-
-							</GroupBox>
-
-						</Grid>
-					</TabItem>
+					
 					<TabItem x:Name="_tabTableSql" Header="SQL">
 						<Grid>
 							<Grid.RowDefinitions>
@@ -255,7 +234,87 @@
 					</TabItem>
 				</TabControl>
 			</TabItem>
-			<TabItem Header="Database">
+            <TabItem Header="Enums">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="Enum List" >
+                        <ListBox x:Name="_LstEnums" ItemsSource="{Binding Enumeration}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"  />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                            <ListBox.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="New">
+                                        <MenuItem.Icon>
+                                            <Image Source="Images/add.png" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="Delete">
+                                        <MenuItem.Icon>
+                                            <Image Source="Images/delete.png" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
+                            <ListBox.CommandBindings>
+                                <CommandBinding Command="New" Executed="NewEnum" CanExecute="NewEnum_CanExecute"/>
+                                <CommandBinding Command="Delete" Executed="DeleteEnum" CanExecute="DeleteEnum_CanExecute"/>
+                            </ListBox.CommandBindings>
+                        </ListBox>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Header="Values" >
+                        <DataGrid x:Name="_DatEnumList" ItemsSource="{Binding SelectedValue.EnumValue, ElementName=_LstEnums}" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+                            </DataGrid.Columns>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Command="dxaml:Commands.MoveUp">
+                                        <MenuItem.Icon>
+                                            <Image Source="Images/arrow_up.png" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="dxaml:Commands.MoveDown">
+                                        <MenuItem.Icon>
+                                            <Image Source="Images/arrow_down.png" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Command="Delete">
+                                        <MenuItem.Icon>
+                                            <Image Source="Images/delete.png" />
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+                            <DataGrid.CommandBindings>
+                                <CommandBinding Command="dxaml:Commands.MoveUp" Executed="MoveEnumUp" CanExecute="ModifyEnumValue_CanExecute"/>
+                                <CommandBinding Command="dxaml:Commands.MoveDown" Executed="MoveEnumDown" CanExecute="ModifyEnumValue_CanExecute"/>
+                                <CommandBinding Command="Delete" Executed="DeleteEnumValue" CanExecute="ModifyEnumValue_CanExecute"/>
+                            </DataGrid.CommandBindings>
+                            <!-- 
+																		<MenuItem x:Name="_CmiMoveColumnUp" Header="Move Column Up" Click="_CmiMoveColumnUp_Click" IsEnabled="False">
+												<MenuItem.Icon>
+													<Image Source="Images/arrow_up.png" />
+												</MenuItem.Icon>
+											</MenuItem>
+											<MenuItem x:Name="_CmiMoveColumnDown" Header="Move Column Down" Click="_CmiMoveColumnDown_Click" IsEnabled="False">
+												<MenuItem.Icon>
+													<Image Source="Images/arrow_down.png" />
+												</MenuItem.Icon>
+											</MenuItem>
+							-->
+                        </DataGrid>
+
+                    </GroupBox>
+
+                </Grid>
+            </TabItem>
+            <TabItem Header="Database">
 				<TabControl VerticalAlignment="Stretch" BorderThickness="0,1">
 					<TabItem x:Name="_tabConfig" Header="Config">
 						<Grid>

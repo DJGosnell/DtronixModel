@@ -34,8 +34,21 @@ string[] reserved_words = new string[] {"for", "with", "while"};
             this.Write(this.ToStringHelper.ToStringWithCulture(this.database.Namespace));
             this.Write(" {\r\n\r\n\tpublic partial class ");
             this.Write(this.ToStringHelper.ToStringWithCulture(this.database.ContextClass));
-            this.Write(@" : Context {
-		private static Func<DbConnection> _DefaultConnection = null;
+            this.Write(" : Context {\r\n\r\n");
+ foreach (var enum_class in database.Enumeration) { 
+            this.Write("\t\tpublic enum ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(enum_class.Name));
+            this.Write(" : int {\r\n");
+ 
+int shift_ammount = 0;
+foreach (var enum_value in enum_class.EnumValue) { 
+            this.Write("\t\t\t");
+            this.Write(this.ToStringHelper.ToStringWithCulture(enum_value.Name));
+            this.Write(" = 1 << shift_ammount++,\r\n");
+ } 
+            this.Write("\t\t}\r\n");
+ } 
+            this.Write(@"		private static Func<DbConnection> _DefaultConnection = null;
 
 		/// <summary>
 		/// Set a default constructor to allow use of parameter-less context calling.
@@ -142,7 +155,7 @@ string[] reserved_words = new string[] {"for", "with", "while"};
             this.Write("; }\r\n");
  if (table.Column[i].IsReadOnly == false) { 
             this.Write("\t\t\tset {\r\n");
- if (table.Column[i].DbLength != 0 && table.Column[i].NetType == NetTypes.String) { 
+ if (table.Column[i].DbLength != 0 && table.Column[i].NetType == "String") { 
             this.Write("\t\t\t\tif(value != null && value.Length > ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].DbLength));
             this.Write(") \r\n\t\t\t\t\tthrow new ArgumentOutOfRangeException(\"");
@@ -295,13 +308,13 @@ foreach (var db_assoc in database.Association) {
 ");
  foreach (var column in table.Column) {
 		string type = ColumnNetType(column);
-		string reader_get = Enum.GetName(typeof(NetTypes), column.NetType);
+		string reader_get = column.NetType;
 
 		if(reader_get == "DateTimeOffset") {
 			reader_get = "DateTime";
 		}
 
-		if (column.NetType == NetTypes.ByteArray) { 
+		if (column.NetType == "ByteArray") { 
             this.Write("\t\t\t\t\tcase \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write("\": _");
@@ -317,7 +330,7 @@ foreach (var db_assoc in database.Association) {
             this.Write(") : reader.Get");
             this.Write(this.ToStringHelper.ToStringWithCulture(reader_get));
             this.Write("(i); break;\r\n");
- } else if (column.NetType == NetTypes.String) { 
+ } else if (column.NetType == "String") { 
             this.Write("\t\t\t\t\tcase \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write("\": _");

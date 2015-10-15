@@ -28,27 +28,27 @@ namespace DtronixModeler.Generator.Output {
 
 
 		private string ColumnNetType(Column column) {
-			if (column.NetType == NetTypes.ByteArray) {
+			if (column.NetType == "ByteArray") {
 				return "byte[]";
 			}
 
-			string type = Enum.GetName(typeof(NetTypes), column.NetType);
+			string type = column.NetType;
 
-			if (column.NetType == NetTypes.Float) {
+			if (column.NetType == "Float") {
 				type = "float";
 			}
 
 			if (column.Nullable) {
 				switch (column.NetType) {
-					case NetTypes.Int64:
-					case NetTypes.Int16:
-					case NetTypes.Int32:
-					case NetTypes.Byte:
-					case NetTypes.Decimal:
-					case NetTypes.Float:
-					case NetTypes.Double:
-					case NetTypes.Boolean:
-					case NetTypes.Char:
+					case "Int64":
+					case "Int16":
+					case "Int32":
+					case "Byte":
+					case "Decimal":
+					case "Float":
+					case "Double":
+					case "Boolean":
+					case "Char":
 						type += "?";
 						break;
 				}

@@ -35,14 +35,33 @@ namespace DtronixModeler.Xaml {
 
 		private Column previous_column = null;
 
+		private List<string> DefaultNetTypes;
+
 		public MainWindow() : this(null) {
 			
 		}
 
+		public ObservableCollection<string> NetTypes { get; set; }
+
 		public MainWindow(string open_file) {
 			InitializeComponent();
-			ColumnNetType.ItemsSource = Enum.GetValues(typeof(NetTypes)).Cast<NetTypes>();
-			_CmbTargetDatabase.ItemsSource = Enum.GetValues(typeof(DbProvider)).Cast<DbProvider>();
+
+			DefaultNetTypes = new List<string>() {
+				"Int64",
+				"Int16",
+				"Int32",
+				"ByteArray",
+				"Byte",
+				"DateTimeOffset",
+				"Decimal",
+				"Float",
+				"Double",
+				"Boolean",
+				"String",
+				"Char",
+			};
+
+            _CmbTargetDatabase.ItemsSource = Enum.GetValues(typeof(DbProvider)).Cast<DbProvider>();
 
 			BindCommand(Commands.NewDatabase, null, Command_NewDatabase);
 			BindCommand(ApplicationCommands.Open, new KeyGesture(Key.O, ModifierKeys.Control), Command_Open);
@@ -254,6 +273,11 @@ namespace DtronixModeler.Xaml {
 				case "NetType":
 					try {
 						var type = type_transformer.NetType(column.NetType);
+
+						if (type == null && NetTypes.Contains(column.NetType)) {
+							type = type_transformer.NetType("Int32");
+						}
+
 						column.DbLength = type.length;
 						column.DbType = type.db_type;
 					} catch (Exception) {
@@ -265,7 +289,7 @@ namespace DtronixModeler.Xaml {
 				case "IsAutoIncrement":
 					if (column.IsAutoIncrement) {
 
-						if (new NetTypes[] { NetTypes.Int16, NetTypes.Int32, NetTypes.Int64 }.Contains(column.NetType) == false) {
+						if (new string[] { "Int16", "Int32", "Int64" }.Contains(column.NetType) == false) {
 							MessageBox.Show("An auto incremented column has to be an integer type.", "Invalid Option");
 							column.IsAutoIncrement = false;
 						} else if (column.Nullable) {
@@ -327,7 +351,16 @@ namespace DtronixModeler.Xaml {
 						break;
 				}
 				ColumnDbType.ItemsSource = type_transformer.DbTypes();
-				this.DataContext = e.Database;
+				DataContext = e.Database;
+
+				NetTypes = new ObservableCollection<string>(DefaultNetTypes);
+				
+				foreach(var type in e.Database.Enumeration) {
+					NetTypes.Add(type.Name);
+                }
+
+				ColumnNetType.ItemsSource = NetTypes;
+				//_TabEnums.DataContext = e.Database.Enumeration;
 			}
 
 
@@ -343,6 +376,8 @@ namespace DtronixModeler.Xaml {
 			} else if (e.SelectionType == ExplorerControl.Selection.Database) {
 				//_tabConfig.IsSelected = true;
 			}
+
+			
 
 			UpdateTitle();
 		}
@@ -659,9 +694,66 @@ namespace DtronixModeler.Xaml {
 			if (link.NavigateUri.IsAbsoluteUri) {
 				Process.Start(link.NavigateUri.ToString());
 			}
-		} 
+		}
+
+		private void NewEnum(object sender, ExecutedRoutedEventArgs e) {
+			InputDialogBox.Show("New Enum Name", "Enter a name for the Enum collection.", "", value => {
+				var new_enum = new Enumeration();
+				new_enum.Name = value;
+                _DatabaseExplorer.SelectedDatabase.Enumeration.Add(new_enum);
+				NetTypes.Add(value);
+			});
+		}
 
 
+		private void DeleteEnum(object sender, ExecutedRoutedEventArgs e) {
+			var selected_enum = _LstEnums.SelectedValue as Enumeration;
+            _DatabaseExplorer.SelectedDatabase.Enumeration.Remove(selected_enum);
+			NetTypes.Remove(selected_enum.Name);
+        }
+
+		private void NewEnum_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			if(_DatabaseExplorer.SelectedDatabase != null){
+				e.CanExecute = true;
+			}
+		}
+
+		private void DeleteEnum_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			if (_LstEnums.SelectedValue != null) {
+				e.CanExecute = true;
+			}
+		}
+
+		private void MoveEnumUp(object sender, ExecutedRoutedEventArgs e) {
+			var data_grid = e.Source as DataGrid;
+			var list = data_grid.ItemsSource as ObservableCollection<EnumValue>;
+			int new_index = (data_grid.SelectedIndex > 1)? data_grid.SelectedIndex - 1 : 0;
+
+			list.Move(data_grid.SelectedIndex, new_index);
+		}
+
+		private void MoveEnumDown(object sender, ExecutedRoutedEventArgs e) {
+			var data_grid = e.Source as DataGrid;
+			var list = data_grid.ItemsSource as ObservableCollection<EnumValue>;
+			int new_index = (data_grid.SelectedIndex < list.Count - 1) ? data_grid.SelectedIndex + 1 : list.Count - 1;
+
+			list.Move(data_grid.SelectedIndex, new_index);
+		}
+
+		private void DeleteEnumValue(object sender, ExecutedRoutedEventArgs e) {
+			var data_grid = e.Source as DataGrid;
+			var list = data_grid.ItemsSource as ObservableCollection<EnumValue>;
+			list.RemoveAt(data_grid.SelectedIndex);
+		}
+
+		private void ModifyEnumValue_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
+			var data_grid = e.Source as DataGrid;
+            if (data_grid != null) {
+				if(data_grid.SelectedValue is EnumValue) {
+					e.CanExecute = true;
+				}
+            }
+		}
 	}
 
 }

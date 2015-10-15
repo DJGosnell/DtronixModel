@@ -222,40 +222,38 @@ namespace DtronixModeler.Xaml {
 		public void LoadDatabase(Database database) {
 			NotifyCollectionChangedEventHandler collection_changed = (coll_sender, coll_e) => {
 				database._Modified = true;
-				if (DatabaseModified != null) {
-					DatabaseModified(this, new DatabaseEventArgs() {
-						Database = database
-					});
-				}
+				DatabaseModified?.Invoke(this, new DatabaseEventArgs() {
+					Database = database
+				});
+				
 			};
 
 			PropertyChangedEventHandler property_changed = (prop_sender, prop_e) => {
 				database._Modified = true;
-				if (DatabaseModified != null) {
-					DatabaseModified(this, new DatabaseEventArgs() {
-						Database = database
-					});
-				}
+				DatabaseModified?.Invoke(this, new DatabaseEventArgs() {
+					Database = database
+				});
+				
 			};
 
 			database.PropertyChanged += property_changed;
 
 			// Tables
-			Utilities.BindChangedCollection<Table>(database.Table, collection_changed, (prop_sender, prop_e) => {
+			Utilities.BindChangedCollection(database.Table, collection_changed, (prop_sender, prop_e) => {
 				property_changed(prop_sender, prop_e);
 				if (prop_e.PropertyName == "UseCustomSql") {
 					Refresh();
 				}
 			});
-			Utilities.BindChangedCollection<Association>(database.Association, collection_changed, property_changed);
+			Utilities.BindChangedCollection(database.Association, collection_changed, property_changed);
 
 			foreach (var table in database.Table) {
-				Utilities.BindChangedCollection<Column>(table.Column, collection_changed, property_changed);
-				Utilities.BindChangedCollection<Index>(table.Index, collection_changed, property_changed);
+				Utilities.BindChangedCollection(table.Column, collection_changed, property_changed);
+				Utilities.BindChangedCollection(table.Index, collection_changed, property_changed);
 			}
 
 			// Configurations
-			Utilities.BindChangedCollection<Configuration>(database.Configuration, collection_changed, (prop_sender, prop_e) => {
+			Utilities.BindChangedCollection(database.Configuration, collection_changed, (prop_sender, prop_e) => {
 				// Ignore the visibility property because this is internal to the GUI and has nothing to do with the schema.
 				if (prop_e.PropertyName != "Visibility") {
 					property_changed(prop_sender, prop_e);
@@ -263,16 +261,24 @@ namespace DtronixModeler.Xaml {
 			});
 
 			// Functions
-			Utilities.BindChangedCollection<Function>(database.Function, collection_changed, property_changed);
+			Utilities.BindChangedCollection(database.Function, collection_changed, property_changed);
 
 			// Views
-			Utilities.BindChangedCollection<View>(database.View, collection_changed, property_changed);
+			Utilities.BindChangedCollection(database.View, collection_changed, property_changed);
 
 			foreach (var view in database.View) {
-				Utilities.BindChangedCollection<Column>(view.Column, collection_changed, property_changed);
+				Utilities.BindChangedCollection(view.Column, collection_changed, property_changed);
 			}
 
-			loaded_databases.Add(database);
+			// Enumerations
+			Utilities.BindChangedCollection(database.Enumeration, collection_changed, property_changed);
+
+			foreach (var enum_item in database.Enumeration) {
+				Utilities.BindChangedCollection(enum_item.EnumValue, collection_changed, property_changed);
+			}
+
+
+				loaded_databases.Add(database);
 			database.Initialize();
 			Refresh();
 

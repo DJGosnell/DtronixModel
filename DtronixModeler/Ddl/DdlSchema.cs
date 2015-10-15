@@ -32,6 +32,8 @@ namespace DtronixModeler.Ddl {
         
         private ObservableCollection<Configuration> configurationField;
         
+        private ObservableCollection<Enumeration> enumerationField;
+        
         private string nameField;
         
         private string namespaceField;
@@ -47,6 +49,7 @@ namespace DtronixModeler.Ddl {
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Database() {
+            this.enumerationField = new ObservableCollection<Enumeration>();
             this.configurationField = new ObservableCollection<Configuration>();
             this.functionField = new ObservableCollection<Function>();
             this.viewField = new ObservableCollection<View>();
@@ -147,6 +150,25 @@ namespace DtronixModeler.Ddl {
                 else {
                     this.configurationField = value;
                     this.OnPropertyChanged("Configuration");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlElementAttribute("Enumeration")]
+        public ObservableCollection<Enumeration> Enumeration {
+            get {
+                return this.enumerationField;
+            }
+            set {
+                if ((this.enumerationField != null)) {
+                    if ((enumerationField.Equals(value) != true)) {
+                        this.enumerationField = value;
+                        this.OnPropertyChanged("Enumeration");
+                    }
+                }
+                else {
+                    this.enumerationField = value;
+                    this.OnPropertyChanged("Enumeration");
                 }
             }
         }
@@ -739,7 +761,7 @@ namespace DtronixModeler.Ddl {
         
         private string descriptionField;
         
-        private NetTypes netTypeField;
+        private string netTypeField;
         
         private string dbTypeField;
         
@@ -822,12 +844,18 @@ namespace DtronixModeler.Ddl {
         }
         
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        public NetTypes NetType {
+        public string NetType {
             get {
                 return this.netTypeField;
             }
             set {
-                if ((netTypeField.Equals(value) != true)) {
+                if ((this.netTypeField != null)) {
+                    if ((netTypeField.Equals(value) != true)) {
+                        this.netTypeField = value;
+                        this.OnPropertyChanged("NetType");
+                    }
+                }
+                else {
                     this.netTypeField = value;
                     this.OnPropertyChanged("NetType");
                 }
@@ -1109,44 +1137,429 @@ namespace DtronixModeler.Ddl {
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
     [System.SerializableAttribute()]
-    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
-    public enum NetTypes {
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class EnumValue : System.ComponentModel.INotifyPropertyChanged {
         
-        /// <remarks/>
-        Int64,
+        private string nameField;
         
-        /// <remarks/>
-        Int16,
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
-        /// <remarks/>
-        Int32,
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                if ((this.nameField != null)) {
+                    if ((nameField.Equals(value) != true)) {
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
+                    }
+                }
+                else {
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
+                }
+            }
+        }
         
-        /// <remarks/>
-        ByteArray,
+        private static System.Xml.Serialization.XmlSerializer Serializer {
+            get {
+                if ((serializer == null)) {
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(EnumValue));
+                }
+                return serializer;
+            }
+        }
         
-        /// <remarks/>
-        Byte,
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
-        /// <remarks/>
-        DateTimeOffset,
+        public virtual void OnPropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
+            if ((handler != null)) {
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
         
-        /// <remarks/>
-        Decimal,
+        #region Serialize/Deserialize
+        /// <summary>
+        /// Serializes current EnumValue object into an XML document
+        /// </summary>
+        /// <returns>string XML value</returns>
+        public virtual string Serialize() {
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
+            try {
+                memoryStream = new System.IO.MemoryStream();
+                Serializer.Serialize(memoryStream, this);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
+                return streamReader.ReadToEnd();
+            }
+            finally {
+                if ((streamReader != null)) {
+                    streamReader.Dispose();
+                }
+                if ((memoryStream != null)) {
+                    memoryStream.Dispose();
+                }
+            }
+        }
         
-        /// <remarks/>
-        Float,
+        /// <summary>
+        /// Deserializes workflow markup into an EnumValue object
+        /// </summary>
+        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="obj">Output EnumValue object</param>
+        /// <param name="exception">output Exception value if deserialize failed</param>
+        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        public static bool Deserialize(string xml, out EnumValue obj, out System.Exception exception) {
+            exception = null;
+            obj = default(EnumValue);
+            try {
+                obj = Deserialize(xml);
+                return true;
+            }
+            catch (System.Exception ex) {
+                exception = ex;
+                return false;
+            }
+        }
         
-        /// <remarks/>
-        Double,
+        public static bool Deserialize(string xml, out EnumValue obj) {
+            System.Exception exception = null;
+            return Deserialize(xml, out obj, out exception);
+        }
         
-        /// <remarks/>
-        Boolean,
+        public static EnumValue Deserialize(string xml) {
+            System.IO.StringReader stringReader = null;
+            try {
+                stringReader = new System.IO.StringReader(xml);
+                return ((EnumValue)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+            }
+            finally {
+                if ((stringReader != null)) {
+                    stringReader.Dispose();
+                }
+            }
+        }
         
-        /// <remarks/>
-        String,
+        /// <summary>
+        /// Serializes current EnumValue object into file
+        /// </summary>
+        /// <param name="fileName">full path of outupt xml file</param>
+        /// <param name="exception">output Exception value if failed</param>
+        /// <returns>true if can serialize and save into file; otherwise, false</returns>
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
+            exception = null;
+            try {
+                SaveToFile(fileName);
+                return true;
+            }
+            catch (System.Exception e) {
+                exception = e;
+                return false;
+            }
+        }
         
-        /// <remarks/>
-        Char,
+        public virtual void SaveToFile(string fileName) {
+            System.IO.StreamWriter streamWriter = null;
+            try {
+                string xmlString = Serialize();
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
+                streamWriter = xmlFile.CreateText();
+                streamWriter.WriteLine(xmlString);
+                streamWriter.Close();
+            }
+            finally {
+                if ((streamWriter != null)) {
+                    streamWriter.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Deserializes xml markup from file into an EnumValue object
+        /// </summary>
+        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="obj">Output EnumValue object</param>
+        /// <param name="exception">output Exception value if deserialize failed</param>
+        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        public static bool LoadFromFile(string fileName, out EnumValue obj, out System.Exception exception) {
+            exception = null;
+            obj = default(EnumValue);
+            try {
+                obj = LoadFromFile(fileName);
+                return true;
+            }
+            catch (System.Exception ex) {
+                exception = ex;
+                return false;
+            }
+        }
+        
+        public static bool LoadFromFile(string fileName, out EnumValue obj) {
+            System.Exception exception = null;
+            return LoadFromFile(fileName, out obj, out exception);
+        }
+        
+        public static EnumValue LoadFromFile(string fileName) {
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
+            try {
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
+                string xmlString = sr.ReadToEnd();
+                sr.Close();
+                file.Close();
+                return Deserialize(xmlString);
+            }
+            finally {
+                if ((file != null)) {
+                    file.Dispose();
+                }
+                if ((sr != null)) {
+                    sr.Dispose();
+                }
+            }
+        }
+        #endregion
+        
+        #region Clone method
+        /// <summary>
+        /// Create a clone of this EnumValue object
+        /// </summary>
+        public virtual EnumValue Clone() {
+            return ((EnumValue)(this.MemberwiseClone()));
+        }
+        #endregion
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class Enumeration : System.ComponentModel.INotifyPropertyChanged {
+        
+        private ObservableCollection<EnumValue> enumValueField;
+        
+        private string nameField;
+        
+        private static System.Xml.Serialization.XmlSerializer serializer;
+        
+        public Enumeration() {
+            this.enumValueField = new ObservableCollection<EnumValue>();
+        }
+        
+        [System.Xml.Serialization.XmlElementAttribute("EnumValue")]
+        public ObservableCollection<EnumValue> EnumValue {
+            get {
+                return this.enumValueField;
+            }
+            set {
+                if ((this.enumValueField != null)) {
+                    if ((enumValueField.Equals(value) != true)) {
+                        this.enumValueField = value;
+                        this.OnPropertyChanged("EnumValue");
+                    }
+                }
+                else {
+                    this.enumValueField = value;
+                    this.OnPropertyChanged("EnumValue");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string Name {
+            get {
+                return this.nameField;
+            }
+            set {
+                if ((this.nameField != null)) {
+                    if ((nameField.Equals(value) != true)) {
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
+                    }
+                }
+                else {
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
+                }
+            }
+        }
+        
+        private static System.Xml.Serialization.XmlSerializer Serializer {
+            get {
+                if ((serializer == null)) {
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Enumeration));
+                }
+                return serializer;
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        public virtual void OnPropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
+            if ((handler != null)) {
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+        
+        #region Serialize/Deserialize
+        /// <summary>
+        /// Serializes current Enumeration object into an XML document
+        /// </summary>
+        /// <returns>string XML value</returns>
+        public virtual string Serialize() {
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
+            try {
+                memoryStream = new System.IO.MemoryStream();
+                Serializer.Serialize(memoryStream, this);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
+                return streamReader.ReadToEnd();
+            }
+            finally {
+                if ((streamReader != null)) {
+                    streamReader.Dispose();
+                }
+                if ((memoryStream != null)) {
+                    memoryStream.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Deserializes workflow markup into an Enumeration object
+        /// </summary>
+        /// <param name="xml">string workflow markup to deserialize</param>
+        /// <param name="obj">Output Enumeration object</param>
+        /// <param name="exception">output Exception value if deserialize failed</param>
+        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        public static bool Deserialize(string xml, out Enumeration obj, out System.Exception exception) {
+            exception = null;
+            obj = default(Enumeration);
+            try {
+                obj = Deserialize(xml);
+                return true;
+            }
+            catch (System.Exception ex) {
+                exception = ex;
+                return false;
+            }
+        }
+        
+        public static bool Deserialize(string xml, out Enumeration obj) {
+            System.Exception exception = null;
+            return Deserialize(xml, out obj, out exception);
+        }
+        
+        public static Enumeration Deserialize(string xml) {
+            System.IO.StringReader stringReader = null;
+            try {
+                stringReader = new System.IO.StringReader(xml);
+                return ((Enumeration)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
+            }
+            finally {
+                if ((stringReader != null)) {
+                    stringReader.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Serializes current Enumeration object into file
+        /// </summary>
+        /// <param name="fileName">full path of outupt xml file</param>
+        /// <param name="exception">output Exception value if failed</param>
+        /// <returns>true if can serialize and save into file; otherwise, false</returns>
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
+            exception = null;
+            try {
+                SaveToFile(fileName);
+                return true;
+            }
+            catch (System.Exception e) {
+                exception = e;
+                return false;
+            }
+        }
+        
+        public virtual void SaveToFile(string fileName) {
+            System.IO.StreamWriter streamWriter = null;
+            try {
+                string xmlString = Serialize();
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
+                streamWriter = xmlFile.CreateText();
+                streamWriter.WriteLine(xmlString);
+                streamWriter.Close();
+            }
+            finally {
+                if ((streamWriter != null)) {
+                    streamWriter.Dispose();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Deserializes xml markup from file into an Enumeration object
+        /// </summary>
+        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="obj">Output Enumeration object</param>
+        /// <param name="exception">output Exception value if deserialize failed</param>
+        /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
+        public static bool LoadFromFile(string fileName, out Enumeration obj, out System.Exception exception) {
+            exception = null;
+            obj = default(Enumeration);
+            try {
+                obj = LoadFromFile(fileName);
+                return true;
+            }
+            catch (System.Exception ex) {
+                exception = ex;
+                return false;
+            }
+        }
+        
+        public static bool LoadFromFile(string fileName, out Enumeration obj) {
+            System.Exception exception = null;
+            return LoadFromFile(fileName, out obj, out exception);
+        }
+        
+        public static Enumeration LoadFromFile(string fileName) {
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
+            try {
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
+                string xmlString = sr.ReadToEnd();
+                sr.Close();
+                file.Close();
+                return Deserialize(xmlString);
+            }
+            finally {
+                if ((file != null)) {
+                    file.Dispose();
+                }
+                if ((sr != null)) {
+                    sr.Dispose();
+                }
+            }
+        }
+        #endregion
+        
+        #region Clone method
+        /// <summary>
+        /// Create a clone of this Enumeration object
+        /// </summary>
+        public virtual Enumeration Clone() {
+            return ((Enumeration)(this.MemberwiseClone()));
+        }
+        #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]

@@ -8,47 +8,47 @@ namespace DtronixModeler.Generator.MySql {
 	class MySqlTypeTransformer : TypeTransformer {
 		public MySqlTypeTransformer() {
 			types = new TypeTransformerType[]{
-				new TypeTransformerType(NetTypes.Boolean, "BOOL", 1),
-				new TypeTransformerType(NetTypes.Boolean, "BOOLEAN", 1),
+				new TypeTransformerType("Boolean", "BOOL", 1),
+				new TypeTransformerType("Boolean", "BOOLEAN", 1),
 
-				new TypeTransformerType(NetTypes.Int16, "TINYINT"),
-				new TypeTransformerType(NetTypes.Int16, "SMALLINT"),
+				new TypeTransformerType("Int16", "TINYINT"),
+				new TypeTransformerType("Int16", "SMALLINT"),
 
-				new TypeTransformerType(NetTypes.Int32, "INT"),
-				new TypeTransformerType(NetTypes.Int32, "INTEGER"),
-				new TypeTransformerType(NetTypes.Int32, "MEDIUMINT"),
+				new TypeTransformerType("Int32", "INT"),
+				new TypeTransformerType("Int32", "INTEGER"),
+				new TypeTransformerType("Int32", "MEDIUMINT"),
 				
-				new TypeTransformerType(NetTypes.Int64, "BIGINT"),
+				new TypeTransformerType("Int64", "BIGINT"),
 
-				new TypeTransformerType(NetTypes.Float, "FLOAT"),
+				new TypeTransformerType("Float", "FLOAT"),
 
-				new TypeTransformerType(NetTypes.Double, "DOUBLE"),
-				new TypeTransformerType(NetTypes.Double, "PRECISION"),
+				new TypeTransformerType("Double", "DOUBLE"),
+				new TypeTransformerType("Double", "PRECISION"),
 
-				new TypeTransformerType(NetTypes.Decimal, "REAL"),
-				new TypeTransformerType(NetTypes.Decimal, "DECIMAL"),
-				new TypeTransformerType(NetTypes.Decimal, "NUMERIC"),
+				new TypeTransformerType("Decimal", "REAL"),
+				new TypeTransformerType("Decimal", "DECIMAL"),
+				new TypeTransformerType("Decimal", "NUMERIC"),
 
-				new TypeTransformerType(NetTypes.Byte, "BYTE", 1),
+				new TypeTransformerType("Byte", "BYTE", 1),
 
-				new TypeTransformerType(NetTypes.ByteArray, "BINARY"),
-				new TypeTransformerType(NetTypes.ByteArray, "BLOB"),
-				new TypeTransformerType(NetTypes.ByteArray, "MEDIMUMBLOB"),
-				new TypeTransformerType(NetTypes.ByteArray, "LONGBLOB"),
+				new TypeTransformerType("ByteArray", "BINARY"),
+				new TypeTransformerType("ByteArray", "BLOB"),
+				new TypeTransformerType("ByteArray", "MEDIMUMBLOB"),
+				new TypeTransformerType("ByteArray", "LONGBLOB"),
 
-				new TypeTransformerType(NetTypes.DateTimeOffset, "DATE"),
-				new TypeTransformerType(NetTypes.DateTimeOffset, "DATETIME"),
-				new TypeTransformerType(NetTypes.DateTimeOffset, "TIME"),
+				new TypeTransformerType("DateTimeOffset", "DATE"),
+				new TypeTransformerType("DateTimeOffset", "DATETIME"),
+				new TypeTransformerType("DateTimeOffset", "TIME"),
 				
-				new TypeTransformerType(NetTypes.String, "CHAR", 32),
-				new TypeTransformerType(NetTypes.String, "VARCHAR", 32),
+				new TypeTransformerType("String", "CHAR", 32),
+				new TypeTransformerType("String", "VARCHAR", 32),
 
-				new TypeTransformerType(NetTypes.String, "TINYTEXT"),
-				new TypeTransformerType(NetTypes.String, "TEXT"),
-				new TypeTransformerType(NetTypes.String, "MEDIUMTEXT"),
-				new TypeTransformerType(NetTypes.String, "LONGTEXT"),
+				new TypeTransformerType("String", "TINYTEXT"),
+				new TypeTransformerType("String", "TEXT"),
+				new TypeTransformerType("String", "MEDIUMTEXT"),
+				new TypeTransformerType("String", "LONGTEXT"),
 
-				new TypeTransformerType(NetTypes.Char, "CHAR", 1)
+				new TypeTransformerType("Char", "CHAR", 1)
 				
 			};
 		}

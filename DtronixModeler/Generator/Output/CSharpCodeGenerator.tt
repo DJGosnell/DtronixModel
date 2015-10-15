@@ -15,6 +15,16 @@ using DtronixModel;
 namespace <#= this.database.Namespace #> {
 
 	public partial class <#= this.database.ContextClass #> : Context {
+
+<# foreach (var enum_class in database.Enumeration) { #>
+		public enum <#= enum_class.Name #> : int {
+<# 
+int shift_ammount = 0;
+foreach (var enum_value in enum_class.EnumValue) { #>
+			<#= enum_value.Name #> = 1 << shift_ammount++,
+<# } #>
+		}
+<# } #>
 		private static Func<DbConnection> _DefaultConnection = null;
 
 		/// <summary>
@@ -103,7 +113,7 @@ namespace <#= this.database.Namespace #> {
 			get { return _<#= table.Column[i].Name #>; }
 <# if (table.Column[i].IsReadOnly == false) { #>
 			set {
-<# if (table.Column[i].DbLength != 0 && table.Column[i].NetType == NetTypes.String) { #>
+<# if (table.Column[i].DbLength != 0 && table.Column[i].NetType == "String") { #>
 				if(value != null && value.Length > <#= table.Column[i].DbLength #>) 
 					throw new ArgumentOutOfRangeException("<#= table.Column[i].Name #>", "String <#= table.Column[i].Name #> is too long. Max length allowed is <#= table.Column[i].DbLength #> characters. Passed string is " + value.Length.ToString() + " characters.");
 <# } #>
@@ -217,17 +227,17 @@ foreach (var db_assoc in database.Association) {
 				switch (reader.GetName(i)) {
 <# foreach (var column in table.Column) {
 		string type = ColumnNetType(column);
-		string reader_get = Enum.GetName(typeof(NetTypes), column.NetType);
+		string reader_get = column.NetType;
 
 		if(reader_get == "DateTimeOffset") {
 			reader_get = "DateTime";
 		}
 
-		if (column.NetType == NetTypes.ByteArray) { #>
+		if (column.NetType == "ByteArray") { #>
 					case "<#= column.Name #>": _<#= column.Name #> = (reader.IsDBNull(i)) ? null : reader.GetFieldValue<byte[]>(i); break;
 <# } else if (column.Nullable) { #>
 					case "<#= column.Name #>": _<#= column.Name #> = (reader.IsDBNull(i)) ? default(<#= type #>) : reader.Get<#= reader_get #>(i); break;
-<# } else if (column.NetType == NetTypes.String) { #>
+<# } else if (column.NetType == "String") { #>
 					case "<#= column.Name #>": _<#= column.Name #> = reader.GetValue(i) as string; break;
 <# } else { #>
 					case "<#= column.Name #>": _<#= column.Name #> = reader.Get<#= reader_get #>(i); break;

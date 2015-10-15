@@ -11,17 +11,17 @@ namespace DtronixModeler.Generator {
 
 		private string[] all_db_types = null;
 
-		public string NetToDbType(NetTypes net_type){
+		public string NetToDbType(string net_type){
 			return NetType(net_type).db_type;
 		}
 
-		public TypeTransformerType NetType(NetTypes net_type) {
+		public TypeTransformerType NetType(string net_type) {
 			return types.FirstOrDefault(type => type.net_type == net_type);
 		}
 
 
 
-		public NetTypes DbToNetType(string db_type) {
+		public string DbToNetType(string db_type) {
 			return DbType(db_type).net_type;
 		}
 

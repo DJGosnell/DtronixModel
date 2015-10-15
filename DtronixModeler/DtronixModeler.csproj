@@ -315,6 +315,7 @@
     <Resource Include="Xaml\Images\table_gear.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Xaml\Images\text_list_bullets.png" />
     <Resource Include="Xaml\Images\database_blue.png" />
     <Resource Include="Xaml\Images\database_blue32.png" />
     <Resource Include="icon.ico" />

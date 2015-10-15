@@ -8,22 +8,22 @@ namespace DtronixModeler.Generator.Sqlite {
 	class SqliteTypeTransformer : TypeTransformer {
 		public SqliteTypeTransformer() {
 			types = new TypeTransformerType[]{
-				new TypeTransformerType(NetTypes.Int64, "INTEGER"),
-				new TypeTransformerType(NetTypes.Int16, "SMALLINT"),
-				new TypeTransformerType(NetTypes.Int32, "INTEGER"),
-				/*new TypeTransformerType(NetTypes.UInt16, "SMALLINT"),
-				new TypeTransformerType(NetTypes.UInt32, "INTEGER"),
-				new TypeTransformerType(NetTypes.UInt64, "BIGINT"),*/
-				new TypeTransformerType(NetTypes.ByteArray, "BLOB"),
-				new TypeTransformerType(NetTypes.Byte, "BLOB"),
-				new TypeTransformerType(NetTypes.Decimal, "REAL"),
-				new TypeTransformerType(NetTypes.Decimal, "NUMERIC"),
-				new TypeTransformerType(NetTypes.Float, "FLOAT"),
-				new TypeTransformerType(NetTypes.Double, "DOUBLE"),
-				new TypeTransformerType(NetTypes.Boolean, "BOOLEAN"),
-				new TypeTransformerType(NetTypes.String, "TEXT"),
-				new TypeTransformerType(NetTypes.DateTimeOffset, "DATETIME"),
-				//new TypeTransformerType(NetTypes.Char, "CHAR")
+				new TypeTransformerType("Int64", "INTEGER"),
+				new TypeTransformerType("Int16", "SMALLINT"),
+				new TypeTransformerType("Int32", "INTEGER"),
+				/*new TypeTransformerType("UInt16", "SMALLINT"),
+				new TypeTransformerType("UInt32", "INTEGER"),
+				new TypeTransformerType("UInt64", "BIGINT"),*/
+				new TypeTransformerType("ByteArray", "BLOB"),
+				new TypeTransformerType("Byte", "BLOB"),
+				new TypeTransformerType("Decimal", "REAL"),
+				new TypeTransformerType("Decimal", "NUMERIC"),
+				new TypeTransformerType("Float", "FLOAT"),
+				new TypeTransformerType("Double", "DOUBLE"),
+				new TypeTransformerType("Boolean", "BOOLEAN"),
+				new TypeTransformerType("String", "TEXT"),
+				new TypeTransformerType("DateTimeOffset", "DATETIME"),
+				//new TypeTransformerType("Char", "CHAR")
 			};
 		}
 	}
