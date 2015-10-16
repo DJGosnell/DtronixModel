@@ -305,6 +305,11 @@ namespace DtronixModeler.Xaml {
 						MessageBox.Show("Can not make an auto incremented value nullable.", "Invalid Option");
 						column.Nullable = false;
 					}
+
+					if (column.Nullable && DefaultNetTypes.Contains(column.NetType) == false && NetTypes.Contains(column.NetType)) {
+						MessageBox.Show("Can not make an enum value nullable.", "Invalid Option");
+						column.Nullable = false;
+					}
 					break;
 
 				case "DefaultValue":
