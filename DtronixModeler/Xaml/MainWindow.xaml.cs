@@ -158,6 +158,7 @@ namespace DtronixModeler.Xaml {
 				Console.WriteLine("Error in executing specified options. Error:");
 				foreach (var inner_ex in ex.InnerExceptions) {
 					Console.WriteLine(inner_ex.Message);
+					Console.WriteLine(inner_ex.ToString());
 				}
 			}
 			
