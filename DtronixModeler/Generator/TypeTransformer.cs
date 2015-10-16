@@ -12,7 +12,14 @@ namespace DtronixModeler.Generator {
 		private string[] all_db_types = null;
 
 		public string NetToDbType(string net_type){
-			return NetType(net_type).db_type;
+			var actual_net_type = NetType(net_type);
+
+			// If this is null, then this is going to have to be an enum.
+			if(actual_net_type == null) {
+				actual_net_type = NetType("Int32");
+			}
+
+            return actual_net_type.db_type;
 		}
 
 		public TypeTransformerType NetType(string net_type) {
