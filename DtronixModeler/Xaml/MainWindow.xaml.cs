@@ -651,6 +651,7 @@ namespace DtronixModeler.Xaml {
 				e.CanExecute = false;
 				e.Handled = true;
 			}
+
 		}
 
 		private void _DagColumnDefinitions_Copy(object sender, ExecutedRoutedEventArgs e) {
