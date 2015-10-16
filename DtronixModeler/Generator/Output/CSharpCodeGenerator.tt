@@ -232,8 +232,9 @@ foreach (var db_assoc in database.Association) {
 		if(reader_get == "DateTimeOffset") {
 			reader_get = "DateTime";
 		}
-
-		if (column.NetType == "ByteArray") { #>
+		if (this.database.Enumeration.Any(en => en.Name == column.NetType)) { #>
+					case "<#= column.Name #>": _<#= column.Name #> = (<#= column.NetType #>)reader.GetInt32(i); break;
+<# } else if (column.NetType == "ByteArray") { #>
 					case "<#= column.Name #>": _<#= column.Name #> = (reader.IsDBNull(i)) ? null : reader.GetFieldValue<byte[]>(i); break;
 <# } else if (column.Nullable) { #>
 					case "<#= column.Name #>": _<#= column.Name #> = (reader.IsDBNull(i)) ? default(<#= type #>) : reader.Get<#= reader_get #>(i); break;

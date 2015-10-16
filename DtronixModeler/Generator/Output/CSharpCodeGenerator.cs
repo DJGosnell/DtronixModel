@@ -313,8 +313,15 @@ foreach (var db_assoc in database.Association) {
 		if(reader_get == "DateTimeOffset") {
 			reader_get = "DateTime";
 		}
-
-		if (column.NetType == "ByteArray") { 
+		if (this.database.Enumeration.Any(en => en.Name == column.NetType)) { 
+            this.Write("\t\t\t\t\tcase \"");
+            this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
+            this.Write("\": _");
+            this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
+            this.Write(" = (");
+            this.Write(this.ToStringHelper.ToStringWithCulture(column.NetType));
+            this.Write(")reader.GetInt32(i); break;\r\n");
+ } else if (column.NetType == "ByteArray") { 
             this.Write("\t\t\t\t\tcase \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write("\": _");
