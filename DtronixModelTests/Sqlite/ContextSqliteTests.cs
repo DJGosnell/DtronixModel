@@ -414,7 +414,8 @@ namespace DtronixModelTests.Sqlite {
 					db_int16 = 32767,
 					db_int32 = 2147483647,
 					db_int64 = 9223372036854775807,
-					db_string = "Database String With \nNewline\nSpecial Chars: ♥♦♣♠"
+					db_string = "Database String With \nNewline\nSpecial Chars: ♥♦♣♠",
+					db_enum = TestEnum.SecondEnumValue
 				});
 				logger.Log("Inserted new row into db.");
 
@@ -437,6 +438,7 @@ namespace DtronixModelTests.Sqlite {
 				Assert.Equal(32767, all_types.db_int16.Value);
 				Assert.Equal(2147483647, all_types.db_int32.Value);
 				Assert.Equal(9223372036854775807, all_types.db_int64.Value);
+				Assert.Equal(TestEnum.SecondEnumValue, all_types.db_enum);
 				Assert.Equal("Database String With \nNewline\nSpecial Chars: ♥♦♣♠", all_types.db_string);
 				logger.Log("Completed tests.");
 

@@ -27,7 +27,8 @@ CREATE TABLE AllTypes (
 	db_float FLOAT ,
 	db_double DOUBLE ,
 	db_bool BOOLEAN ,
-	db_string TEXT 
+	db_string TEXT ,
+	db_enum INTEGER NOT NULL 
 );
 
 

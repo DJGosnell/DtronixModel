@@ -24,6 +24,12 @@
     <Column Name="db_double" NetType="Double" DbType="DOUBLE" Nullable="true" />
     <Column Name="db_bool" NetType="Boolean" DbType="BOOLEAN" Nullable="true" />
     <Column Name="db_string" NetType="String" DbType="TEXT" Nullable="true" />
+    <Column Name="db_enum" NetType="TestEnum" DbType="INTEGER" />
   </Table>
   <Association Table1Name="Logs" Table1="Logs" Table1Column="Users_rowid" Table1Cardinality="Many" Table2Name="User" Table2="Users" Table2Column="rowid" Table2Cardinality="One" />
+  <Enumeration Name="TestEnum">
+    <EnumValue Name="Unset" />
+    <EnumValue Name="Enum1" />
+    <EnumValue Name="SecondEnumValue" />
+  </Enumeration>
 </Database>

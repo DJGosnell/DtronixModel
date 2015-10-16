@@ -6,7 +6,14 @@ using DtronixModel;
 
 namespace DtronixModelTests.Sqlite {
 
+	public enum TestEnum : int {
+		Unset = 1 << 0,
+		Enum1 = 1 << 1,
+		SecondEnumValue = 1 << 2,
+	}
+
 	public partial class TestDatabaseContext : Context {
+
 		private static Func<DbConnection> _DefaultConnection = null;
 
 		/// <summary>
@@ -197,7 +204,12 @@ namespace DtronixModelTests.Sqlite {
 					case "username": _username = reader.GetValue(i) as string; break;
 					case "password": _password = reader.GetValue(i) as string; break;
 					case "last_logged": _last_logged = reader.GetInt64(i); break;
-					default: additional_values.Add(reader.GetName(i), reader.GetValue(i)); break;
+					default: 
+						if(additional_values == null) {
+							additional_values = new Dictionary<string, object>();
+						}
+						additional_values.Add(reader.GetName(i), reader.GetValue(i)); 
+						break;
 				}
 			}
 		}
@@ -351,7 +363,12 @@ namespace DtronixModelTests.Sqlite {
 					case "rowid": _rowid = reader.GetInt64(i); break;
 					case "Users_rowid": _Users_rowid = reader.GetInt64(i); break;
 					case "text": _text = reader.GetValue(i) as string; break;
-					default: additional_values.Add(reader.GetName(i), reader.GetValue(i)); break;
+					default: 
+						if(additional_values == null) {
+							additional_values = new Dictionary<string, object>();
+						}
+						additional_values.Add(reader.GetName(i), reader.GetValue(i)); 
+						break;
 				}
 			}
 		}
@@ -519,6 +536,15 @@ namespace DtronixModelTests.Sqlite {
 			}
 		}
 
+		private TestEnum _db_enum;
+		public TestEnum db_enum {
+			get { return _db_enum; }
+			set {
+				_db_enum = value;
+				changed_flags.Set(12, true);
+			}
+		}
+
 		/// <summary>
 		/// Clones a AllTypes model.
 		/// </summary>
@@ -550,6 +576,8 @@ namespace DtronixModelTests.Sqlite {
 				_db_bool = source._db_bool;
 			if (only_changes == false || source.changed_flags.Get(11))
 				_db_string = source._db_string;
+			if (only_changes == false || source.changed_flags.Get(12))
+				_db_enum = source._db_enum;
 			changed_flags = new BitArray(source.changed_flags);
 		}
 		
@@ -564,7 +592,7 @@ namespace DtronixModelTests.Sqlite {
 		/// <param name="reader">Instance of a live data reader for this model's table.</param>
 		/// <param name="context">The current context of the database.</param>
 		public AllTypes(DbDataReader reader, Context context) {
-			changed_flags = new BitArray(12);
+			changed_flags = new BitArray(13);
 			Read(reader, context);
 		}
 
@@ -591,7 +619,13 @@ namespace DtronixModelTests.Sqlite {
 					case "db_double": _db_double = (reader.IsDBNull(i)) ? default(Double?) : reader.GetDouble(i); break;
 					case "db_bool": _db_bool = (reader.IsDBNull(i)) ? default(Boolean?) : reader.GetBoolean(i); break;
 					case "db_string": _db_string = (reader.IsDBNull(i)) ? default(String) : reader.GetString(i); break;
-					default: additional_values.Add(reader.GetName(i), reader.GetValue(i)); break;
+					case "db_enum": _db_enum = (TestEnum)reader.GetInt32(i); break;
+					default: 
+						if(additional_values == null) {
+							additional_values = new Dictionary<string, object>();
+						}
+						additional_values.Add(reader.GetName(i), reader.GetValue(i)); 
+						break;
 				}
 			}
 		}
@@ -624,6 +658,8 @@ namespace DtronixModelTests.Sqlite {
 				changed.Add("db_bool", _db_bool);
 			if (changed_flags.Get(11))
 				changed.Add("db_string", _db_string);
+			if (changed_flags.Get(12))
+				changed.Add("db_enum", _db_enum);
 
 			return changed;
 		}
@@ -645,6 +681,7 @@ namespace DtronixModelTests.Sqlite {
 				_db_double,
 				_db_bool,
 				_db_string,
+				_db_enum,
 			};
 		}
 
@@ -665,6 +702,7 @@ namespace DtronixModelTests.Sqlite {
 				"db_double",
 				"db_bool",
 				"db_string",
+				"db_enum",
 			};
 		}
 
