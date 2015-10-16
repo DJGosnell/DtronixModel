@@ -32,23 +32,27 @@ string[] reserved_words = new string[] {"for", "with", "while"};
             this.Write("using System;\r\nusing System.Data.Common;\r\nusing System.Collections.Generic;\r\nusin" +
                     "g System.Collections;\r\nusing DtronixModel;\r\n\r\nnamespace ");
             this.Write(this.ToStringHelper.ToStringWithCulture(this.database.Namespace));
-            this.Write(" {\r\n\r\n\tpublic partial class ");
-            this.Write(this.ToStringHelper.ToStringWithCulture(this.database.ContextClass));
-            this.Write(" : Context {\r\n\r\n");
+            this.Write(" {\r\n\r\n");
  foreach (var enum_class in database.Enumeration) { 
-            this.Write("\t\tpublic enum ");
+            this.Write("\tpublic enum ");
             this.Write(this.ToStringHelper.ToStringWithCulture(enum_class.Name));
             this.Write(" : int {\r\n");
  
 int shift_ammount = 0;
 foreach (var enum_value in enum_class.EnumValue) { 
-            this.Write("\t\t\t");
+            this.Write("\t\t");
             this.Write(this.ToStringHelper.ToStringWithCulture(enum_value.Name));
-            this.Write(" = 1 << shift_ammount++,\r\n");
+            this.Write(" = 1 << ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(shift_ammount++));
+            this.Write(",\r\n");
  } 
-            this.Write("\t\t}\r\n");
+            this.Write("\t}\r\n");
  } 
-            this.Write(@"		private static Func<DbConnection> _DefaultConnection = null;
+            this.Write("\r\n\tpublic partial class ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(this.database.ContextClass));
+            this.Write(@" : Context {
+
+		private static Func<DbConnection> _DefaultConnection = null;
 
 		/// <summary>
 		/// Set a default constructor to allow use of parameter-less context calling.

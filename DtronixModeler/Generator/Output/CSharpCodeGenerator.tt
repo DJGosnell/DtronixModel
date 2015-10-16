@@ -14,17 +14,18 @@ using DtronixModel;
 
 namespace <#= this.database.Namespace #> {
 
-	public partial class <#= this.database.ContextClass #> : Context {
-
 <# foreach (var enum_class in database.Enumeration) { #>
-		public enum <#= enum_class.Name #> : int {
+	public enum <#= enum_class.Name #> : int {
 <# 
 int shift_ammount = 0;
 foreach (var enum_value in enum_class.EnumValue) { #>
-			<#= enum_value.Name #> = 1 << shift_ammount++,
+		<#= enum_value.Name #> = 1 << <#= shift_ammount++ #>,
 <# } #>
-		}
+	}
 <# } #>
+
+	public partial class <#= this.database.ContextClass #> : Context {
+
 		private static Func<DbConnection> _DefaultConnection = null;
 
 		/// <summary>
