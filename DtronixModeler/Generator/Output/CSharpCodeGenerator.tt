@@ -126,7 +126,7 @@ foreach (var enum_value in enum_class.EnumValue) { #>
 					throw new ArgumentOutOfRangeException("<#= table.Column[i].Name #>", "String <#= table.Column[i].Name #> is too long. Max length allowed is <#= table.Column[i].DbLength #> characters. Passed string is " + value.Length.ToString() + " characters.");
 <# } #>
 <# if(this.database.ImplementINotifyPropertyChanged){ #>
-				if(_<#= table.Column[i].Name #><# if(ColumnIsTypeStruct(table.Column[i]) == false) { #>?<# } #>.Equals(value) == false){
+				if(_<#= table.Column[i].Name #> != value){
 					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(<#= table.Column[i].Name #>)));
 				}
 <# } #>

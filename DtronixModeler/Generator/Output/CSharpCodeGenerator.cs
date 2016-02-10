@@ -182,11 +182,8 @@ foreach (var enum_value in enum_class.EnumValue) {
  if(this.database.ImplementINotifyPropertyChanged){ 
             this.Write("\t\t\t\tif(_");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
- if(ColumnIsTypeStruct(table.Column[i]) == false) { 
-            this.Write("?");
- } 
-            this.Write(".Equals(value) == false){\r\n\t\t\t\t\tPropertyChanged?.Invoke(this, new System.Componen" +
-                    "tModel.PropertyChangedEventArgs(nameof(");
+            this.Write(" != value){\r\n\t\t\t\t\tPropertyChanged?.Invoke(this, new System.ComponentModel.Propert" +
+                    "yChangedEventArgs(nameof(");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write(")));\r\n\t\t\t\t}\r\n");
  } 
