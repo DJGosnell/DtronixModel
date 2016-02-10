@@ -102,7 +102,14 @@ foreach (var enum_value in enum_class.EnumValue) { #>
 	} #>
 
 	[TableAttribute(Name = "<#= table.Name #>")]
-	public partial class <#= table.Name #> : Model {
+	public partial class <#= table.Name #> : Model<# if(this.database.ImplementINotifyPropertyChanged){ #>, System.ComponentModel.INotifyPropertyChanged<# } #> {
+
+<# if(this.database.ImplementINotifyPropertyChanged){ #>
+		/// <summary>
+		/// Implementation for INotifyPropertyChanged.
+		/// </summary>
+		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+<# } #>
 <# for(int i = 0; i < table.Column.Count(); i++) { #>
 		private <#= ColumnNetType(table.Column[i]) #> _<#= table.Column[i].Name #>;
 <# if (string.IsNullOrWhiteSpace(table.Column[i].Description) == false) { #>
@@ -118,10 +125,15 @@ foreach (var enum_value in enum_class.EnumValue) { #>
 				if(value != null && value.Length > <#= table.Column[i].DbLength #>) 
 					throw new ArgumentOutOfRangeException("<#= table.Column[i].Name #>", "String <#= table.Column[i].Name #> is too long. Max length allowed is <#= table.Column[i].DbLength #> characters. Passed string is " + value.Length.ToString() + " characters.");
 <# } #>
+<# if(this.database.ImplementINotifyPropertyChanged){ #>
+				if(_<#= table.Column[i].Name #> != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(<#= table.Column[i].Name #>)));
+				}
+<# } #>
 				_<#= table.Column[i].Name #> = value;
 				changed_flags.Set(<#= i #>, true);
 			}
-<#			} #>
+<# } #>
 		}
 
 <# } #>

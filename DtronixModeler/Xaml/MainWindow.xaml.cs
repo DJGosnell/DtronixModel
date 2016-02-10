@@ -61,7 +61,7 @@ namespace DtronixModeler.Xaml {
 				"Char",
 			};
 
-            _CmbTargetDatabase.ItemsSource = Enum.GetValues(typeof(DbProvider)).Cast<DbProvider>();
+			_CmbTargetDatabase.ItemsSource = Enum.GetValues(typeof(DbProvider)).Cast<DbProvider>();
 
 			BindCommand(Commands.NewDatabase, null, Command_NewDatabase);
 			BindCommand(ApplicationCommands.Open, new KeyGesture(Key.O, ModifierKeys.Control), Command_Open);
@@ -264,7 +264,7 @@ namespace DtronixModeler.Xaml {
 						MessageBox.Show("Can not use reserved word '" + reserved_word_match.ToString() + "' for a column name.", "Column Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
 					} else {
 						column.PostRename(_DatabaseExplorer.SelectedDatabase, previous_column.Name);
-                    }
+					}
 					break;
 
 				case "DbType":
@@ -363,7 +363,7 @@ namespace DtronixModeler.Xaml {
 				
 				foreach(var type in e.Database.Enumeration) {
 					NetTypes.Add(type.Name);
-                }
+				}
 
 				ColumnNetType.ItemsSource = NetTypes;
 				//_TabEnums.DataContext = e.Database.Enumeration;
@@ -707,7 +707,7 @@ namespace DtronixModeler.Xaml {
 			InputDialogBox.Show("New Enum Name", "Enter a name for the Enum collection.", "", value => {
 				var new_enum = new Enumeration();
 				new_enum.Name = value;
-                _DatabaseExplorer.SelectedDatabase.Enumeration.Add(new_enum);
+				_DatabaseExplorer.SelectedDatabase.Enumeration.Add(new_enum);
 				NetTypes.Add(value);
 			});
 		}
@@ -715,9 +715,9 @@ namespace DtronixModeler.Xaml {
 
 		private void DeleteEnum(object sender, ExecutedRoutedEventArgs e) {
 			var selected_enum = _LstEnums.SelectedValue as Enumeration;
-            _DatabaseExplorer.SelectedDatabase.Enumeration.Remove(selected_enum);
+			_DatabaseExplorer.SelectedDatabase.Enumeration.Remove(selected_enum);
 			NetTypes.Remove(selected_enum.Name);
-        }
+		}
 
 		private void NewEnum_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
 			if(_DatabaseExplorer.SelectedDatabase != null){
@@ -755,11 +755,11 @@ namespace DtronixModeler.Xaml {
 
 		private void ModifyEnumValue_CanExecute(object sender, CanExecuteRoutedEventArgs e) {
 			var data_grid = e.Source as DataGrid;
-            if (data_grid != null) {
+			if (data_grid != null) {
 				if(data_grid.SelectedValue is EnumValue) {
 					e.CanExecute = true;
 				}
-            }
+			}
 		}
 	}
 

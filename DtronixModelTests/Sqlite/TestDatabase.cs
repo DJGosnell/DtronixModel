@@ -104,11 +104,19 @@ namespace DtronixModelTests.Sqlite {
 	}
 
 	[TableAttribute(Name = "Users")]
-	public partial class Users : Model {
+	public partial class Users : Model, System.ComponentModel.INotifyPropertyChanged {
+
+		/// <summary>
+		/// Implementation for INotifyPropertyChanged.
+		/// </summary>
+		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 		private Int64 _rowid;
 		public Int64 rowid {
 			get { return _rowid; }
 			set {
+				if(_rowid != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(rowid)));
+				}
 				_rowid = value;
 				changed_flags.Set(0, true);
 			}
@@ -118,6 +126,9 @@ namespace DtronixModelTests.Sqlite {
 		public String username {
 			get { return _username; }
 			set {
+				if(_username != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(username)));
+				}
 				_username = value;
 				changed_flags.Set(1, true);
 			}
@@ -127,6 +138,9 @@ namespace DtronixModelTests.Sqlite {
 		public String password {
 			get { return _password; }
 			set {
+				if(_password != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(password)));
+				}
 				_password = value;
 				changed_flags.Set(2, true);
 			}
@@ -136,6 +150,9 @@ namespace DtronixModelTests.Sqlite {
 		public Int64 last_logged {
 			get { return _last_logged; }
 			set {
+				if(_last_logged != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(last_logged)));
+				}
 				_last_logged = value;
 				changed_flags.Set(3, true);
 			}
@@ -272,11 +289,19 @@ namespace DtronixModelTests.Sqlite {
 	}
 
 	[TableAttribute(Name = "Logs")]
-	public partial class Logs : Model {
+	public partial class Logs : Model, System.ComponentModel.INotifyPropertyChanged {
+
+		/// <summary>
+		/// Implementation for INotifyPropertyChanged.
+		/// </summary>
+		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 		private Int64 _rowid;
 		public Int64 rowid {
 			get { return _rowid; }
 			set {
+				if(_rowid != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(rowid)));
+				}
 				_rowid = value;
 				changed_flags.Set(0, true);
 			}
@@ -289,6 +314,9 @@ namespace DtronixModelTests.Sqlite {
 		public Int64 Users_rowid {
 			get { return _Users_rowid; }
 			set {
+				if(_Users_rowid != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(Users_rowid)));
+				}
 				_Users_rowid = value;
 				changed_flags.Set(1, true);
 			}
@@ -298,6 +326,9 @@ namespace DtronixModelTests.Sqlite {
 		public String text {
 			get { return _text; }
 			set {
+				if(_text != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(text)));
+				}
 				_text = value;
 				changed_flags.Set(2, true);
 			}
@@ -427,11 +458,19 @@ namespace DtronixModelTests.Sqlite {
 	}
 
 	[TableAttribute(Name = "AllTypes")]
-	public partial class AllTypes : Model {
+	public partial class AllTypes : Model, System.ComponentModel.INotifyPropertyChanged {
+
+		/// <summary>
+		/// Implementation for INotifyPropertyChanged.
+		/// </summary>
+		public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 		private Int64 _id;
 		public Int64 id {
 			get { return _id; }
 			set {
+				if(_id != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(id)));
+				}
 				_id = value;
 				changed_flags.Set(0, true);
 			}
@@ -441,6 +480,9 @@ namespace DtronixModelTests.Sqlite {
 		public Int16? db_int16 {
 			get { return _db_int16; }
 			set {
+				if(_db_int16 != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_int16)));
+				}
 				_db_int16 = value;
 				changed_flags.Set(1, true);
 			}
@@ -450,6 +492,9 @@ namespace DtronixModelTests.Sqlite {
 		public Int32? db_int32 {
 			get { return _db_int32; }
 			set {
+				if(_db_int32 != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_int32)));
+				}
 				_db_int32 = value;
 				changed_flags.Set(2, true);
 			}
@@ -459,6 +504,9 @@ namespace DtronixModelTests.Sqlite {
 		public Int64? db_int64 {
 			get { return _db_int64; }
 			set {
+				if(_db_int64 != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_int64)));
+				}
 				_db_int64 = value;
 				changed_flags.Set(3, true);
 			}
@@ -468,6 +516,9 @@ namespace DtronixModelTests.Sqlite {
 		public byte[] db_byte_array {
 			get { return _db_byte_array; }
 			set {
+				if(_db_byte_array != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_byte_array)));
+				}
 				_db_byte_array = value;
 				changed_flags.Set(4, true);
 			}
@@ -477,15 +528,21 @@ namespace DtronixModelTests.Sqlite {
 		public Byte? db_byte {
 			get { return _db_byte; }
 			set {
+				if(_db_byte != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_byte)));
+				}
 				_db_byte = value;
 				changed_flags.Set(5, true);
 			}
 		}
 
-		private DateTimeOffset _db_date_time;
-		public DateTimeOffset db_date_time {
+		private DateTimeOffset? _db_date_time;
+		public DateTimeOffset? db_date_time {
 			get { return _db_date_time; }
 			set {
+				if(_db_date_time != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_date_time)));
+				}
 				_db_date_time = value;
 				changed_flags.Set(6, true);
 			}
@@ -495,6 +552,9 @@ namespace DtronixModelTests.Sqlite {
 		public Decimal? db_decimal {
 			get { return _db_decimal; }
 			set {
+				if(_db_decimal != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_decimal)));
+				}
 				_db_decimal = value;
 				changed_flags.Set(7, true);
 			}
@@ -504,6 +564,9 @@ namespace DtronixModelTests.Sqlite {
 		public float? db_float {
 			get { return _db_float; }
 			set {
+				if(_db_float != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_float)));
+				}
 				_db_float = value;
 				changed_flags.Set(8, true);
 			}
@@ -513,6 +576,9 @@ namespace DtronixModelTests.Sqlite {
 		public Double? db_double {
 			get { return _db_double; }
 			set {
+				if(_db_double != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_double)));
+				}
 				_db_double = value;
 				changed_flags.Set(9, true);
 			}
@@ -522,6 +588,9 @@ namespace DtronixModelTests.Sqlite {
 		public Boolean? db_bool {
 			get { return _db_bool; }
 			set {
+				if(_db_bool != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_bool)));
+				}
 				_db_bool = value;
 				changed_flags.Set(10, true);
 			}
@@ -531,6 +600,9 @@ namespace DtronixModelTests.Sqlite {
 		public String db_string {
 			get { return _db_string; }
 			set {
+				if(_db_string != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_string)));
+				}
 				_db_string = value;
 				changed_flags.Set(11, true);
 			}
@@ -540,6 +612,9 @@ namespace DtronixModelTests.Sqlite {
 		public TestEnum db_enum {
 			get { return _db_enum; }
 			set {
+				if(_db_enum != value){
+					PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_enum)));
+				}
 				_db_enum = value;
 				changed_flags.Set(12, true);
 			}
@@ -613,7 +688,7 @@ namespace DtronixModelTests.Sqlite {
 					case "db_int64": _db_int64 = (reader.IsDBNull(i)) ? default(Int64?) : reader.GetInt64(i); break;
 					case "db_byte_array": _db_byte_array = (reader.IsDBNull(i)) ? null : reader.GetFieldValue<byte[]>(i); break;
 					case "db_byte": _db_byte = (reader.IsDBNull(i)) ? default(Byte?) : reader.GetByte(i); break;
-					case "db_date_time": _db_date_time = (reader.IsDBNull(i)) ? default(DateTimeOffset) : reader.GetDateTime(i); break;
+					case "db_date_time": _db_date_time = (reader.IsDBNull(i)) ? default(DateTimeOffset?) : reader.GetDateTime(i); break;
 					case "db_decimal": _db_decimal = (reader.IsDBNull(i)) ? default(Decimal?) : reader.GetDecimal(i); break;
 					case "db_float": _db_float = (reader.IsDBNull(i)) ? default(float?) : reader.GetFloat(i); break;
 					case "db_double": _db_double = (reader.IsDBNull(i)) ? default(Double?) : reader.GetDouble(i); break;

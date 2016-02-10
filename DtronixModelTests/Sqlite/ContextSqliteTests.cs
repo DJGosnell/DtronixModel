@@ -403,7 +403,7 @@ namespace DtronixModelTests.Sqlite {
 				var date_time = DateTimeOffset.Now;
 				int ch = (int)'D';
 				string t = date_time.ToString();
-                context.AllTypes.Insert(new AllTypes() {
+				context.AllTypes.Insert(new AllTypes() {
 					db_bool = true,
 					db_byte = 157,
 					db_byte_array = initial_byte_array,
@@ -592,6 +592,51 @@ namespace DtronixModelTests.Sqlite {
 
 				var all_types = context.AllTypes.Select().ExecuteFetch();
 				Assert.Equal(now_dto, all_types.db_date_time);
+			}
+		}
+
+		[Fact]
+		public void PropertyChangeNotificationNotifiesEvent() {
+
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				bool fired = false;
+				var row = new AllTypes();
+
+				row.PropertyChanged += (sender, e) => {
+					if (e.PropertyName == "db_date_time") {
+						fired = true;
+					}
+				};
+
+				Assert.False(fired);
+
+				row.db_date_time = DateTime.Now;
+
+				Assert.True(fired);
+			}
+		}
+
+		[Fact]
+		public void PropertyChangeNotificationDoesNotNotifyWhenSameValue() {
+
+			using (var context = CreateContext(MethodBase.GetCurrentMethod().Name)) {
+				bool fired = false;
+				var now = DateTime.Now;
+				var row = new AllTypes() {
+					db_date_time = now
+				};
+
+				row.PropertyChanged += (sender, e) => {
+					if (e.PropertyName == "db_date_time") {
+						fired = true;
+					}
+				};
+
+				Assert.False(fired);
+
+				row.db_date_time = now;
+
+				Assert.False(fired);
 			}
 		}
 

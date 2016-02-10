@@ -137,7 +137,16 @@ foreach (var enum_value in enum_class.EnumValue) {
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             this.Write("\")]\r\n\tpublic partial class ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(" : Model {\r\n");
+            this.Write(" : Model");
+ if(this.database.ImplementINotifyPropertyChanged){ 
+            this.Write(", System.ComponentModel.INotifyPropertyChanged");
+ } 
+            this.Write(" {\r\n\r\n");
+ if(this.database.ImplementINotifyPropertyChanged){ 
+            this.Write("\t\t/// <summary>\r\n\t\t/// Implementation for INotifyPropertyChanged.\r\n\t\t/// </summar" +
+                    "y>\r\n\t\tpublic event System.ComponentModel.PropertyChangedEventHandler PropertyCha" +
+                    "nged;\r\n");
+ } 
  for(int i = 0; i < table.Column.Count(); i++) { 
             this.Write("\t\tprivate ");
             this.Write(this.ToStringHelper.ToStringWithCulture(ColumnNetType(table.Column[i])));
@@ -170,12 +179,20 @@ foreach (var enum_value in enum_class.EnumValue) {
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].DbLength));
             this.Write(" characters. Passed string is \" + value.Length.ToString() + \" characters.\");\r\n");
  } 
+ if(this.database.ImplementINotifyPropertyChanged){ 
+            this.Write("\t\t\t\tif(_");
+            this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
+            this.Write(" != value){\r\n\t\t\t\t\tPropertyChanged?.Invoke(this, new System.ComponentModel.Propert" +
+                    "yChangedEventArgs(nameof(");
+            this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
+            this.Write(")));\r\n\t\t\t\t}\r\n");
+ } 
             this.Write("\t\t\t\t_");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write(" = value;\r\n\t\t\t\tchanged_flags.Set(");
             this.Write(this.ToStringHelper.ToStringWithCulture(i));
             this.Write(", true);\r\n\t\t\t}\r\n");
-			} 
+ } 
             this.Write("\t\t}\r\n\r\n");
  } 
  
