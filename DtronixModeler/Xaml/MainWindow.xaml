@@ -1,9 +1,9 @@
 ﻿<Window
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:Xaml="clr-namespace:DtronixModeler.Xaml" x:Class="DtronixModeler.Xaml.MainWindow"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:Xaml="clr-namespace:DtronixModeler.Xaml" x:Class="DtronixModeler.Xaml.MainWindow"
 		xmlns:dxaml="clr-namespace:DtronixModeler.Xaml"
-        Title="Dtronix Modeler" Height="700" Width="930" MinHeight="450" MinWidth="700" Icon="Images/database_blue.png" Closing="Window_Closing" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp">
+		Title="Dtronix Modeler" Height="700" Width="930" MinHeight="450" MinWidth="700" Icon="Images/database_blue.png" Closing="Window_Closing" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp">
 	<Window.Resources>
 		<Style TargetType="FrameworkElement" x:Key="MiddleCenter">
 			<Setter Property="VerticalAlignment" Value="Center" />
@@ -82,7 +82,7 @@
 								<DataGrid AutoGenerateColumns="False" x:Name="_DagColumnDefinitions"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_DagColumnDefinitions_ContextMenuOpening" SelectionChanged="_DagColumnDefinitions_SelectionChanged">
 									<DataGrid.Columns>
 										<DataGridTextColumn Header="Name" Width="100*" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridComboBoxColumn Width="140" x:Name="ColumnNetType" Header=".Net Type" SelectedValueBinding="{Binding NetType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding NetType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+										<DataGridComboBoxColumn Width="140" x:Name="ColumnNetType" Header=".Net Type" SelectedValueBinding="{Binding NetType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding NetType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
 										<DataGridComboBoxColumn Width="140" x:Name="ColumnDbType" Header="Database Type" SelectedValueBinding="{Binding DbType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding DbType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
 										<DataGridTextColumn Header="Length" Width="50" Binding="{Binding DbLength}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
 										<DataGridTextColumn Header="Default Value" Width="100" Binding="{Binding DefaultValue, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
@@ -234,69 +234,69 @@
 					</TabItem>
 				</TabControl>
 			</TabItem>
-            <TabItem Header="Enums">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <GroupBox Grid.Column="0" Header="Enum List" >
-                        <ListBox x:Name="_LstEnums" ItemsSource="{Binding Enumeration}">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Name}"  />
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                            <ListBox.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="New" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
-                                        <MenuItem.Icon>
-                                            <Image Source="Images/add.png" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="Delete" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
-                                        <MenuItem.Icon>
-                                            <Image Source="Images/delete.png" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </ContextMenu>
-                            </ListBox.ContextMenu>
-                            <ListBox.CommandBindings>
-                                <CommandBinding Command="New" Executed="NewEnum" CanExecute="NewEnum_CanExecute"/>
-                                <CommandBinding Command="Delete" Executed="DeleteEnum" CanExecute="DeleteEnum_CanExecute"/>
-                            </ListBox.CommandBindings>
-                        </ListBox>
-                    </GroupBox>
-                    <GroupBox Grid.Column="1" Header="Values" >
-                        <DataGrid x:Name="_DatEnumList" ItemsSource="{Binding SelectedValue.EnumValue, ElementName=_LstEnums}" AutoGenerateColumns="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                            </DataGrid.Columns>
-                            <DataGrid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="dxaml:Commands.MoveUp" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
-                                        <MenuItem.Icon>
-                                            <Image Source="Images/arrow_up.png" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="dxaml:Commands.MoveDown" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
-                                        <MenuItem.Icon>
-                                            <Image Source="Images/arrow_down.png" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="Delete" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
-                                        <MenuItem.Icon>
-                                            <Image Source="Images/delete.png" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
-                            <DataGrid.CommandBindings>
-                                <CommandBinding Command="dxaml:Commands.MoveUp" Executed="MoveEnumUp" CanExecute="ModifyEnumValue_CanExecute"/>
-                                <CommandBinding Command="dxaml:Commands.MoveDown" Executed="MoveEnumDown" CanExecute="ModifyEnumValue_CanExecute"/>
-                                <CommandBinding Command="Delete" Executed="DeleteEnumValue" CanExecute="ModifyEnumValue_CanExecute"/>
-                            </DataGrid.CommandBindings>
-                            <!-- 
+			<TabItem Header="Enums">
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="200"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<GroupBox Grid.Column="0" Header="Enum List" >
+						<ListBox x:Name="_LstEnums" ItemsSource="{Binding Enumeration}">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding Name}"  />
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+							<ListBox.ContextMenu>
+								<ContextMenu>
+									<MenuItem Command="New" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
+										<MenuItem.Icon>
+											<Image Source="Images/add.png" />
+										</MenuItem.Icon>
+									</MenuItem>
+									<MenuItem Command="Delete" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
+										<MenuItem.Icon>
+											<Image Source="Images/delete.png" />
+										</MenuItem.Icon>
+									</MenuItem>
+								</ContextMenu>
+							</ListBox.ContextMenu>
+							<ListBox.CommandBindings>
+								<CommandBinding Command="New" Executed="NewEnum" CanExecute="NewEnum_CanExecute"/>
+								<CommandBinding Command="Delete" Executed="DeleteEnum" CanExecute="DeleteEnum_CanExecute"/>
+							</ListBox.CommandBindings>
+						</ListBox>
+					</GroupBox>
+					<GroupBox Grid.Column="1" Header="Values" >
+						<DataGrid x:Name="_DatEnumList" ItemsSource="{Binding SelectedValue.EnumValue, ElementName=_LstEnums}" AutoGenerateColumns="False">
+							<DataGrid.Columns>
+								<DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+							</DataGrid.Columns>
+							<DataGrid.ContextMenu>
+								<ContextMenu>
+									<MenuItem Command="dxaml:Commands.MoveUp" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
+										<MenuItem.Icon>
+											<Image Source="Images/arrow_up.png" />
+										</MenuItem.Icon>
+									</MenuItem>
+									<MenuItem Command="dxaml:Commands.MoveDown" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
+										<MenuItem.Icon>
+											<Image Source="Images/arrow_down.png" />
+										</MenuItem.Icon>
+									</MenuItem>
+									<MenuItem Command="Delete" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
+										<MenuItem.Icon>
+											<Image Source="Images/delete.png" />
+										</MenuItem.Icon>
+									</MenuItem>
+								</ContextMenu>
+							</DataGrid.ContextMenu>
+							<DataGrid.CommandBindings>
+								<CommandBinding Command="dxaml:Commands.MoveUp" Executed="MoveEnumUp" CanExecute="ModifyEnumValue_CanExecute"/>
+								<CommandBinding Command="dxaml:Commands.MoveDown" Executed="MoveEnumDown" CanExecute="ModifyEnumValue_CanExecute"/>
+								<CommandBinding Command="Delete" Executed="DeleteEnumValue" CanExecute="ModifyEnumValue_CanExecute"/>
+							</DataGrid.CommandBindings>
+							<!-- 
 																		<MenuItem x:Name="_CmiMoveColumnUp" Header="Move Column Up" Click="_CmiMoveColumnUp_Click" IsEnabled="False">
 												<MenuItem.Icon>
 													<Image Source="Images/arrow_up.png" />
@@ -308,13 +308,13 @@
 												</MenuItem.Icon>
 											</MenuItem>
 							-->
-                        </DataGrid>
+						</DataGrid>
 
-                    </GroupBox>
+					</GroupBox>
 
-                </Grid>
-            </TabItem>
-            <TabItem Header="Database">
+				</Grid>
+			</TabItem>
+			<TabItem Header="Database">
 				<TabControl VerticalAlignment="Stretch" BorderThickness="0,1">
 					<TabItem x:Name="_tabConfig" Header="Config">
 						<Grid>
@@ -382,6 +382,8 @@
 						<CheckBox Grid.Column="3" Grid.Row="0" IsChecked="{Binding DataContext.OutputSqlTables, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Output SQL Tables"/>
 
 						<CheckBox Grid.Column="3" Grid.Row="1" IsChecked="{Binding DataContext.OutputCsClasses, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Output C# Classes"/>
+
+						<CheckBox Grid.Column="3" Grid.Row="2" IsChecked="{Binding DataContext.ImplementINotifyPropertyChanged, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Implement INotifyPropertyChanged"/>
 					</Grid>
 				</GroupBox>
 			</TabItem>

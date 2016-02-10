@@ -44,6 +44,8 @@ namespace DtronixModeler.Ddl {
         
         private bool outputCsClassesField;
         
+        private bool implementINotifyPropertyChangedField;
+        
         private DbProvider targetDbField;
         
         private static System.Xml.Serialization.XmlSerializer serializer;
@@ -57,6 +59,7 @@ namespace DtronixModeler.Ddl {
             this.tableField = new ObservableCollection<Table>();
             this.outputSqlTablesField = true;
             this.outputCsClassesField = true;
+            this.implementINotifyPropertyChangedField = false;
         }
         
         [System.Xml.Serialization.XmlElementAttribute("Table")]
@@ -254,6 +257,20 @@ namespace DtronixModeler.Ddl {
                 if ((outputCsClassesField.Equals(value) != true)) {
                     this.outputCsClassesField = value;
                     this.OnPropertyChanged("OutputCsClasses");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool ImplementINotifyPropertyChanged {
+            get {
+                return this.implementINotifyPropertyChangedField;
+            }
+            set {
+                if ((implementINotifyPropertyChangedField.Equals(value) != true)) {
+                    this.implementINotifyPropertyChangedField = value;
+                    this.OnPropertyChanged("ImplementINotifyPropertyChanged");
                 }
             }
         }

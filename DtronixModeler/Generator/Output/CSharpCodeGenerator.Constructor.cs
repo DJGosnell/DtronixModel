@@ -26,6 +26,29 @@ namespace DtronixModeler.Generator.Output {
 			this.database = database;
 		}
 
+		private bool ColumnIsTypeStruct(Column column) {
+			switch (column.NetType) {
+				case "Int64":
+				case "Int16":
+				case "Int32":
+				case "Byte":
+				case "Decimal":
+				case "Float":
+				case "Double":
+				case "Boolean":
+				case "Char":
+				case "DateTimeOffset":
+					return true;
+			}
+
+			// See if the type is an enum.
+			if (Type.GetType("System." + column.NetType, false) == null) {
+				return true;
+			}
+
+			return true;
+		}
+
 
 		private string ColumnNetType(Column column) {
 			if (column.NetType == "ByteArray") {
@@ -49,6 +72,7 @@ namespace DtronixModeler.Generator.Output {
 					case "Double":
 					case "Boolean":
 					case "Char":
+					case "DateTimeOffset":
 						type += "?";
 						break;
 				}
