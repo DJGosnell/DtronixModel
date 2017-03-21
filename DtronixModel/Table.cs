@@ -6,7 +6,7 @@ namespace DtronixModel {
 	/// </summary>
 	/// <typeparam name="T">Table model to wrap.</typeparam>
 	public class Table<T> where T : Model, new() {
-		private Context context;
+		private readonly Context context;
 
 		/// <summary>
 		/// Constructor to define which context this table is operating inside.
@@ -31,8 +31,8 @@ namespace DtronixModel {
 		/// <param name="model">Row to insert.</param>
 		/// <returns>If the "LastInsertIdQuery" property is set on the database context, will return the newly inserted row id.  Otherwise will return 0.</returns>
 		public long Insert(T model) {
-			long[] result = Insert(new T[] { model });
-			return (result == null) ? 0 : result[0];
+			long[] result = Insert(new[] { model });
+			return result?[0] ?? 0;
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace DtronixModel {
 		/// </remarks>
 		/// <param name="model">Row to update.</param>
 		public void Update(T model) {
-			Update(new T[] { model });
+			Update(new[] { model });
 		}
 
 		/// <summary>
@@ -81,7 +81,7 @@ namespace DtronixModel {
 		/// </remarks>
 		/// <param name="model">Row to delete.</param>
 		public void Delete(T model) {
-			Delete(new T[] { model });
+			Delete(new[] { model });
 		}
 
 		/// <summary>
@@ -99,7 +99,7 @@ namespace DtronixModel {
 		/// </summary>
 		/// <param name="id">Row id to delete.</param>
 		public void Delete(long id) {
-			Delete(new long[] { id });
+			Delete(new[] { id });
 		}
 
 		/// <summary>
