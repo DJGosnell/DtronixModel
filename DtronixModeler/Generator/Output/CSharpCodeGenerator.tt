@@ -102,6 +102,9 @@ foreach (var enum_value in enum_class.EnumValue) { #>
 	} #>
 
 	[TableAttribute(Name = "<#= table.Name #>")]
+<# if (this.database.ImplementProtobufNetDataContracts) { #>
+	[ProtoBuf.ProtoContract]
+<# } #>
 	public partial class <#= table.Name #> : Model<# if(this.database.ImplementINotifyPropertyChanged){ #>, System.ComponentModel.INotifyPropertyChanged<# } #> {
 
 <# if(this.database.ImplementINotifyPropertyChanged){ #>
@@ -116,6 +119,9 @@ foreach (var enum_value in enum_class.EnumValue) { #>
 		/// <summary>
 		/// <#= table.Column[i].Description #>
 		/// </summary>
+<# }
+if (this.database.ImplementProtobufNetDataContracts) { #>
+		[ProtoBuf.ProtoMember(<#= i+1 #>)]
 <# } #>
 		public <#= ColumnNetType(table.Column[i]) #> <# if(reserved_words.Contains(table.Column[i].Name)){ this.Write("@"); } #><#= table.Column[i].Name #> {
 			get { return _<#= table.Column[i].Name #>; }

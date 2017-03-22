@@ -48,6 +48,8 @@ namespace DtronixModeler.Ddl {
         
         private DbProvider targetDbField;
         
+        private bool implementProtobufNetDataContractsField;
+        
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Database() {
@@ -60,6 +62,7 @@ namespace DtronixModeler.Ddl {
             this.outputSqlTablesField = true;
             this.outputCsClassesField = true;
             this.implementINotifyPropertyChangedField = false;
+            this.implementProtobufNetDataContractsField = false;
         }
         
         [System.Xml.Serialization.XmlElementAttribute("Table")]
@@ -284,6 +287,20 @@ namespace DtronixModeler.Ddl {
                 if ((targetDbField.Equals(value) != true)) {
                     this.targetDbField = value;
                     this.OnPropertyChanged("TargetDb");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool ImplementProtobufNetDataContracts {
+            get {
+                return this.implementProtobufNetDataContractsField;
+            }
+            set {
+                if ((implementProtobufNetDataContractsField.Equals(value) != true)) {
+                    this.implementProtobufNetDataContractsField = value;
+                    this.OnPropertyChanged("ImplementProtobufNetDataContracts");
                 }
             }
         }

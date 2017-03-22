@@ -362,6 +362,7 @@
 							<RowDefinition Height="30"/>
 							<RowDefinition Height="30"/>
 							<RowDefinition Height="30"/>
+							<RowDefinition Height="30"/>
 							<RowDefinition Height="33*"/>
 						</Grid.RowDefinitions>
 						<Grid.ColumnDefinitions>
@@ -384,6 +385,8 @@
 						<CheckBox Grid.Column="3" Grid.Row="1" IsChecked="{Binding DataContext.OutputCsClasses, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Output C# Classes"/>
 
 						<CheckBox Grid.Column="3" Grid.Row="2" IsChecked="{Binding DataContext.ImplementINotifyPropertyChanged, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Implement INotifyPropertyChanged"/>
+
+						<CheckBox Grid.Column="3" Grid.Row="3" IsChecked="{Binding DataContext.ImplementProtobufNetDataContracts, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Implement Protobuf-net DataContracts"/>
 					</Grid>
 				</GroupBox>
 			</TabItem>
