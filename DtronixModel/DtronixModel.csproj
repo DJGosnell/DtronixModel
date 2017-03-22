@@ -106,7 +106,7 @@
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Nuget (
   del $(TargetDir)\*.nupkg
-  $(SolutionDir)packages\NuGet.CommandLine.2.8.5\tools\nuget.exe pack $(ProjectDir)DtronixModel.csproj -Symbols -Prop Configuration=Nuget -Verbosity Detailed
+  $(SolutionDir)packages\NuGet.CommandLine.3.4.3\tools\nuget.exe pack $(ProjectDir)DtronixModel.csproj -Symbols -Prop Configuration=Nuget -Verbosity Detailed
   copy  "$(SolutionDir)Tools\NugetPush.bat" "$(TargetDir)NugetPush.bat"
 )</PostBuildEvent>
   </PropertyGroup>

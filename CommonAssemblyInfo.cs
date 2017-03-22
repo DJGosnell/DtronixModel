@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyCompany("Dtronix")]
 [assembly: AssemblyProduct("Dtronix Database Modeler")]
-[assembly: AssemblyCopyright("Copyright © Dtronix 2015")]
+[assembly: AssemblyCopyright("Copyright © Dtronix 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
