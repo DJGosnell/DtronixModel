@@ -60,15 +60,10 @@ namespace DtronixModel {
 			All = Queries | BoundParameters | Inserts | Updates
 		}
 
-		private DebugLevel _debug = DebugLevel.None;
-
 		/// <summary>
 		/// Set to the level of debugging to output.  
 		/// </summary>
-		public DebugLevel Debug {
-			get { return _debug; }
-			set { _debug = value; }
-		}
+		public DebugLevel Debug { get; set; } = DebugLevel.None;
 
 
 		/// <summary>

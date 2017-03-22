@@ -23,19 +23,19 @@ namespace DtronixModel {
 			Delete
 		}
 
-		private bool _auto_close_command = true;
+		private bool auto_close_command = true;
 
 		/// <summary>
 		/// True to close the command at the end of the query.
 		/// </summary>
 		public bool AutoCloseCommand {
-			get { return _auto_close_command; }
-			set { _auto_close_command = value; }
+			get { return auto_close_command; }
+			set { auto_close_command = value; }
 		}
 
 
-		private Context context;
-		private DbCommand command;
+		private readonly Context context;
+		private readonly DbCommand command;
 
 		/// <summary>
 		/// Internal mode that the statement was setup with.
@@ -167,7 +167,7 @@ namespace DtronixModel {
 				throw new InvalidOperationException("Can not use all functions in Execute mode.");
 			}
 
-			this.sql_select = select;
+			sql_select = select;
 			return this;
 		}
 
@@ -246,7 +246,7 @@ namespace DtronixModel {
 		/// <param name="model">Row to provide the primary key for.</param>
 		/// <returns>Current statement for chaining.</returns>
 		public SqlStatement<T> Where(T model) {
-			return Where(new T[] { model });
+			return Where(new[] { model });
 		}
 
 		/// <summary>
@@ -413,7 +413,7 @@ namespace DtronixModel {
 				command.ExecuteNonQuery();
 			}
 
-			if (_auto_close_command) {
+			if (auto_close_command) {
 				command.Dispose();
 			}
 
@@ -444,7 +444,7 @@ namespace DtronixModel {
 				model.Read(reader, context);
 			}
 
-			if (_auto_close_command) {
+			if (auto_close_command) {
 				command.Dispose();
 			}
 
@@ -475,7 +475,7 @@ namespace DtronixModel {
 				}
 			}
 
-			if (_auto_close_command) {
+			if (auto_close_command) {
 				command.Dispose();
 			}
 
@@ -579,6 +579,7 @@ namespace DtronixModel {
 		/// Binds a parameter in the current command.
 		/// </summary>
 		/// <param name="value">Value to bind.</param>
+		/// <param name="parameter_list">List of paramaters to bind.</param>
 		/// <returns>Parameter name for the binding reference.</returns>
 		private string BindParameter(object value, List<DbParameter> parameter_list = null) {
 			string key = "@p" + command.Parameters.Count;
@@ -588,12 +589,10 @@ namespace DtronixModel {
 
 			// Logging to output bound parameters to stdout.
 			if (context.Debug.HasFlag(Context.DebugLevel.BoundParameters)) {
-				Console.Out.WriteLine("Parameter: " + key + " = " + value.ToString());
+				Console.Out.WriteLine("Parameter: " + key + " = " + value);
 			}
 
-			if (parameter_list != null) {
-				parameter_list.Add(param);
-			}
+			parameter_list?.Add(param);
 
 			command.Parameters.Add(param);
 			return key;
@@ -692,9 +691,9 @@ namespace DtronixModel {
 						object new_row = command.ExecuteScalar();
 						if (new_row == null) {
 							throw new Exception("Unable to insert row");
-						} else {
-							new_row_ids[i] = Convert.ToInt64(new_row);
 						}
+
+						new_row_ids[i] = Convert.ToInt64(new_row);
 					} else {
 						if (command.ExecuteNonQuery() != 1) {
 							throw new Exception("Unable to insert row");
@@ -712,7 +711,7 @@ namespace DtronixModel {
 				if (transaction != null) {
 					transaction.Commit();
 				}
-			} catch (Exception e) {
+			} catch (Exception) {
 				// If we encountered an error, rollback the transaction.
 
 				if (transaction != null) {
@@ -746,8 +745,8 @@ namespace DtronixModel {
 				return sql;
 			}
 
-			string[] sql_param_holder = new string[binding.Length];
-			for (int i = 0; i < binding.Length; i++) {
+			object[] sql_param_holder = new object[binding.Length];
+			for (var i = 0; i < binding.Length; i++) {
 				sql_param_holder[i] = BindParameter(binding[i]);
 			}
 
@@ -776,7 +775,7 @@ namespace DtronixModel {
 		}
 
 		public void Dispose() {
-			this.command.Dispose();
+			command.Dispose();
 		}
 
 	}

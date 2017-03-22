@@ -6,17 +6,17 @@ namespace DtronixModel {
 	/// Transaction wrapper to handle internal transactions and object states.
 	/// </summary>
 	public class DtronixTransaction : IDisposable {
-		bool disposed = false;
+		private bool disposed = false;
 
 		/// <summary>
 		/// Wrapped transaction for the database.
 		/// </summary>
-		DbTransaction transaction;
+		private readonly DbTransaction transaction;
 
 		/// <summary>
 		/// Method to call on transaction disposal.
 		/// </summary>
-		Action on_dispose;
+		private readonly Action on_dispose;
 
 		/// <summary>
 		/// Creates a wrapped transaction with action on disposal.
@@ -50,7 +50,11 @@ namespace DtronixModel {
 			GC.SuppressFinalize(this);
 		}
 
-		// Protected implementation of Dispose pattern. 
+
+		/// <summary>
+		/// Protected implementation of Dispose pattern. 
+		/// </summary>
+		/// <param name="disposing">True if the object is in the process of being disposed.</param>
 		protected virtual void Dispose(bool disposing) {
 			if (disposed)
 				return;
