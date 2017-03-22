@@ -104,11 +104,11 @@
   </Target>
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.104.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.104.0\build\net45\System.Data.SQLite.Core.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName) == Nuget (
+    <PostBuildEvent Condition="$(ConfigurationName) == Nuget">
   del $(TargetDir)\*.nupkg
   $(SolutionDir)packages\NuGet.CommandLine.3.4.3\tools\nuget.exe pack $(ProjectDir)DtronixModel.csproj -Symbols -Prop Configuration=Nuget -Verbosity Detailed
   copy  "$(SolutionDir)Tools\NugetPush.bat" "$(TargetDir)NugetPush.bat"
-)</PostBuildEvent>
+  </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
