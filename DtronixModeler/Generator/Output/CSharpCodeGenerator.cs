@@ -320,10 +320,25 @@ foreach (var db_assoc in database.Association) {
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             this.Write("(DbDataReader reader, Context context) {\r\n\t\t\tchanged_flags = new BitArray(");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column.Count()));
-            this.Write(@");
-			Read(reader, context);
-		}
-
+            this.Write(");\r\n\t\t\tRead(reader, context);\r\n\t\t}\r\n\r\n");
+ var primary_key = table.Column.FirstOrDefault(c => c.IsPrimaryKey);
+if(primary_key != null){ 
+            this.Write("\t\t/// <summary>\r\n\t\t/// Creates a ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
+            this.Write(@" model and with the specified Id.
+		/// Useful when creating a new matching row on a remote connection.
+		/// </summary>
+		/// <param name=""reader"">Instance of a live data reader for this model's table.</param>
+		/// <param name=""id"">Id to set the model to.</param>
+		public ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
+            this.Write("(");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ColumnNetType(primary_key)));
+            this.Write(" id) {\r\n\t\t\tthis._");
+            this.Write(this.ToStringHelper.ToStringWithCulture(primary_key.Name));
+            this.Write(" = id;\r\n\t\t}\r\n");
+ } 
+            this.Write(@"
 		/// <summary>
 		/// Reads the row information from the table into this model.
 		/// </summary>

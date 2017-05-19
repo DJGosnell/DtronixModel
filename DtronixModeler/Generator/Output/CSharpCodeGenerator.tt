@@ -233,6 +233,19 @@ foreach (var db_assoc in database.Association) {
 			Read(reader, context);
 		}
 
+<# var primary_key = table.Column.FirstOrDefault(c => c.IsPrimaryKey);
+if(primary_key != null){ #>
+		/// <summary>
+		/// Creates a <#= table.Name #> model and with the specified Id.
+		/// Useful when creating a new matching row on a remote connection.
+		/// </summary>
+		/// <param name="reader">Instance of a live data reader for this model's table.</param>
+		/// <param name="id">Id to set the model to.</param>
+		public <#= table.Name #>(<#= ColumnNetType(primary_key) #> id) {
+			this._<#= primary_key.Name #> = id;
+		}
+<# } #>
+
 		/// <summary>
 		/// Reads the row information from the table into this model.
 		/// </summary>
