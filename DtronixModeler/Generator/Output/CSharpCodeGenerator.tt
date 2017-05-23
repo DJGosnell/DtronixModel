@@ -125,8 +125,8 @@ if (this.database.ImplementProtobufNetDataContracts) { #>
 <# } #>
 		public <#= ColumnNetType(table.Column[i]) #> <# if(reserved_words.Contains(table.Column[i].Name)){ this.Write("@"); } #><#= table.Column[i].Name #> {
 			get { return _<#= table.Column[i].Name #>; }
-<# if (table.Column[i].IsReadOnly == false) { #>
-			set {
+<# if (table.Column[i].IsReadOnly == false || this.database.ImplementProtobufNetDataContracts) { #>
+			<# if(this.database.ImplementProtobufNetDataContracts && table.Column[i].IsReadOnly) { #>private <# } #>set {
 <# if (table.Column[i].DbLength != 0 && table.Column[i].NetType == "String") { #>
 				if(value != null && value.Length > <#= table.Column[i].DbLength #>) 
 					throw new ArgumentOutOfRangeException("<#= table.Column[i].Name #>", "String <#= table.Column[i].Name #> is too long. Max length allowed is <#= table.Column[i].DbLength #> characters. Passed string is " + value.Length.ToString() + " characters.");
@@ -242,6 +242,7 @@ if(primary_key != null){ #>
 		/// <param name="reader">Instance of a live data reader for this model's table.</param>
 		/// <param name="id">Id to set the model to.</param>
 		public <#= table.Name #>(<#= ColumnNetType(primary_key) #> id) {
+			changed_flags = new BitArray(<#= table.Column.Count() #>);
 			this._<#= primary_key.Name #> = id;
 		}
 <# } #>

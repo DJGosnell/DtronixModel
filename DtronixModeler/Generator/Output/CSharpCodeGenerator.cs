@@ -175,8 +175,12 @@ if (this.database.ImplementProtobufNetDataContracts) {
             this.Write(" {\r\n\t\t\tget { return _");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write("; }\r\n");
- if (table.Column[i].IsReadOnly == false) { 
-            this.Write("\t\t\tset {\r\n");
+ if (table.Column[i].IsReadOnly == false || this.database.ImplementProtobufNetDataContracts) { 
+            this.Write("\t\t\t");
+ if(this.database.ImplementProtobufNetDataContracts && table.Column[i].IsReadOnly) { 
+            this.Write("private ");
+ } 
+            this.Write("set {\r\n");
  if (table.Column[i].DbLength != 0 && table.Column[i].NetType == "String") { 
             this.Write("\t\t\t\tif(value != null && value.Length > ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].DbLength));
@@ -334,7 +338,9 @@ if(primary_key != null){
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             this.Write("(");
             this.Write(this.ToStringHelper.ToStringWithCulture(ColumnNetType(primary_key)));
-            this.Write(" id) {\r\n\t\t\tthis._");
+            this.Write(" id) {\r\n\t\t\tchanged_flags = new BitArray(");
+            this.Write(this.ToStringHelper.ToStringWithCulture(table.Column.Count()));
+            this.Write(");\r\n\t\t\tthis._");
             this.Write(this.ToStringHelper.ToStringWithCulture(primary_key.Name));
             this.Write(" = id;\r\n\t\t}\r\n");
  } 
