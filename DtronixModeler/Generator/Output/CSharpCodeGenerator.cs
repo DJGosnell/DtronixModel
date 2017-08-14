@@ -40,7 +40,7 @@ string[] reserved_words = new string[] {"for", "with", "while"};
  
 int shift_ammount = 0;
 foreach (var enum_value in enum_class.EnumValue) { 
-            this.Write("        ");
+            this.Write("GetPKValue\r\n        ");
             this.Write(this.ToStringHelper.ToStringWithCulture(enum_value.Name));
             this.Write(" = 1 << ");
             this.Write(this.ToStringHelper.ToStringWithCulture(shift_ammount++));
@@ -475,20 +475,35 @@ if(primary_key != null){
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write("\",\r\n");
  } 
-            this.Write("            };\r\n        }\r\n\r\n");
- if (pk_column != null) { 
-            this.Write("        /// <summary>\r\n        /// Gets the name of the row primary key.\r\n       " +
-                    " /// </summary>\r\n        /// <returns>The name of the primary key</returns>\r\n   " +
-                    "     public override string GetPKName()\r\n        {\r\n            return \"");
+            this.Write(@"            };
+        }
+
+        /// <summary>
+        /// Gets the name of the row primary key.
+        /// </summary>
+        /// <returns>The name of the primary key</returns>
+        public override string GetPKName()
+        {
+            return ");
+ if(pk_column == null) { 
+            this.Write("null;");
+ } else { 
+            this.Write("\"");
             this.Write(this.ToStringHelper.ToStringWithCulture(pk_column.Name));
-            this.Write("\";\r\n        }\r\n\r\n        /// <summary>\r\n        /// Gets the value of the primary" +
-                    " key.\r\n        /// </summary>\r\n        /// <returns>The value of the primary key" +
-                    ".</returns>\r\n        public override object GetPKValue()\r\n        {\r\n           " +
-                    " return _");
-            this.Write(this.ToStringHelper.ToStringWithCulture(pk_column.Name));
-            this.Write(";\r\n        }\r\n");
+            this.Write("\";");
  } 
-            this.Write("    }\r\n");
+            this.Write(" \r\n        }\r\n\r\n        /// <summary>\r\n        /// Gets the value of the primary " +
+                    "key.\r\n        /// </summary>\r\n        /// <returns>The value of the primary key." +
+                    "</returns>\r\n        public override object GetPKValue()\r\n        {\r\n            " +
+                    "return ");
+ if(pk_column == null) { 
+            this.Write("null;");
+ } else { 
+            this.Write("_");
+            this.Write(this.ToStringHelper.ToStringWithCulture(pk_column.Name));
+            this.Write(";");
+ } 
+            this.Write(" \r\n        }\r\n    }\r\n");
  } 
             this.Write("}\r\n");
             return this.GenerationEnvironment.ToString();
