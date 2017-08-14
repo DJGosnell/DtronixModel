@@ -12,7 +12,7 @@ namespace DtronixModeler.Ddl {
 	public partial class Table {
 
 		public void Rename(Database database, string new_name) {
-			string old_name = this.nameField;
+			string old_name = nameField;
 			// Update associations
 			foreach (var association in database.Association) {
 				var assoc_ref = association.ReferencesTable(this);
@@ -31,7 +31,7 @@ namespace DtronixModeler.Ddl {
 				}
 			}
 
-			this.Name = new_name;
+			Name = new_name;
 
 		}
 
@@ -53,7 +53,7 @@ namespace DtronixModeler.Ddl {
 			Initialize();
 
 			property = property.ToLower();
-			foreach (var config in this.configurationField) {
+			foreach (var config in configurationField) {
 				if (config.Name == property) {
 					try {
 						return (T)Convert.ChangeType(config.Value, typeof(T));
@@ -70,7 +70,7 @@ namespace DtronixModeler.Ddl {
 			Initialize();
 
 			property = property.ToLower();
-			foreach (var config in this.configurationField) {
+			foreach (var config in configurationField) {
 				if (config.Name == property) {
 					try {
 						return (T)Convert.ChangeType(config.Value, typeof(T));
@@ -114,11 +114,11 @@ namespace DtronixModeler.Ddl {
 			if (initialized == false) {
 				initialized = true;
 
-				if (string.IsNullOrWhiteSpace(this.ContextClass)) {
+				if (string.IsNullOrWhiteSpace(ContextClass)) {
 					if (string.IsNullOrWhiteSpace(Name)) {
-						this.ContextClass = "DatabaseContext";
+						ContextClass = "DatabaseContext";
 					} else {
-						this.ContextClass = Name + "Context";
+						ContextClass = Name + "Context";
 					}
 				}
 			}
@@ -173,10 +173,10 @@ namespace DtronixModeler.Ddl {
 		}
 
 		public Reference ReferencesTable(Table table) {
-			if (this.table1Field == table.Name){
+			if (table1Field == table.Name){
 				return Reference.R1;
 
-			} else if (this.table2Field == table.Name) {
+			} else if (table2Field == table.Name) {
 				return Reference.R2;
 
 			} else {
@@ -189,10 +189,10 @@ namespace DtronixModeler.Ddl {
 			if (ref_table == Reference.None) {
 				return Reference.None;
 
-			} else if (ref_table == Reference.R1 && this.Table1Column == column_name) {
+			} else if (ref_table == Reference.R1 && Table1Column == column_name) {
 				return Reference.R1;
 
-			} else if (ref_table == Reference.R2 && this.Table2Column == column_name) {
+			} else if (ref_table == Reference.R2 && Table2Column == column_name) {
 				return Reference.R2;
 
 			} else {
@@ -214,7 +214,7 @@ namespace DtronixModeler.Ddl {
 
 			// Rename associations.
 			foreach (var association in database.Association) {
-				var assoc_ref = association.ReferencesTableColumn(table, this.nameField);
+				var assoc_ref = association.ReferencesTableColumn(table, nameField);
 				if (assoc_ref != Association.Reference.None) {
 					if (assoc_ref == Association.Reference.R1) {
 						association.Table1Column = new_name;
@@ -225,13 +225,13 @@ namespace DtronixModeler.Ddl {
 			}
 
 
-			this.Name = new_name;
+			Name = new_name;
 		}
 
 		public void PostRename(Database database, string old_name) {
 			// Undo the change and don't notify the property listeners.
-			var new_name = this.nameField;
-			this.nameField = old_name;
+			var new_name = nameField;
+			nameField = old_name;
 			Rename(database, new_name);
 		}
 	}
@@ -250,12 +250,12 @@ namespace DtronixModeler.Ddl {
 		[XmlIgnore]
 		public Visibility Visibility {
 			get {
-				return this.visibilityField;
+				return visibilityField;
 			}
 			set {
 				if ((visibilityField.Equals(value) != true)) {
-					this.visibilityField = value;
-					this.OnPropertyChanged("Visibility");
+					visibilityField = value;
+					OnPropertyChanged("Visibility");
 				}
 			}
 		}

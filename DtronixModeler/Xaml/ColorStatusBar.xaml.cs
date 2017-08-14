@@ -71,7 +71,7 @@ namespace DtronixModeler.Xaml {
 				Time = DateTime.Now
 			};
 
-			_PrbProgress.Visibility = (progress == -1) ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+			_PrbProgress.Visibility = (progress == -1) ? Visibility.Collapsed : Visibility.Visible;
 			current_status = status;
 			
 			string hex_color = null;
@@ -107,10 +107,10 @@ namespace DtronixModeler.Xaml {
 					await Task.Delay(10000, task_ready_cancel_token.Token);
 
 					if (task_ready_cancel_token.Token.IsCancellationRequested == false) {
-						this.Dispatcher.Invoke(() => {
+						Dispatcher.Invoke(() => {
 							SetStatus("Ready", Status.Idle);
 							_PrbProgress.Value = 0;
-							_PrbProgress.Visibility = System.Windows.Visibility.Collapsed;
+							_PrbProgress.Visibility = Visibility.Collapsed;
 						});
 					}
 				});

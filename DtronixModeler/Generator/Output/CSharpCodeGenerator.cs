@@ -34,157 +34,150 @@ string[] reserved_words = new string[] {"for", "with", "while"};
             this.Write(this.ToStringHelper.ToStringWithCulture(this.database.Namespace));
             this.Write(" {\r\n\r\n");
  foreach (var enum_class in database.Enumeration) { 
-            this.Write("\tpublic enum ");
+            this.Write("    public enum ");
             this.Write(this.ToStringHelper.ToStringWithCulture(enum_class.Name));
             this.Write(" : int {\r\n");
  
 int shift_ammount = 0;
 foreach (var enum_value in enum_class.EnumValue) { 
-            this.Write("\t\t");
+            this.Write("        ");
             this.Write(this.ToStringHelper.ToStringWithCulture(enum_value.Name));
             this.Write(" = 1 << ");
             this.Write(this.ToStringHelper.ToStringWithCulture(shift_ammount++));
             this.Write(",\r\n");
  } 
-            this.Write("\t}\r\n");
+            this.Write("    }\r\n");
  } 
-            this.Write("\r\n\tpublic partial class ");
+            this.Write("\r\n    public partial class ");
             this.Write(this.ToStringHelper.ToStringWithCulture(this.database.ContextClass));
-            this.Write(@" : Context {
-
-		private static Func<DbConnection> _DefaultConnection = null;
-
-		/// <summary>
-		/// Set a default constructor to allow use of parameter-less context calling.
-		/// </summary>
-		public static Func<DbConnection> DefaultConnection {
-			get { return _DefaultConnection; }
-			set { _DefaultConnection = value; }
-		}
-
-		private static string _LastInsertIdQuery = null;
-
-		/// <summary>
-		/// Sets the query string to retrieve the last insert ID.
-		/// </summary>
-		public static new string LastInsertIdQuery {
-			get { return _LastInsertIdQuery; }
-			set { _LastInsertIdQuery = value; }
-		}
-
-		private static TargetDb _DatabaseType;
-
-		/// <summary>
-		/// Type of database this context will target.  Automatically sets proper database specific values.
-		/// </summary>
-		public static TargetDb DatabaseType {
-			get { return _DatabaseType; }
-			set {
-				_DatabaseType = value;
-				switch (value) {
-					case TargetDb.MySql:
-						LastInsertIdQuery = ""SELECT last_insert_id()"";
-						break;
-					case TargetDb.Sqlite:
-						LastInsertIdQuery = ""SELECT last_insert_rowid()"";
-						break;
-					case TargetDb.Other:
-						break;
-				}
-			}
-		}
-");
+            this.Write(" : Context {\r\n\r\n        private static Func<DbConnection> _defaultConnection;\r\n\r\n" +
+                    "        /// <summary>\r\n        /// Set a default constructor to allow use of par" +
+                    "ameter-less context calling.\r\n        /// </summary>\r\n        public static Func" +
+                    "<DbConnection> DefaultConnection\r\n        {\r\n            get { return _defaultCo" +
+                    "nnection; }\r\n            set { _defaultConnection = value; }\r\n        }\r\n\r\n     " +
+                    "   private static string _lastInsertIdQuery = null;\r\n\r\n        /// <summary>\r\n  " +
+                    "      /// Sets the query string to retrieve the last insert ID.\r\n        /// </s" +
+                    "ummary>\r\n        public new static string LastInsertIdQuery\r\n        {\r\n        " +
+                    "    get { return _lastInsertIdQuery; }\r\n            set { _lastInsertIdQuery = v" +
+                    "alue; }\r\n        }\r\n\r\n        private static TargetDb _DatabaseType;\r\n\r\n        " +
+                    "/// <summary>\r\n        /// Type of database this context will target.  Automatic" +
+                    "ally sets proper database specific values.\r\n        /// </summary>\r\n        publ" +
+                    "ic static TargetDb DatabaseType\r\n        {\r\n            get { return _DatabaseTy" +
+                    "pe; }\r\n            set \r\n            {\r\n                _DatabaseType = value;\r\n" +
+                    "                switch (value) \r\n                {\r\n                    case Tar" +
+                    "getDb.MySql:\r\n                        LastInsertIdQuery = \"SELECT last_insert_id" +
+                    "()\";\r\n                        break;\r\n                    case TargetDb.Sqlite:\r" +
+                    "\n                        LastInsertIdQuery = \"SELECT last_insert_rowid()\";\r\n    " +
+                    "                    break;\r\n                    case TargetDb.Other:\r\n          " +
+                    "              break;\r\n                }\r\n            }\r\n        }\r\n");
  foreach (var table in database.Table) { 
-            this.Write("\t\tprivate Table<");
+            this.Write("        private Table<");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             this.Write("> _");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(";\r\n\r\n\t\tpublic Table<");
+            this.Write(";\r\n\r\n        public Table<");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             this.Write("> ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(" {\r\n\t\t\tget {\r\n\t\t\t\tif (_");
+            this.Write(" {\r\n            get {\r\n                if (_");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(" == null) {\r\n\t\t\t\t\t_");
+            this.Write(" == null) {\r\n                    _");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             this.Write(" = new Table<");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(">(this);\r\n\t\t\t\t}\r\n\r\n\t\t\t\treturn _");
+            this.Write(">(this);\r\n                }\r\n\r\n                return _");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(";\r\n\t\t\t}\r\n\t\t}\r\n\r\n");
+            this.Write(";\r\n            }\r\n        }\r\n\r\n");
  } 
-            this.Write("\t\t/// <summary>\r\n\t\t/// Create a new context of this database\'s type.  Can only be" +
-                    " used if a default connection is specified.\r\n\t\t/// </summary>\r\n\t\tpublic ");
+            this.Write("        /// <summary>\r\n        /// Create a new context of this database\'s type. " +
+                    " Can only be used if a default connection is specified.\r\n        /// </summary>\r" +
+                    "\n        public ");
             this.Write(this.ToStringHelper.ToStringWithCulture(this.database.ContextClass));
-            this.Write(@"() : base(_DefaultConnection, _LastInsertIdQuery) { }
+            this.Write(@"() : base(_defaultConnection, _lastInsertIdQuery) { }
 
-		/// <summary>
-		/// Create a new context of this database's type with a specific connection.
-		/// </summary>
-		/// <param name=""connection"">Existing open database connection to use.</param>
-		public ");
+        /// <summary>
+        /// Create a new context of this database's type with a specific connection.
+        /// </summary>
+        /// <param name=""connection"">Existing open database connection to use.</param>
+        public ");
             this.Write(this.ToStringHelper.ToStringWithCulture(this.database.ContextClass));
-            this.Write("(DbConnection connection) : base(connection, _LastInsertIdQuery) { }\r\n\t}\r\n");
+            this.Write(@"(DbConnection connection) : base(connection, _lastInsertIdQuery) { }
+        
+        /// <summary>
+        /// Sets the default connection creation method.
+        /// </summary>
+        /// <param name=""defaultConnection"">Method to be called on each context creation and return the new connection.</param>
+        /// <param name=""targetDb"">Type of DB this is connecting to.</param>
+        public override void SetDefaultConnection(Func<DbConnection> defaultConnection, TargetDb targetDb)
+        {
+           DefaultConnection = defaultConnection;
+           DatabaseType = targetDb;
+        }
+    }
+");
  foreach (var table in database.Table) { 
-	Column pk_column = null;
+    Column pk_column = null;
 
-	foreach (var column in table.Column) {
-		if (pk_column == null && column.IsPrimaryKey) {
-			pk_column = column;
-		}
-	} 
-            this.Write("\r\n\t[TableAttribute(Name = \"");
+    foreach (var column in table.Column) {
+        if (pk_column == null && column.IsPrimaryKey) {
+            pk_column = column;
+        }
+    } 
+            this.Write("\r\n    [Table(Name = \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             this.Write("\")]\r\n");
  if (this.database.ImplementProtobufNetDataContracts) { 
-            this.Write("\t[ProtoBuf.ProtoContract]\r\n");
+            this.Write("    [ProtoBuf.ProtoContract]\r\n");
  } 
-            this.Write("\tpublic partial class ");
+            this.Write("    public partial class ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(" : Model");
+            this.Write(" : TableRow");
  if(this.database.ImplementINotifyPropertyChanged){ 
             this.Write(", System.ComponentModel.INotifyPropertyChanged");
  } 
             this.Write(" {\r\n\r\n");
  if(this.database.ImplementINotifyPropertyChanged){ 
-            this.Write("\t\t/// <summary>\r\n\t\t/// Implementation for INotifyPropertyChanged.\r\n\t\t/// </summar" +
-                    "y>\r\n\t\tpublic event System.ComponentModel.PropertyChangedEventHandler PropertyCha" +
-                    "nged;\r\n");
+            this.Write("        /// <summary>\r\n        /// Implementation for INotifyPropertyChanged.\r\n  " +
+                    "      /// </summary>\r\n        public event System.ComponentModel.PropertyChanged" +
+                    "EventHandler PropertyChanged;\r\n");
  } 
+            this.Write("        \r\n");
  for(int i = 0; i < table.Column.Count(); i++) { 
-            this.Write("\t\tprivate ");
+            this.Write("        /// <summary>\r\n        /// Backing field for the ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
+            this.Write(" property.\r\n        /// </summary>\r\n        private ");
             this.Write(this.ToStringHelper.ToStringWithCulture(ColumnNetType(table.Column[i])));
             this.Write(" _");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
-            this.Write(";\r\n");
+            this.Write(";\r\n\r\n");
  if (string.IsNullOrWhiteSpace(table.Column[i].Description) == false) { 
-            this.Write("\t\t/// <summary>\r\n\t\t/// ");
+            this.Write("        /// <summary>\r\n        /// ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Description));
-            this.Write("\r\n\t\t/// </summary>\r\n");
+            this.Write("\r\n        /// </summary>\r\n");
  }
 if (this.database.ImplementProtobufNetDataContracts) { 
-            this.Write("\t\t[ProtoBuf.ProtoMember(");
+            this.Write("        [ProtoBuf.ProtoMember(");
             this.Write(this.ToStringHelper.ToStringWithCulture(i+1));
             this.Write(")]\r\n");
  } 
-            this.Write("\t\tpublic ");
+            this.Write("        public ");
             this.Write(this.ToStringHelper.ToStringWithCulture(ColumnNetType(table.Column[i])));
             this.Write(" ");
  if(reserved_words.Contains(table.Column[i].Name)){ this.Write("@"); } 
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
-            this.Write(" {\r\n\t\t\tget { return _");
+            this.Write("\r\n        {\r\n            get { return _");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write("; }\r\n");
  if (table.Column[i].IsReadOnly == false || this.database.ImplementProtobufNetDataContracts) { 
-            this.Write("\t\t\t");
+            this.Write("            ");
  if(this.database.ImplementProtobufNetDataContracts && table.Column[i].IsReadOnly) { 
             this.Write("private ");
  } 
-            this.Write("set {\r\n");
+            this.Write("set\r\n            {\r\n");
  if (table.Column[i].DbLength != 0 && table.Column[i].NetType == "String") { 
-            this.Write("\t\t\t\tif(value != null && value.Length > ");
+            this.Write("                if(value != null && value.Length > ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].DbLength));
-            this.Write(") \r\n\t\t\t\t\tthrow new ArgumentOutOfRangeException(\"");
+            this.Write(") \r\n                    throw new ArgumentOutOfRangeException(\"");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write("\", \"String ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
@@ -193,79 +186,82 @@ if (this.database.ImplementProtobufNetDataContracts) {
             this.Write(" characters. Passed string is \" + value.Length.ToString() + \" characters.\");\r\n");
  } 
  if(this.database.ImplementINotifyPropertyChanged){ 
-            this.Write("\t\t\t\tif(_");
+            this.Write("                if(_");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
-            this.Write(" != value){\r\n\t\t\t\t\tPropertyChanged?.Invoke(this, new System.ComponentModel.Propert" +
-                    "yChangedEventArgs(nameof(");
+            this.Write(" != value)\r\n                    PropertyChanged?.Invoke(this, new System.Componen" +
+                    "tModel.PropertyChangedEventArgs(nameof(");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
-            this.Write(")));\r\n\t\t\t\t}\r\n");
+            this.Write(")));\r\n\r\n");
  } 
-            this.Write("\t\t\t\t_");
+            this.Write("                _");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
-            this.Write(" = value;\r\n\t\t\t\tchanged_flags.Set(");
+            this.Write(" = value;\r\n                ChangedFlags.Set(");
             this.Write(this.ToStringHelper.ToStringWithCulture(i));
-            this.Write(", true);\r\n\t\t\t}\r\n");
+            this.Write(", true);\r\n            }\r\n");
  } 
-            this.Write("\t\t}\r\n\r\n");
+            this.Write("        }\r\n\r\n");
  } 
  
 foreach (var db_assoc in database.Association) {
-	var reference = db_assoc.ReferencesTable(table);
-	var assoc = new AssociationCodeGenerator();
+    var reference = db_assoc.ReferencesTable(table);
+    var assoc = new AssociationCodeGenerator();
 
-	if (reference == Association.Reference.R1) {
-		assoc.ThisAssociationName = db_assoc.Table1Name;
-		assoc.ThisColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R1);
-		assoc.ThisTable = table;
-		assoc.ThisCardinality = db_assoc.Table1Cardinality;
+    if (reference == Association.Reference.R1) {
+        assoc.ThisAssociationName = db_assoc.Table1Name;
+        assoc.ThisColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R1);
+        assoc.ThisTable = table;
+        assoc.ThisCardinality = db_assoc.Table1Cardinality;
 
-		assoc.OtherAssociationName = db_assoc.Table2Name;
-		assoc.OtherColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R2);
-		assoc.OtherTable = database.Table.Single(t => t.Name == db_assoc.Table2);
-		assoc.OtherCardinality = db_assoc.Table2Cardinality;
-					
+        assoc.OtherAssociationName = db_assoc.Table2Name;
+        assoc.OtherColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R2);
+        assoc.OtherTable = database.Table.Single(t => t.Name == db_assoc.Table2);
+        assoc.OtherCardinality = db_assoc.Table2Cardinality;
+                    
 
-	} else if (reference == Association.Reference.R2) {
-		assoc.ThisAssociationName = db_assoc.Table2Name;
-		assoc.ThisColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R2);
-		assoc.ThisTable = table;
-		assoc.ThisCardinality = db_assoc.Table2Cardinality;
+    } else if (reference == Association.Reference.R2) {
+        assoc.ThisAssociationName = db_assoc.Table2Name;
+        assoc.ThisColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R2);
+        assoc.ThisTable = table;
+        assoc.ThisCardinality = db_assoc.Table2Cardinality;
 
-		assoc.OtherAssociationName = db_assoc.Table1Name;
-		assoc.OtherColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R1);
-		assoc.OtherTable = database.Table.Single(t => t.Name == db_assoc.Table1);
-		assoc.OtherCardinality = db_assoc.Table1Cardinality;
+        assoc.OtherAssociationName = db_assoc.Table1Name;
+        assoc.OtherColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R1);
+        assoc.OtherTable = database.Table.Single(t => t.Name == db_assoc.Table1);
+        assoc.OtherCardinality = db_assoc.Table1Cardinality;
 
-	} else {
-		continue;
-	}
+    } else {
+        continue;
+    }
 
-	string field_type = assoc.OtherTable.Name;
-	if (assoc.OtherCardinality == Cardinality.Many) {
-		field_type += "[]";
-	} 
-	string fetch_type;
+    string field_type = assoc.OtherTable.Name;
+    if (assoc.OtherCardinality == Cardinality.Many) {
+        field_type += "[]";
+    } 
+    string fetch_type;
 
-	if (assoc.OtherCardinality == Cardinality.Many) {
-		fetch_type = "ExecuteFetchAll();";
-	} else {
-		fetch_type = "ExecuteFetch();";
-	} 
-            this.Write("\t\tprivate ");
+    if (assoc.OtherCardinality == Cardinality.Many) {
+        fetch_type = "ExecuteFetchAll();";
+    } else {
+        fetch_type = "ExecuteFetch();";
+    } 
+            this.Write("        private ");
             this.Write(this.ToStringHelper.ToStringWithCulture(field_type));
             this.Write(" _");
             this.Write(this.ToStringHelper.ToStringWithCulture(assoc.OtherAssociationName));
-            this.Write(";\r\n\t\tpublic ");
+            this.Write(";\r\n\r\n        public ");
             this.Write(this.ToStringHelper.ToStringWithCulture(field_type));
             this.Write(" ");
             this.Write(this.ToStringHelper.ToStringWithCulture(assoc.OtherAssociationName));
-            this.Write(" {\r\n\t\t\tget {\r\n\t\t\t\tif (_");
+            this.Write("\r\n        {\r\n            get \r\n            {\r\n                if (_");
             this.Write(this.ToStringHelper.ToStringWithCulture(assoc.OtherAssociationName));
-            this.Write(" == null) {\r\n\t\t\t\t\ttry {\r\n\t\t\t\t\t\t_");
+            this.Write(" != null)\r\n                    return _");
+            this.Write(this.ToStringHelper.ToStringWithCulture(assoc.OtherAssociationName));
+            this.Write(";\r\n                \r\n                try \r\n                {\r\n                   " +
+                    " _");
             this.Write(this.ToStringHelper.ToStringWithCulture(assoc.OtherAssociationName));
             this.Write(" = ((");
             this.Write(this.ToStringHelper.ToStringWithCulture(database.ContextClass));
-            this.Write(")context).");
+            this.Write(")Context).");
             this.Write(this.ToStringHelper.ToStringWithCulture(assoc.OtherTable.Name));
             this.Write(".Select().WhereIn(\"");
             this.Write(this.ToStringHelper.ToStringWithCulture(assoc.OtherColumn.Name));
@@ -273,210 +269,226 @@ foreach (var db_assoc in database.Association) {
             this.Write(this.ToStringHelper.ToStringWithCulture(assoc.ThisColumn.Name));
             this.Write(").");
             this.Write(this.ToStringHelper.ToStringWithCulture(fetch_type));
-            this.Write("\r\n\t\t\t\t\t} catch {\r\n\t\t\t\t\t\t//Accessing a property outside of its database context is" +
-                    " not allowed.  Access an association inside the database context to cache the va" +
-                    "lues for later use.\r\n\t\t\t\t\t\t_");
+            this.Write(@"
+                }
+                catch 
+                {
+                    //Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+                    _");
             this.Write(this.ToStringHelper.ToStringWithCulture(assoc.OtherAssociationName));
-            this.Write(" = null;\r\n\t\t\t\t\t}\r\n\t\t\t\t}\r\n\t\t\t\treturn _");
+            this.Write(" = null;\r\n                }\r\n                return _");
             this.Write(this.ToStringHelper.ToStringWithCulture(assoc.OtherAssociationName));
-            this.Write(";\r\n\t\t\t}\r\n\t\t}\r\n\t\t\r\n");
+            this.Write(";\r\n            }\r\n        }\r\n        \r\n");
  } 
-            this.Write("\t\t/// <summary>\r\n\t\t/// Clones a ");
+            this.Write("        /// <summary>\r\n        /// Clones a ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(" model.\r\n\t\t/// </summary>\r\n\t\t/// <param name=\"source\">Source ");
+            this.Write(" row.\r\n        /// </summary>\r\n        /// <param name=\"source\">Source ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(" model to clone from.</param>\r\n\t\t/// <param name=\"only_changes\">True to only clon" +
-                    "e the changes from the source. False to clone all the values regardless of chang" +
-                    "ed or unchanged.</param>\r\n\t\tpublic ");
+            this.Write(" row to clone from.</param>\r\n        /// <param name=\"onlyChanged\">True to only c" +
+                    "lone the changes from the source. False to clone all the values regardless of ch" +
+                    "anged or unchanged.</param>\r\n        public ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             this.Write("(");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(" source, bool only_changes = false) { \r\n");
+            this.Write(" source, bool onlyChanged = false)\r\n        { \r\n");
  for(int i = 0; i < table.Column.Count(); i++) { 
-			if (table.Column[i].IsPrimaryKey) { 
-            this.Write("\t\t\t_");
+            if (table.Column[i].IsPrimaryKey) { 
+            this.Write("            _");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write(" = source._");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write(";\r\n");
  } 
-            this.Write("\t\t\tif (only_changes == false || source.changed_flags.Get(");
+            this.Write("            if (onlyChanged == false || source.ChangedFlags.Get(");
             this.Write(this.ToStringHelper.ToStringWithCulture(i));
-            this.Write("))\r\n\t\t\t\t_");
+            this.Write("))\r\n                _");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write(" = source._");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write(";\r\n");
  } 
-            this.Write("\t\t\tchanged_flags = new BitArray(source.changed_flags);\r\n\t\t}\r\n\t\t\r\n\t\t/// <summary>\r" +
-                    "\n\t\t/// Creates a empty ");
+            this.Write("            ChangedFlags = new BitArray(source.ChangedFlags);\r\n        }\r\n       " +
+                    " \r\n        /// <summary>\r\n        /// Creates a empty ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(" model. Use this for creating a new row and inserting into the database.\r\n\t\t/// <" +
-                    "/summary>\r\n\t\tpublic ");
+            this.Write(" row. Use this for creating a new row and inserting into the database.\r\n        /" +
+                    "// </summary>\r\n        public ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write("() : this(null, null) { }\r\n\r\n\t\t/// <summary>\r\n\t\t/// Creates a ");
+            this.Write("() : this(null, null) { }\r\n\r\n        /// <summary>\r\n        /// Creates a ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(@" model and reads the row information from the table into this model.
-		/// </summary>
-		/// <param name=""reader"">Instance of a live data reader for this model's table.</param>
-		/// <param name=""context"">The current context of the database.</param>
-		public ");
+            this.Write(@" row and reads the row information from the table into this row.
+        /// </summary>
+        /// <param name=""reader"">Instance of a live data reader for this row's table.</param>
+        /// <param name=""context"">The current context of the database.</param>
+        public ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write("(DbDataReader reader, Context context) {\r\n\t\t\tchanged_flags = new BitArray(");
+            this.Write("(DbDataReader reader, Context context)\r\n        {\r\n            ChangedFlags = new" +
+                    " BitArray(");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column.Count()));
-            this.Write(");\r\n\t\t\tRead(reader, context);\r\n\t\t}\r\n\r\n");
+            this.Write(");\r\n            Read(reader, context);\r\n        }\r\n\r\n");
  var primary_key = table.Column.FirstOrDefault(c => c.IsPrimaryKey);
 if(primary_key != null){ 
-            this.Write("\t\t/// <summary>\r\n\t\t/// Creates a ");
+            this.Write("        /// <summary>\r\n        /// Creates a ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
-            this.Write(@" model and with the specified Id.
-		/// Useful when creating a new matching row on a remote connection.
-		/// </summary>
-		/// <param name=""reader"">Instance of a live data reader for this model's table.</param>
-		/// <param name=""id"">Id to set the model to.</param>
-		public ");
+            this.Write(" row and with the specified Id.\r\n        /// Useful when creating a new matching " +
+                    "row on a remote connection.\r\n        /// </summary>\r\n        /// <param name=\"id" +
+                    "\">Id to set the row to.</param>\r\n        public ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Name));
             this.Write("(");
             this.Write(this.ToStringHelper.ToStringWithCulture(ColumnNetType(primary_key)));
-            this.Write(" id) {\r\n\t\t\tchanged_flags = new BitArray(");
+            this.Write(" id)\r\n        {\r\n            ChangedFlags = new BitArray(");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column.Count()));
-            this.Write(");\r\n\t\t\tthis._");
+            this.Write(");\r\n            _");
             this.Write(this.ToStringHelper.ToStringWithCulture(primary_key.Name));
-            this.Write(" = id;\r\n\t\t}\r\n");
+            this.Write(" = id;\r\n        }\r\n");
  } 
             this.Write(@"
-		/// <summary>
-		/// Reads the row information from the table into this model.
-		/// </summary>
-		/// <param name=""reader"">Instance of a live data reader for this model's table.</param>
-		/// <param name=""context"">The current context of the database.</param>
-		public override void Read(DbDataReader reader, Context context) {
-			this.context = context;
-			if (reader == null) { return; }
-			int length = reader.FieldCount;
-			for (int i = 0; i < length; i++) {
-				switch (reader.GetName(i)) {
+        /// <summary>
+        /// Reads the row information from the table into this row.
+        /// </summary>
+        /// <param name=""reader"">Instance of a live data reader for this row's table.</param>
+        /// <param name=""context"">The current context of the database.</param>
+        public override void Read(DbDataReader reader, Context context) {
+            Context = context;
+            if (reader == null)
+                return;
+
+            var length = reader.FieldCount;
+            for (var i = 0; i < length; i++)
+            {
+                switch (reader.GetName(i))
+                {
 ");
  foreach (var column in table.Column) {
-		string type = ColumnNetType(column);
-		string reader_get = column.NetType;
+        string type = ColumnNetType(column);
+        string reader_get = column.NetType;
 
-		if(reader_get == "DateTimeOffset") {
-			reader_get = "DateTime";
-		}
-		if (this.database.Enumeration.Any(en => en.Name == column.NetType)) { 
-            this.Write("\t\t\t\t\tcase \"");
+        if(reader_get == "DateTimeOffset")
+            reader_get = "DateTime";
+
+        if (this.database.Enumeration.Any(en => en.Name == column.NetType)) { 
+            this.Write("                    case \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
-            this.Write("\": _");
+            this.Write("\":\r\n                        _");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write(" = (");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.NetType));
-            this.Write(")reader.GetInt32(i); break;\r\n");
+            this.Write(")reader.GetInt32(i);\r\n                        break;\r\n");
  } else if (column.NetType == "ByteArray") { 
-            this.Write("\t\t\t\t\tcase \"");
+            this.Write("                    case \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
-            this.Write("\": _");
+            this.Write("\":\r\n                        _");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
-            this.Write(" = (reader.IsDBNull(i)) ? null : reader.GetFieldValue<byte[]>(i); break;\r\n");
+            this.Write(" = (reader.IsDBNull(i)) ? null : reader.GetFieldValue<byte[]>(i);\r\n              " +
+                    "          break;\r\n");
  } else if (column.Nullable) { 
-            this.Write("\t\t\t\t\tcase \"");
+            this.Write("                    case \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
-            this.Write("\": _");
+            this.Write("\":\r\n                        _");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write(" = (reader.IsDBNull(i)) ? default(");
             this.Write(this.ToStringHelper.ToStringWithCulture(type));
             this.Write(") : reader.Get");
             this.Write(this.ToStringHelper.ToStringWithCulture(reader_get));
-            this.Write("(i); break;\r\n");
+            this.Write("(i);\r\n                        break;\r\n");
  } else if (column.NetType == "String") { 
-            this.Write("\t\t\t\t\tcase \"");
+            this.Write("                    case \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
-            this.Write("\": _");
+            this.Write("\":\r\n                        _");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
-            this.Write(" = reader.GetValue(i) as string; break;\r\n");
+            this.Write(" = reader.GetValue(i) as string;\r\n                        break;\r\n");
  } else { 
-            this.Write("\t\t\t\t\tcase \"");
+            this.Write("                    case \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
-            this.Write("\": _");
+            this.Write("\":\r\n                        _");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write(" = reader.Get");
             this.Write(this.ToStringHelper.ToStringWithCulture(reader_get));
-            this.Write("(i); break;\r\n");
+            this.Write("(i);\r\n                        break;\r\n");
  } 
  } 
-            this.Write(@"					default: 
-						if(additional_values == null) {
-							additional_values = new Dictionary<string, object>();
-						}
-						additional_values.Add(reader.GetName(i), reader.GetValue(i)); 
-						break;
-				}
-			}
-		}
+            this.Write(@"                    default: 
+                        if(AdditionalValues == null)
+                            AdditionalValues = new Dictionary<string, object>();
 
-		/// <summary>
-		/// Gets all the instance values in the model which have been changed.
-		/// </summary>
-		/// <returns>Dictionary with the keys of the column names and values of the properties.</returns>
-		public override Dictionary<string, object> GetChangedValues() {
-			var changed = new Dictionary<string, object>();
+                        AdditionalValues.Add(reader.GetName(i), reader.GetValue(i)); 
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets all the instance values in the row which have been changed.
+        /// </summary>
+        /// <returns>Dictionary with the keys of the column names and values of the properties.</returns>
+        public override Dictionary<string, object> GetChangedValues()
+        {
+            var changed = new Dictionary<string, object>();
 ");
  for(int i = 0; i < table.Column.Count(); i++) { 
-	if (table.Column[i].IsPrimaryKey) {
-		 continue;
-	} 
-            this.Write("\t\t\tif (changed_flags.Get(");
+    if (table.Column[i].IsPrimaryKey) {
+         continue;
+    } 
+            this.Write("            if (ChangedFlags.Get(");
             this.Write(this.ToStringHelper.ToStringWithCulture(i));
-            this.Write("))\r\n\t\t\t\tchanged.Add(\"");
+            this.Write("))\r\n                changed.Add(\"");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write("\", _");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write(");\r\n");
  } 
             this.Write(@"
-			return changed;
-		}
+            return changed;
+        }
 
-		/// <summary>
-		/// Return all the instance values for the entire model.
-		/// </summary>
-		/// <returns>An object array with all the values of this model.</returns>
-		public override object[] GetAllValues() {
-			return new object[] {
+        /// <summary>
+        /// Return all the instance values for the entire row.
+        /// </summary>
+        /// <returns>An object array with all the values of this row.</returns>
+        public override object[] GetAllValues()
+        {
+            return new object[] {
 ");
- foreach (var column in table.Column) {
-	if (column.IsPrimaryKey) {
-		 continue;
-	} 
-            this.Write("\t\t\t\t_");
+ foreach (var column in table.Column){
+    if (column.IsPrimaryKey) {
+         continue;
+    } 
+            this.Write("                _");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write(",\r\n");
  } 
-            this.Write("\t\t\t};\r\n\t\t}\r\n\r\n\t\t/// <summary>\r\n\t\t/// Returns all the columns in this model.\r\n\t\t//" +
-                    "/ </summary>\r\n\t\t/// <returns>A string array with all the columns in this model.<" +
-                    "/returns>\r\n\t\tpublic override string[] GetColumns() {\r\n\t\t\treturn new string[] {\r\n" +
-                    "");
+            this.Write(@"            };
+        }
+
+        /// <summary>
+        /// Returns all the columns in this row.
+        /// </summary>
+        /// <returns>A string array with all the columns in this row.</returns>
+        public override string[] GetColumns()
+        {
+            return new [] {
+");
  foreach (var column in table.Column) { 
-	if (column.IsPrimaryKey) {
-		 continue;
-	} 
-            this.Write("\t\t\t\t\"");
+    if (column.IsPrimaryKey) {
+         continue;
+    } 
+            this.Write("                \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write("\",\r\n");
  } 
-            this.Write("\t\t\t};\r\n\t\t}\r\n\r\n");
+            this.Write("            };\r\n        }\r\n\r\n");
  if (pk_column != null) { 
-            this.Write("\t\t/// <summary>\r\n\t\t/// Gets the name of the model primary key.\r\n\t\t/// </summary>\r" +
-                    "\n\t\t/// <returns>The name of the primary key</returns>\r\n\t\tpublic override string " +
-                    "GetPKName() {\r\n\t\t\treturn \"");
+            this.Write("        /// <summary>\r\n        /// Gets the name of the row primary key.\r\n       " +
+                    " /// </summary>\r\n        /// <returns>The name of the primary key</returns>\r\n   " +
+                    "     public override string GetPKName()\r\n        {\r\n            return \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(pk_column.Name));
-            this.Write("\";\r\n\t\t}\r\n\r\n\t\t/// <summary>\r\n\t\t/// Gets the value of the primary key.\r\n\t\t/// </sum" +
-                    "mary>\r\n\t\t/// <returns>The value of the primary key.</returns>\r\n\t\tpublic override" +
-                    " object GetPKValue() {\r\n\t\t\treturn _");
+            this.Write("\";\r\n        }\r\n\r\n        /// <summary>\r\n        /// Gets the value of the primary" +
+                    " key.\r\n        /// </summary>\r\n        /// <returns>The value of the primary key" +
+                    ".</returns>\r\n        public override object GetPKValue()\r\n        {\r\n           " +
+                    " return _");
             this.Write(this.ToStringHelper.ToStringWithCulture(pk_column.Name));
-            this.Write(";\r\n\t\t}\r\n");
+            this.Write(";\r\n        }\r\n");
  } 
-            this.Write("\t}\r\n");
+            this.Write("    }\r\n");
  } 
             this.Write("}\r\n");
             return this.GenerationEnvironment.ToString();

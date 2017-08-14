@@ -57,12 +57,12 @@ namespace DtronixModeler.Xaml {
 				return;
 			}
 			DialogResult = true;
-			this.Close();
+			Close();
 		}
 
 		private void _BtnCancel_Click(object sender, RoutedEventArgs e) {
 			DialogResult = false;
-			this.Close();
+			Close();
 		}
 	}
 }

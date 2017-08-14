@@ -63,7 +63,7 @@ namespace DtronixModeler.Xaml {
 
 		public ExplorerControl() {
 			selected_type = Selection.None;
-			this.UseLayoutRounding = true;
+			UseLayoutRounding = true;
 
 			InitializeComponent();
 
@@ -338,7 +338,7 @@ namespace DtronixModeler.Xaml {
 			Task.Run(() => {
 				Exception exception = null;
 				if (database.SaveToFile(file_name, out exception) == false) {
-					this.Dispatcher.BeginInvoke(new Action(() => {
+					Dispatcher.BeginInvoke(new Action(() => {
 						database._Modified = true;
 						MessageBox.Show("Unable to save current DDL into selected file. \r\n" + exception.ToString());
 					}), null);

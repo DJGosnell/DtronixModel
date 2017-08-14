@@ -1,6 +1,4 @@
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 [assembly: AssemblyCompany("Dtronix")]
 [assembly: AssemblyProduct("Dtronix Database Modeler")]
@@ -11,5 +9,6 @@ using System.Runtime.InteropServices;
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
 #else
+
 [assembly: AssemblyConfiguration("Release")]
 #endif

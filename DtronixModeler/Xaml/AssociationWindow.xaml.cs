@@ -120,11 +120,11 @@ namespace DtronixModeler.Xaml {
 			}
 
 
-			this.DialogResult = true;
+			DialogResult = true;
 		}
 
 		private void _BtnCancel_Click(object sender, RoutedEventArgs e) {
-			this.DialogResult = false;
+			DialogResult = false;
 		}
 
 

@@ -224,11 +224,11 @@ namespace DtronixModeler.Xaml {
 		}
 
 		private void Command_Exit(object obSender, ExecutedRoutedEventArgs e) {
-			Exit(new System.ComponentModel.CancelEventArgs());
+			Exit(new CancelEventArgs());
 		}
 
 		
-		private void Exit(System.ComponentModel.CancelEventArgs e) {
+		private void Exit(CancelEventArgs e) {
 			if (_DatabaseExplorer.CloseAllDatabases() == false) {
 				e.Cancel = true;
 			}
@@ -398,16 +398,16 @@ namespace DtronixModeler.Xaml {
 
 			if(database != null){
 				if (database._FileLocation != null) {
-					this.Title = "Dtronix Modeler - " + database.Name + " (" + Path.GetFileName(database._FileLocation) + ")";
+					Title = "Dtronix Modeler - " + database.Name + " (" + Path.GetFileName(database._FileLocation) + ")";
 				} else {
-					this.Title = "Dtronix Modeler - " + database.Name + "(Usaved)";
+					Title = "Dtronix Modeler - " + database.Name + "(Usaved)";
 				}
 
 				if (database._Modified) {
-					this.Title += " [Unsaved Changes]";
+					Title += " [Unsaved Changes]";
 				}
 			} else {
-				this.Title = "Dtronix Modeler";
+				Title = "Dtronix Modeler";
 			}
 		}
 
@@ -484,7 +484,7 @@ namespace DtronixModeler.Xaml {
 
 
 
-		private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) {
+		private void Window_Closing(object sender, CancelEventArgs e) {
 			Exit(e);
 		}
 
@@ -536,7 +536,7 @@ namespace DtronixModeler.Xaml {
 				int index = column.Name.IndexOf('_');
 				string sel_table = column.Name.Substring(0, index);
 				string sel_column = column.Name.Substring(index + 1);
-				DtronixModeler.Ddl.Table found_table = null;
+				Ddl.Table found_table = null;
 
 				if ((found_table = database.Table.FirstOrDefault(t => t.Name == sel_table)) != null) {
 					association.Table2 = sel_table;
@@ -619,7 +619,7 @@ namespace DtronixModeler.Xaml {
 
 
 		private void _DagColumnDefinitions_Paste(object sender, ExecutedRoutedEventArgs e) {
-			Column[] columns = Utilities.XmlDeserializeString<DtronixModeler.Ddl.Column[]>(Clipboard.GetText()) as Column[];
+			Column[] columns = Utilities.XmlDeserializeString<Column[]>(Clipboard.GetText()) as Column[];
 			var all_columns = _DatabaseExplorer.SelectedTable.Column;
 
 			if (columns == null) {
@@ -677,9 +677,9 @@ namespace DtronixModeler.Xaml {
 
 			foreach (var config in database.Configuration) {
 				if (config.Name.Contains(text) == false && text_empty == false) {
-					config.Visibility = System.Windows.Visibility.Collapsed;
+					config.Visibility = Visibility.Collapsed;
 				} else {
-					config.Visibility = System.Windows.Visibility.Visible;
+					config.Visibility = Visibility.Visible;
 				}
 			}
 		}

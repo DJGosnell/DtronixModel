@@ -13,7 +13,7 @@ namespace DtronixModeler.Generator {
 		protected Database database = new Database();
 
 		public DdlGenerator(TypeTransformer type_transformer) {
-			this.TypeTransformer = type_transformer;
+			TypeTransformer = type_transformer;
 		}
 
 		public abstract Task<Database> GenerateDdl();

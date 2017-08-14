@@ -145,7 +145,7 @@ namespace DtronixModeler.Xaml {
 							}
 						}
 
-						using (var connection = this.Connection) {
+						using (var connection = Connection) {
 							connection.Open();
 							MessageBox.Show("Successfully Verified database.");
 						}
@@ -163,7 +163,7 @@ namespace DtronixModeler.Xaml {
 
 		}
 		private void Cancel_Click(object sender, RoutedEventArgs e) {
-			this.DialogResult = false;
+			DialogResult = false;
 		}
 
 		private void _cmbProvider_SelectionChanged(object sender, SelectionChangedEventArgs e) {
@@ -186,7 +186,7 @@ namespace DtronixModeler.Xaml {
 					sqlite_add_rowid = true;
 				}
 			};
-			this.DialogResult = true;
+			DialogResult = true;
 		}
 	}
 }
