@@ -350,7 +350,7 @@
   <PropertyGroup>
     <PostBuildEvent>if "Installer" == "$(ConfigurationName)" (
 echo Building installer...
-"$(SolutionDir)packages\Tools.InnoSetup.5.5.6\tools\iscc.exe" /q setup.iss 
+"$(SolutionDir)packages\Tools.InnoSetup.5.5.9\tools\iscc.exe" /q setup.iss 
 echo Installer built.
 )
 
