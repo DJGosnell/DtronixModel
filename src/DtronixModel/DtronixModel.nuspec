@@ -6,12 +6,12 @@
     <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
-    <projectUrl>https://github.com/DJGosnell/DtronixModel</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/DJGosnell/DtronixModel/master/DtronixModeler/Xaml/Images/database_blue32.png</iconUrl>
+    <licenseUrl>https://github.com/Dtronix/DtronixModel/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/Dtronix/DtronixModel/</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/Dtronix/DtronixModel/master/src/DtronixModeler/Xaml/Images/database_blue32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Small .net tool aiding in sql data modeling.</description>
-    <copyright>Copyright 2015</copyright>
+    <copyright>Copyright 2017</copyright>
     <tags>model modeling dtronix sql</tags>
   </metadata>
 </package>
