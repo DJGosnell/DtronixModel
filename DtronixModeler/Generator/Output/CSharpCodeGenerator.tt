@@ -18,7 +18,7 @@ namespace <#= this.database.Namespace #> {
     public enum <#= enum_class.Name #> : int {
 <# 
 int shift_ammount = 0;
-foreach (var enum_value in enum_class.EnumValue) { #>GetPKValue
+foreach (var enum_value in enum_class.EnumValue) { #>
         <#= enum_value.Name #> = 1 << <#= shift_ammount++ #>,
 <# } #>
     }
@@ -307,11 +307,15 @@ if(primary_key != null){ #>
                         break;
 <# } else if (column.NetType == "ByteArray") { #>
                     case "<#= column.Name #>":
-                        _<#= column.Name #> = (reader.IsDBNull(i)) ? null : reader.GetFieldValue<byte[]>(i);
+                        _<#= column.Name #> = reader.IsDBNull(i) ? null : reader.GetFieldValue<byte[]>(i);
+                        break;
+<# } else if (column.NetType.StartsWith("UInt")) { #>
+                    case "<#= column.Name #>":
+                        _<#= column.Name #> = reader.IsDBNull(i) ? default(<#= type #>) : (<#= type.Replace("?", "") #>)(long)reader.GetValue(i);
                         break;
 <# } else if (column.Nullable) { #>
                     case "<#= column.Name #>":
-                        _<#= column.Name #> = (reader.IsDBNull(i)) ? default(<#= type #>) : reader.Get<#= reader_get #>(i);
+                        _<#= column.Name #> = reader.IsDBNull(i) ? default(<#= type #>) : reader.Get<#= reader_get #>(i);
                         break;
 <# } else if (column.NetType == "String") { #>
                     case "<#= column.Name #>":
@@ -379,6 +383,22 @@ if(primary_key != null){ #>
          continue;
     } #>
                 "<#= column.Name #>",
+<# } #>
+            };
+        }
+
+        /// <summary>
+        /// Returns all the columns types.
+        /// </summary>
+        /// <returns>A type array with all the columns in this row.</returns>
+        public override Type[] GetColumnTypes()
+        {
+            return new [] {
+<# foreach (var column in table.Column) { 
+    if (column.IsPrimaryKey) {
+         continue;
+    } #>
+                typeof(<#= ColumnNetType(column) #>),
 <# } #>
             };
         }

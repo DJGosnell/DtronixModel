@@ -8,12 +8,12 @@ namespace DtronixModeler.Generator.Sqlite {
 	class SqliteTypeTransformer : TypeTransformer {
 		public SqliteTypeTransformer() {
 			types = new TypeTransformerType[]{
-				new TypeTransformerType("Int64", "INTEGER", true),
-				new TypeTransformerType("Int16", "SMALLINT", true),
-				new TypeTransformerType("Int32", "INTEGER", true),
-				/*new TypeTransformerType("UInt16", "SMALLINT"),
-				new TypeTransformerType("UInt32", "INTEGER"),
-				new TypeTransformerType("UInt64", "BIGINT"),*/
+				new TypeTransformerType("Int64", "INTEGER", true, false),
+				new TypeTransformerType("Int16", "INTEGER", true, false),
+				new TypeTransformerType("Int32", "INTEGER", true, false),
+				new TypeTransformerType("UInt16", "INTEGER", true, true),
+				new TypeTransformerType("UInt32", "INTEGER", true, true),
+				new TypeTransformerType("UInt64", "INTEGER", true, true),
 				new TypeTransformerType("ByteArray", "BLOB", false),
 				new TypeTransformerType("Byte", "BLOB", true),
 				new TypeTransformerType("Decimal", "REAL", true),

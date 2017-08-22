@@ -40,7 +40,7 @@ string[] reserved_words = new string[] {"for", "with", "while"};
  
 int shift_ammount = 0;
 foreach (var enum_value in enum_class.EnumValue) { 
-            this.Write("GetPKValue\r\n        ");
+            this.Write("        ");
             this.Write(this.ToStringHelper.ToStringWithCulture(enum_value.Name));
             this.Write(" = 1 << ");
             this.Write(this.ToStringHelper.ToStringWithCulture(shift_ammount++));
@@ -378,14 +378,24 @@ if(primary_key != null){
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write("\":\r\n                        _");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
-            this.Write(" = (reader.IsDBNull(i)) ? null : reader.GetFieldValue<byte[]>(i);\r\n              " +
-                    "          break;\r\n");
+            this.Write(" = reader.IsDBNull(i) ? null : reader.GetFieldValue<byte[]>(i);\r\n                " +
+                    "        break;\r\n");
+ } else if (column.NetType.StartsWith("UInt")) { 
+            this.Write("                    case \"");
+            this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
+            this.Write("\":\r\n                        _");
+            this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
+            this.Write(" = reader.IsDBNull(i) ? default(");
+            this.Write(this.ToStringHelper.ToStringWithCulture(type));
+            this.Write(") : (");
+            this.Write(this.ToStringHelper.ToStringWithCulture(type.Replace("?", "")));
+            this.Write(")(long)reader.GetValue(i);\r\n                        break;\r\n");
  } else if (column.Nullable) { 
             this.Write("                    case \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write("\":\r\n                        _");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
-            this.Write(" = (reader.IsDBNull(i)) ? default(");
+            this.Write(" = reader.IsDBNull(i) ? default(");
             this.Write(this.ToStringHelper.ToStringWithCulture(type));
             this.Write(") : reader.Get");
             this.Write(this.ToStringHelper.ToStringWithCulture(reader_get));
@@ -474,6 +484,25 @@ if(primary_key != null){
             this.Write("                \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
             this.Write("\",\r\n");
+ } 
+            this.Write(@"            };
+        }
+
+        /// <summary>
+        /// Returns all the columns types.
+        /// </summary>
+        /// <returns>A type array with all the columns in this row.</returns>
+        public override Type[] GetColumnTypes()
+        {
+            return new [] {
+");
+ foreach (var column in table.Column) { 
+    if (column.IsPrimaryKey) {
+         continue;
+    } 
+            this.Write("                typeof(");
+            this.Write(this.ToStringHelper.ToStringWithCulture(ColumnNetType(column)));
+            this.Write("),\r\n");
  } 
             this.Write(@"            };
         }
