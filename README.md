@@ -1,4 +1,4 @@
-DtronixModel [![NuGet](https://img.shields.io/nuget/v/DtronixModel.svg?maxAge=600)](https://www.nuget.org/packages/DtronixModel)
+DtronixModel [![Build Status](https://travis-ci.org/Dtronix/DtronixModel.svg?branch=master)](https://travis-ci.org/Dtronix/DtronixModel) [![NuGet](https://img.shields.io/nuget/v/DtronixModel.svg?maxAge=60)](https://www.nuget.org/packages/DtronixModel)
 ============
 DtronixModel is a compact .net tool to aid in database modeling.
 
