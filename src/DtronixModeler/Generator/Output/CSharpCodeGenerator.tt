@@ -1,0 +1,425 @@
+﻿<#@ template language="C#" linePragmas="false" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="DtronixModeler.Ddl" #>
+<# 
+string[] reserved_words = new string[] {"for", "with", "while"};
+#>using System;
+using System.Data.Common;
+using System.Collections.Generic;
+using System.Collections;
+using DtronixModel;
+
+namespace <#= this.database.Namespace #> {
+
+<# foreach (var enum_class in database.Enumeration) { #>
+    public enum <#= enum_class.Name #> : int {
+<# 
+int shift_ammount = 0;
+foreach (var enum_value in enum_class.EnumValue) { #>
+        <#= enum_value.Name #> = 1 << <#= shift_ammount++ #>,
+<# } #>
+    }
+<# } #>
+
+    public partial class <#= this.database.ContextClass #> : Context {
+
+        private static Func<DbConnection> _defaultConnection;
+
+        /// <summary>
+        /// Set a default constructor to allow use of parameter-less context calling.
+        /// </summary>
+        public static Func<DbConnection> DefaultConnection
+        {
+            get { return _defaultConnection; }
+            set { _defaultConnection = value; }
+        }
+
+        private static string _lastInsertIdQuery = null;
+
+        /// <summary>
+        /// Sets the query string to retrieve the last insert ID.
+        /// </summary>
+        public new static string LastInsertIdQuery
+        {
+            get { return _lastInsertIdQuery; }
+            set { _lastInsertIdQuery = value; }
+        }
+
+        private static TargetDb _DatabaseType;
+
+        /// <summary>
+        /// Type of database this context will target.  Automatically sets proper database specific values.
+        /// </summary>
+        public static TargetDb DatabaseType
+        {
+            get { return _DatabaseType; }
+            set 
+            {
+                _DatabaseType = value;
+                switch (value) 
+                {
+                    case TargetDb.MySql:
+                        LastInsertIdQuery = "SELECT last_insert_id()";
+                        break;
+                    case TargetDb.Sqlite:
+                        LastInsertIdQuery = "SELECT last_insert_rowid()";
+                        break;
+                    case TargetDb.Other:
+                        break;
+                }
+            }
+        }
+<# foreach (var table in database.Table) { #>
+        private Table<<#= table.Name #>> _<#= table.Name #>;
+
+        public Table<<#= table.Name #>> <#= table.Name #> {
+            get {
+                if (_<#= table.Name #> == null) {
+                    _<#= table.Name #> = new Table<<#= table.Name #>>(this);
+                }
+
+                return _<#= table.Name #>;
+            }
+        }
+
+<# } #>
+        /// <summary>
+        /// Create a new context of this database's type.  Can only be used if a default connection is specified.
+        /// </summary>
+        public <#= this.database.ContextClass #>() : base(_defaultConnection, _lastInsertIdQuery) { }
+
+        /// <summary>
+        /// Create a new context of this database's type with a specific connection.
+        /// </summary>
+        /// <param name="connection">Existing open database connection to use.</param>
+        public <#= this.database.ContextClass #>(DbConnection connection) : base(connection, _lastInsertIdQuery) { }
+        
+        /// <summary>
+        /// Sets the default connection creation method.
+        /// </summary>
+        /// <param name="defaultConnection">Method to be called on each context creation and return the new connection.</param>
+        /// <param name="targetDb">Type of DB this is connecting to.</param>
+        public override void SetDefaultConnection(Func<DbConnection> defaultConnection, TargetDb targetDb)
+        {
+           DefaultConnection = defaultConnection;
+           DatabaseType = targetDb;
+        }
+    }
+<# foreach (var table in database.Table) { 
+    Column pk_column = null;
+
+    foreach (var column in table.Column) {
+        if (pk_column == null && column.IsPrimaryKey) {
+            pk_column = column;
+        }
+    } #>
+
+    [Table(Name = "<#= table.Name #>")]
+<# if (this.database.ImplementProtobufNetDataContracts) { #>
+    [ProtoBuf.ProtoContract]
+<# } #>
+    public partial class <#= table.Name #> : TableRow<# if(this.database.ImplementINotifyPropertyChanged){ #>, System.ComponentModel.INotifyPropertyChanged<# } #> {
+
+<# if(this.database.ImplementINotifyPropertyChanged){ #>
+        /// <summary>
+        /// Implementation for INotifyPropertyChanged.
+        /// </summary>
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+<# } #>
+        
+<# for(int i = 0; i < table.Column.Count(); i++) { #>
+        /// <summary>
+        /// Backing field for the <#= table.Column[i].Name #> property.
+        /// </summary>
+        private <#= ColumnNetType(table.Column[i]) #> _<#= table.Column[i].Name #>;
+
+<# if (string.IsNullOrWhiteSpace(table.Column[i].Description) == false) { #>
+        /// <summary>
+        /// <#= table.Column[i].Description #>
+        /// </summary>
+<# }
+if (this.database.ImplementProtobufNetDataContracts) { #>
+        [ProtoBuf.ProtoMember(<#= i+1 #>)]
+<# } #>
+        public <#= ColumnNetType(table.Column[i]) #> <# if(reserved_words.Contains(table.Column[i].Name)){ this.Write("@"); } #><#= table.Column[i].Name #>
+        {
+            get { return _<#= table.Column[i].Name #>; }
+<# if (table.Column[i].IsReadOnly == false || this.database.ImplementProtobufNetDataContracts) { #>
+            <# if(this.database.ImplementProtobufNetDataContracts && table.Column[i].IsReadOnly) { #>private <# } #>set
+            {
+<# if (table.Column[i].DbLength != 0 && table.Column[i].NetType == "String") { #>
+                if(value != null && value.Length > <#= table.Column[i].DbLength #>) 
+                    throw new ArgumentOutOfRangeException("<#= table.Column[i].Name #>", "String <#= table.Column[i].Name #> is too long. Max length allowed is <#= table.Column[i].DbLength #> characters. Passed string is " + value.Length.ToString() + " characters.");
+<# } #>
+<# if(this.database.ImplementINotifyPropertyChanged){ #>
+                if(_<#= table.Column[i].Name #> != value)
+                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(<#= table.Column[i].Name #>)));
+
+<# } #>
+                _<#= table.Column[i].Name #> = value;
+                ChangedFlags.Set(<#= i #>, true);
+            }
+<# } #>
+        }
+
+<# } #>
+<# 
+foreach (var db_assoc in database.Association) {
+    var reference = db_assoc.ReferencesTable(table);
+    var assoc = new AssociationCodeGenerator();
+
+    if (reference == Association.Reference.R1) {
+        assoc.ThisAssociationName = db_assoc.Table1Name;
+        assoc.ThisColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R1);
+        assoc.ThisTable = table;
+        assoc.ThisCardinality = db_assoc.Table1Cardinality;
+
+        assoc.OtherAssociationName = db_assoc.Table2Name;
+        assoc.OtherColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R2);
+        assoc.OtherTable = database.Table.Single(t => t.Name == db_assoc.Table2);
+        assoc.OtherCardinality = db_assoc.Table2Cardinality;
+                    
+
+    } else if (reference == Association.Reference.R2) {
+        assoc.ThisAssociationName = db_assoc.Table2Name;
+        assoc.ThisColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R2);
+        assoc.ThisTable = table;
+        assoc.ThisCardinality = db_assoc.Table2Cardinality;
+
+        assoc.OtherAssociationName = db_assoc.Table1Name;
+        assoc.OtherColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R1);
+        assoc.OtherTable = database.Table.Single(t => t.Name == db_assoc.Table1);
+        assoc.OtherCardinality = db_assoc.Table1Cardinality;
+
+    } else {
+        continue;
+    }
+
+    string field_type = assoc.OtherTable.Name;
+    if (assoc.OtherCardinality == Cardinality.Many) {
+        field_type += "[]";
+    } 
+    string fetch_type;
+
+    if (assoc.OtherCardinality == Cardinality.Many) {
+        fetch_type = "ExecuteFetchAll();";
+    } else {
+        fetch_type = "ExecuteFetch();";
+    } #>
+        private <#= field_type #> _<#= assoc.OtherAssociationName #>;
+
+        public <#= field_type #> <#= assoc.OtherAssociationName #>
+        {
+            get 
+            {
+                if (_<#= assoc.OtherAssociationName #> != null)
+                    return _<#= assoc.OtherAssociationName #>;
+                
+                try 
+                {
+                    _<#= assoc.OtherAssociationName #> = ((<#= database.ContextClass #>)Context).<#= assoc.OtherTable.Name #>.Select().WhereIn("<#= assoc.OtherColumn.Name #>", _<#= assoc.ThisColumn.Name #>).<#= fetch_type #>
+                }
+                catch 
+                {
+                    //Accessing a property outside of its database context is not allowed.  Access an association inside the database context to cache the values for later use.
+                    _<#= assoc.OtherAssociationName #> = null;
+                }
+                return _<#= assoc.OtherAssociationName #>;
+            }
+        }
+        
+<# } #>
+        /// <summary>
+        /// Clones a <#= table.Name #> row.
+        /// </summary>
+        /// <param name="source">Source <#= table.Name #> row to clone from.</param>
+        /// <param name="onlyChanged">True to only clone the changes from the source. False to clone all the values regardless of changed or unchanged.</param>
+        public <#= table.Name #>(<#= table.Name #> source, bool onlyChanged = false)
+        { 
+<# for(int i = 0; i < table.Column.Count(); i++) { 
+            if (table.Column[i].IsPrimaryKey) { #>
+            _<#= table.Column[i].Name #> = source._<#= table.Column[i].Name #>;
+<# } #>
+            if (onlyChanged == false || source.ChangedFlags.Get(<#= i #>))
+                _<#= table.Column[i].Name #> = source._<#= table.Column[i].Name #>;
+<# } #>
+            ChangedFlags = new BitArray(source.ChangedFlags);
+        }
+        
+        /// <summary>
+        /// Creates a empty <#= table.Name #> row. Use this for creating a new row and inserting into the database.
+        /// </summary>
+        public <#= table.Name #>() : this(null, null) { }
+
+        /// <summary>
+        /// Creates a <#= table.Name #> row and reads the row information from the table into this row.
+        /// </summary>
+        /// <param name="reader">Instance of a live data reader for this row's table.</param>
+        /// <param name="context">The current context of the database.</param>
+        public <#= table.Name #>(DbDataReader reader, Context context)
+        {
+            ChangedFlags = new BitArray(<#= table.Column.Count() #>);
+            Read(reader, context);
+        }
+
+<# var primary_key = table.Column.FirstOrDefault(c => c.IsPrimaryKey);
+if(primary_key != null){ #>
+        /// <summary>
+        /// Creates a <#= table.Name #> row and with the specified Id.
+        /// Useful when creating a new matching row on a remote connection.
+        /// </summary>
+        /// <param name="id">Id to set the row to.</param>
+        public <#= table.Name #>(<#= ColumnNetType(primary_key) #> id)
+        {
+            ChangedFlags = new BitArray(<#= table.Column.Count() #>);
+            _<#= primary_key.Name #> = id;
+        }
+<# } #>
+
+        /// <summary>
+        /// Reads the row information from the table into this row.
+        /// </summary>
+        /// <param name="reader">Instance of a live data reader for this row's table.</param>
+        /// <param name="context">The current context of the database.</param>
+        public override void Read(DbDataReader reader, Context context) {
+            Context = context;
+            if (reader == null)
+                return;
+
+            var length = reader.FieldCount;
+            for (var i = 0; i < length; i++)
+            {
+                switch (reader.GetName(i))
+                {
+<# foreach (var column in table.Column) {
+        string type = ColumnNetType(column);
+        string reader_get = column.NetType;
+
+        if(reader_get == "DateTimeOffset")
+            reader_get = "DateTime";
+
+        if (this.database.Enumeration.Any(en => en.Name == column.NetType)) { #>
+                    case "<#= column.Name #>":
+                        _<#= column.Name #> = (<#= column.NetType #>)reader.GetInt32(i);
+                        break;
+<# } else if (column.NetType == "ByteArray") { #>
+                    case "<#= column.Name #>":
+                        _<#= column.Name #> = reader.IsDBNull(i) ? null : reader.GetFieldValue<byte[]>(i);
+                        break;
+<# } else if (column.NetType.StartsWith("UInt")) { #>
+                    case "<#= column.Name #>":
+                        _<#= column.Name #> = reader.IsDBNull(i) ? default(<#= type #>) : (<#= type.Replace("?", "") #>)(long)reader.GetValue(i);
+                        break;
+<# } else if (column.Nullable) { #>
+                    case "<#= column.Name #>":
+                        _<#= column.Name #> = reader.IsDBNull(i) ? default(<#= type #>) : reader.Get<#= reader_get #>(i);
+                        break;
+<# } else if (column.NetType == "String") { #>
+                    case "<#= column.Name #>":
+                        _<#= column.Name #> = reader.GetValue(i) as string;
+                        break;
+<# } else { #>
+                    case "<#= column.Name #>":
+                        _<#= column.Name #> = reader.Get<#= reader_get #>(i);
+                        break;
+<# } #>
+<# } #>
+                    default: 
+                        if(AdditionalValues == null)
+                            AdditionalValues = new Dictionary<string, object>();
+
+                        AdditionalValues.Add(reader.GetName(i), reader.GetValue(i)); 
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets all the instance values in the row which have been changed.
+        /// </summary>
+        /// <returns>Dictionary with the keys of the column names and values of the properties.</returns>
+        public override Dictionary<string, object> GetChangedValues()
+        {
+            var changed = new Dictionary<string, object>();
+<# for(int i = 0; i < table.Column.Count(); i++) { 
+    if (table.Column[i].IsPrimaryKey) {
+         continue;
+    } #>
+            if (ChangedFlags.Get(<#= i #>))
+                changed.Add("<#= table.Column[i].Name #>", _<#= table.Column[i].Name #>);
+<# } #>
+
+            return changed;
+        }
+
+        /// <summary>
+        /// Return all the instance values for the entire row.
+        /// </summary>
+        /// <returns>An object array with all the values of this row.</returns>
+        public override object[] GetAllValues()
+        {
+            return new object[] {
+<# foreach (var column in table.Column){
+    if (column.IsPrimaryKey) {
+         continue;
+    } #>
+                _<#= column.Name #>,
+<# } #>
+            };
+        }
+
+        /// <summary>
+        /// Returns all the columns in this row.
+        /// </summary>
+        /// <returns>A string array with all the columns in this row.</returns>
+        public override string[] GetColumns()
+        {
+            return new [] {
+<# foreach (var column in table.Column) { 
+    if (column.IsPrimaryKey) {
+         continue;
+    } #>
+                "<#= column.Name #>",
+<# } #>
+            };
+        }
+
+        /// <summary>
+        /// Returns all the columns types.
+        /// </summary>
+        /// <returns>A type array with all the columns in this row.</returns>
+        public override Type[] GetColumnTypes()
+        {
+            return new [] {
+<# foreach (var column in table.Column) { 
+    if (column.IsPrimaryKey) {
+         continue;
+    } #>
+                typeof(<#= ColumnNetType(column) #>),
+<# } #>
+            };
+        }
+
+        /// <summary>
+        /// Gets the name of the row primary key.
+        /// </summary>
+        /// <returns>The name of the primary key</returns>
+        public override string GetPKName()
+        {
+            return <# if(pk_column == null) { #>null;<# } else { #>"<#= pk_column.Name #>";<# } #> 
+        }
+
+        /// <summary>
+        /// Gets the value of the primary key.
+        /// </summary>
+        /// <returns>The value of the primary key.</returns>
+        public override object GetPKValue()
+        {
+            return <# if(pk_column == null) { #>null;<# } else { #>_<#= pk_column.Name #>;<# } #> 
+        }
+    }
+<# } #>
+}

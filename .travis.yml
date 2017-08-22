@@ -1,0 +1,5 @@
+language: csharp
+before_script:
+  - nuget restore ./src/DtronixModel.sln
+script:
+  - xbuild /p:Configuration=Release ./src/DtronixModel/DtronixModel.csproj
