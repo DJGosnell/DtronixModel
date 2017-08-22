@@ -6,7 +6,7 @@ namespace DtronixModel
     /// <summary>
     /// Transaction wrapper to handle internal transactions and object states.
     /// </summary>
-    public class DtronixTransaction : IDisposable
+    public class SqlTransaction : IDisposable
     {
         /// <summary>
         /// Method to call on transaction disposal.
@@ -25,7 +25,7 @@ namespace DtronixModel
         /// </summary>
         /// <param name="transaction">Transaction to wrap.</param>
         /// <param name="onDispose">Method to call on transaction disposal.</param>
-        public DtronixTransaction(DbTransaction transaction, Action onDispose)
+        public SqlTransaction(DbTransaction transaction, Action onDispose)
         {
             _transaction = transaction;
             _onDispose = onDispose;

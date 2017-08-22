@@ -36,6 +36,14 @@ namespace DtronixModel
         /// <summary>
         /// Not implemented.  Throws exception.
         /// </summary>
+        public override Type[] GetColumnTypes()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Not implemented.  Throws exception.
+        /// </summary>
         public override string GetPKName()
         {
             throw new NotImplementedException();

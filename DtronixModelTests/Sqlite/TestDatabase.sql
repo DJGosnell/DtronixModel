@@ -17,9 +17,12 @@ CREATE TABLE Logs (
 
 CREATE TABLE AllTypes (
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
-	db_int16 SMALLINT ,
+	db_int16 INTEGER ,
 	db_int32 INTEGER ,
 	db_int64 INTEGER ,
+	db_uint16 INTEGER ,
+	db_uint32 INTEGER ,
+	db_uint64 INTEGER ,
 	db_byte_array BLOB ,
 	db_byte BLOB ,
 	db_date_time DATETIME ,

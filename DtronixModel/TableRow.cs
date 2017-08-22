@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.SqlTypes;
 
 namespace DtronixModel
 {
@@ -52,6 +54,12 @@ namespace DtronixModel
         /// </summary>
         /// <returns>A string array with all the columns in this model.</returns>
         public abstract string[] GetColumns();
+
+        /// <summary>
+        /// Returns all the columns in this model.
+        /// </summary>
+        /// <returns>A string array with all the columns in this model.</returns>
+        public abstract Type[] GetColumnTypes();
 
         /// <summary>
         /// Gets the name of the model primary key.

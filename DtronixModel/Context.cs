@@ -189,14 +189,14 @@ namespace DtronixModel
         /// }
         /// </example>
         /// <returns>Wrapped transaction.</returns>
-        public DtronixTransaction BeginTransaction()
+        public SqlTransaction BeginTransaction()
         {
             if (_transactionStarted)
                 throw new InvalidOperationException(
                     "Transaction has already been created.  Can not create nested transactions.");
 
             _transactionStarted = true;
-            return new DtronixTransaction(Connection.BeginTransaction(), () => { _transactionStarted = false; });
+            return new SqlTransaction(Connection.BeginTransaction(), () => { _transactionStarted = false; });
         }
     }
 }

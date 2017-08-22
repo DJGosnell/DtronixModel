@@ -403,7 +403,7 @@ namespace DtronixModel
 
             if (_mode == Mode.Update)
             {
-                DtronixTransaction transaction = null;
+                SqlTransaction transaction = null;
                 try
                 {
                     // Start a transaction if one does not already exist.
@@ -677,7 +677,7 @@ namespace DtronixModel
                 sbSql.Append(_context.LastInsertIdQuery);
                 newRowIds = new long[models.Length];
             }
-            DtronixTransaction transaction = null;
+            SqlTransaction transaction = null;
 
             try
             {
