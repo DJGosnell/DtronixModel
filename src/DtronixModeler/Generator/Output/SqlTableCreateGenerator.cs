@@ -58,7 +58,7 @@ namespace DtronixModeler.Generator.Output {
 
 					code.removeLength(1);
 
-					code.EndBlock(");").WriteLine().WriteLine();
+					code.EndBlock(");").WriteLine();
 				}
 
 				// Indexes
@@ -73,6 +73,8 @@ namespace DtronixModeler.Generator.Output {
 
 				code.WriteLine().WriteLine();
 			}
+
+		    code.Write(database.CreationSql).WriteLine();
 
 			return code.ToString();
 		}

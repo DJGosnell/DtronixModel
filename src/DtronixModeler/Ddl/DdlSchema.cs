@@ -17,10 +17,10 @@ namespace DtronixModeler.Ddl {
     
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=false)]
-    public partial class Database : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
+    public partial class Database : System.ComponentModel.INotifyPropertyChanged {
         
         private ObservableCollection<Table> tableField;
         
@@ -33,6 +33,8 @@ namespace DtronixModeler.Ddl {
         private ObservableCollection<Configuration> configurationField;
         
         private ObservableCollection<Enumeration> enumerationField;
+        
+        private string creationSqlField;
         
         private string nameField;
         
@@ -50,276 +52,294 @@ namespace DtronixModeler.Ddl {
         
         private bool implementProtobufNetDataContractsField;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Database() {
-            enumerationField = new ObservableCollection<Enumeration>();
-            configurationField = new ObservableCollection<Configuration>();
-            functionField = new ObservableCollection<Function>();
-            viewField = new ObservableCollection<View>();
-            associationField = new ObservableCollection<Association>();
-            tableField = new ObservableCollection<Table>();
-            outputSqlTablesField = true;
-            outputCsClassesField = true;
-            implementINotifyPropertyChangedField = false;
-            implementProtobufNetDataContractsField = false;
+            this.enumerationField = new ObservableCollection<Enumeration>();
+            this.configurationField = new ObservableCollection<Configuration>();
+            this.functionField = new ObservableCollection<Function>();
+            this.viewField = new ObservableCollection<View>();
+            this.associationField = new ObservableCollection<Association>();
+            this.tableField = new ObservableCollection<Table>();
+            this.outputSqlTablesField = true;
+            this.outputCsClassesField = true;
+            this.implementINotifyPropertyChangedField = false;
+            this.implementProtobufNetDataContractsField = false;
         }
         
-        [XmlElementAttribute("Table")]
+        [System.Xml.Serialization.XmlElementAttribute("Table")]
         public ObservableCollection<Table> Table {
             get {
-                return tableField;
+                return this.tableField;
             }
             set {
-                if ((tableField != null)) {
+                if ((this.tableField != null)) {
                     if ((tableField.Equals(value) != true)) {
-                        tableField = value;
-                        OnPropertyChanged("Table");
+                        this.tableField = value;
+                        this.OnPropertyChanged("Table");
                     }
                 }
                 else {
-                    tableField = value;
-                    OnPropertyChanged("Table");
+                    this.tableField = value;
+                    this.OnPropertyChanged("Table");
                 }
             }
         }
         
-        [XmlElementAttribute("Association")]
+        [System.Xml.Serialization.XmlElementAttribute("Association")]
         public ObservableCollection<Association> Association {
             get {
-                return associationField;
+                return this.associationField;
             }
             set {
-                if ((associationField != null)) {
+                if ((this.associationField != null)) {
                     if ((associationField.Equals(value) != true)) {
-                        associationField = value;
-                        OnPropertyChanged("Association");
+                        this.associationField = value;
+                        this.OnPropertyChanged("Association");
                     }
                 }
                 else {
-                    associationField = value;
-                    OnPropertyChanged("Association");
+                    this.associationField = value;
+                    this.OnPropertyChanged("Association");
                 }
             }
         }
         
-        [XmlElementAttribute("View")]
+        [System.Xml.Serialization.XmlElementAttribute("View")]
         public ObservableCollection<View> View {
             get {
-                return viewField;
+                return this.viewField;
             }
             set {
-                if ((viewField != null)) {
+                if ((this.viewField != null)) {
                     if ((viewField.Equals(value) != true)) {
-                        viewField = value;
-                        OnPropertyChanged("View");
+                        this.viewField = value;
+                        this.OnPropertyChanged("View");
                     }
                 }
                 else {
-                    viewField = value;
-                    OnPropertyChanged("View");
+                    this.viewField = value;
+                    this.OnPropertyChanged("View");
                 }
             }
         }
         
-        [XmlElementAttribute("Function")]
+        [System.Xml.Serialization.XmlElementAttribute("Function")]
         public ObservableCollection<Function> Function {
             get {
-                return functionField;
+                return this.functionField;
             }
             set {
-                if ((functionField != null)) {
+                if ((this.functionField != null)) {
                     if ((functionField.Equals(value) != true)) {
-                        functionField = value;
-                        OnPropertyChanged("Function");
+                        this.functionField = value;
+                        this.OnPropertyChanged("Function");
                     }
                 }
                 else {
-                    functionField = value;
-                    OnPropertyChanged("Function");
+                    this.functionField = value;
+                    this.OnPropertyChanged("Function");
                 }
             }
         }
         
-        [XmlElementAttribute("Configuration")]
+        [System.Xml.Serialization.XmlElementAttribute("Configuration")]
         public ObservableCollection<Configuration> Configuration {
             get {
-                return configurationField;
+                return this.configurationField;
             }
             set {
-                if ((configurationField != null)) {
+                if ((this.configurationField != null)) {
                     if ((configurationField.Equals(value) != true)) {
-                        configurationField = value;
-                        OnPropertyChanged("Configuration");
+                        this.configurationField = value;
+                        this.OnPropertyChanged("Configuration");
                     }
                 }
                 else {
-                    configurationField = value;
-                    OnPropertyChanged("Configuration");
+                    this.configurationField = value;
+                    this.OnPropertyChanged("Configuration");
                 }
             }
         }
         
-        [XmlElementAttribute("Enumeration")]
+        [System.Xml.Serialization.XmlElementAttribute("Enumeration")]
         public ObservableCollection<Enumeration> Enumeration {
             get {
-                return enumerationField;
+                return this.enumerationField;
             }
             set {
-                if ((enumerationField != null)) {
+                if ((this.enumerationField != null)) {
                     if ((enumerationField.Equals(value) != true)) {
-                        enumerationField = value;
-                        OnPropertyChanged("Enumeration");
+                        this.enumerationField = value;
+                        this.OnPropertyChanged("Enumeration");
                     }
                 }
                 else {
-                    enumerationField = value;
-                    OnPropertyChanged("Enumeration");
+                    this.enumerationField = value;
+                    this.OnPropertyChanged("Enumeration");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        public string CreationSql {
+            get {
+                return this.creationSqlField;
+            }
+            set {
+                if ((this.creationSqlField != null)) {
+                    if ((creationSqlField.Equals(value) != true)) {
+                        this.creationSqlField = value;
+                        this.OnPropertyChanged("CreationSql");
+                    }
+                }
+                else {
+                    this.creationSqlField = value;
+                    this.OnPropertyChanged("CreationSql");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
-                return nameField;
+                return this.nameField;
             }
             set {
-                if ((nameField != null)) {
+                if ((this.nameField != null)) {
                     if ((nameField.Equals(value) != true)) {
-                        nameField = value;
-                        OnPropertyChanged("Name");
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
                     }
                 }
                 else {
-                    nameField = value;
-                    OnPropertyChanged("Name");
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Namespace {
             get {
-                return namespaceField;
+                return this.namespaceField;
             }
             set {
-                if ((namespaceField != null)) {
+                if ((this.namespaceField != null)) {
                     if ((namespaceField.Equals(value) != true)) {
-                        namespaceField = value;
-                        OnPropertyChanged("Namespace");
+                        this.namespaceField = value;
+                        this.OnPropertyChanged("Namespace");
                     }
                 }
                 else {
-                    namespaceField = value;
-                    OnPropertyChanged("Namespace");
+                    this.namespaceField = value;
+                    this.OnPropertyChanged("Namespace");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string ContextClass {
             get {
-                return contextClassField;
+                return this.contextClassField;
             }
             set {
-                if ((contextClassField != null)) {
+                if ((this.contextClassField != null)) {
                     if ((contextClassField.Equals(value) != true)) {
-                        contextClassField = value;
-                        OnPropertyChanged("ContextClass");
+                        this.contextClassField = value;
+                        this.OnPropertyChanged("ContextClass");
                     }
                 }
                 else {
-                    contextClassField = value;
-                    OnPropertyChanged("ContextClass");
+                    this.contextClassField = value;
+                    this.OnPropertyChanged("ContextClass");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(true)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(true)]
         public bool OutputSqlTables {
             get {
-                return outputSqlTablesField;
+                return this.outputSqlTablesField;
             }
             set {
                 if ((outputSqlTablesField.Equals(value) != true)) {
-                    outputSqlTablesField = value;
-                    OnPropertyChanged("OutputSqlTables");
+                    this.outputSqlTablesField = value;
+                    this.OnPropertyChanged("OutputSqlTables");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(true)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(true)]
         public bool OutputCsClasses {
             get {
-                return outputCsClassesField;
+                return this.outputCsClassesField;
             }
             set {
                 if ((outputCsClassesField.Equals(value) != true)) {
-                    outputCsClassesField = value;
-                    OnPropertyChanged("OutputCsClasses");
+                    this.outputCsClassesField = value;
+                    this.OnPropertyChanged("OutputCsClasses");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(false)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool ImplementINotifyPropertyChanged {
             get {
-                return implementINotifyPropertyChangedField;
+                return this.implementINotifyPropertyChangedField;
             }
             set {
                 if ((implementINotifyPropertyChangedField.Equals(value) != true)) {
-                    implementINotifyPropertyChangedField = value;
-                    OnPropertyChanged("ImplementINotifyPropertyChanged");
+                    this.implementINotifyPropertyChangedField = value;
+                    this.OnPropertyChanged("ImplementINotifyPropertyChanged");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public DbProvider TargetDb {
             get {
-                return targetDbField;
+                return this.targetDbField;
             }
             set {
                 if ((targetDbField.Equals(value) != true)) {
-                    targetDbField = value;
-                    OnPropertyChanged("TargetDb");
+                    this.targetDbField = value;
+                    this.OnPropertyChanged("TargetDb");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(false)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool ImplementProtobufNetDataContracts {
             get {
-                return implementProtobufNetDataContractsField;
+                return this.implementProtobufNetDataContractsField;
             }
             set {
                 if ((implementProtobufNetDataContractsField.Equals(value) != true)) {
-                    implementProtobufNetDataContractsField = value;
-                    OnPropertyChanged("ImplementProtobufNetDataContracts");
+                    this.implementProtobufNetDataContractsField = value;
+                    this.OnPropertyChanged("ImplementProtobufNetDataContracts");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(Database));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Database));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -329,13 +349,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -355,28 +375,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Database object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out Database obj, out Exception exception) {
+        public static bool Deserialize(string xml, out Database obj, out System.Exception exception) {
             exception = null;
             obj = default(Database);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out Database obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static Database Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((Database)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -392,23 +412,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -427,30 +447,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Database object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out Database obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out Database obj, out System.Exception exception) {
             exception = null;
             obj = default(Database);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out Database obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static Database LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -472,16 +492,16 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this Database object
         /// </summary>
         public virtual Database Clone() {
-            return ((Database)(MemberwiseClone()));
+            return ((Database)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class Table : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class Table : System.ComponentModel.INotifyPropertyChanged {
         
         private ObservableCollection<Column> columnField;
         
@@ -495,137 +515,137 @@ namespace DtronixModeler.Ddl {
         
         private bool useCustomSqlField;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Table() {
-            indexField = new ObservableCollection<Index>();
-            columnField = new ObservableCollection<Column>();
-            useCustomSqlField = false;
+            this.indexField = new ObservableCollection<Index>();
+            this.columnField = new ObservableCollection<Column>();
+            this.useCustomSqlField = false;
         }
         
-        [XmlElementAttribute("Column")]
+        [System.Xml.Serialization.XmlElementAttribute("Column")]
         public ObservableCollection<Column> Column {
             get {
-                return columnField;
+                return this.columnField;
             }
             set {
-                if ((columnField != null)) {
+                if ((this.columnField != null)) {
                     if ((columnField.Equals(value) != true)) {
-                        columnField = value;
-                        OnPropertyChanged("Column");
+                        this.columnField = value;
+                        this.OnPropertyChanged("Column");
                     }
                 }
                 else {
-                    columnField = value;
-                    OnPropertyChanged("Column");
+                    this.columnField = value;
+                    this.OnPropertyChanged("Column");
                 }
             }
         }
         
-        [XmlElementAttribute("Index")]
+        [System.Xml.Serialization.XmlElementAttribute("Index")]
         public ObservableCollection<Index> Index {
             get {
-                return indexField;
+                return this.indexField;
             }
             set {
-                if ((indexField != null)) {
+                if ((this.indexField != null)) {
                     if ((indexField.Equals(value) != true)) {
-                        indexField = value;
-                        OnPropertyChanged("Index");
+                        this.indexField = value;
+                        this.OnPropertyChanged("Index");
                     }
                 }
                 else {
-                    indexField = value;
-                    OnPropertyChanged("Index");
+                    this.indexField = value;
+                    this.OnPropertyChanged("Index");
                 }
             }
         }
         
         public string CustomSql {
             get {
-                return customSqlField;
+                return this.customSqlField;
             }
             set {
-                if ((customSqlField != null)) {
+                if ((this.customSqlField != null)) {
                     if ((customSqlField.Equals(value) != true)) {
-                        customSqlField = value;
-                        OnPropertyChanged("CustomSql");
+                        this.customSqlField = value;
+                        this.OnPropertyChanged("CustomSql");
                     }
                 }
                 else {
-                    customSqlField = value;
-                    OnPropertyChanged("CustomSql");
+                    this.customSqlField = value;
+                    this.OnPropertyChanged("CustomSql");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
-                return nameField;
+                return this.nameField;
             }
             set {
-                if ((nameField != null)) {
+                if ((this.nameField != null)) {
                     if ((nameField.Equals(value) != true)) {
-                        nameField = value;
-                        OnPropertyChanged("Name");
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
                     }
                 }
                 else {
-                    nameField = value;
-                    OnPropertyChanged("Name");
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Description {
             get {
-                return descriptionField;
+                return this.descriptionField;
             }
             set {
-                if ((descriptionField != null)) {
+                if ((this.descriptionField != null)) {
                     if ((descriptionField.Equals(value) != true)) {
-                        descriptionField = value;
-                        OnPropertyChanged("Description");
+                        this.descriptionField = value;
+                        this.OnPropertyChanged("Description");
                     }
                 }
                 else {
-                    descriptionField = value;
-                    OnPropertyChanged("Description");
+                    this.descriptionField = value;
+                    this.OnPropertyChanged("Description");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(false)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool UseCustomSql {
             get {
-                return useCustomSqlField;
+                return this.useCustomSqlField;
             }
             set {
                 if ((useCustomSqlField.Equals(value) != true)) {
-                    useCustomSqlField = value;
-                    OnPropertyChanged("UseCustomSql");
+                    this.useCustomSqlField = value;
+                    this.OnPropertyChanged("UseCustomSql");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(Table));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Table));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -635,13 +655,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -661,28 +681,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Table object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out Table obj, out Exception exception) {
+        public static bool Deserialize(string xml, out Table obj, out System.Exception exception) {
             exception = null;
             obj = default(Table);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out Table obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static Table Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((Table)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -698,23 +718,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -733,30 +753,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Table object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out Table obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out Table obj, out System.Exception exception) {
             exception = null;
             obj = default(Table);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out Table obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static Table LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -778,16 +798,16 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this Table object
         /// </summary>
         public virtual Table Clone() {
-            return ((Table)(MemberwiseClone()));
+            return ((Table)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class Column : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class Column : System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
         
@@ -811,207 +831,207 @@ namespace DtronixModeler.Ddl {
         
         private bool nullableField;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Column() {
-            isReadOnlyField = false;
-            isPrimaryKeyField = false;
-            isAutoIncrementField = false;
-            nullableField = false;
+            this.isReadOnlyField = false;
+            this.isPrimaryKeyField = false;
+            this.isAutoIncrementField = false;
+            this.nullableField = false;
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
-                return nameField;
+                return this.nameField;
             }
             set {
-                if ((nameField != null)) {
+                if ((this.nameField != null)) {
                     if ((nameField.Equals(value) != true)) {
-                        nameField = value;
-                        OnPropertyChanged("Name");
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
                     }
                 }
                 else {
-                    nameField = value;
-                    OnPropertyChanged("Name");
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string DefaultValue {
             get {
-                return defaultValueField;
+                return this.defaultValueField;
             }
             set {
-                if ((defaultValueField != null)) {
+                if ((this.defaultValueField != null)) {
                     if ((defaultValueField.Equals(value) != true)) {
-                        defaultValueField = value;
-                        OnPropertyChanged("DefaultValue");
+                        this.defaultValueField = value;
+                        this.OnPropertyChanged("DefaultValue");
                     }
                 }
                 else {
-                    defaultValueField = value;
-                    OnPropertyChanged("DefaultValue");
+                    this.defaultValueField = value;
+                    this.OnPropertyChanged("DefaultValue");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Description {
             get {
-                return descriptionField;
+                return this.descriptionField;
             }
             set {
-                if ((descriptionField != null)) {
+                if ((this.descriptionField != null)) {
                     if ((descriptionField.Equals(value) != true)) {
-                        descriptionField = value;
-                        OnPropertyChanged("Description");
+                        this.descriptionField = value;
+                        this.OnPropertyChanged("Description");
                     }
                 }
                 else {
-                    descriptionField = value;
-                    OnPropertyChanged("Description");
+                    this.descriptionField = value;
+                    this.OnPropertyChanged("Description");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string NetType {
             get {
-                return netTypeField;
+                return this.netTypeField;
             }
             set {
-                if ((netTypeField != null)) {
+                if ((this.netTypeField != null)) {
                     if ((netTypeField.Equals(value) != true)) {
-                        netTypeField = value;
-                        OnPropertyChanged("NetType");
+                        this.netTypeField = value;
+                        this.OnPropertyChanged("NetType");
                     }
                 }
                 else {
-                    netTypeField = value;
-                    OnPropertyChanged("NetType");
+                    this.netTypeField = value;
+                    this.OnPropertyChanged("NetType");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string DbType {
             get {
-                return dbTypeField;
+                return this.dbTypeField;
             }
             set {
-                if ((dbTypeField != null)) {
+                if ((this.dbTypeField != null)) {
                     if ((dbTypeField.Equals(value) != true)) {
-                        dbTypeField = value;
-                        OnPropertyChanged("DbType");
+                        this.dbTypeField = value;
+                        this.OnPropertyChanged("DbType");
                     }
                 }
                 else {
-                    dbTypeField = value;
-                    OnPropertyChanged("DbType");
+                    this.dbTypeField = value;
+                    this.OnPropertyChanged("DbType");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public int DbLength {
             get {
-                return dbLengthField;
+                return this.dbLengthField;
             }
             set {
                 if ((dbLengthField.Equals(value) != true)) {
-                    dbLengthField = value;
-                    OnPropertyChanged("DbLength");
+                    this.dbLengthField = value;
+                    this.OnPropertyChanged("DbLength");
                 }
             }
         }
         
-        [XmlIgnoreAttribute()]
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool DbLengthSpecified {
             get {
-                return dbLengthFieldSpecified;
+                return this.dbLengthFieldSpecified;
             }
             set {
                 if ((dbLengthFieldSpecified.Equals(value) != true)) {
-                    dbLengthFieldSpecified = value;
-                    OnPropertyChanged("DbLengthSpecified");
+                    this.dbLengthFieldSpecified = value;
+                    this.OnPropertyChanged("DbLengthSpecified");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(false)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool IsReadOnly {
             get {
-                return isReadOnlyField;
+                return this.isReadOnlyField;
             }
             set {
                 if ((isReadOnlyField.Equals(value) != true)) {
-                    isReadOnlyField = value;
-                    OnPropertyChanged("IsReadOnly");
+                    this.isReadOnlyField = value;
+                    this.OnPropertyChanged("IsReadOnly");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(false)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool IsPrimaryKey {
             get {
-                return isPrimaryKeyField;
+                return this.isPrimaryKeyField;
             }
             set {
                 if ((isPrimaryKeyField.Equals(value) != true)) {
-                    isPrimaryKeyField = value;
-                    OnPropertyChanged("IsPrimaryKey");
+                    this.isPrimaryKeyField = value;
+                    this.OnPropertyChanged("IsPrimaryKey");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(false)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool IsAutoIncrement {
             get {
-                return isAutoIncrementField;
+                return this.isAutoIncrementField;
             }
             set {
                 if ((isAutoIncrementField.Equals(value) != true)) {
-                    isAutoIncrementField = value;
-                    OnPropertyChanged("IsAutoIncrement");
+                    this.isAutoIncrementField = value;
+                    this.OnPropertyChanged("IsAutoIncrement");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(false)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool Nullable {
             get {
-                return nullableField;
+                return this.nullableField;
             }
             set {
                 if ((nullableField.Equals(value) != true)) {
-                    nullableField = value;
-                    OnPropertyChanged("Nullable");
+                    this.nullableField = value;
+                    this.OnPropertyChanged("Nullable");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(Column));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Column));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -1021,13 +1041,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -1047,28 +1067,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Column object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out Column obj, out Exception exception) {
+        public static bool Deserialize(string xml, out Column obj, out System.Exception exception) {
             exception = null;
             obj = default(Column);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out Column obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static Column Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((Column)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -1084,23 +1104,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -1119,30 +1139,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Column object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out Column obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out Column obj, out System.Exception exception) {
             exception = null;
             obj = default(Column);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out Column obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static Column LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -1164,55 +1184,55 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this Column object
         /// </summary>
         public virtual Column Clone() {
-            return ((Column)(MemberwiseClone()));
+            return ((Column)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class EnumValue : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class EnumValue : System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
-                return nameField;
+                return this.nameField;
             }
             set {
-                if ((nameField != null)) {
+                if ((this.nameField != null)) {
                     if ((nameField.Equals(value) != true)) {
-                        nameField = value;
-                        OnPropertyChanged("Name");
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
                     }
                 }
                 else {
-                    nameField = value;
-                    OnPropertyChanged("Name");
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(EnumValue));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(EnumValue));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -1222,13 +1242,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -1248,28 +1268,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output EnumValue object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out EnumValue obj, out Exception exception) {
+        public static bool Deserialize(string xml, out EnumValue obj, out System.Exception exception) {
             exception = null;
             obj = default(EnumValue);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out EnumValue obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static EnumValue Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((EnumValue)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -1285,23 +1305,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -1320,30 +1340,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output EnumValue object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out EnumValue obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out EnumValue obj, out System.Exception exception) {
             exception = null;
             obj = default(EnumValue);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out EnumValue obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static EnumValue LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -1365,80 +1385,80 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this EnumValue object
         /// </summary>
         public virtual EnumValue Clone() {
-            return ((EnumValue)(MemberwiseClone()));
+            return ((EnumValue)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class Enumeration : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class Enumeration : System.ComponentModel.INotifyPropertyChanged {
         
         private ObservableCollection<EnumValue> enumValueField;
         
         private string nameField;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Enumeration() {
-            enumValueField = new ObservableCollection<EnumValue>();
+            this.enumValueField = new ObservableCollection<EnumValue>();
         }
         
-        [XmlElementAttribute("EnumValue")]
+        [System.Xml.Serialization.XmlElementAttribute("EnumValue")]
         public ObservableCollection<EnumValue> EnumValue {
             get {
-                return enumValueField;
+                return this.enumValueField;
             }
             set {
-                if ((enumValueField != null)) {
+                if ((this.enumValueField != null)) {
                     if ((enumValueField.Equals(value) != true)) {
-                        enumValueField = value;
-                        OnPropertyChanged("EnumValue");
+                        this.enumValueField = value;
+                        this.OnPropertyChanged("EnumValue");
                     }
                 }
                 else {
-                    enumValueField = value;
-                    OnPropertyChanged("EnumValue");
+                    this.enumValueField = value;
+                    this.OnPropertyChanged("EnumValue");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
-                return nameField;
+                return this.nameField;
             }
             set {
-                if ((nameField != null)) {
+                if ((this.nameField != null)) {
                     if ((nameField.Equals(value) != true)) {
-                        nameField = value;
-                        OnPropertyChanged("Name");
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
                     }
                 }
                 else {
-                    nameField = value;
-                    OnPropertyChanged("Name");
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(Enumeration));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Enumeration));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -1448,13 +1468,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -1474,28 +1494,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Enumeration object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out Enumeration obj, out Exception exception) {
+        public static bool Deserialize(string xml, out Enumeration obj, out System.Exception exception) {
             exception = null;
             obj = default(Enumeration);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out Enumeration obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static Enumeration Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((Enumeration)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -1511,23 +1531,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -1546,30 +1566,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Enumeration object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out Enumeration obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out Enumeration obj, out System.Exception exception) {
             exception = null;
             obj = default(Enumeration);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out Enumeration obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static Enumeration LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -1591,16 +1611,16 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this Enumeration object
         /// </summary>
         public virtual Enumeration Clone() {
-            return ((Enumeration)(MemberwiseClone()));
+            return ((Enumeration)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class Configuration : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class Configuration : System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
         
@@ -1608,80 +1628,80 @@ namespace DtronixModeler.Ddl {
         
         private string descriptionField;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
-                return nameField;
+                return this.nameField;
             }
             set {
-                if ((nameField != null)) {
+                if ((this.nameField != null)) {
                     if ((nameField.Equals(value) != true)) {
-                        nameField = value;
-                        OnPropertyChanged("Name");
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
                     }
                 }
                 else {
-                    nameField = value;
-                    OnPropertyChanged("Name");
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Value {
             get {
-                return valueField;
+                return this.valueField;
             }
             set {
-                if ((valueField != null)) {
+                if ((this.valueField != null)) {
                     if ((valueField.Equals(value) != true)) {
-                        valueField = value;
-                        OnPropertyChanged("Value");
+                        this.valueField = value;
+                        this.OnPropertyChanged("Value");
                     }
                 }
                 else {
-                    valueField = value;
-                    OnPropertyChanged("Value");
+                    this.valueField = value;
+                    this.OnPropertyChanged("Value");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Description {
             get {
-                return descriptionField;
+                return this.descriptionField;
             }
             set {
-                if ((descriptionField != null)) {
+                if ((this.descriptionField != null)) {
                     if ((descriptionField.Equals(value) != true)) {
-                        descriptionField = value;
-                        OnPropertyChanged("Description");
+                        this.descriptionField = value;
+                        this.OnPropertyChanged("Description");
                     }
                 }
                 else {
-                    descriptionField = value;
-                    OnPropertyChanged("Description");
+                    this.descriptionField = value;
+                    this.OnPropertyChanged("Description");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(Configuration));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Configuration));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -1691,13 +1711,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -1717,28 +1737,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Configuration object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out Configuration obj, out Exception exception) {
+        public static bool Deserialize(string xml, out Configuration obj, out System.Exception exception) {
             exception = null;
             obj = default(Configuration);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out Configuration obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static Configuration Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((Configuration)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -1754,23 +1774,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -1789,30 +1809,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Configuration object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out Configuration obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out Configuration obj, out System.Exception exception) {
             exception = null;
             obj = default(Configuration);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out Configuration obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static Configuration LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -1834,76 +1854,76 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this Configuration object
         /// </summary>
         public virtual Configuration Clone() {
-            return ((Configuration)(MemberwiseClone()));
+            return ((Configuration)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class Return : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class Return : System.ComponentModel.INotifyPropertyChanged {
         
         private string typeField;
         
         private string dbTypeField;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Type {
             get {
-                return typeField;
+                return this.typeField;
             }
             set {
-                if ((typeField != null)) {
+                if ((this.typeField != null)) {
                     if ((typeField.Equals(value) != true)) {
-                        typeField = value;
-                        OnPropertyChanged("Type");
+                        this.typeField = value;
+                        this.OnPropertyChanged("Type");
                     }
                 }
                 else {
-                    typeField = value;
-                    OnPropertyChanged("Type");
+                    this.typeField = value;
+                    this.OnPropertyChanged("Type");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string DbType {
             get {
-                return dbTypeField;
+                return this.dbTypeField;
             }
             set {
-                if ((dbTypeField != null)) {
+                if ((this.dbTypeField != null)) {
                     if ((dbTypeField.Equals(value) != true)) {
-                        dbTypeField = value;
-                        OnPropertyChanged("DbType");
+                        this.dbTypeField = value;
+                        this.OnPropertyChanged("DbType");
                     }
                 }
                 else {
-                    dbTypeField = value;
-                    OnPropertyChanged("DbType");
+                    this.dbTypeField = value;
+                    this.OnPropertyChanged("DbType");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(Return));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Return));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -1913,13 +1933,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -1939,28 +1959,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Return object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out Return obj, out Exception exception) {
+        public static bool Deserialize(string xml, out Return obj, out System.Exception exception) {
             exception = null;
             obj = default(Return);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out Return obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static Return Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((Return)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -1976,23 +1996,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -2011,30 +2031,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Return object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out Return obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out Return obj, out System.Exception exception) {
             exception = null;
             obj = default(Return);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out Return obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static Return LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -2056,16 +2076,16 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this Return object
         /// </summary>
         public virtual Return Clone() {
-            return ((Return)(MemberwiseClone()));
+            return ((Return)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class Parameter : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class Parameter : System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
         
@@ -2079,125 +2099,125 @@ namespace DtronixModeler.Ddl {
         
         private bool directionFieldSpecified;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
-                return nameField;
+                return this.nameField;
             }
             set {
-                if ((nameField != null)) {
+                if ((this.nameField != null)) {
                     if ((nameField.Equals(value) != true)) {
-                        nameField = value;
-                        OnPropertyChanged("Name");
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
                     }
                 }
                 else {
-                    nameField = value;
-                    OnPropertyChanged("Name");
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
                 }
             }
         }
         
-        [XmlAttributeAttribute("Parameter")]
+        [System.Xml.Serialization.XmlAttributeAttribute("Parameter")]
         public string Parameter1 {
             get {
-                return parameter1Field;
+                return this.parameter1Field;
             }
             set {
-                if ((parameter1Field != null)) {
+                if ((this.parameter1Field != null)) {
                     if ((parameter1Field.Equals(value) != true)) {
-                        parameter1Field = value;
-                        OnPropertyChanged("Parameter1");
+                        this.parameter1Field = value;
+                        this.OnPropertyChanged("Parameter1");
                     }
                 }
                 else {
-                    parameter1Field = value;
-                    OnPropertyChanged("Parameter1");
+                    this.parameter1Field = value;
+                    this.OnPropertyChanged("Parameter1");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Type {
             get {
-                return typeField;
+                return this.typeField;
             }
             set {
-                if ((typeField != null)) {
+                if ((this.typeField != null)) {
                     if ((typeField.Equals(value) != true)) {
-                        typeField = value;
-                        OnPropertyChanged("Type");
+                        this.typeField = value;
+                        this.OnPropertyChanged("Type");
                     }
                 }
                 else {
-                    typeField = value;
-                    OnPropertyChanged("Type");
+                    this.typeField = value;
+                    this.OnPropertyChanged("Type");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string DbType {
             get {
-                return dbTypeField;
+                return this.dbTypeField;
             }
             set {
-                if ((dbTypeField != null)) {
+                if ((this.dbTypeField != null)) {
                     if ((dbTypeField.Equals(value) != true)) {
-                        dbTypeField = value;
-                        OnPropertyChanged("DbType");
+                        this.dbTypeField = value;
+                        this.OnPropertyChanged("DbType");
                     }
                 }
                 else {
-                    dbTypeField = value;
-                    OnPropertyChanged("DbType");
+                    this.dbTypeField = value;
+                    this.OnPropertyChanged("DbType");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public ParameterDirection Direction {
             get {
-                return directionField;
+                return this.directionField;
             }
             set {
                 if ((directionField.Equals(value) != true)) {
-                    directionField = value;
-                    OnPropertyChanged("Direction");
+                    this.directionField = value;
+                    this.OnPropertyChanged("Direction");
                 }
             }
         }
         
-        [XmlIgnoreAttribute()]
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool DirectionSpecified {
             get {
-                return directionFieldSpecified;
+                return this.directionFieldSpecified;
             }
             set {
                 if ((directionFieldSpecified.Equals(value) != true)) {
-                    directionFieldSpecified = value;
-                    OnPropertyChanged("DirectionSpecified");
+                    this.directionFieldSpecified = value;
+                    this.OnPropertyChanged("DirectionSpecified");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(Parameter));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Parameter));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -2207,13 +2227,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -2233,28 +2253,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Parameter object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out Parameter obj, out Exception exception) {
+        public static bool Deserialize(string xml, out Parameter obj, out System.Exception exception) {
             exception = null;
             obj = default(Parameter);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out Parameter obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static Parameter Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((Parameter)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -2270,23 +2290,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -2305,30 +2325,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Parameter object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out Parameter obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out Parameter obj, out System.Exception exception) {
             exception = null;
             obj = default(Parameter);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out Parameter obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static Parameter LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -2350,14 +2370,14 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this Parameter object
         /// </summary>
         public virtual Parameter Clone() {
-            return ((Parameter)(MemberwiseClone()));
+            return ((Parameter)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [XmlRootAttribute(Namespace="", IsNullable=false)]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
     public enum ParameterDirection {
         
         /// <remarks/>
@@ -2371,10 +2391,10 @@ namespace DtronixModeler.Ddl {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class Function : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class Function : System.ComponentModel.INotifyPropertyChanged {
         
         private ObservableCollection<Parameter> parameterField;
         
@@ -2398,205 +2418,205 @@ namespace DtronixModeler.Ddl {
         
         private bool isComposableField;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Function() {
-            itemField = new Return();
-            parameterField = new ObservableCollection<Parameter>();
-            hasMultipleResultsField = false;
-            isComposableField = false;
+            this.itemField = new Return();
+            this.parameterField = new ObservableCollection<Parameter>();
+            this.hasMultipleResultsField = false;
+            this.isComposableField = false;
         }
         
-        [XmlElementAttribute("Parameter")]
+        [System.Xml.Serialization.XmlElementAttribute("Parameter")]
         public ObservableCollection<Parameter> Parameter {
             get {
-                return parameterField;
+                return this.parameterField;
             }
             set {
-                if ((parameterField != null)) {
+                if ((this.parameterField != null)) {
                     if ((parameterField.Equals(value) != true)) {
-                        parameterField = value;
-                        OnPropertyChanged("Parameter");
+                        this.parameterField = value;
+                        this.OnPropertyChanged("Parameter");
                     }
                 }
                 else {
-                    parameterField = value;
-                    OnPropertyChanged("Parameter");
+                    this.parameterField = value;
+                    this.OnPropertyChanged("Parameter");
                 }
             }
         }
         
-        [XmlElementAttribute("Return")]
+        [System.Xml.Serialization.XmlElementAttribute("Return")]
         public Return Item {
             get {
-                return itemField;
+                return this.itemField;
             }
             set {
-                if ((itemField != null)) {
+                if ((this.itemField != null)) {
                     if ((itemField.Equals(value) != true)) {
-                        itemField = value;
-                        OnPropertyChanged("Item");
+                        this.itemField = value;
+                        this.OnPropertyChanged("Item");
                     }
                 }
                 else {
-                    itemField = value;
-                    OnPropertyChanged("Item");
+                    this.itemField = value;
+                    this.OnPropertyChanged("Item");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
-                return nameField;
+                return this.nameField;
             }
             set {
-                if ((nameField != null)) {
+                if ((this.nameField != null)) {
                     if ((nameField.Equals(value) != true)) {
-                        nameField = value;
-                        OnPropertyChanged("Name");
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
                     }
                 }
                 else {
-                    nameField = value;
-                    OnPropertyChanged("Name");
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
                 }
             }
         }
         
-        [XmlAttributeAttribute(DataType="ID")]
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType="ID")]
         public string Id {
             get {
-                return idField;
+                return this.idField;
             }
             set {
-                if ((idField != null)) {
+                if ((this.idField != null)) {
                     if ((idField.Equals(value) != true)) {
-                        idField = value;
-                        OnPropertyChanged("Id");
+                        this.idField = value;
+                        this.OnPropertyChanged("Id");
                     }
                 }
                 else {
-                    idField = value;
-                    OnPropertyChanged("Id");
+                    this.idField = value;
+                    this.OnPropertyChanged("Id");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Method {
             get {
-                return methodField;
+                return this.methodField;
             }
             set {
-                if ((methodField != null)) {
+                if ((this.methodField != null)) {
                     if ((methodField.Equals(value) != true)) {
-                        methodField = value;
-                        OnPropertyChanged("Method");
+                        this.methodField = value;
+                        this.OnPropertyChanged("Method");
                     }
                 }
                 else {
-                    methodField = value;
-                    OnPropertyChanged("Method");
+                    this.methodField = value;
+                    this.OnPropertyChanged("Method");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public AccessModifier AccessModifier {
             get {
-                return accessModifierField;
+                return this.accessModifierField;
             }
             set {
                 if ((accessModifierField.Equals(value) != true)) {
-                    accessModifierField = value;
-                    OnPropertyChanged("AccessModifier");
+                    this.accessModifierField = value;
+                    this.OnPropertyChanged("AccessModifier");
                 }
             }
         }
         
-        [XmlIgnoreAttribute()]
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool AccessModifierSpecified {
             get {
-                return accessModifierFieldSpecified;
+                return this.accessModifierFieldSpecified;
             }
             set {
                 if ((accessModifierFieldSpecified.Equals(value) != true)) {
-                    accessModifierFieldSpecified = value;
-                    OnPropertyChanged("AccessModifierSpecified");
+                    this.accessModifierFieldSpecified = value;
+                    this.OnPropertyChanged("AccessModifierSpecified");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public MemberModifier Modifier {
             get {
-                return modifierField;
+                return this.modifierField;
             }
             set {
                 if ((modifierField.Equals(value) != true)) {
-                    modifierField = value;
-                    OnPropertyChanged("Modifier");
+                    this.modifierField = value;
+                    this.OnPropertyChanged("Modifier");
                 }
             }
         }
         
-        [XmlIgnoreAttribute()]
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
         public bool ModifierSpecified {
             get {
-                return modifierFieldSpecified;
+                return this.modifierFieldSpecified;
             }
             set {
                 if ((modifierFieldSpecified.Equals(value) != true)) {
-                    modifierFieldSpecified = value;
-                    OnPropertyChanged("ModifierSpecified");
+                    this.modifierFieldSpecified = value;
+                    this.OnPropertyChanged("ModifierSpecified");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(false)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool HasMultipleResults {
             get {
-                return hasMultipleResultsField;
+                return this.hasMultipleResultsField;
             }
             set {
                 if ((hasMultipleResultsField.Equals(value) != true)) {
-                    hasMultipleResultsField = value;
-                    OnPropertyChanged("HasMultipleResults");
+                    this.hasMultipleResultsField = value;
+                    this.OnPropertyChanged("HasMultipleResults");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(false)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool IsComposable {
             get {
-                return isComposableField;
+                return this.isComposableField;
             }
             set {
                 if ((isComposableField.Equals(value) != true)) {
-                    isComposableField = value;
-                    OnPropertyChanged("IsComposable");
+                    this.isComposableField = value;
+                    this.OnPropertyChanged("IsComposable");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(Function));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Function));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -2606,13 +2626,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -2632,28 +2652,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Function object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out Function obj, out Exception exception) {
+        public static bool Deserialize(string xml, out Function obj, out System.Exception exception) {
             exception = null;
             obj = default(Function);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out Function obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static Function Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((Function)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -2669,23 +2689,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -2704,30 +2724,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Function object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out Function obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out Function obj, out System.Exception exception) {
             exception = null;
             obj = default(Function);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out Function obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static Function LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -2749,14 +2769,14 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this Function object
         /// </summary>
         public virtual Function Clone() {
-            return ((Function)(MemberwiseClone()));
+            return ((Function)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [XmlRootAttribute(Namespace="", IsNullable=false)]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
     public enum AccessModifier {
         
         /// <remarks/>
@@ -2776,8 +2796,8 @@ namespace DtronixModeler.Ddl {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [XmlRootAttribute(Namespace="", IsNullable=false)]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
     public enum MemberModifier {
         
         /// <remarks/>
@@ -2794,10 +2814,10 @@ namespace DtronixModeler.Ddl {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class View : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class View : System.ComponentModel.INotifyPropertyChanged {
         
         private ObservableCollection<Column> columnField;
         
@@ -2805,84 +2825,84 @@ namespace DtronixModeler.Ddl {
         
         private string descriptionField;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
         public View() {
-            columnField = new ObservableCollection<Column>();
+            this.columnField = new ObservableCollection<Column>();
         }
         
-        [XmlElementAttribute("Column")]
+        [System.Xml.Serialization.XmlElementAttribute("Column")]
         public ObservableCollection<Column> Column {
             get {
-                return columnField;
+                return this.columnField;
             }
             set {
-                if ((columnField != null)) {
+                if ((this.columnField != null)) {
                     if ((columnField.Equals(value) != true)) {
-                        columnField = value;
-                        OnPropertyChanged("Column");
+                        this.columnField = value;
+                        this.OnPropertyChanged("Column");
                     }
                 }
                 else {
-                    columnField = value;
-                    OnPropertyChanged("Column");
+                    this.columnField = value;
+                    this.OnPropertyChanged("Column");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
-                return nameField;
+                return this.nameField;
             }
             set {
-                if ((nameField != null)) {
+                if ((this.nameField != null)) {
                     if ((nameField.Equals(value) != true)) {
-                        nameField = value;
-                        OnPropertyChanged("Name");
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
                     }
                 }
                 else {
-                    nameField = value;
-                    OnPropertyChanged("Name");
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Description {
             get {
-                return descriptionField;
+                return this.descriptionField;
             }
             set {
-                if ((descriptionField != null)) {
+                if ((this.descriptionField != null)) {
                     if ((descriptionField.Equals(value) != true)) {
-                        descriptionField = value;
-                        OnPropertyChanged("Description");
+                        this.descriptionField = value;
+                        this.OnPropertyChanged("Description");
                     }
                 }
                 else {
-                    descriptionField = value;
-                    OnPropertyChanged("Description");
+                    this.descriptionField = value;
+                    this.OnPropertyChanged("Description");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(View));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(View));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -2892,13 +2912,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -2918,28 +2938,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output View object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out View obj, out Exception exception) {
+        public static bool Deserialize(string xml, out View obj, out System.Exception exception) {
             exception = null;
             obj = default(View);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out View obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static View Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((View)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -2955,23 +2975,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -2990,30 +3010,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output View object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out View obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out View obj, out System.Exception exception) {
             exception = null;
             obj = default(View);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out View obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static View LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -3035,16 +3055,16 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this View object
         /// </summary>
         public virtual View Clone() {
-            return ((View)(MemberwiseClone()));
+            return ((View)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class Association : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class Association : System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
         
@@ -3064,182 +3084,182 @@ namespace DtronixModeler.Ddl {
         
         private Cardinality table2CardinalityField;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
-                return nameField;
+                return this.nameField;
             }
             set {
-                if ((nameField != null)) {
+                if ((this.nameField != null)) {
                     if ((nameField.Equals(value) != true)) {
-                        nameField = value;
-                        OnPropertyChanged("Name");
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
                     }
                 }
                 else {
-                    nameField = value;
-                    OnPropertyChanged("Name");
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Table1Name {
             get {
-                return table1NameField;
+                return this.table1NameField;
             }
             set {
-                if ((table1NameField != null)) {
+                if ((this.table1NameField != null)) {
                     if ((table1NameField.Equals(value) != true)) {
-                        table1NameField = value;
-                        OnPropertyChanged("Table1Name");
+                        this.table1NameField = value;
+                        this.OnPropertyChanged("Table1Name");
                     }
                 }
                 else {
-                    table1NameField = value;
-                    OnPropertyChanged("Table1Name");
+                    this.table1NameField = value;
+                    this.OnPropertyChanged("Table1Name");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Table1 {
             get {
-                return table1Field;
+                return this.table1Field;
             }
             set {
-                if ((table1Field != null)) {
+                if ((this.table1Field != null)) {
                     if ((table1Field.Equals(value) != true)) {
-                        table1Field = value;
-                        OnPropertyChanged("Table1");
+                        this.table1Field = value;
+                        this.OnPropertyChanged("Table1");
                     }
                 }
                 else {
-                    table1Field = value;
-                    OnPropertyChanged("Table1");
+                    this.table1Field = value;
+                    this.OnPropertyChanged("Table1");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Table1Column {
             get {
-                return table1ColumnField;
+                return this.table1ColumnField;
             }
             set {
-                if ((table1ColumnField != null)) {
+                if ((this.table1ColumnField != null)) {
                     if ((table1ColumnField.Equals(value) != true)) {
-                        table1ColumnField = value;
-                        OnPropertyChanged("Table1Column");
+                        this.table1ColumnField = value;
+                        this.OnPropertyChanged("Table1Column");
                     }
                 }
                 else {
-                    table1ColumnField = value;
-                    OnPropertyChanged("Table1Column");
+                    this.table1ColumnField = value;
+                    this.OnPropertyChanged("Table1Column");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public Cardinality Table1Cardinality {
             get {
-                return table1CardinalityField;
+                return this.table1CardinalityField;
             }
             set {
                 if ((table1CardinalityField.Equals(value) != true)) {
-                    table1CardinalityField = value;
-                    OnPropertyChanged("Table1Cardinality");
+                    this.table1CardinalityField = value;
+                    this.OnPropertyChanged("Table1Cardinality");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Table2Name {
             get {
-                return table2NameField;
+                return this.table2NameField;
             }
             set {
-                if ((table2NameField != null)) {
+                if ((this.table2NameField != null)) {
                     if ((table2NameField.Equals(value) != true)) {
-                        table2NameField = value;
-                        OnPropertyChanged("Table2Name");
+                        this.table2NameField = value;
+                        this.OnPropertyChanged("Table2Name");
                     }
                 }
                 else {
-                    table2NameField = value;
-                    OnPropertyChanged("Table2Name");
+                    this.table2NameField = value;
+                    this.OnPropertyChanged("Table2Name");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Table2 {
             get {
-                return table2Field;
+                return this.table2Field;
             }
             set {
-                if ((table2Field != null)) {
+                if ((this.table2Field != null)) {
                     if ((table2Field.Equals(value) != true)) {
-                        table2Field = value;
-                        OnPropertyChanged("Table2");
+                        this.table2Field = value;
+                        this.OnPropertyChanged("Table2");
                     }
                 }
                 else {
-                    table2Field = value;
-                    OnPropertyChanged("Table2");
+                    this.table2Field = value;
+                    this.OnPropertyChanged("Table2");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Table2Column {
             get {
-                return table2ColumnField;
+                return this.table2ColumnField;
             }
             set {
-                if ((table2ColumnField != null)) {
+                if ((this.table2ColumnField != null)) {
                     if ((table2ColumnField.Equals(value) != true)) {
-                        table2ColumnField = value;
-                        OnPropertyChanged("Table2Column");
+                        this.table2ColumnField = value;
+                        this.OnPropertyChanged("Table2Column");
                     }
                 }
                 else {
-                    table2ColumnField = value;
-                    OnPropertyChanged("Table2Column");
+                    this.table2ColumnField = value;
+                    this.OnPropertyChanged("Table2Column");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public Cardinality Table2Cardinality {
             get {
-                return table2CardinalityField;
+                return this.table2CardinalityField;
             }
             set {
                 if ((table2CardinalityField.Equals(value) != true)) {
-                    table2CardinalityField = value;
-                    OnPropertyChanged("Table2Cardinality");
+                    this.table2CardinalityField = value;
+                    this.OnPropertyChanged("Table2Cardinality");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(Association));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Association));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -3249,13 +3269,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -3275,28 +3295,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Association object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out Association obj, out Exception exception) {
+        public static bool Deserialize(string xml, out Association obj, out System.Exception exception) {
             exception = null;
             obj = default(Association);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out Association obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static Association Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((Association)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -3312,23 +3332,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -3347,30 +3367,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Association object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out Association obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out Association obj, out System.Exception exception) {
             exception = null;
             obj = default(Association);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out Association obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static Association LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -3392,14 +3412,14 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this Association object
         /// </summary>
         public virtual Association Clone() {
-            return ((Association)(MemberwiseClone()));
+            return ((Association)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [XmlRootAttribute(Namespace="", IsNullable=false)]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
     public enum Cardinality {
         
         /// <remarks/>
@@ -3410,69 +3430,69 @@ namespace DtronixModeler.Ddl {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class IndexColumn : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class IndexColumn : System.ComponentModel.INotifyPropertyChanged {
         
         private string nameField;
         
         private Order directionField;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
         public IndexColumn() {
-            directionField = Order.Ascending;
+            this.directionField = Order.Ascending;
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
-                return nameField;
+                return this.nameField;
             }
             set {
-                if ((nameField != null)) {
+                if ((this.nameField != null)) {
                     if ((nameField.Equals(value) != true)) {
-                        nameField = value;
-                        OnPropertyChanged("Name");
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
                     }
                 }
                 else {
-                    nameField = value;
-                    OnPropertyChanged("Name");
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(Order.Ascending)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(Order.Ascending)]
         public Order Direction {
             get {
-                return directionField;
+                return this.directionField;
             }
             set {
                 if ((directionField.Equals(value) != true)) {
-                    directionField = value;
-                    OnPropertyChanged("Direction");
+                    this.directionField = value;
+                    this.OnPropertyChanged("Direction");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(IndexColumn));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(IndexColumn));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -3482,13 +3502,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -3508,28 +3528,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output IndexColumn object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out IndexColumn obj, out Exception exception) {
+        public static bool Deserialize(string xml, out IndexColumn obj, out System.Exception exception) {
             exception = null;
             obj = default(IndexColumn);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out IndexColumn obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static IndexColumn Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((IndexColumn)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -3545,23 +3565,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -3580,30 +3600,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output IndexColumn object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out IndexColumn obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out IndexColumn obj, out System.Exception exception) {
             exception = null;
             obj = default(IndexColumn);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out IndexColumn obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static IndexColumn LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -3625,14 +3645,14 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this IndexColumn object
         /// </summary>
         public virtual IndexColumn Clone() {
-            return ((IndexColumn)(MemberwiseClone()));
+            return ((IndexColumn)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [XmlRootAttribute(Namespace="", IsNullable=false)]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
     public enum Order {
         
         /// <remarks/>
@@ -3643,10 +3663,10 @@ namespace DtronixModeler.Ddl {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [DesignerCategoryAttribute("code")]
-    [XmlRootAttribute(Namespace="", IsNullable=true)]
-    public partial class Index : INotifyPropertyChanged {
+    [System.SerializableAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=true)]
+    public partial class Index : System.ComponentModel.INotifyPropertyChanged {
         
         private ObservableCollection<IndexColumn> indexColumnField;
         
@@ -3656,99 +3676,99 @@ namespace DtronixModeler.Ddl {
         
         private bool uniqueField;
         
-        private static XmlSerializer serializer;
+        private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Index() {
-            indexColumnField = new ObservableCollection<IndexColumn>();
-            uniqueField = false;
+            this.indexColumnField = new ObservableCollection<IndexColumn>();
+            this.uniqueField = false;
         }
         
-        [XmlElementAttribute("IndexColumn")]
+        [System.Xml.Serialization.XmlElementAttribute("IndexColumn")]
         public ObservableCollection<IndexColumn> IndexColumn {
             get {
-                return indexColumnField;
+                return this.indexColumnField;
             }
             set {
-                if ((indexColumnField != null)) {
+                if ((this.indexColumnField != null)) {
                     if ((indexColumnField.Equals(value) != true)) {
-                        indexColumnField = value;
-                        OnPropertyChanged("IndexColumn");
+                        this.indexColumnField = value;
+                        this.OnPropertyChanged("IndexColumn");
                     }
                 }
                 else {
-                    indexColumnField = value;
-                    OnPropertyChanged("IndexColumn");
+                    this.indexColumnField = value;
+                    this.OnPropertyChanged("IndexColumn");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Name {
             get {
-                return nameField;
+                return this.nameField;
             }
             set {
-                if ((nameField != null)) {
+                if ((this.nameField != null)) {
                     if ((nameField.Equals(value) != true)) {
-                        nameField = value;
-                        OnPropertyChanged("Name");
+                        this.nameField = value;
+                        this.OnPropertyChanged("Name");
                     }
                 }
                 else {
-                    nameField = value;
-                    OnPropertyChanged("Name");
+                    this.nameField = value;
+                    this.OnPropertyChanged("Name");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Description {
             get {
-                return descriptionField;
+                return this.descriptionField;
             }
             set {
-                if ((descriptionField != null)) {
+                if ((this.descriptionField != null)) {
                     if ((descriptionField.Equals(value) != true)) {
-                        descriptionField = value;
-                        OnPropertyChanged("Description");
+                        this.descriptionField = value;
+                        this.OnPropertyChanged("Description");
                     }
                 }
                 else {
-                    descriptionField = value;
-                    OnPropertyChanged("Description");
+                    this.descriptionField = value;
+                    this.OnPropertyChanged("Description");
                 }
             }
         }
         
-        [XmlAttributeAttribute()]
-        [DefaultValueAttribute(false)]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool Unique {
             get {
-                return uniqueField;
+                return this.uniqueField;
             }
             set {
                 if ((uniqueField.Equals(value) != true)) {
-                    uniqueField = value;
-                    OnPropertyChanged("Unique");
+                    this.uniqueField = value;
+                    this.OnPropertyChanged("Unique");
                 }
             }
         }
         
-        private static XmlSerializer Serializer {
+        private static System.Xml.Serialization.XmlSerializer Serializer {
             get {
                 if ((serializer == null)) {
-                    serializer = new XmlSerializer(typeof(Index));
+                    serializer = new System.Xml.Serialization.XmlSerializer(typeof(Index));
                 }
                 return serializer;
             }
         }
         
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         public virtual void OnPropertyChanged(string propertyName) {
-            PropertyChangedEventHandler handler = PropertyChanged;
+            System.ComponentModel.PropertyChangedEventHandler handler = this.PropertyChanged;
             if ((handler != null)) {
-                handler(this, new PropertyChangedEventArgs(propertyName));
+                handler(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
             }
         }
         
@@ -3758,13 +3778,13 @@ namespace DtronixModeler.Ddl {
         /// </summary>
         /// <returns>string XML value</returns>
         public virtual string Serialize() {
-            StreamReader streamReader = null;
-            MemoryStream memoryStream = null;
+            System.IO.StreamReader streamReader = null;
+            System.IO.MemoryStream memoryStream = null;
             try {
-                memoryStream = new MemoryStream();
+                memoryStream = new System.IO.MemoryStream();
                 Serializer.Serialize(memoryStream, this);
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                streamReader = new StreamReader(memoryStream);
+                memoryStream.Seek(0, System.IO.SeekOrigin.Begin);
+                streamReader = new System.IO.StreamReader(memoryStream);
                 return streamReader.ReadToEnd();
             }
             finally {
@@ -3784,28 +3804,28 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Index object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool Deserialize(string xml, out Index obj, out Exception exception) {
+        public static bool Deserialize(string xml, out Index obj, out System.Exception exception) {
             exception = null;
             obj = default(Index);
             try {
                 obj = Deserialize(xml);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool Deserialize(string xml, out Index obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
         
         public static Index Deserialize(string xml) {
-            StringReader stringReader = null;
+            System.IO.StringReader stringReader = null;
             try {
-                stringReader = new StringReader(xml);
+                stringReader = new System.IO.StringReader(xml);
                 return ((Index)(Serializer.Deserialize(System.Xml.XmlReader.Create(stringReader))));
             }
             finally {
@@ -3821,23 +3841,23 @@ namespace DtronixModeler.Ddl {
         /// <param name="fileName">full path of outupt xml file</param>
         /// <param name="exception">output Exception value if failed</param>
         /// <returns>true if can serialize and save into file; otherwise, false</returns>
-        public virtual bool SaveToFile(string fileName, out Exception exception) {
+        public virtual bool SaveToFile(string fileName, out System.Exception exception) {
             exception = null;
             try {
                 SaveToFile(fileName);
                 return true;
             }
-            catch (Exception e) {
+            catch (System.Exception e) {
                 exception = e;
                 return false;
             }
         }
         
         public virtual void SaveToFile(string fileName) {
-            StreamWriter streamWriter = null;
+            System.IO.StreamWriter streamWriter = null;
             try {
                 string xmlString = Serialize();
-                FileInfo xmlFile = new FileInfo(fileName);
+                System.IO.FileInfo xmlFile = new System.IO.FileInfo(fileName);
                 streamWriter = xmlFile.CreateText();
                 streamWriter.WriteLine(xmlString);
                 streamWriter.Close();
@@ -3856,30 +3876,30 @@ namespace DtronixModeler.Ddl {
         /// <param name="obj">Output Index object</param>
         /// <param name="exception">output Exception value if deserialize failed</param>
         /// <returns>true if this XmlSerializer can deserialize the object; otherwise, false</returns>
-        public static bool LoadFromFile(string fileName, out Index obj, out Exception exception) {
+        public static bool LoadFromFile(string fileName, out Index obj, out System.Exception exception) {
             exception = null;
             obj = default(Index);
             try {
                 obj = LoadFromFile(fileName);
                 return true;
             }
-            catch (Exception ex) {
+            catch (System.Exception ex) {
                 exception = ex;
                 return false;
             }
         }
         
         public static bool LoadFromFile(string fileName, out Index obj) {
-            Exception exception = null;
+            System.Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
         
         public static Index LoadFromFile(string fileName) {
-            FileStream file = null;
-            StreamReader sr = null;
+            System.IO.FileStream file = null;
+            System.IO.StreamReader sr = null;
             try {
-                file = new FileStream(fileName, FileMode.Open, FileAccess.Read);
-                sr = new StreamReader(file);
+                file = new System.IO.FileStream(fileName, FileMode.Open, FileAccess.Read);
+                sr = new System.IO.StreamReader(file);
                 string xmlString = sr.ReadToEnd();
                 sr.Close();
                 file.Close();
@@ -3901,14 +3921,14 @@ namespace DtronixModeler.Ddl {
         /// Create a clone of this Index object
         /// </summary>
         public virtual Index Clone() {
-            return ((Index)(MemberwiseClone()));
+            return ((Index)(this.MemberwiseClone()));
         }
         #endregion
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [XmlRootAttribute(Namespace="", IsNullable=false)]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
     public enum DbProvider {
         
         /// <remarks/>
@@ -3919,8 +3939,8 @@ namespace DtronixModeler.Ddl {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [XmlRootAttribute(Namespace="", IsNullable=false)]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
     public enum ClassModifier {
         
         /// <remarks/>
@@ -3931,8 +3951,8 @@ namespace DtronixModeler.Ddl {
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
-    [SerializableAttribute()]
-    [XmlRootAttribute(Namespace="", IsNullable=false)]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
     public enum ColumnReservedWords {
         
         /// <remarks/>
