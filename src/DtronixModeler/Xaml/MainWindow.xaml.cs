@@ -157,7 +157,9 @@ namespace DtronixModeler.Xaml
             var options = new CommandOptions
             {
                 DbProvider = database.TargetDb,
-                InputType = CommandOptions.InType.Ddl
+                InputType = CommandOptions.InType.Ddl,
+                ProtobufDataContracts = database.ImplementProtobufNetDataContracts,
+                NotifyPropertyChanged = database.ImplementINotifyPropertyChanged
             };
 
             string base_ddl_filename = Path.Combine(Path.GetDirectoryName(database._FileLocation),

@@ -40,7 +40,11 @@ namespace DtronixModeler.Generator {
 
 		public string ContextClass { get; set; }
 
-		public CommandOptions() { }
+	    public bool NotifyPropertyChanged { get; set; }
+
+	    public bool ProtobufDataContracts { get; set; }
+
+        public CommandOptions() { }
 
 		public CommandOptions(string[] args, TextWriter writer){
 			ParseSuccess = false;
@@ -59,7 +63,12 @@ namespace DtronixModeler.Generator {
 			option_set.Add("namespace=", "Namespace used to contain all of the code objects & classes.", v => Namespace = (v == null) ? "" : v);
 			option_set.Add("context-class=", "Class name for the main context.", v => ContextClass = (v == null) ? "" : v);
 
-			option_set.Add("h|?|help", "Displays this help menu.", v => {
+		    option_set.Add("notifypropertychanged=", "Set to true if the INotifyPropertyChanged class should be implemented.",
+		        v => NotifyPropertyChanged = bool.Parse(v));
+		    option_set.Add("protobufdatacontracts=", "Set to true if protobuf-net data contracts should be implemented.",
+		        v => ProtobufDataContracts = bool.Parse(v));
+
+            option_set.Add("h|?|help", "Displays this help menu.", v => {
 				help = true;
 				Help();
 			});

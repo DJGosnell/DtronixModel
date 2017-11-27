@@ -126,8 +126,11 @@ namespace DtronixModeler.Generator {
 				input_database.ContextClass = options.ContextClass;
 			}
 
-			// Output SQL file if required.
-			if (options.SqlOutput != null) {
+		    input_database.ImplementINotifyPropertyChanged = options.NotifyPropertyChanged;
+		    input_database.ImplementProtobufNetDataContracts = options.ProtobufDataContracts;
+
+            // Output SQL file if required.
+            if (options.SqlOutput != null) {
 				var sql_code_writer = new SqlTableCreateGenerator(input_database, type_transformer);
 
 				if (options.SqlOutput == "") {
