@@ -72,14 +72,15 @@ namespace DtronixModel
         }
 
         /// <summary>
-        /// True if a transaction has been started.
-        /// </summary>
-        private bool _transactionStarted;
-
-        /// <summary>
         /// The connection that this context tables will use.
         /// </summary>
         public DbConnection Connection;
+
+
+        /// <summary>
+        /// Retrieves the current transaction if one exists for this context.  Null otherwise.
+        /// </summary>
+        public SqlTransaction Transaction { get; private set; }
 
         /// <summary>
         /// Select string to be appended and read from insert queries to retrieve the newly inserted row's id.
@@ -130,11 +131,6 @@ namespace DtronixModel
         /// Set to the level of debugging to output.
         /// </summary>
         public DebugLevel Debug { get; set; } = DebugLevel.None;
-
-        /// <summary>
-        /// Retrieves if this context is in a transaction or not.
-        /// </summary>
-        public bool TransactionStarted => _transactionStarted;
 
         /// <summary>
         /// Releases any connection resources.
@@ -191,12 +187,11 @@ namespace DtronixModel
         /// <returns>Wrapped transaction.</returns>
         public SqlTransaction BeginTransaction()
         {
-            if (_transactionStarted)
+            if (Transaction != null)
                 throw new InvalidOperationException(
                     "Transaction has already been created.  Can not create nested transactions.");
 
-            _transactionStarted = true;
-            return new SqlTransaction(Connection.BeginTransaction(), () => { _transactionStarted = false; });
+            return Transaction = new SqlTransaction(Connection.BeginTransaction(), () => { Transaction = null; });
         }
     }
 }

@@ -16,7 +16,7 @@ namespace DtronixModel
         /// <summary>
         /// Wrapped transaction for the database.
         /// </summary>
-        private readonly DbTransaction _transaction;
+        public DbTransaction Transaction { get; }
 
         private bool _disposed;
 
@@ -27,7 +27,7 @@ namespace DtronixModel
         /// <param name="onDispose">Method to call on transaction disposal.</param>
         public SqlTransaction(DbTransaction transaction, Action onDispose)
         {
-            _transaction = transaction;
+            Transaction = transaction;
             _onDispose = onDispose;
         }
 
@@ -45,7 +45,7 @@ namespace DtronixModel
         /// </summary>
         public void Commit()
         {
-            _transaction.Commit();
+            Transaction.Commit();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace DtronixModel
         /// </summary>
         public void Rollback()
         {
-            _transaction.Rollback();
+            Transaction.Rollback();
         }
 
 
@@ -68,7 +68,7 @@ namespace DtronixModel
 
             if (disposing)
             {
-                _transaction.Dispose();
+                Transaction.Dispose();
                 _onDispose();
             }
 

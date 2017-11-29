@@ -403,11 +403,12 @@ namespace DtronixModel
 
             if (_mode == Mode.Update)
             {
+
                 SqlTransaction transaction = null;
                 try
                 {
                     // Start a transaction if one does not already exist.
-                    if (_context.TransactionStarted == false)
+                    if (_context.Transaction == null)
                         transaction = _context.BeginTransaction();
 
                     foreach (var model in _sqlRows)
@@ -682,10 +683,11 @@ namespace DtronixModel
             try
             {
                 // Start a transaction if one does not already exist for fast bulk inserts.
-                if (_context.TransactionStarted == false)
+                if (_context.Transaction == null)
                     transaction = _context.BeginTransaction();
 
                 _command.CommandText = sbSql.ToString();
+                _command.Transaction = _context.Transaction.Transaction;
 
                 // Create the parameters for bulk inserts.
                 for (var i = 0; i < columns.Length; i++)
