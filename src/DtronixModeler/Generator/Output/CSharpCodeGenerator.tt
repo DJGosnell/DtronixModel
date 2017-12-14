@@ -132,6 +132,14 @@ foreach (var enum_value in enum_class.EnumValue) { #>
         
 <# for(int i = 0; i < table.Column.Count(); i++) { #>
         /// <summary>
+        /// Column name.
+<# if (string.IsNullOrWhiteSpace(table.Column[i].Description) == false) { #>
+        /// <#= table.Column[i].Description #>
+<# } #>
+        /// </summary>
+        public const string <#= table.Column[i].Name #>Column = "<#= table.Column[i].Name #>";
+
+        /// <summary>
         /// Backing field for the <#= table.Column[i].Name #> property.
         /// </summary>
         private <#= ColumnNetType(table.Column[i]) #> _<#= table.Column[i].Name #>;

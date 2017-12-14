@@ -143,7 +143,17 @@ foreach (var enum_value in enum_class.EnumValue) {
  } 
             this.Write("        \r\n");
  for(int i = 0; i < table.Column.Count(); i++) { 
-            this.Write("        /// <summary>\r\n        /// Backing field for the ");
+            this.Write("        /// <summary>\r\n        /// Column name.\r\n");
+ if (string.IsNullOrWhiteSpace(table.Column[i].Description) == false) { 
+            this.Write("        /// ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Description));
+            this.Write("\r\n");
+ } 
+            this.Write("        /// </summary>\r\n        public const string ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
+            this.Write("Column = \"");
+            this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
+            this.Write("\";\r\n\r\n        /// <summary>\r\n        /// Backing field for the ");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write(" property.\r\n        /// </summary>\r\n        private ");
             this.Write(this.ToStringHelper.ToStringWithCulture(ColumnNetType(table.Column[i])));
