@@ -273,9 +273,9 @@ foreach (var db_assoc in database.Association) {
             this.Write(this.ToStringHelper.ToStringWithCulture(database.ContextClass));
             this.Write(")Context).");
             this.Write(this.ToStringHelper.ToStringWithCulture(assoc.OtherTable.Name));
-            this.Write(".Select().WhereIn(\"");
+            this.Write(".Select().Where(\"");
             this.Write(this.ToStringHelper.ToStringWithCulture(assoc.OtherColumn.Name));
-            this.Write("\", _");
+            this.Write(" = {0}\", _");
             this.Write(this.ToStringHelper.ToStringWithCulture(assoc.ThisColumn.Name));
             this.Write(").");
             this.Write(this.ToStringHelper.ToStringWithCulture(fetch_type));

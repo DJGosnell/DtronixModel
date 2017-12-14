@@ -189,7 +189,7 @@ namespace DtronixModelTests.Sqlite
                 CreateUser(context, "2");
                 CreateUser(context, "3");
 
-                var users = context.Users.Select().WhereIn("username", "user_name1", "user_name3").ExecuteFetchAll();
+                var users = context.Users.Select().WhereIn("username", new object[]{"user_name1", "user_name3"}).ExecuteFetchAll();
 
                 Assert.Equal(2, users.Length);
                 Assert.Equal("user_name1", users[0].username);

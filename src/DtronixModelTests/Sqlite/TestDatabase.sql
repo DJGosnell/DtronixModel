@@ -6,13 +6,11 @@ CREATE TABLE Users (
 );
 
 
-
 CREATE TABLE Logs (
 	rowid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
 	Users_rowid INTEGER NOT NULL ,
 	text TEXT NOT NULL 
 );
-
 
 
 CREATE TABLE AllTypes (

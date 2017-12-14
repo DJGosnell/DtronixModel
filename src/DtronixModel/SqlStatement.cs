@@ -244,7 +244,7 @@ namespace DtronixModel
         /// <param name="column">Column to match against.</param>
         /// <param name="values">Values to check against the specified column.</param>
         /// <returns>Current statement for chaining.</returns>
-        public SqlStatement<T> WhereIn(string column, params object[] values)
+        public SqlStatement<T> WhereIn(string column, object[] values)
         {
             ValidateWhere();
 

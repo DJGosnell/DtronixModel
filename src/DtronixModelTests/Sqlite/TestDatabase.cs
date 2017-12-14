@@ -128,6 +128,11 @@ namespace DtronixModelTests.Sqlite {
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string rowidColumn = "rowid";
+
+        /// <summary>
         /// Backing field for the rowid property.
         /// </summary>
         private Int64 _rowid;
@@ -144,6 +149,11 @@ namespace DtronixModelTests.Sqlite {
                 ChangedFlags.Set(0, true);
             }
         }
+
+        /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string usernameColumn = "username";
 
         /// <summary>
         /// Backing field for the username property.
@@ -164,6 +174,11 @@ namespace DtronixModelTests.Sqlite {
         }
 
         /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string passwordColumn = "password";
+
+        /// <summary>
         /// Backing field for the password property.
         /// </summary>
         private String _password;
@@ -180,6 +195,11 @@ namespace DtronixModelTests.Sqlite {
                 ChangedFlags.Set(2, true);
             }
         }
+
+        /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string last_loggedColumn = "last_logged";
 
         /// <summary>
         /// Backing field for the last_logged property.
@@ -210,7 +230,7 @@ namespace DtronixModelTests.Sqlite {
                 
                 try 
                 {
-                    _Logs = ((TestDatabaseContext)Context).Logs.Select().WhereIn("Users_rowid", _rowid).ExecuteFetchAll();
+                    _Logs = ((TestDatabaseContext)Context).Logs.Select().Where("Users_rowid = {0}", _rowid).ExecuteFetchAll();
                 }
                 catch 
                 {
@@ -388,6 +408,11 @@ namespace DtronixModelTests.Sqlite {
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string rowidColumn = "rowid";
+
+        /// <summary>
         /// Backing field for the rowid property.
         /// </summary>
         private Int64 _rowid;
@@ -404,6 +429,12 @@ namespace DtronixModelTests.Sqlite {
                 ChangedFlags.Set(0, true);
             }
         }
+
+        /// <summary>
+        /// Column name.
+        /// User which created this log item.
+        /// </summary>
+        public const string Users_rowidColumn = "Users_rowid";
 
         /// <summary>
         /// Backing field for the Users_rowid property.
@@ -425,6 +456,11 @@ namespace DtronixModelTests.Sqlite {
                 ChangedFlags.Set(1, true);
             }
         }
+
+        /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string textColumn = "text";
 
         /// <summary>
         /// Backing field for the text property.
@@ -455,7 +491,7 @@ namespace DtronixModelTests.Sqlite {
                 
                 try 
                 {
-                    _User = ((TestDatabaseContext)Context).Users.Select().WhereIn("rowid", _Users_rowid).ExecuteFetch();
+                    _User = ((TestDatabaseContext)Context).Users.Select().Where("rowid = {0}", _Users_rowid).ExecuteFetch();
                 }
                 catch 
                 {
@@ -623,6 +659,11 @@ namespace DtronixModelTests.Sqlite {
         public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
         
         /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string idColumn = "id";
+
+        /// <summary>
         /// Backing field for the id property.
         /// </summary>
         private Int64 _id;
@@ -639,6 +680,11 @@ namespace DtronixModelTests.Sqlite {
                 ChangedFlags.Set(0, true);
             }
         }
+
+        /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_int16Column = "db_int16";
 
         /// <summary>
         /// Backing field for the db_int16 property.
@@ -659,6 +705,11 @@ namespace DtronixModelTests.Sqlite {
         }
 
         /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_int32Column = "db_int32";
+
+        /// <summary>
         /// Backing field for the db_int32 property.
         /// </summary>
         private Int32? _db_int32;
@@ -675,6 +726,11 @@ namespace DtronixModelTests.Sqlite {
                 ChangedFlags.Set(2, true);
             }
         }
+
+        /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_int64Column = "db_int64";
 
         /// <summary>
         /// Backing field for the db_int64 property.
@@ -695,6 +751,11 @@ namespace DtronixModelTests.Sqlite {
         }
 
         /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_uint16Column = "db_uint16";
+
+        /// <summary>
         /// Backing field for the db_uint16 property.
         /// </summary>
         private UInt16? _db_uint16;
@@ -711,6 +772,11 @@ namespace DtronixModelTests.Sqlite {
                 ChangedFlags.Set(4, true);
             }
         }
+
+        /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_uint32Column = "db_uint32";
 
         /// <summary>
         /// Backing field for the db_uint32 property.
@@ -731,6 +797,11 @@ namespace DtronixModelTests.Sqlite {
         }
 
         /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_uint64Column = "db_uint64";
+
+        /// <summary>
         /// Backing field for the db_uint64 property.
         /// </summary>
         private UInt64? _db_uint64;
@@ -747,6 +818,11 @@ namespace DtronixModelTests.Sqlite {
                 ChangedFlags.Set(6, true);
             }
         }
+
+        /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_byte_arrayColumn = "db_byte_array";
 
         /// <summary>
         /// Backing field for the db_byte_array property.
@@ -767,6 +843,11 @@ namespace DtronixModelTests.Sqlite {
         }
 
         /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_byteColumn = "db_byte";
+
+        /// <summary>
         /// Backing field for the db_byte property.
         /// </summary>
         private Byte? _db_byte;
@@ -783,6 +864,11 @@ namespace DtronixModelTests.Sqlite {
                 ChangedFlags.Set(8, true);
             }
         }
+
+        /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_date_timeColumn = "db_date_time";
 
         /// <summary>
         /// Backing field for the db_date_time property.
@@ -803,6 +889,11 @@ namespace DtronixModelTests.Sqlite {
         }
 
         /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_decimalColumn = "db_decimal";
+
+        /// <summary>
         /// Backing field for the db_decimal property.
         /// </summary>
         private Decimal? _db_decimal;
@@ -819,6 +910,11 @@ namespace DtronixModelTests.Sqlite {
                 ChangedFlags.Set(10, true);
             }
         }
+
+        /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_floatColumn = "db_float";
 
         /// <summary>
         /// Backing field for the db_float property.
@@ -839,6 +935,11 @@ namespace DtronixModelTests.Sqlite {
         }
 
         /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_doubleColumn = "db_double";
+
+        /// <summary>
         /// Backing field for the db_double property.
         /// </summary>
         private Double? _db_double;
@@ -855,6 +956,11 @@ namespace DtronixModelTests.Sqlite {
                 ChangedFlags.Set(12, true);
             }
         }
+
+        /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_boolColumn = "db_bool";
 
         /// <summary>
         /// Backing field for the db_bool property.
@@ -875,6 +981,11 @@ namespace DtronixModelTests.Sqlite {
         }
 
         /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_stringColumn = "db_string";
+
+        /// <summary>
         /// Backing field for the db_string property.
         /// </summary>
         private String _db_string;
@@ -891,6 +1002,11 @@ namespace DtronixModelTests.Sqlite {
                 ChangedFlags.Set(14, true);
             }
         }
+
+        /// <summary>
+        /// Column name.
+        /// </summary>
+        public const string db_enumColumn = "db_enum";
 
         /// <summary>
         /// Backing field for the db_enum property.

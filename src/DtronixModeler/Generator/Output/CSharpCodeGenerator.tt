@@ -228,7 +228,7 @@ foreach (var db_assoc in database.Association) {
                 
                 try 
                 {
-                    _<#= assoc.OtherAssociationName #> = ((<#= database.ContextClass #>)Context).<#= assoc.OtherTable.Name #>.Select().WhereIn("<#= assoc.OtherColumn.Name #>", _<#= assoc.ThisColumn.Name #>).<#= fetch_type #>
+                    _<#= assoc.OtherAssociationName #> = ((<#= database.ContextClass #>)Context).<#= assoc.OtherTable.Name #>.Select().Where("<#= assoc.OtherColumn.Name #> = {0}", _<#= assoc.ThisColumn.Name #>).<#= fetch_type #>
                 }
                 catch 
                 {
