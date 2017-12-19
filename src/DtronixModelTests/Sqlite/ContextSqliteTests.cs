@@ -713,37 +713,5 @@ namespace DtronixModelTests.Sqlite
                 Assert.True(fired);
             }
         }
-
-        [Fact]
-        public void PropertyChangeNotificationDoesNotNotifyWhenSameValue()
-        {
-
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                bool fired = false;
-                var now = DateTime.Now;
-                var row = new AllTypes
-                {
-                    db_date_time = now
-                };
-
-                row.PropertyChanged += (sender, e) =>
-                {
-                    if (e.PropertyName == "db_date_time")
-                    {
-                        fired = true;
-                    }
-                };
-
-                Assert.False(fired);
-
-                row.db_date_time = now;
-
-                Assert.False(fired);
-            }
-        }
-
-
-
     }
 }

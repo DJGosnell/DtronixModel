@@ -142,11 +142,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _rowid; }
             set
             {
-                if(_rowid != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(rowid)));
-
                 _rowid = value;
                 ChangedFlags.Set(0, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(rowid)));
             }
         }
 
@@ -165,11 +163,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _username; }
             set
             {
-                if(_username != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(username)));
-
                 _username = value;
                 ChangedFlags.Set(1, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(username)));
             }
         }
 
@@ -188,11 +184,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _password; }
             set
             {
-                if(_password != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(password)));
-
                 _password = value;
                 ChangedFlags.Set(2, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(password)));
             }
         }
 
@@ -211,11 +205,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _last_logged; }
             set
             {
-                if(_last_logged != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(last_logged)));
-
                 _last_logged = value;
                 ChangedFlags.Set(3, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(last_logged)));
             }
         }
 
@@ -422,11 +414,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _rowid; }
             set
             {
-                if(_rowid != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(rowid)));
-
                 _rowid = value;
                 ChangedFlags.Set(0, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(rowid)));
             }
         }
 
@@ -449,11 +439,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _Users_rowid; }
             set
             {
-                if(_Users_rowid != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(Users_rowid)));
-
                 _Users_rowid = value;
                 ChangedFlags.Set(1, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(Users_rowid)));
             }
         }
 
@@ -472,11 +460,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _text; }
             set
             {
-                if(_text != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(text)));
-
                 _text = value;
                 ChangedFlags.Set(2, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(text)));
             }
         }
 
@@ -673,11 +659,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _id; }
             set
             {
-                if(_id != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(id)));
-
                 _id = value;
                 ChangedFlags.Set(0, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(id)));
             }
         }
 
@@ -696,11 +680,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_int16; }
             set
             {
-                if(_db_int16 != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_int16)));
-
                 _db_int16 = value;
                 ChangedFlags.Set(1, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_int16)));
             }
         }
 
@@ -719,11 +701,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_int32; }
             set
             {
-                if(_db_int32 != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_int32)));
-
                 _db_int32 = value;
                 ChangedFlags.Set(2, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_int32)));
             }
         }
 
@@ -742,11 +722,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_int64; }
             set
             {
-                if(_db_int64 != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_int64)));
-
                 _db_int64 = value;
                 ChangedFlags.Set(3, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_int64)));
             }
         }
 
@@ -765,11 +743,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_uint16; }
             set
             {
-                if(_db_uint16 != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_uint16)));
-
                 _db_uint16 = value;
                 ChangedFlags.Set(4, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_uint16)));
             }
         }
 
@@ -788,11 +764,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_uint32; }
             set
             {
-                if(_db_uint32 != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_uint32)));
-
                 _db_uint32 = value;
                 ChangedFlags.Set(5, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_uint32)));
             }
         }
 
@@ -811,11 +785,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_uint64; }
             set
             {
-                if(_db_uint64 != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_uint64)));
-
                 _db_uint64 = value;
                 ChangedFlags.Set(6, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_uint64)));
             }
         }
 
@@ -834,11 +806,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_byte_array; }
             set
             {
-                if(_db_byte_array != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_byte_array)));
-
                 _db_byte_array = value;
                 ChangedFlags.Set(7, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_byte_array)));
             }
         }
 
@@ -857,11 +827,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_byte; }
             set
             {
-                if(_db_byte != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_byte)));
-
                 _db_byte = value;
                 ChangedFlags.Set(8, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_byte)));
             }
         }
 
@@ -880,11 +848,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_date_time; }
             set
             {
-                if(_db_date_time != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_date_time)));
-
                 _db_date_time = value;
                 ChangedFlags.Set(9, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_date_time)));
             }
         }
 
@@ -903,11 +869,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_decimal; }
             set
             {
-                if(_db_decimal != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_decimal)));
-
                 _db_decimal = value;
                 ChangedFlags.Set(10, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_decimal)));
             }
         }
 
@@ -926,11 +890,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_float; }
             set
             {
-                if(_db_float != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_float)));
-
                 _db_float = value;
                 ChangedFlags.Set(11, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_float)));
             }
         }
 
@@ -949,11 +911,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_double; }
             set
             {
-                if(_db_double != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_double)));
-
                 _db_double = value;
                 ChangedFlags.Set(12, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_double)));
             }
         }
 
@@ -972,11 +932,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_bool; }
             set
             {
-                if(_db_bool != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_bool)));
-
                 _db_bool = value;
                 ChangedFlags.Set(13, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_bool)));
             }
         }
 
@@ -995,11 +953,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_string; }
             set
             {
-                if(_db_string != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_string)));
-
                 _db_string = value;
                 ChangedFlags.Set(14, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_string)));
             }
         }
 
@@ -1018,11 +974,9 @@ namespace DtronixModelTests.Sqlite {
             get { return _db_enum; }
             set
             {
-                if(_db_enum != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_enum)));
-
                 _db_enum = value;
                 ChangedFlags.Set(15, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_enum)));
             }
         }
 

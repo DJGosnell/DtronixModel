@@ -195,19 +195,18 @@ if (this.database.ImplementProtobufNetDataContracts) {
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].DbLength));
             this.Write(" characters. Passed string is \" + value.Length.ToString() + \" characters.\");\r\n");
  } 
- if(this.database.ImplementINotifyPropertyChanged){ 
-            this.Write("                if(_");
-            this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
-            this.Write(" != value)\r\n                    PropertyChanged?.Invoke(this, new System.Componen" +
-                    "tModel.PropertyChangedEventArgs(nameof(");
-            this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
-            this.Write(")));\r\n\r\n");
- } 
             this.Write("                _");
             this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
             this.Write(" = value;\r\n                ChangedFlags.Set(");
             this.Write(this.ToStringHelper.ToStringWithCulture(i));
-            this.Write(", true);\r\n            }\r\n");
+            this.Write(", true);\r\n");
+ if(this.database.ImplementINotifyPropertyChanged){ 
+            this.Write("                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyC" +
+                    "hangedEventArgs(nameof(");
+            this.Write(this.ToStringHelper.ToStringWithCulture(table.Column[i].Name));
+            this.Write(")));\r\n");
+ } 
+            this.Write("            }\r\n");
  } 
             this.Write("        }\r\n\r\n");
  } 

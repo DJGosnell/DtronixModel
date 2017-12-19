@@ -162,13 +162,11 @@ if (this.database.ImplementProtobufNetDataContracts) { #>
                 if(value != null && value.Length > <#= table.Column[i].DbLength #>) 
                     throw new ArgumentOutOfRangeException("<#= table.Column[i].Name #>", "String <#= table.Column[i].Name #> is too long. Max length allowed is <#= table.Column[i].DbLength #> characters. Passed string is " + value.Length.ToString() + " characters.");
 <# } #>
-<# if(this.database.ImplementINotifyPropertyChanged){ #>
-                if(_<#= table.Column[i].Name #> != value)
-                    PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(<#= table.Column[i].Name #>)));
-
-<# } #>
                 _<#= table.Column[i].Name #> = value;
                 ChangedFlags.Set(<#= i #>, true);
+<# if(this.database.ImplementINotifyPropertyChanged){ #>
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(<#= table.Column[i].Name #>)));
+<# } #>
             }
 <# } #>
         }
