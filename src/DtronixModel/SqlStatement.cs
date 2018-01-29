@@ -472,10 +472,33 @@ namespace DtronixModel
         }
 
         /// <summary>
-        /// Executes the query built and returns the associated rows with the query. Synchronous.
+        ///  Executes the query built and returns the associated rows with the query. Synchronous.
         /// </summary>
         /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
         public T[] ExecuteFetchAll()
+        {
+            return ExecuteFetchAll(null, null);
+        }
+
+
+        /// <summary>
+        ///  Executes the specified query and returns the associated rows with the query. Synchronous.
+        /// </summary>
+        /// <param name="query">Query override which will ignore all previous query builder commands.</param>
+        /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
+        public T[] ExecuteFetchAll(string query)
+        {
+            return ExecuteFetchAll(query, null);
+        }
+
+
+        /// <summary>
+        ///  Executes the specified query, binds the passed parameters and returns the associated rows with the query. Synchronous.
+        /// </summary>
+        /// <param name="query">Query override which will ignore all previous query builder commands.</param>
+        /// <param name="parameters">Parameters to bind to the query.</param>
+        /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
+        public T[] ExecuteFetchAll(string query, object[] parameters)
         {
             if (_mode == Mode.Execute)
                 throw new InvalidOperationException("Can not use all functions in Execute mode.");
@@ -483,7 +506,14 @@ namespace DtronixModel
             if (_mode != Mode.Select)
                 throw new InvalidOperationException("Can not fetch from the server when not in SELECT mode.");
 
-            BuildSql(null);
+            if (query == null)
+                BuildSql(null);
+            else
+            {
+                // Clear all previous bound parameters.
+                _command.Parameters.Clear();
+                _command.CommandText = SqlBindParameters(query, parameters);
+            }
 
             var results = new List<T>();
             using (var reader = _command.ExecuteReader())

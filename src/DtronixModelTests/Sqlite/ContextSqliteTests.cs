@@ -713,5 +713,50 @@ namespace DtronixModelTests.Sqlite
                 Assert.True(fired);
             }
         }
+
+        [Fact]
+        public void ExecuteFetchAllSpecifiedQuery()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+
+                var users = context.Users.Select().ExecuteFetchAll("SELECT username FROM Users");
+
+                Assert.Equal("user_name", users[0].username);
+                Assert.Equal(null, users[0].password);
+            }
+        }
+
+        [Fact]
+        public void ExecuteFetchAllBindsSpecifiedQuery()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+
+                var users = context.Users.Select()
+                    .ExecuteFetchAll("SELECT username FROM Users WHERE username = {0}", new object[] {"user_name"});
+
+                Assert.Equal("user_name", users[0].username);
+                Assert.Equal(null, users[0].password);
+            }
+        }
+
+        [Fact]
+        public void ExecuteFetchAllOverridesPreviousMethods()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+
+                var users = context.Users.Select()
+                    .Where("user_name = {0}", "1234")
+                    .ExecuteFetchAll("SELECT username FROM Users");
+
+                Assert.Equal("user_name", users[0].username);
+                Assert.Equal(null, users[0].password);
+            }
+        }
     }
 }
