@@ -2,7 +2,7 @@ using System.Reflection;
 
 [assembly: AssemblyCompany("Dtronix")]
 [assembly: AssemblyProduct("Dtronix Database Modeler")]
-[assembly: AssemblyCopyright("Copyright © Dtronix 2017")]
+[assembly: AssemblyCopyright("Copyright © Dtronix 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
