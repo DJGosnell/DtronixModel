@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Xaml="clr-namespace:DtronixModeler.Xaml" x:Class="DtronixModeler.Xaml.MainWindow"
     xmlns:dxaml="clr-namespace:DtronixModeler.Xaml"
-    Title="Dtronix Modeler" Height="700" Width="930" MinHeight="450" MinWidth="700" Icon="Images/database_blue.png" Closing="Window_Closing" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp">
+    Title="Dtronix Modeler" Height="700" Width="950" MinHeight="450" MinWidth="700" Icon="Images/database_blue.png" Closing="Window_Closing" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp">
     <Window.Resources>
         <Style TargetType="FrameworkElement" x:Key="MiddleCenter">
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -86,6 +86,7 @@
                                         <DataGridComboBoxColumn Width="140" x:Name="ColumnDbType" Header="Database Type" SelectedValueBinding="{Binding DbType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding DbType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
                                         <DataGridTextColumn Header="Length" Width="50" Binding="{Binding DbLength}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
                                         <DataGridTextColumn Header="Default Value" Width="100" Binding="{Binding DefaultValue, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+                                        <DataGridCheckBoxColumn Header="UN" Width="28" Binding="{Binding IsUnsigned, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
                                         <DataGridCheckBoxColumn Header="AI" Width="24" Binding="{Binding IsAutoIncrement, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
                                         <DataGridCheckBoxColumn Header="PK" Width="24" Binding="{Binding IsPrimaryKey, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
                                         <DataGridCheckBoxColumn Header="N" Width="20" Binding="{Binding Nullable, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />

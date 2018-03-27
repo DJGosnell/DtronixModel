@@ -16,11 +16,12 @@
     <Column Name="db_int16" NetType="Int16" DbType="INTEGER" Nullable="true" />
     <Column Name="db_int32" NetType="Int32" DbType="INTEGER" Nullable="true" />
     <Column Name="db_int64" NetType="Int64" DbType="INTEGER" Nullable="true" />
-    <Column Name="db_uint16" NetType="UInt16" DbType="INTEGER" Nullable="true" />
-    <Column Name="db_uint32" NetType="UInt32" DbType="INTEGER" Nullable="true" />
-    <Column Name="db_uint64" NetType="UInt64" DbType="INTEGER" Nullable="true" />
+    <Column Name="db_uint16" NetType="UInt16" DbType="INTEGER" IsUnsigned="true" Nullable="true" />
+    <Column Name="db_uint32" NetType="UInt32" DbType="INTEGER" IsUnsigned="true" Nullable="true" />
+    <Column Name="db_uint64" NetType="UInt64" DbType="INTEGER" IsUnsigned="true" Nullable="true" />
     <Column Name="db_byte_array" NetType="ByteArray" DbType="BLOB" Nullable="true" />
     <Column Name="db_byte" NetType="Byte" DbType="BLOB" Nullable="true" />
+    <Column Name="db_sbyte" NetType="SByte" DbType="INTEGER" IsUnsigned="true" />
     <Column Name="db_date_time" NetType="DateTimeOffset" DbType="DATETIME" Nullable="true" />
     <Column Name="db_decimal" NetType="Decimal" DbType="REAL" Nullable="true" />
     <Column Name="db_float" NetType="Float" DbType="FLOAT" Nullable="true" />

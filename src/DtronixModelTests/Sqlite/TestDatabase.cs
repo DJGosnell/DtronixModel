@@ -836,6 +836,27 @@ namespace DtronixModelTests.Sqlite {
         /// <summary>
         /// Column name.
         /// </summary>
+        public const string db_sbyteColumn = "db_sbyte";
+
+        /// <summary>
+        /// Backing field for the db_sbyte property.
+        /// </summary>
+        private SByte _db_sbyte;
+
+        public SByte db_sbyte
+        {
+            get { return _db_sbyte; }
+            set
+            {
+                _db_sbyte = value;
+                ChangedFlags.Set(9, true);
+                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_sbyte)));
+            }
+        }
+
+        /// <summary>
+        /// Column name.
+        /// </summary>
         public const string db_date_timeColumn = "db_date_time";
 
         /// <summary>
@@ -849,7 +870,7 @@ namespace DtronixModelTests.Sqlite {
             set
             {
                 _db_date_time = value;
-                ChangedFlags.Set(9, true);
+                ChangedFlags.Set(10, true);
                 PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_date_time)));
             }
         }
@@ -870,7 +891,7 @@ namespace DtronixModelTests.Sqlite {
             set
             {
                 _db_decimal = value;
-                ChangedFlags.Set(10, true);
+                ChangedFlags.Set(11, true);
                 PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_decimal)));
             }
         }
@@ -891,7 +912,7 @@ namespace DtronixModelTests.Sqlite {
             set
             {
                 _db_float = value;
-                ChangedFlags.Set(11, true);
+                ChangedFlags.Set(12, true);
                 PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_float)));
             }
         }
@@ -912,7 +933,7 @@ namespace DtronixModelTests.Sqlite {
             set
             {
                 _db_double = value;
-                ChangedFlags.Set(12, true);
+                ChangedFlags.Set(13, true);
                 PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_double)));
             }
         }
@@ -933,7 +954,7 @@ namespace DtronixModelTests.Sqlite {
             set
             {
                 _db_bool = value;
-                ChangedFlags.Set(13, true);
+                ChangedFlags.Set(14, true);
                 PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_bool)));
             }
         }
@@ -954,7 +975,7 @@ namespace DtronixModelTests.Sqlite {
             set
             {
                 _db_string = value;
-                ChangedFlags.Set(14, true);
+                ChangedFlags.Set(15, true);
                 PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_string)));
             }
         }
@@ -975,7 +996,7 @@ namespace DtronixModelTests.Sqlite {
             set
             {
                 _db_enum = value;
-                ChangedFlags.Set(15, true);
+                ChangedFlags.Set(16, true);
                 PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(nameof(db_enum)));
             }
         }
@@ -1007,18 +1028,20 @@ namespace DtronixModelTests.Sqlite {
             if (onlyChanged == false || source.ChangedFlags.Get(8))
                 _db_byte = source._db_byte;
             if (onlyChanged == false || source.ChangedFlags.Get(9))
-                _db_date_time = source._db_date_time;
+                _db_sbyte = source._db_sbyte;
             if (onlyChanged == false || source.ChangedFlags.Get(10))
-                _db_decimal = source._db_decimal;
+                _db_date_time = source._db_date_time;
             if (onlyChanged == false || source.ChangedFlags.Get(11))
-                _db_float = source._db_float;
+                _db_decimal = source._db_decimal;
             if (onlyChanged == false || source.ChangedFlags.Get(12))
-                _db_double = source._db_double;
+                _db_float = source._db_float;
             if (onlyChanged == false || source.ChangedFlags.Get(13))
-                _db_bool = source._db_bool;
+                _db_double = source._db_double;
             if (onlyChanged == false || source.ChangedFlags.Get(14))
-                _db_string = source._db_string;
+                _db_bool = source._db_bool;
             if (onlyChanged == false || source.ChangedFlags.Get(15))
+                _db_string = source._db_string;
+            if (onlyChanged == false || source.ChangedFlags.Get(16))
                 _db_enum = source._db_enum;
             ChangedFlags = new BitArray(source.ChangedFlags);
         }
@@ -1035,7 +1058,7 @@ namespace DtronixModelTests.Sqlite {
         /// <param name="context">The current context of the database.</param>
         public AllTypes(DbDataReader reader, Context context)
         {
-            ChangedFlags = new BitArray(16);
+            ChangedFlags = new BitArray(17);
             Read(reader, context);
         }
 
@@ -1046,7 +1069,7 @@ namespace DtronixModelTests.Sqlite {
         /// <param name="id">Id to set the row to.</param>
         public AllTypes(Int64 id)
         {
-            ChangedFlags = new BitArray(16);
+            ChangedFlags = new BitArray(17);
             _id = id;
         }
 
@@ -1091,6 +1114,9 @@ namespace DtronixModelTests.Sqlite {
                         break;
                     case "db_byte":
                         _db_byte = reader.IsDBNull(i) ? default(Byte?) : reader.GetByte(i);
+                        break;
+                    case "db_sbyte":
+                        _db_sbyte = reader.IsDBNull(i) ? default(SByte) : (SByte)reader.GetByte(i);
                         break;
                     case "db_date_time":
                         _db_date_time = reader.IsDBNull(i) ? default(DateTimeOffset?) : reader.GetDateTime(i);
@@ -1147,18 +1173,20 @@ namespace DtronixModelTests.Sqlite {
             if (ChangedFlags.Get(8))
                 changed.Add("db_byte", _db_byte);
             if (ChangedFlags.Get(9))
-                changed.Add("db_date_time", _db_date_time);
+                changed.Add("db_sbyte", _db_sbyte);
             if (ChangedFlags.Get(10))
-                changed.Add("db_decimal", _db_decimal);
+                changed.Add("db_date_time", _db_date_time);
             if (ChangedFlags.Get(11))
-                changed.Add("db_float", _db_float);
+                changed.Add("db_decimal", _db_decimal);
             if (ChangedFlags.Get(12))
-                changed.Add("db_double", _db_double);
+                changed.Add("db_float", _db_float);
             if (ChangedFlags.Get(13))
-                changed.Add("db_bool", _db_bool);
+                changed.Add("db_double", _db_double);
             if (ChangedFlags.Get(14))
-                changed.Add("db_string", _db_string);
+                changed.Add("db_bool", _db_bool);
             if (ChangedFlags.Get(15))
+                changed.Add("db_string", _db_string);
+            if (ChangedFlags.Get(16))
                 changed.Add("db_enum", _db_enum);
 
             return changed;
@@ -1179,6 +1207,7 @@ namespace DtronixModelTests.Sqlite {
                 _db_uint64,
                 _db_byte_array,
                 _db_byte,
+                _db_sbyte,
                 _db_date_time,
                 _db_decimal,
                 _db_float,
@@ -1204,6 +1233,7 @@ namespace DtronixModelTests.Sqlite {
                 "db_uint64",
                 "db_byte_array",
                 "db_byte",
+                "db_sbyte",
                 "db_date_time",
                 "db_decimal",
                 "db_float",
@@ -1229,6 +1259,7 @@ namespace DtronixModelTests.Sqlite {
                 typeof(UInt64?),
                 typeof(byte[]),
                 typeof(Byte?),
+                typeof(SByte),
                 typeof(DateTimeOffset?),
                 typeof(Decimal?),
                 typeof(float?),

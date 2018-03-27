@@ -319,6 +319,10 @@ if(primary_key != null){ #>
                     case "<#= column.Name #>":
                         _<#= column.Name #> = reader.IsDBNull(i) ? default(<#= type #>) : (<#= type.Replace("?", "") #>)(long)reader.GetValue(i);
                         break;
+<# } else if (column.NetType.StartsWith("SByte")) { #>
+                    case "<#= column.Name #>":
+                        _<#= column.Name #> = reader.IsDBNull(i) ? default(<#= type #>) : (<#= type.Replace("?", "") #>)reader.GetByte(i);
+                        break;
 <# } else if (column.Nullable) { #>
                     case "<#= column.Name #>":
                         _<#= column.Name #> = reader.IsDBNull(i) ? default(<#= type #>) : reader.Get<#= reader_get #>(i);

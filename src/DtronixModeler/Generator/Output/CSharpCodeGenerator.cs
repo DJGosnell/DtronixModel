@@ -399,6 +399,16 @@ if(primary_key != null){
             this.Write(") : (");
             this.Write(this.ToStringHelper.ToStringWithCulture(type.Replace("?", "")));
             this.Write(")(long)reader.GetValue(i);\r\n                        break;\r\n");
+ } else if (column.NetType.StartsWith("SByte")) { 
+            this.Write("                    case \"");
+            this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
+            this.Write("\":\r\n                        _");
+            this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));
+            this.Write(" = reader.IsDBNull(i) ? default(");
+            this.Write(this.ToStringHelper.ToStringWithCulture(type));
+            this.Write(") : (");
+            this.Write(this.ToStringHelper.ToStringWithCulture(type.Replace("?", "")));
+            this.Write(")reader.GetByte(i);\r\n                        break;\r\n");
  } else if (column.Nullable) { 
             this.Write("                    case \"");
             this.Write(this.ToStringHelper.ToStringWithCulture(column.Name));

@@ -467,6 +467,7 @@ namespace DtronixModelTests.Sqlite
                 {
                     db_bool = true,
                     db_byte = 157,
+                    db_sbyte = -24,
                     db_byte_array = initial_byte_array,
                     db_date_time = date_time,
                     db_decimal = 3456789.986543M,
@@ -488,6 +489,7 @@ namespace DtronixModelTests.Sqlite
 
                 Assert.Equal(true, all_types.db_bool);
                 Assert.Equal(157, all_types.db_byte.Value);
+                Assert.Equal(-24, all_types.db_sbyte);
 
                 // Test the contents of the byte array.
                 Assert.Equal(initial_byte_array.Length, all_types.db_byte_array.Length);

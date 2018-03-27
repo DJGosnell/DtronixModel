@@ -361,6 +361,21 @@ namespace DtronixModeler.Xaml
 
                     break;
 
+                case "IsUnsigned":
+                    if (column.NetType.Contains("Int") || column.NetType.Contains("Byte"))
+                    {
+                        TableColumn_PropertyChanged(sender, new PropertyChangedEventArgs("NetType"));
+                        TableColumn_PropertyChanged(sender, new PropertyChangedEventArgs("DbType"));
+                    }
+                    else
+                    {
+                        column.IsUnsigned = false;
+                        MessageBox.Show(
+                            "Can not change unsigned value for non-number column",
+                            "Column Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    }
+                    break;
+
                 case "IsAutoIncrement":
                     if (column.IsAutoIncrement)
                     {

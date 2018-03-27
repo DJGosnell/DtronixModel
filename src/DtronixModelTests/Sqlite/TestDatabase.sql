@@ -23,6 +23,7 @@ CREATE TABLE AllTypes (
 	db_uint64 INTEGER ,
 	db_byte_array BLOB ,
 	db_byte BLOB ,
+	db_sbyte INTEGER NOT NULL ,
 	db_date_time DATETIME ,
 	db_decimal REAL ,
 	db_float FLOAT ,
