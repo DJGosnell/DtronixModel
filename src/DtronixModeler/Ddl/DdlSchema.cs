@@ -829,6 +829,8 @@ namespace DtronixModeler.Ddl {
         
         private bool isAutoIncrementField;
         
+        private bool isUnsignedField;
+        
         private bool nullableField;
         
         private static System.Xml.Serialization.XmlSerializer serializer;
@@ -837,6 +839,7 @@ namespace DtronixModeler.Ddl {
             this.isReadOnlyField = false;
             this.isPrimaryKeyField = false;
             this.isAutoIncrementField = false;
+            this.isUnsignedField = false;
             this.nullableField = false;
         }
         
@@ -999,6 +1002,20 @@ namespace DtronixModeler.Ddl {
                 if ((isAutoIncrementField.Equals(value) != true)) {
                     this.isAutoIncrementField = value;
                     this.OnPropertyChanged("IsAutoIncrement");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool IsUnsigned {
+            get {
+                return this.isUnsignedField;
+            }
+            set {
+                if ((isUnsignedField.Equals(value) != true)) {
+                    this.isUnsignedField = value;
+                    this.OnPropertyChanged("IsUnsigned");
                 }
             }
         }

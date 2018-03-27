@@ -80,7 +80,23 @@ namespace DtronixModeler.Generator.MySqlMwb {
 							DefaultValue = xml_column.SelectSingleNode(@"value[@key='defaultValue']").InnerText,
 						};
 
-						var auto_increment = xml_column.SelectSingleNode(@"value[@key='autoIncrement']").InnerText;
+					    var flags = xml_column.SelectSingleNode(@"value[@key='flags']");
+
+					    for (int i = 0; i < flags.ChildNodes.Count; i++)
+					    {
+					        switch (flags.ChildNodes[i].InnerText.ToLower())
+					        {
+					            case "unsigned":
+					                column.IsUnsigned = true;
+					                break;
+
+					        }
+
+
+
+					    }
+
+					    var auto_increment = xml_column.SelectSingleNode(@"value[@key='autoIncrement']").InnerText;
 						column.IsAutoIncrement = (auto_increment == "0" || auto_increment == null) ? false : true;
 
 						var length = xml_column.SelectSingleNode(@"value[@key='length']").InnerText;
@@ -106,7 +122,7 @@ namespace DtronixModeler.Generator.MySqlMwb {
 						}
 
 						try {
-							column.NetType = TypeTransformer.DbToNetType(column.DbType);
+							column.NetType = TypeTransformer.DbToNetType(column.DbType, column.IsUnsigned);
 						} catch {
 							throw new Exception("Unknown data type for column '" + column.Name + "' in table '" + table.Name + "'.");
 						}

@@ -84,7 +84,7 @@ namespace DtronixModeler.Generator.Sqlite {
 									IsPrimaryKey = Convert.ToBoolean(reader["pk"]),
 									Nullable = !Convert.ToBoolean(reader["notnull"]),
 									DbType = reader["type"].ToString(),
-									NetType = TypeTransformer.DbToNetType(reader["type"].ToString()),
+									NetType = TypeTransformer.DbToNetType(reader["type"].ToString(), false),
 								};
 
 								if (column.IsPrimaryKey && column.DbType.ToLower() == "integer") {

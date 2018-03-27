@@ -28,12 +28,23 @@ namespace DtronixModeler.Generator {
 
 
 
-		public string DbToNetType(string db_type) {
-			return DbType(db_type).NetType;
+		public string DbToNetType(string db_type, bool unsigned) {
+			return DbType(db_type, unsigned).NetType;
 		}
 
-		public TypeTransformerType DbType(string db_type) {
-			return types.FirstOrDefault(type => type.DbType == db_type);
+		public TypeTransformerType DbType(string db_type, bool unsigned)
+		{
+		    var baseType = types.Where(type => type.DbType == db_type);
+
+		    var typeTransformerTypes = baseType as TypeTransformerType[] ?? baseType.ToArray();
+
+		    if (typeTransformerTypes.Length == 1)
+		        return typeTransformerTypes.First();
+
+		    var typeSigned = typeTransformerTypes.FirstOrDefault(t => t.IsUnsigned == unsigned);
+
+		    return typeSigned ?? typeTransformerTypes.First();
+
 		}
 
 		public string[] DbTypes() {

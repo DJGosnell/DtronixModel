@@ -15,10 +15,10 @@ namespace DtronixModeler.Generator.MySql
                 new TypeTransformerType("Boolean", "BOOL", true, null, 1),
                 new TypeTransformerType("Boolean", "BOOLEAN", true, null, 1),
 
-                new TypeTransformerType("Int16", "TINYINT", true, false),
+                new TypeTransformerType("SByte", "TINYINT", true, false),
                 new TypeTransformerType("Int16", "SMALLINT", true, false),
 
-                new TypeTransformerType("UInt16", "TINYINT", true, true),
+                new TypeTransformerType("Byte", "TINYINT", true, true),
                 new TypeTransformerType("UInt16", "SMALLINT", true, true),
 
                 new TypeTransformerType("Int32", "INT", true, false),

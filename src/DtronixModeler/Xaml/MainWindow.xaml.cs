@@ -59,6 +59,7 @@ namespace DtronixModeler.Xaml
                 "Int64",
                 "UInt64",
                 "ByteArray",
+                "SByte",
                 "Byte",
                 "DateTimeOffset",
                 "Decimal",
@@ -337,7 +338,7 @@ namespace DtronixModeler.Xaml
                     break;
 
                 case "DbType":
-                    column.NetType = type_transformer.DbToNetType(column.DbType);
+                    column.NetType = type_transformer.DbToNetType(column.DbType, column.IsUnsigned);
                     break;
 
                 case "NetType":
