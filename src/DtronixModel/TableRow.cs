@@ -44,6 +44,12 @@ namespace DtronixModel
         public abstract Dictionary<string, object> GetChangedValues();
 
         /// <summary>
+        /// Returns true if any of the values have been modified from the properties.
+        /// </summary>
+        /// <returns>True if the row has any modified values.</returns>
+        public abstract bool IsChanged();
+
+        /// <summary>
         /// Return all the instance values for the entire model.
         /// </summary>
         /// <returns>An object array with all the values of this model.</returns>

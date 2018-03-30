@@ -380,7 +380,7 @@ namespace DtronixModeler.Xaml
                     if (column.IsAutoIncrement)
                     {
 
-                        if (new string[] {"Int16", "Int32", "Int64"}.Contains(column.NetType) == false)
+                        if (new string[] { "Int16", "Int32", "Int64" }.Contains(column.NetType) == false)
                         {
                             MessageBox.Show("An auto incremented column has to be an integer type.", "Invalid Option");
                             column.IsAutoIncrement = false;

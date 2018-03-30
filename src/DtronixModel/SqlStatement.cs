@@ -270,7 +270,7 @@ namespace DtronixModel
         /// <returns>Current statement for chaining.</returns>
         public SqlStatement<T> Where(T model)
         {
-            return Where(new[] {model});
+            return Where(new[] { model });
         }
 
         /// <summary>
@@ -655,7 +655,7 @@ namespace DtronixModel
         private object PrepareParameterValue(object value)
         {
             if (value is DateTimeOffset)
-                value = ((DateTimeOffset) value).ToString("o");
+                value = ((DateTimeOffset)value).ToString("o");
 
             return value;
         }

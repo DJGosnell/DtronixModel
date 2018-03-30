@@ -470,6 +470,20 @@ if(primary_key != null){
         }
 
         /// <summary>
+        /// Returns true if any of the values have been modified from the properties.
+        /// </summary>
+        /// <returns>True if the row has any modified values.</returns>
+        public override bool IsChanged()
+        {
+            var length = ChangedFlags.Length;
+            for(var i = 0; i < length; i++){
+                if(ChangedFlags.Get(i))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Return all the instance values for the entire row.
         /// </summary>
         /// <returns>An object array with all the values of this row.</returns>

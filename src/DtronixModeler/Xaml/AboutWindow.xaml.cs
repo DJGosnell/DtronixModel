@@ -5,23 +5,27 @@ using System.IO;
 using System.Reflection;
 using System.Windows;
 
-namespace DtronixModeler.Xaml {
+namespace DtronixModeler.Xaml
+{
     /// <summary>
     /// Interaction logic for AboutWindow.xaml
     /// </summary>
     public partial class AboutWindow
     {
-        public AboutWindow() {
+        public AboutWindow()
+        {
             InitializeComponent();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e) {
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
 
 
             Type[] types = { GetType(), typeof(TableAttribute) };
 
             _TxtVersionInfo.Text += "\r\n\r\n";
-            foreach (var type in types) {
+            foreach (var type in types)
+            {
                 var assembly = Assembly.GetAssembly(type);
                 var assemblyInfo = new AssemblyInfo(assembly);
 
@@ -38,15 +42,18 @@ namespace DtronixModeler.Xaml {
             }
         }
 
-        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e) {
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
         }
 
 
 
-        private class AssemblyInfo {
-            public AssemblyInfo(Assembly assembly) {
+        private class AssemblyInfo
+        {
+            public AssemblyInfo(Assembly assembly)
+            {
                 if (assembly == null)
                     throw new ArgumentNullException("assembly");
                 _assembly = assembly;
@@ -60,7 +67,7 @@ namespace DtronixModeler.Xaml {
             public string ProductTitle {
                 get {
                     return GetAttributeValue<AssemblyTitleAttribute>(a => a.Title,
-                            Path.GetFileNameWithoutExtension(_assembly.CodeBase));
+                        Path.GetFileNameWithoutExtension(_assembly.CodeBase));
                 }
             }
 
@@ -108,7 +115,8 @@ namespace DtronixModeler.Xaml {
             }
 
             protected string GetAttributeValue<TAttr>(Func<TAttr,
-                string> resolveFunc, string defaultResult = null) where TAttr : Attribute {
+                string> resolveFunc, string defaultResult = null) where TAttr : Attribute
+            {
                 object[] attributes = _assembly.GetCustomAttributes(typeof(TAttr), false);
                 if (attributes.Length > 0)
                     return resolveFunc((TAttr)attributes[0]);
@@ -118,5 +126,5 @@ namespace DtronixModeler.Xaml {
         }
     }
 
-    
+
 }

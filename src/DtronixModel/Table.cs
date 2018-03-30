@@ -38,7 +38,7 @@
         /// </returns>
         public long Insert(T model)
         {
-            var result = Insert(new[] {model});
+            var result = Insert(new[] { model });
             return result?[0] ?? 0;
         }
 
@@ -71,7 +71,7 @@
         /// <param name="model">Row to update.</param>
         public void Update(T model)
         {
-            Update(new[] {model});
+            Update(new[] { model });
         }
 
         /// <summary>
@@ -98,7 +98,7 @@
         /// <param name="model">Row to delete.</param>
         public void Delete(T model)
         {
-            Delete(new[] {model});
+            Delete(new[] { model });
         }
 
         /// <summary>
@@ -119,7 +119,7 @@
         /// <param name="id">Row id to delete.</param>
         public void Delete(long id)
         {
-            Delete(new[] {id});
+            Delete(new[] { id });
         }
 
         /// <summary>

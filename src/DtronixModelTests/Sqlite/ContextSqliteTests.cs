@@ -760,5 +760,47 @@ namespace DtronixModelTests.Sqlite
                 Assert.Equal(null, users[0].password);
             }
         }
+
+        [Fact]
+        public void TableRowIsChangeHasNoChanges()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+                var user = context.Users.Select().ExecuteFetch();
+
+                Assert.Equal(false, user.IsChanged());
+            }
+        }
+
+        [Fact]
+        public void TableRowIsChangeHasChanges()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+                var user = context.Users.Select().ExecuteFetch();
+
+                user.username = "newUsername";
+
+                Assert.Equal(true, user.IsChanged());
+            }
+        }
+
+        [Fact]
+        public void TableRowResetsChangedFlags()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+                var user = context.Users.Select().ExecuteFetch();
+
+                user.username = "newUsername";
+                user.ResetChangedFlags();
+
+                Assert.Equal(false, user.IsChanged());
+                Assert.Equal(0, user.GetChangedValues().Count);
+            }
+        }
     }
 }

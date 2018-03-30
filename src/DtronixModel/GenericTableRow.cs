@@ -20,6 +20,14 @@ namespace DtronixModel
         /// <summary>
         /// Not implemented.  Throws exception.
         /// </summary>
+        public override bool IsChanged()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Not implemented.  Throws exception.
+        /// </summary>
         public override object[] GetAllValues()
         {
             throw new NotImplementedException();
