@@ -52,6 +52,8 @@ namespace DtronixModeler.Ddl {
         
         private bool implementProtobufNetDataContractsField;
         
+        private string versionField;
+        
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Database() {
@@ -65,6 +67,7 @@ namespace DtronixModeler.Ddl {
             this.outputCsClassesField = true;
             this.implementINotifyPropertyChangedField = false;
             this.implementProtobufNetDataContractsField = false;
+            this.versionField = "0";
         }
         
         [System.Xml.Serialization.XmlElementAttribute("Table")]
@@ -321,6 +324,26 @@ namespace DtronixModeler.Ddl {
                 if ((implementProtobufNetDataContractsField.Equals(value) != true)) {
                     this.implementProtobufNetDataContractsField = value;
                     this.OnPropertyChanged("ImplementProtobufNetDataContracts");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute("0")]
+        public string Version {
+            get {
+                return this.versionField;
+            }
+            set {
+                if ((this.versionField != null)) {
+                    if ((versionField.Equals(value) != true)) {
+                        this.versionField = value;
+                        this.OnPropertyChanged("Version");
+                    }
+                }
+                else {
+                    this.versionField = value;
+                    this.OnPropertyChanged("Version");
                 }
             }
         }
@@ -1417,10 +1440,13 @@ namespace DtronixModeler.Ddl {
         
         private string nameField;
         
+        private EnumType enumTypeField;
+        
         private static System.Xml.Serialization.XmlSerializer serializer;
         
         public Enumeration() {
             this.enumValueField = new ObservableCollection<EnumValue>();
+            this.enumTypeField = EnumType.Bitwise;
         }
         
         [System.Xml.Serialization.XmlElementAttribute("EnumValue")]
@@ -1457,6 +1483,20 @@ namespace DtronixModeler.Ddl {
                 else {
                     this.nameField = value;
                     this.OnPropertyChanged("Name");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(EnumType.Bitwise)]
+        public EnumType EnumType {
+            get {
+                return this.enumTypeField;
+            }
+            set {
+                if ((enumTypeField.Equals(value) != true)) {
+                    this.enumTypeField = value;
+                    this.OnPropertyChanged("EnumType");
                 }
             }
         }
@@ -1631,6 +1671,18 @@ namespace DtronixModeler.Ddl {
             return ((Enumeration)(this.MemberwiseClone()));
         }
         #endregion
+    }
+    
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]
+    [System.SerializableAttribute()]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace="", IsNullable=false)]
+    public enum EnumType {
+        
+        /// <remarks/>
+        Bitwise,
+        
+        /// <remarks/>
+        Increment,
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Xsd2Code", "3.4.0.32990")]

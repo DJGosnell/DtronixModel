@@ -14,15 +14,25 @@ using DtronixModel;
 
 namespace <#= this.database.Namespace #> {
 
-<# foreach (var enum_class in database.Enumeration) { #>
+<# 
+foreach (var enum_class in database.Enumeration) 
+{ #>
     public enum <#= enum_class.Name #> : int {
 <# 
-int shift_ammount = 0;
-foreach (var enum_value in enum_class.EnumValue) { #>
+    int shift_ammount = 0;
+    foreach (var enum_value in enum_class.EnumValue) 
+    { 
+        if(enum_class.EnumType == EnumType.Bitwise) 
+        { #>
         <#= enum_value.Name #> = 1 << <#= shift_ammount++ #>,
+<#  } 
+        else if(enum_class.EnumType == EnumType.Increment) 
+        { #>
+        <#= enum_value.Name #> = <#= shift_ammount++ #>,
+<#  } #>
 <# } #>
     }
-<# } #>
+<# }#>
 
     public partial class <#= this.database.ContextClass #> : Context {
 

@@ -33,21 +33,35 @@ string[] reserved_words = new string[] {"for", "with", "while"};
                     "g System.Collections;\r\nusing DtronixModel;\r\n\r\nnamespace ");
             this.Write(this.ToStringHelper.ToStringWithCulture(this.database.Namespace));
             this.Write(" {\r\n\r\n");
- foreach (var enum_class in database.Enumeration) { 
+ 
+foreach (var enum_class in database.Enumeration) 
+{ 
             this.Write("    public enum ");
             this.Write(this.ToStringHelper.ToStringWithCulture(enum_class.Name));
             this.Write(" : int {\r\n");
  
-int shift_ammount = 0;
-foreach (var enum_value in enum_class.EnumValue) { 
+    int shift_ammount = 0;
+    foreach (var enum_value in enum_class.EnumValue) 
+    { 
+        if(enum_class.EnumType == EnumType.Bitwise) 
+        { 
             this.Write("        ");
             this.Write(this.ToStringHelper.ToStringWithCulture(enum_value.Name));
             this.Write(" = 1 << ");
             this.Write(this.ToStringHelper.ToStringWithCulture(shift_ammount++));
             this.Write(",\r\n");
+  } 
+        else if(enum_class.EnumType == EnumType.Increment) 
+        { 
+            this.Write("        ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(enum_value.Name));
+            this.Write(" = ");
+            this.Write(this.ToStringHelper.ToStringWithCulture(shift_ammount++));
+            this.Write(",\r\n");
+  } 
  } 
             this.Write("    }\r\n");
- } 
+ }
             this.Write("\r\n    public partial class ");
             this.Write(this.ToStringHelper.ToStringWithCulture(this.database.ContextClass));
             this.Write(" : Context {\r\n\r\n        private static Func<DbConnection> _defaultConnection;\r\n\r\n" +

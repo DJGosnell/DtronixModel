@@ -3,7 +3,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Xaml="clr-namespace:DtronixModeler.Xaml" x:Class="DtronixModeler.Xaml.MainWindow"
     xmlns:dxaml="clr-namespace:DtronixModeler.Xaml"
-    Title="Dtronix Modeler" Height="700" Width="950" MinHeight="450" MinWidth="700" Icon="Images/database_blue.png" Closing="Window_Closing" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp">
+    xmlns:ddl="clr-namespace:DtronixModeler.Ddl"
+    xmlns:converters="clr-namespace:DtronixModeler.Xaml.Converters"
+    Title="Dtronix Modeler" Height="700" Width="950" MinHeight="450" MinWidth="700" Icon="Images/database_blue.png"
+    Closing="Window_Closing" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp">
     <Window.Resources>
         <Style TargetType="FrameworkElement" x:Key="MiddleCenter">
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -15,35 +18,36 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="22"/>
-            <RowDefinition/>
-            <RowDefinition Height="27"/>
+            <RowDefinition Height="22" />
+            <RowDefinition />
+            <RowDefinition Height="27" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="200"/>
-            <ColumnDefinition MinWidth="400" Width="*"/>
+            <ColumnDefinition Width="Auto" MinWidth="200" />
+            <ColumnDefinition MinWidth="400" Width="*" />
         </Grid.ColumnDefinitions>
         <!-- <Xaml:ExplorerControl x:Name="_DatabaseExplorer" Grid.Row="1" Margin="0" SelectTable="_DatabaseExplorer_SelectTable" /> -->
-        <GridSplitter HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Grid.Column="1" Grid.Row="1" Grid.RowSpan="1"/>
+        <GridSplitter HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Grid.Column="1" Grid.Row="1"
+                      Grid.RowSpan="1" />
         <Menu HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="3" UseLayoutRounding="False">
             <Menu.Background>
                 <LinearGradientBrush EndPoint="0.5,1" MappingMode="RelativeToBoundingBox" StartPoint="0.5,0">
-                    <GradientStop Color="#FFF6F6F6" Offset="0.25"/>
-                    <GradientStop Color="#FFEAE8E8" Offset="0.25"/>
-                    <GradientStop Color="#FFDCD9D9" Offset="0.8"/>
-                    <GradientStop Color="White" Offset="1"/>
+                    <GradientStop Color="#FFF6F6F6" Offset="0.25" />
+                    <GradientStop Color="#FFEAE8E8" Offset="0.25" />
+                    <GradientStop Color="#FFDCD9D9" Offset="0.8" />
+                    <GradientStop Color="White" Offset="1" />
                 </LinearGradientBrush>
             </Menu.Background>
             <MenuItem Header="_File">
-                <MenuItem Command="dxaml:Commands.NewDatabase"/>
-                <Separator/>
-                <MenuItem Command="Open"/>
-                <MenuItem Command="dxaml:Commands.ImportDatabase"/>
-                <MenuItem Command="dxaml:Commands.ImportMySqlMwb"/>
-                <Separator/>
-                <MenuItem Command="Save"/>
-                <MenuItem Command="SaveAs"/>
-                <Separator/>
+                <MenuItem Command="dxaml:Commands.NewDatabase" />
+                <Separator />
+                <MenuItem Command="Open" />
+                <MenuItem Command="dxaml:Commands.ImportDatabase" />
+                <MenuItem Command="dxaml:Commands.ImportMySqlMwb" />
+                <Separator />
+                <MenuItem Command="Save" />
+                <MenuItem Command="SaveAs" />
+                <Separator />
                 <MenuItem Command="Close" />
             </MenuItem>
             <MenuItem Header="_Edit">
@@ -52,58 +56,103 @@
                 <MenuItem Command="Delete" />
             </MenuItem>
             <MenuItem Header="_Output">
-                <MenuItem Command="dxaml:Commands.GenerateAll"/>
+                <MenuItem Command="dxaml:Commands.GenerateAll" />
             </MenuItem>
             <MenuItem Header="_Options" ContextMenuOpening="MenuItem_ContextMenuOpening">
-                <MenuItem x:Name="_MiValidateColumnsOnPaste" Header="Validate Columns On Paste" IsCheckable="True" IsChecked="True"/>
+                <MenuItem x:Name="_MiValidateColumnsOnPaste" Header="Validate Columns On Paste" IsCheckable="True"
+                          IsChecked="True" />
                 <MenuItem Header="Target Database Type" VerticalAlignment="Top">
-                    <MenuItem Header="Sqlite" VerticalAlignment="Top" IsCheckable="True" IsChecked="True"/>
+                    <MenuItem Header="Sqlite" VerticalAlignment="Top" IsCheckable="True" IsChecked="True" />
                 </MenuItem>
-                <MenuItem x:Name="_MiCommandlineToggle" Header="Show Commandline" VerticalAlignment="Top" IsCheckable="True" IsChecked="false" Click="_MiCommandlineToggle_Click"/>
+                <MenuItem x:Name="_MiCommandlineToggle" Header="Show Commandline" VerticalAlignment="Top"
+                          IsCheckable="True" IsChecked="false" Click="_MiCommandlineToggle_Click" />
             </MenuItem>
             <MenuItem Command="dxaml:Commands.About" />
         </Menu>
-        <Xaml:ExplorerControl x:Name="_DatabaseExplorer"  Grid.Row="1" ChangedSelection="_DatabaseExplorer_ChangedSelection" LoadedDatabase="_DatabaseExplorer_LoadedDatabase" UnloadedDatabase="_DatabaseExplorer_UnloadedDatabase" DatabaseModified="_DatabaseExplorer_DatabaseModified" />
-        <TabControl Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch" Margin="5,0,0,0" BorderThickness="1,1,0,0" Grid.ColumnSpan="1" Padding="0,4">
+        <Xaml:ExplorerControl x:Name="_DatabaseExplorer" Grid.Row="1"
+                              ChangedSelection="_DatabaseExplorer_ChangedSelection"
+                              LoadedDatabase="_DatabaseExplorer_LoadedDatabase"
+                              UnloadedDatabase="_DatabaseExplorer_UnloadedDatabase"
+                              DatabaseModified="_DatabaseExplorer_DatabaseModified" />
+        <TabControl Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="1" VerticalAlignment="Stretch"
+                    Margin="5,0,0,0" BorderThickness="1,1,0,0" Grid.ColumnSpan="1" Padding="0,4">
             <TabItem Header="Tables">
                 <TabControl x:Name="_tbcDatabaseView" VerticalAlignment="Stretch" BorderThickness="0,1">
                     <TabItem x:Name="_tabTable" Header="Table">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="60"/>
-                                <RowDefinition/>
-                                <RowDefinition Height="60"/>
-                                <RowDefinition Height="150"/>
+                                <RowDefinition Height="60" />
+                                <RowDefinition />
+                                <RowDefinition Height="60" />
+                                <RowDefinition Height="150" />
                             </Grid.RowDefinitions>
                             <GroupBox Grid.Row="0" Header="Table Description">
-                                <TextBox x:Name="_TxtTableDescription" IsEnabled="False" Text="{Binding Description}" TextWrapping="Wrap" SpellCheck.IsEnabled="True" AcceptsReturn="True" />
+                                <TextBox x:Name="_TxtTableDescription" IsEnabled="False" Text="{Binding Description}"
+                                         TextWrapping="Wrap" SpellCheck.IsEnabled="True" AcceptsReturn="True" />
                             </GroupBox>
                             <GroupBox Grid.Row="1" Header="Colum Definitions">
-                                <DataGrid AutoGenerateColumns="False" x:Name="_DagColumnDefinitions"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_DagColumnDefinitions_ContextMenuOpening" SelectionChanged="_DagColumnDefinitions_SelectionChanged">
+                                <DataGrid AutoGenerateColumns="False" x:Name="_DagColumnDefinitions"
+                                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25"
+                                          CanUserReorderColumns="False" CanUserResizeRows="False"
+                                          CanUserSortColumns="False"
+                                          ContextMenuOpening="_DagColumnDefinitions_ContextMenuOpening"
+                                          SelectionChanged="_DagColumnDefinitions_SelectionChanged">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Name" Width="100*" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridComboBoxColumn Width="140" x:Name="ColumnNetType" Header=".Net Type" SelectedValueBinding="{Binding NetType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding NetType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridComboBoxColumn Width="140" x:Name="ColumnDbType" Header="Database Type" SelectedValueBinding="{Binding DbType, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding DbType}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridTextColumn Header="Length" Width="50" Binding="{Binding DbLength}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridTextColumn Header="Default Value" Width="100" Binding="{Binding DefaultValue, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridCheckBoxColumn Header="UN" Width="28" Binding="{Binding IsUnsigned, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
-                                        <DataGridCheckBoxColumn Header="AI" Width="24" Binding="{Binding IsAutoIncrement, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
-                                        <DataGridCheckBoxColumn Header="PK" Width="24" Binding="{Binding IsPrimaryKey, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
-                                        <DataGridCheckBoxColumn Header="N" Width="20" Binding="{Binding Nullable, UpdateSourceTrigger=PropertyChanged}" ElementStyle="{StaticResource MiddleCenter}" EditingElementStyle="{StaticResource MiddleCenter}" />
+                                        <DataGridTextColumn Header="Name" Width="100*" Binding="{Binding Name}"
+                                                            ElementStyle="{StaticResource VerticalCenter}"
+                                                            EditingElementStyle="{StaticResource VerticalCenter}" />
+                                        <DataGridComboBoxColumn Width="140" x:Name="ColumnNetType" Header=".Net Type"
+                                                                SelectedValueBinding="{Binding NetType, UpdateSourceTrigger=PropertyChanged}"
+                                                                DisplayMemberPath="{Binding NetType}"
+                                                                ElementStyle="{StaticResource VerticalCenter}"
+                                                                EditingElementStyle="{StaticResource VerticalCenter}" />
+                                        <DataGridComboBoxColumn Width="140" x:Name="ColumnDbType"
+                                                                Header="Database Type"
+                                                                SelectedValueBinding="{Binding DbType, UpdateSourceTrigger=PropertyChanged}"
+                                                                DisplayMemberPath="{Binding DbType}"
+                                                                ElementStyle="{StaticResource VerticalCenter}"
+                                                                EditingElementStyle="{StaticResource VerticalCenter}" />
+                                        <DataGridTextColumn Header="Length" Width="50" Binding="{Binding DbLength}"
+                                                            ElementStyle="{StaticResource VerticalCenter}"
+                                                            EditingElementStyle="{StaticResource VerticalCenter}" />
+                                        <DataGridTextColumn Header="Default Value" Width="100"
+                                                            Binding="{Binding DefaultValue, UpdateSourceTrigger=PropertyChanged}"
+                                                            ElementStyle="{StaticResource VerticalCenter}"
+                                                            EditingElementStyle="{StaticResource VerticalCenter}" />
+                                        <DataGridCheckBoxColumn Header="UN" Width="28"
+                                                                Binding="{Binding IsUnsigned, UpdateSourceTrigger=PropertyChanged}"
+                                                                ElementStyle="{StaticResource MiddleCenter}"
+                                                                EditingElementStyle="{StaticResource MiddleCenter}" />
+                                        <DataGridCheckBoxColumn Header="AI" Width="24"
+                                                                Binding="{Binding IsAutoIncrement, UpdateSourceTrigger=PropertyChanged}"
+                                                                ElementStyle="{StaticResource MiddleCenter}"
+                                                                EditingElementStyle="{StaticResource MiddleCenter}" />
+                                        <DataGridCheckBoxColumn Header="PK" Width="24"
+                                                                Binding="{Binding IsPrimaryKey, UpdateSourceTrigger=PropertyChanged}"
+                                                                ElementStyle="{StaticResource MiddleCenter}"
+                                                                EditingElementStyle="{StaticResource MiddleCenter}" />
+                                        <DataGridCheckBoxColumn Header="N" Width="20"
+                                                                Binding="{Binding Nullable, UpdateSourceTrigger=PropertyChanged}"
+                                                                ElementStyle="{StaticResource MiddleCenter}"
+                                                                EditingElementStyle="{StaticResource MiddleCenter}" />
                                     </DataGrid.Columns>
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem x:Name="_CmiMoveColumnUp" Header="Move Column Up" Click="_CmiMoveColumnUp_Click" IsEnabled="False">
+                                            <MenuItem x:Name="_CmiMoveColumnUp" Header="Move Column Up"
+                                                      Click="_CmiMoveColumnUp_Click" IsEnabled="False">
                                                 <MenuItem.Icon>
                                                     <Image Source="Images/arrow_up.png" />
                                                 </MenuItem.Icon>
                                             </MenuItem>
-                                            <MenuItem x:Name="_CmiMoveColumnDown" Header="Move Column Down" Click="_CmiMoveColumnDown_Click" IsEnabled="False">
+                                            <MenuItem x:Name="_CmiMoveColumnDown" Header="Move Column Down"
+                                                      Click="_CmiMoveColumnDown_Click" IsEnabled="False">
                                                 <MenuItem.Icon>
                                                     <Image Source="Images/arrow_down.png" />
                                                 </MenuItem.Icon>
                                             </MenuItem>
-                                            <MenuItem x:Name="_CmiCreateAssociationWith" Header="Create Association With..." Click="AssociationCreate_Click" IsEnabled="False">
+                                            <MenuItem x:Name="_CmiCreateAssociationWith"
+                                                      Header="Create Association With..."
+                                                      Click="AssociationCreate_Click" IsEnabled="False">
                                                 <MenuItem.Icon>
                                                     <Image Source="Images/chart_line_add.png" />
                                                 </MenuItem.Icon>
@@ -129,45 +178,79 @@
 
                                     </DataGrid.ContextMenu>
                                     <DataGrid.CommandBindings>
-                                        <CommandBinding Command="Copy" Executed="_DagColumnDefinitions_Copy" CanExecute="_DagColumnDefinitions_CopyCanExecute" />
-                                        <CommandBinding Command="Paste" Executed="_DagColumnDefinitions_Paste" CanExecute="_DagColumnDefinitions_PasteCanExecute" />
+                                        <CommandBinding Command="Copy" Executed="_DagColumnDefinitions_Copy"
+                                                        CanExecute="_DagColumnDefinitions_CopyCanExecute" />
+                                        <CommandBinding Command="Paste" Executed="_DagColumnDefinitions_Paste"
+                                                        CanExecute="_DagColumnDefinitions_PasteCanExecute" />
                                     </DataGrid.CommandBindings>
                                 </DataGrid>
                             </GroupBox>
-                            <GroupBox Grid.Row="2" Header="Column Description" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <TextBox x:Name="_TxtColumnDescription" Text="{Binding Description}" TextWrapping="Wrap" IsEnabled="False" SpellCheck.IsEnabled="True" AcceptsReturn="True" />
+                            <GroupBox Grid.Row="2" Header="Column Description" HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Stretch">
+                                <TextBox x:Name="_TxtColumnDescription" Text="{Binding Description}"
+                                         TextWrapping="Wrap" IsEnabled="False" SpellCheck.IsEnabled="True"
+                                         AcceptsReturn="True" />
                             </GroupBox>
                             <GroupBox Grid.Row="3" Header="Associations">
-                                <DataGrid AutoGenerateColumns="False" x:Name="_DagTableAssociations"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserSortColumns="False" ContextMenuOpening="_DagTableAssociations_ContextMenuOpening" IsReadOnly="True">
+                                <DataGrid AutoGenerateColumns="False" x:Name="_DagTableAssociations"
+                                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RowHeight="25"
+                                          CanUserReorderColumns="False" CanUserResizeRows="False"
+                                          CanUserSortColumns="False"
+                                          ContextMenuOpening="_DagTableAssociations_ContextMenuOpening"
+                                          IsReadOnly="True">
                                     <DataGrid.Columns>
-                                        <DataGridTextColumn Header="Name 1" Width="*" Binding="{Binding Table1Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridTextColumn Header="Table 1" Width="*" Binding="{Binding Table1}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridTextColumn Header="Column 1" Width="*" Binding="{Binding Table1Column}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridTextColumn Header="Card1" Width="45" Binding="{Binding Table1Cardinality}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+                                        <DataGridTextColumn Header="Name 1" Width="*" Binding="{Binding Table1Name}"
+                                                            ElementStyle="{StaticResource VerticalCenter}"
+                                                            EditingElementStyle="{StaticResource VerticalCenter}" />
+                                        <DataGridTextColumn Header="Table 1" Width="*" Binding="{Binding Table1}"
+                                                            ElementStyle="{StaticResource VerticalCenter}"
+                                                            EditingElementStyle="{StaticResource VerticalCenter}" />
+                                        <DataGridTextColumn Header="Column 1" Width="*"
+                                                            Binding="{Binding Table1Column}"
+                                                            ElementStyle="{StaticResource VerticalCenter}"
+                                                            EditingElementStyle="{StaticResource VerticalCenter}" />
+                                        <DataGridTextColumn Header="Card1" Width="45"
+                                                            Binding="{Binding Table1Cardinality}"
+                                                            ElementStyle="{StaticResource VerticalCenter}"
+                                                            EditingElementStyle="{StaticResource VerticalCenter}" />
 
-                                        <DataGridTextColumn Header="Name 2" Width="*" Binding="{Binding Table2Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridTextColumn Header="Table 2" Width="*" Binding="{Binding Table2}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridTextColumn Header="Column 2" Width="*" Binding="{Binding Table2Column}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridTextColumn Header="Card2" Width="45" Binding="{Binding Table2Cardinality}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+                                        <DataGridTextColumn Header="Name 2" Width="*" Binding="{Binding Table2Name}"
+                                                            ElementStyle="{StaticResource VerticalCenter}"
+                                                            EditingElementStyle="{StaticResource VerticalCenter}" />
+                                        <DataGridTextColumn Header="Table 2" Width="*" Binding="{Binding Table2}"
+                                                            ElementStyle="{StaticResource VerticalCenter}"
+                                                            EditingElementStyle="{StaticResource VerticalCenter}" />
+                                        <DataGridTextColumn Header="Column 2" Width="*"
+                                                            Binding="{Binding Table2Column}"
+                                                            ElementStyle="{StaticResource VerticalCenter}"
+                                                            EditingElementStyle="{StaticResource VerticalCenter}" />
+                                        <DataGridTextColumn Header="Card2" Width="45"
+                                                            Binding="{Binding Table2Cardinality}"
+                                                            ElementStyle="{StaticResource VerticalCenter}"
+                                                            EditingElementStyle="{StaticResource VerticalCenter}" />
                                     </DataGrid.Columns>
                                     <DataGrid.ContextMenu>
                                         <ContextMenu>
-                                            <MenuItem x:Name="_CmiCreateAssociation" Header="Create Association" Click="AssociationCreate_Click" IsEnabled="False">
+                                            <MenuItem x:Name="_CmiCreateAssociation" Header="Create Association"
+                                                      Click="AssociationCreate_Click" IsEnabled="False">
                                                 <MenuItem.Icon>
                                                     <Image Source="Images/chart_line_add.png" />
                                                 </MenuItem.Icon>
                                             </MenuItem>
-                                            <MenuItem x:Name="_CmiEditAssociation" Header="Edit Association" Click="AssociationEdit_Click" IsEnabled="False">
+                                            <MenuItem x:Name="_CmiEditAssociation" Header="Edit Association"
+                                                      Click="AssociationEdit_Click" IsEnabled="False">
                                                 <MenuItem.Icon>
                                                     <Image Source="Images/chart_line_edit.png" />
                                                 </MenuItem.Icon>
                                             </MenuItem>
-                                            <MenuItem x:Name="_CmiDeleteAssociation" Header="Delete Association" Click="AssociationDelete_Click" IsEnabled="False">
+                                            <MenuItem x:Name="_CmiDeleteAssociation" Header="Delete Association"
+                                                      Click="AssociationDelete_Click" IsEnabled="False">
                                                 <MenuItem.Icon>
                                                     <Image Source="Images/chart_line_delete.png" />
                                                 </MenuItem.Icon>
                                             </MenuItem>
-                                            <MenuItem x:Name="_CmiGoToOtherTable" Header="Go To Other Table" IsEnabled="False" Visibility="Collapsed" />
+                                            <MenuItem x:Name="_CmiGoToOtherTable" Header="Go To Other Table"
+                                                      IsEnabled="False" Visibility="Collapsed" />
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
                                 </DataGrid>
@@ -181,11 +264,11 @@
                     <TabItem x:Name="_tabIndexes" Header="Indexes">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="36*"/>
-                                <ColumnDefinition Width="65*"/>
+                                <ColumnDefinition Width="36*" />
+                                <ColumnDefinition Width="65*" />
                             </Grid.ColumnDefinitions>
                             <GroupBox Header="Indexes" Grid.Column="0" Margin="3">
-                                <ListBox x:Name="_LstIndexes" DisplayMemberPath="Name" >
+                                <ListBox x:Name="_LstIndexes" DisplayMemberPath="Name">
                                     <ListBox.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem Command="New">
@@ -202,12 +285,21 @@
                                     </ListBox.ContextMenu>
                                 </ListBox>
                             </GroupBox>
-                            <GridSplitter HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5" Grid.Column="1" Grid.RowSpan="1"/>
+                            <GridSplitter HorizontalAlignment="Left" VerticalAlignment="Stretch" Width="5"
+                                          Grid.Column="1" Grid.RowSpan="1" />
                             <GroupBox Grid.Column="1" Header="Index Definition" Margin="3">
-                                <DataGrid x:Name="_DatIndexDefinition" >
+                                <DataGrid x:Name="_DatIndexDefinition">
                                     <DataGrid.Columns>
-                                        <DataGridComboBoxColumn Width="*" Header="Column Name" SelectedValueBinding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                                        <DataGridComboBoxColumn Width="140" Header="Sort Direction" SelectedValueBinding="{Binding SortDirection, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="{Binding SortDirection}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
+                                        <DataGridComboBoxColumn Width="*" Header="Column Name"
+                                                                SelectedValueBinding="{Binding Name, UpdateSourceTrigger=PropertyChanged}"
+                                                                DisplayMemberPath="{Binding Name}"
+                                                                ElementStyle="{StaticResource VerticalCenter}"
+                                                                EditingElementStyle="{StaticResource VerticalCenter}" />
+                                        <DataGridComboBoxColumn Width="140" Header="Sort Direction"
+                                                                SelectedValueBinding="{Binding SortDirection, UpdateSourceTrigger=PropertyChanged}"
+                                                                DisplayMemberPath="{Binding SortDirection}"
+                                                                ElementStyle="{StaticResource VerticalCenter}"
+                                                                EditingElementStyle="{StaticResource VerticalCenter}" />
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </GroupBox>
@@ -219,16 +311,22 @@
                     <TabItem x:Name="_tabTableSql" Header="SQL">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="40"/>
-                                <RowDefinition/>
+                                <RowDefinition Height="40" />
+                                <RowDefinition />
                             </Grid.RowDefinitions>
                             <GroupBox Grid.Row="0" Header="Options">
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
-                                    <CheckBox Name="ChkCustomTableSql" IsChecked="{Binding DataContext.UseCustomSql, RelativeSource={RelativeSource AncestorType=TabItem}}">Custom Table SQL</CheckBox>
+                                    <CheckBox Name="ChkCustomTableSql"
+                                              IsChecked="{Binding DataContext.UseCustomSql, RelativeSource={RelativeSource AncestorType=TabItem}}">
+                                        Custom Table SQL
+                                    </CheckBox>
                                 </StackPanel>
                             </GroupBox>
                             <GroupBox Grid.Row="1" Header="Table SQL">
-                                <TextBox x:Name="_TxtTableSql" Text="{Binding DataContext.CustomSql, RelativeSource={RelativeSource AncestorType=TabItem}, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding ElementName=ChkCustomTableSql, Path=IsChecked}" AcceptsTab="True" AcceptsReturn="True" />
+                                <TextBox x:Name="_TxtTableSql"
+                                         Text="{Binding DataContext.CustomSql, RelativeSource={RelativeSource AncestorType=TabItem}, UpdateSourceTrigger=PropertyChanged}"
+                                         IsEnabled="{Binding ElementName=ChkCustomTableSql, Path=IsChecked}"
+                                         AcceptsTab="True" AcceptsReturn="True" />
                             </GroupBox>
 
                         </Grid>
@@ -238,24 +336,28 @@
             <TabItem Header="Enums">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="200" />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <GroupBox Grid.Column="0" Header="Enum List" >
+                    <GroupBox
+                        Grid.Row="0"
+                        Header="Enum List">
                         <ListBox x:Name="_LstEnums" ItemsSource="{Binding Enumeration}">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding Name}"  />
+                                    <TextBlock Text="{Binding Name}" />
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                             <ListBox.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Command="New" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
+                                    <MenuItem Command="New"
+                                              CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
                                         <MenuItem.Icon>
                                             <Image Source="Images/add.png" />
                                         </MenuItem.Icon>
                                     </MenuItem>
-                                    <MenuItem Command="Delete" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
+                                    <MenuItem Command="Delete"
+                                              CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
                                         <MenuItem.Icon>
                                             <Image Source="Images/delete.png" />
                                         </MenuItem.Icon>
@@ -263,41 +365,68 @@
                                 </ContextMenu>
                             </ListBox.ContextMenu>
                             <ListBox.CommandBindings>
-                                <CommandBinding Command="New" Executed="NewEnum" CanExecute="NewEnum_CanExecute"/>
-                                <CommandBinding Command="Delete" Executed="DeleteEnum" CanExecute="DeleteEnum_CanExecute"/>
+                                <CommandBinding Command="New" Executed="NewEnum" CanExecute="NewEnum_CanExecute" />
+                                <CommandBinding Command="Delete" Executed="DeleteEnum"
+                                                CanExecute="DeleteEnum_CanExecute" />
                             </ListBox.CommandBindings>
                         </ListBox>
                     </GroupBox>
-                    <GroupBox Grid.Column="1" Header="Values" >
-                        <DataGrid x:Name="_DatEnumList" ItemsSource="{Binding SelectedValue.EnumValue, ElementName=_LstEnums}" AutoGenerateColumns="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}" ElementStyle="{StaticResource VerticalCenter}" EditingElementStyle="{StaticResource VerticalCenter}"/>
-                            </DataGrid.Columns>
-                            <DataGrid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Command="dxaml:Commands.MoveUp" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
-                                        <MenuItem.Icon>
-                                            <Image Source="Images/arrow_up.png" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="dxaml:Commands.MoveDown" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
-                                        <MenuItem.Icon>
-                                            <Image Source="Images/arrow_down.png" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Command="Delete" CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
-                                        <MenuItem.Icon>
-                                            <Image Source="Images/delete.png" />
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
-                            <DataGrid.CommandBindings>
-                                <CommandBinding Command="dxaml:Commands.MoveUp" Executed="MoveEnumUp" CanExecute="ModifyEnumValue_CanExecute"/>
-                                <CommandBinding Command="dxaml:Commands.MoveDown" Executed="MoveEnumDown" CanExecute="ModifyEnumValue_CanExecute"/>
-                                <CommandBinding Command="Delete" Executed="DeleteEnumValue" CanExecute="ModifyEnumValue_CanExecute"/>
-                            </DataGrid.CommandBindings>
-                            <!-- 
+                    <Grid
+                        Grid.Column="1">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <GroupBox
+                            Header="Options">
+                            <Grid>
+                                <ComboBox 
+                                    ItemsSource="{Binding Source={converters:EnumBindingSource {x:Type ddl:EnumType}}}"
+                                    SelectedValue="{Binding SelectedValue.EnumType, ElementName=_LstEnums}"/>
+                            </Grid>
+                        </GroupBox>
+                        <GroupBox
+                            Grid.Row="1"
+                            Header="Values">
+                            <DataGrid x:Name="_DatEnumList"
+                                      ItemsSource="{Binding SelectedValue.EnumValue, ElementName=_LstEnums}"
+                                      AutoGenerateColumns="False">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Name" Width="200" Binding="{Binding Name}"
+                                                        ElementStyle="{StaticResource VerticalCenter}"
+                                                        EditingElementStyle="{StaticResource VerticalCenter}" />
+                                </DataGrid.Columns>
+                                <DataGrid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Command="dxaml:Commands.MoveUp"
+                                                  CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
+                                            <MenuItem.Icon>
+                                                <Image Source="Images/arrow_up.png" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Command="dxaml:Commands.MoveDown"
+                                                  CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
+                                            <MenuItem.Icon>
+                                                <Image Source="Images/arrow_down.png" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Command="Delete"
+                                                  CommandTarget="{Binding Path=PlacementTarget, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
+                                            <MenuItem.Icon>
+                                                <Image Source="Images/delete.png" />
+                                            </MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </DataGrid.ContextMenu>
+                                <DataGrid.CommandBindings>
+                                    <CommandBinding Command="dxaml:Commands.MoveUp" Executed="MoveEnumUp"
+                                                    CanExecute="ModifyEnumValue_CanExecute" />
+                                    <CommandBinding Command="dxaml:Commands.MoveDown" Executed="MoveEnumDown"
+                                                    CanExecute="ModifyEnumValue_CanExecute" />
+                                    <CommandBinding Command="Delete" Executed="DeleteEnumValue"
+                                                    CanExecute="ModifyEnumValue_CanExecute" />
+                                </DataGrid.CommandBindings>
+                                <!-- 
                                                                         <MenuItem x:Name="_CmiMoveColumnUp" Header="Move Column Up" Click="_CmiMoveColumnUp_Click" IsEnabled="False">
                                                 <MenuItem.Icon>
                                                     <Image Source="Images/arrow_up.png" />
@@ -309,9 +438,11 @@
                                                 </MenuItem.Icon>
                                             </MenuItem>
                             -->
-                        </DataGrid>
+                            </DataGrid>
 
-                    </GroupBox>
+                        </GroupBox>
+
+                    </Grid>
 
                 </Grid>
             </TabItem>
@@ -320,23 +451,29 @@
                     <TabItem x:Name="_tabConfig" Header="Config">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
                             <GroupBox Header="Database Values" Grid.Row="0">
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="27"/>
-                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="27" />
+                                        <RowDefinition Height="*" />
                                     </Grid.RowDefinitions>
-                                    <TextBox x:Name="_TxtConfigSearch" Height="24" Grid.Row="0" TextChanged="_TxtConfigSearch_TextChanged" Text=" Search Configurations" VerticalContentAlignment="Center" GotFocus="_TxtConfigSearch_GotFocus" LostFocus="_TxtConfigSearch_LostFocus" />
+                                    <TextBox x:Name="_TxtConfigSearch" Height="24" Grid.Row="0"
+                                             TextChanged="_TxtConfigSearch_TextChanged" Text=" Search Configurations"
+                                             VerticalContentAlignment="Center" GotFocus="_TxtConfigSearch_GotFocus"
+                                             LostFocus="_TxtConfigSearch_LostFocus" />
                                     <DataGrid x:Name="_DagConfigurations" AutoGenerateColumns="False" Grid.Row="1">
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Binding="{Binding Name}" Width="250" Header="Configuration"/>
-                                            <DataGridTextColumn Binding="{Binding Value}" Width="200" Header="Value"/>
-                                            <DataGridHyperlinkColumn Binding="{Binding Description}" Width="*" Header="Description">
+                                            <DataGridTextColumn Binding="{Binding Name}" Width="250"
+                                                                Header="Configuration" />
+                                            <DataGridTextColumn Binding="{Binding Value}" Width="200" Header="Value" />
+                                            <DataGridHyperlinkColumn Binding="{Binding Description}" Width="*"
+                                                                     Header="Description">
                                                 <DataGridHyperlinkColumn.ElementStyle>
                                                     <Style>
-                                                        <EventSetter Event="Hyperlink.Click" Handler="_DagConfigurations_Hyperlink"/>
+                                                        <EventSetter Event="Hyperlink.Click"
+                                                                     Handler="_DagConfigurations_Hyperlink" />
                                                     </Style>
                                                 </DataGridHyperlinkColumn.ElementStyle>
                                             </DataGridHyperlinkColumn>
@@ -355,47 +492,66 @@
             </TabItem>
             <TabItem Header="Sql">
                 <GroupBox Header="Database Creation SQL">
-                    <TextBox Text="{Binding DataContext.CreationSql, RelativeSource={RelativeSource AncestorType=Window}}" AcceptsReturn="True" TextWrapping="WrapWithOverflow" />
+                    <TextBox
+                        Text="{Binding DataContext.CreationSql, RelativeSource={RelativeSource AncestorType=Window}}"
+                        AcceptsReturn="True" TextWrapping="WrapWithOverflow" />
                 </GroupBox>
             </TabItem>
             <TabItem Header="Output">
                 <GroupBox Header="Output Configurations" Grid.Row="0">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="33*"/>
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
+                            <RowDefinition Height="33*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="118*"/>
-                            <ColumnDefinition Width="201*"/>
-                            <ColumnDefinition Width="124*"/>
-                            <ColumnDefinition Width="257*"/>
+                            <ColumnDefinition Width="118*" />
+                            <ColumnDefinition Width="201*" />
+                            <ColumnDefinition Width="124*" />
+                            <ColumnDefinition Width="257*" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock HorizontalAlignment="Right" Text="Target Database" VerticalAlignment="Center" Grid.Column="0" Grid.Row="0" Margin="3"/>
-                        <ComboBox x:Name="_CmbTargetDatabase" SelectedValue="{Binding DataContext.TargetDb, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Column="1" Grid.Row="0" Margin="3"/>
+                        <TextBlock HorizontalAlignment="Right" Text="Target Database" VerticalAlignment="Center"
+                                   Grid.Column="0" Grid.Row="0" Margin="3" />
+                        <ComboBox x:Name="_CmbTargetDatabase"
+                                  SelectedValue="{Binding DataContext.TargetDb, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  Grid.Column="1" Grid.Row="0" Margin="3" />
 
-                        <TextBlock HorizontalAlignment="Right" Text="Namespace" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1" Margin="3"/>
-                        <TextBox Text="{Binding DataContext.Namespace, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Column="1" Grid.Row="1" Margin="3"/>
+                        <TextBlock HorizontalAlignment="Right" Text="Namespace" VerticalAlignment="Center"
+                                   Grid.Column="0" Grid.Row="1" Margin="3" />
+                        <TextBox
+                            Text="{Binding DataContext.Namespace, RelativeSource={RelativeSource AncestorType=Window}}"
+                            Grid.Column="1" Grid.Row="1" Margin="3" />
 
-                        <TextBlock HorizontalAlignment="Right" Text="Context Class" VerticalAlignment="Center" Grid.Column="0" Grid.Row="2" Margin="3"/>
-                        <TextBox Text="{Binding DataContext.ContextClass, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Column="1" Grid.Row="2" Margin="3"/>
+                        <TextBlock HorizontalAlignment="Right" Text="Context Class" VerticalAlignment="Center"
+                                   Grid.Column="0" Grid.Row="2" Margin="3" />
+                        <TextBox
+                            Text="{Binding DataContext.ContextClass, RelativeSource={RelativeSource AncestorType=Window}}"
+                            Grid.Column="1" Grid.Row="2" Margin="3" />
 
-                        <CheckBox Grid.Column="3" Grid.Row="0" IsChecked="{Binding DataContext.OutputSqlTables, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Output SQL Tables"/>
+                        <CheckBox Grid.Column="3" Grid.Row="0"
+                                  IsChecked="{Binding DataContext.OutputSqlTables, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  VerticalAlignment="Center" Content="Output SQL Tables" />
 
-                        <CheckBox Grid.Column="3" Grid.Row="1" IsChecked="{Binding DataContext.OutputCsClasses, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Output C# Classes"/>
+                        <CheckBox Grid.Column="3" Grid.Row="1"
+                                  IsChecked="{Binding DataContext.OutputCsClasses, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  VerticalAlignment="Center" Content="Output C# Classes" />
 
-                        <CheckBox Grid.Column="3" Grid.Row="2" IsChecked="{Binding DataContext.ImplementINotifyPropertyChanged, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Implement INotifyPropertyChanged"/>
+                        <CheckBox Grid.Column="3" Grid.Row="2"
+                                  IsChecked="{Binding DataContext.ImplementINotifyPropertyChanged, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  VerticalAlignment="Center" Content="Implement INotifyPropertyChanged" />
 
-                        <CheckBox Grid.Column="3" Grid.Row="3" IsChecked="{Binding DataContext.ImplementProtobufNetDataContracts, RelativeSource={RelativeSource AncestorType=Window}}" VerticalAlignment="Center" Content="Implement Protobuf-net DataContracts"/>
+                        <CheckBox Grid.Column="3" Grid.Row="3"
+                                  IsChecked="{Binding DataContext.ImplementProtobufNetDataContracts, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  VerticalAlignment="Center" Content="Implement Protobuf-net DataContracts" />
                     </Grid>
                 </GroupBox>
             </TabItem>
 
 
         </TabControl>
-        <dxaml:ColorStatusBar x:Name="_Status" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2"/>
+        <dxaml:ColorStatusBar x:Name="_Status" Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="2" />
     </Grid>
 </Window>

@@ -156,6 +156,9 @@ namespace DtronixModeler.Generator
                 input_database.ContextClass = options.ContextClass;
             }
 
+            if(string.IsNullOrWhiteSpace(input_database.Namespace))
+                throw new Exception("Namespace not set.");
+
             input_database.ImplementINotifyPropertyChanged = options.NotifyPropertyChanged;
             input_database.ImplementProtobufNetDataContracts = options.ProtobufDataContracts;
 
