@@ -48,6 +48,7 @@ namespace DtronixModeler.Generator.MySql
                 new TypeTransformerType("ByteArray", "BLOB", false),
                 new TypeTransformerType("ByteArray", "MEDIMUMBLOB", false),
                 new TypeTransformerType("ByteArray", "LONGBLOB", false),
+                new TypeTransformerType("ByteArray", "TINYBLOB", false),
 
                 new TypeTransformerType("DateTimeOffset", "DATE", true),
                 new TypeTransformerType("DateTimeOffset", "DATE_F", true),
