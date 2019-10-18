@@ -48,7 +48,16 @@ namespace DtronixModeler.Xaml
 
         public MainWindow(string open_file)
         {
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
 
             DefaultNetTypes = new List<string>
             {
