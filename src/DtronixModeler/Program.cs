@@ -34,6 +34,8 @@ namespace DtronixModeler.Generator
         static void Main(string[] args)
         {
 
+            Console.WriteLine("TEst");
+
             // Get and hide the console and show the UI if there are no arguments passed.
             if (args.Length == 0 ||
                 (args.Length == 1 && Path.GetExtension(args[0]) == ".ddl"))
@@ -52,6 +54,8 @@ namespace DtronixModeler.Generator
                 }
                 return;
             }
+
+
 
             CommandOptions options = new CommandOptions(args, Console.Out);
 

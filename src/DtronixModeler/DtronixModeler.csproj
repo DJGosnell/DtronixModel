@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <Description>Modeler for defining database systems.</Description>
@@ -10,6 +10,8 @@
     <Product>Dtronix Database Modeler</Product>
     <Authors>DJGosnell</Authors>
     <Configurations>Debug;Release;Installer</Configurations>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <StartupObject />
   </PropertyGroup>
 
   <ItemGroup>

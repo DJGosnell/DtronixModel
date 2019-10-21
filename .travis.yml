@@ -1,5 +1,8 @@
-language: csharp
+language: minimal
 before_script:
-  - nuget restore ./src/DtronixModel.sln
+  - sudo apt install snapd
+  - sudo snap install dotnet-sdk --classic
 script:
-  - xbuild /p:Configuration=Release ./src/DtronixModel/DtronixModel.csproj
+  - cd src
+  - dotnet-sdk.dotnet build
+  - dotnet-sdk.dotnet test

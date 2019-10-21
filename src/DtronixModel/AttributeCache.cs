@@ -15,12 +15,12 @@ namespace DtronixModel
 
         static AttributeCache()
         {
-            var attObjects = typeof(TObject).GetTypeInfo().GetCustomAttributes(typeof(TAttribute), true).ToArray();
+            var attObjects = typeof(TObject).GetTypeInfo().GetCustomAttributes(typeof(TAttribute), true).OfType<TAttribute>().ToArray();
             if (attObjects.Length == 0)
                 throw new ArgumentException("Object " + typeof(TObject) + "Does not contain attribute " +
                                             typeof(TAttribute) + ".");
 
-            Attributes = attObjects as TAttribute[];
+            Attributes = attObjects;
         }
 
         /// <summary>

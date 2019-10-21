@@ -7,13 +7,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Sqlite\TestDatabase.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="nunit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.111" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DtronixModel\DtronixModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Sqlite\TestDatabase.sql" />
   </ItemGroup>
 
 </Project>
