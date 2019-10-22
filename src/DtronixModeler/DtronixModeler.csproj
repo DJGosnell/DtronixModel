@@ -52,7 +52,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.111" />
-    <PackageReference Include="Tools.InnoSetup" Version="6.0.2.1" />
+    <PackageReference Include="Tools.InnoSetup" Version="6.0.2.1" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>
@@ -101,8 +101,8 @@
     </None>
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if &quot;Installer&quot; == &quot;$(ConfigurationName)&quot; (&#xD;&#xA;echo Building installer...&#xD;&#xA;&quot;%25appdata%25\.nuget\packages\Tools.InnoSetup\5.5.9\tools\iscc.exe&quot; /q setup.iss &#xD;&#xA;echo Installer built.&#xD;&#xA;)" />
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)' == 'Installer'">
+    <Exec Command="$(NuGetPackageRoot)Tools.InnoSetup\5.5.9\tools\iscc.exe /q $(TargetDir)setup.iss" />
   </Target>
 
 </Project>
