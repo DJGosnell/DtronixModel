@@ -15,39 +15,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Xaml\Images\add.png" />
-    <None Remove="Xaml\Images\arrow_down.png" />
-    <None Remove="Xaml\Images\arrow_up.png" />
-    <None Remove="Xaml\Images\chart_line.png" />
-    <None Remove="Xaml\Images\chart_line_add.png" />
-    <None Remove="Xaml\Images\chart_line_delete.png" />
-    <None Remove="Xaml\Images\chart_line_edit.png" />
-    <None Remove="Xaml\Images\check_box_list.png" />
-    <None Remove="Xaml\Images\cut.png" />
-    <None Remove="Xaml\Images\database.png" />
-    <None Remove="Xaml\Images\database_add.png" />
-    <None Remove="Xaml\Images\database_blue.png" />
-    <None Remove="Xaml\Images\database_blue32.png" />
-    <None Remove="Xaml\Images\database_connect.png" />
-    <None Remove="Xaml\Images\database_delete.png" />
-    <None Remove="Xaml\Images\database_error.png" />
-    <None Remove="Xaml\Images\database_refresh.png" />
-    <None Remove="Xaml\Images\database_table.png" />
-    <None Remove="Xaml\Images\delete.png" />
-    <None Remove="Xaml\Images\document_empty.png" />
-    <None Remove="Xaml\Images\folder.png" />
-    <None Remove="Xaml\Images\folder_vertical_open.png" />
-    <None Remove="Xaml\Images\function.png" />
-    <None Remove="Xaml\Images\page_copy.png" />
-    <None Remove="Xaml\Images\page_paste.png" />
-    <None Remove="Xaml\Images\plugin_disabled.png" />
-    <None Remove="Xaml\Images\table.png" />
-    <None Remove="Xaml\Images\table_chart.png" />
-    <None Remove="Xaml\Images\table_gear.png" />
-    <None Remove="Xaml\Images\table_import.png" />
-    <None Remove="Xaml\Images\table_multiple.png" />
-    <None Remove="Xaml\Images\textfield_rename.png" />
-    <None Remove="Xaml\Images\text_list_bullets.png" />
+    <None Remove="Xaml\Images\*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -60,39 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Xaml\Images\add.png" />
-    <Resource Include="Xaml\Images\arrow_down.png" />
-    <Resource Include="Xaml\Images\arrow_up.png" />
-    <Resource Include="Xaml\Images\chart_line.png" />
-    <Resource Include="Xaml\Images\chart_line_add.png" />
-    <Resource Include="Xaml\Images\chart_line_delete.png" />
-    <Resource Include="Xaml\Images\chart_line_edit.png" />
-    <Resource Include="Xaml\Images\check_box_list.png" />
-    <Resource Include="Xaml\Images\cut.png" />
-    <Resource Include="Xaml\Images\database.png" />
-    <Resource Include="Xaml\Images\database_add.png" />
-    <Resource Include="Xaml\Images\database_blue.png" />
-    <Resource Include="Xaml\Images\database_blue32.png" />
-    <Resource Include="Xaml\Images\database_connect.png" />
-    <Resource Include="Xaml\Images\database_delete.png" />
-    <Resource Include="Xaml\Images\database_error.png" />
-    <Resource Include="Xaml\Images\database_refresh.png" />
-    <Resource Include="Xaml\Images\database_table.png" />
-    <Resource Include="Xaml\Images\delete.png" />
-    <Resource Include="Xaml\Images\document_empty.png" />
-    <Resource Include="Xaml\Images\folder.png" />
-    <Resource Include="Xaml\Images\folder_vertical_open.png" />
-    <Resource Include="Xaml\Images\function.png" />
-    <Resource Include="Xaml\Images\page_copy.png" />
-    <Resource Include="Xaml\Images\page_paste.png" />
-    <Resource Include="Xaml\Images\plugin_disabled.png" />
-    <Resource Include="Xaml\Images\table.png" />
-    <Resource Include="Xaml\Images\table_chart.png" />
-    <Resource Include="Xaml\Images\table_gear.png" />
-    <Resource Include="Xaml\Images\table_import.png" />
-    <Resource Include="Xaml\Images\table_multiple.png" />
-    <Resource Include="Xaml\Images\textfield_rename.png" />
-    <Resource Include="Xaml\Images\text_list_bullets.png" />
+    <Resource Include="Xaml\Images\*" />
   </ItemGroup>
 
   <ItemGroup>
