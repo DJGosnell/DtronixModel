@@ -4,5 +4,4 @@ before_script:
   - sudo snap install dotnet-sdk --classic
 script:
   - cd src
-  - dotnet-sdk.dotnet build DtronixModel
-  - dotnet-sdk.dotnet build DtronixModelTests
+  - dotnet-sdk.dotnet test DtronixModelTests

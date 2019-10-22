@@ -9,18 +9,20 @@ namespace DtronixModelTests.Sqlite
 {
     public class ContextSqliteTests
     {
+        private static string _sbSql;
+
         static ContextSqliteTests()
         {
             TestDatabaseContext.DatabaseType = DtronixModel.Context.TargetDb.Sqlite;
+            _sbSql = File.ReadAllText("Sqlite/TestDatabase.sql");
         }
 
         private TestDatabaseContext CreateContext(string methodName)
         {
             var connection = new SQLiteConnection("Data Source=:memory:;Version=3;");
             connection.Open();
-
             var context = new TestDatabaseContext(connection);
-            context.Query(Utilities.GetFileContents("Sqlite.TestDatabase.sql"), null);
+            context.Query(_sbSql, null);
 
             return context;
         }
@@ -461,7 +463,7 @@ namespace DtronixModelTests.Sqlite
                 byte[] initialByteArray = new byte[]
                     {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255, 254, 243, 252, 251, 250, 249, 248, 247, 246, 245};
                 var dateTime = DateTimeOffset.Now;
-                int ch = (int) 'D';
+                //int ch = (int) 'D';
                 string t = dateTime.ToString();
                 context.AllTypes.Insert(new AllTypes
                 {
