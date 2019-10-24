@@ -17,5 +17,8 @@
   <ItemGroup>
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
   </ItemGroup>
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
 
 </Project>
