@@ -505,6 +505,7 @@
                             <RowDefinition Height="30" />
                             <RowDefinition Height="30" />
                             <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
                             <RowDefinition Height="33*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -531,6 +532,13 @@
                             Text="{Binding DataContext.ContextClass, RelativeSource={RelativeSource AncestorType=Window}}"
                             Grid.Column="1" Grid.Row="2" Margin="3" />
 
+                        <TextBlock HorizontalAlignment="Right" Text="Protobuf Package" VerticalAlignment="Center"
+                                   Grid.Column="0" Grid.Row="3" Margin="3" />
+                        <TextBox
+                            Text="{Binding DataContext.ProtobufPackage, RelativeSource={RelativeSource AncestorType=Window}}"
+                            Grid.Column="1" Grid.Row="3" Margin="3,0,3,3" Height="24" VerticalAlignment="Bottom" />
+
+
                         <CheckBox Grid.Column="3" Grid.Row="0"
                                   IsChecked="{Binding DataContext.OutputSqlTables, RelativeSource={RelativeSource AncestorType=Window}}"
                                   VerticalAlignment="Center" Content="Output SQL Tables" />
@@ -539,13 +547,19 @@
                                   IsChecked="{Binding DataContext.OutputCsClasses, RelativeSource={RelativeSource AncestorType=Window}}"
                                   VerticalAlignment="Center" Content="Output C# Classes" />
 
+
                         <CheckBox Grid.Column="3" Grid.Row="2"
+                                  IsChecked="{Binding DataContext.OutputProtobuf, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  VerticalAlignment="Center" Content="Output Protobuf" />
+
+                        <CheckBox Grid.Column="3" Grid.Row="3"
                                   IsChecked="{Binding DataContext.ImplementINotifyPropertyChanged, RelativeSource={RelativeSource AncestorType=Window}}"
                                   VerticalAlignment="Center" Content="Implement INotifyPropertyChanged" />
 
-                        <CheckBox Grid.Column="3" Grid.Row="3"
+                        <CheckBox Grid.Column="3" Grid.Row="4"
                                   IsChecked="{Binding DataContext.ImplementProtobufNetDataContracts, RelativeSource={RelativeSource AncestorType=Window}}"
                                   VerticalAlignment="Center" Content="Implement Protobuf-net DataContracts" />
+
                     </Grid>
                 </GroupBox>
             </TabItem>

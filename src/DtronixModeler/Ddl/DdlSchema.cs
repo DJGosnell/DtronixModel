@@ -46,11 +46,15 @@ namespace DtronixModeler.Ddl {
         
         private bool outputCsClassesField;
         
+        private bool outputProtobufField;
+        
         private bool implementINotifyPropertyChangedField;
         
         private DbProvider targetDbField;
         
         private bool implementProtobufNetDataContractsField;
+        
+        private string protobufPackageField;
         
         private string versionField;
         
@@ -65,6 +69,7 @@ namespace DtronixModeler.Ddl {
             this.tableField = new ObservableCollection<Table>();
             this.outputSqlTablesField = true;
             this.outputCsClassesField = true;
+            this.outputProtobufField = false;
             this.implementINotifyPropertyChangedField = false;
             this.implementProtobufNetDataContractsField = false;
             this.versionField = "0";
@@ -289,6 +294,20 @@ namespace DtronixModeler.Ddl {
         
         [System.Xml.Serialization.XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool OutputProtobuf {
+            get {
+                return this.outputProtobufField;
+            }
+            set {
+                if ((outputProtobufField.Equals(value) != true)) {
+                    this.outputProtobufField = value;
+                    this.OnPropertyChanged("OutputProtobuf");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool ImplementINotifyPropertyChanged {
             get {
                 return this.implementINotifyPropertyChangedField;
@@ -324,6 +343,25 @@ namespace DtronixModeler.Ddl {
                 if ((implementProtobufNetDataContractsField.Equals(value) != true)) {
                     this.implementProtobufNetDataContractsField = value;
                     this.OnPropertyChanged("ImplementProtobufNetDataContracts");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ProtobufPackage {
+            get {
+                return this.protobufPackageField;
+            }
+            set {
+                if ((this.protobufPackageField != null)) {
+                    if ((protobufPackageField.Equals(value) != true)) {
+                        this.protobufPackageField = value;
+                        this.OnPropertyChanged("ProtobufPackage");
+                    }
+                }
+                else {
+                    this.protobufPackageField = value;
+                    this.OnPropertyChanged("ProtobufPackage");
                 }
             }
         }

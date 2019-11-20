@@ -169,7 +169,8 @@ namespace DtronixModeler.Xaml
                 DbProvider = database.TargetDb,
                 InputType = CommandOptions.InType.Ddl,
                 ProtobufDataContracts = database.ImplementProtobufNetDataContracts,
-                NotifyPropertyChanged = database.ImplementINotifyPropertyChanged
+                NotifyPropertyChanged = database.ImplementINotifyPropertyChanged,
+                ProtobufPackage = database.ProtobufPackage
             };
 
             string base_ddl_filename = Path.Combine(Path.GetDirectoryName(database._FileLocation),
@@ -185,6 +186,12 @@ namespace DtronixModeler.Xaml
             if (database.OutputCsClasses)
             {
                 options.CodeOutput = base_ddl_filename + ".cs";
+            }
+
+            // If we are set to output in the ddl, then set a default name.
+            if (database.OutputProtobuf)
+            {
+                options.ProtobufOutput = base_ddl_filename + ".proto";
             }
 
             _Status.SetStatus("Generating Code...", ColorStatusBar.Status.Working);
