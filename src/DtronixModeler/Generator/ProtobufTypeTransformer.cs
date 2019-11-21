@@ -21,7 +21,7 @@ namespace DtronixModeler.Generator
             { ("uint32", "UInt32") },
             { ("uint64", "UInt64") },
             { ("bool", "Boolean") },
-            { ("string", "String") },
+            { ("google.protobuf.StringValue", "String") },
             { ("string", "Char") },
             { ("bytes", "ByteArray") },
             { ("uint64", "DateTimeOffset") },

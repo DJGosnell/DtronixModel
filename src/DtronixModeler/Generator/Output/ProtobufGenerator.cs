@@ -21,6 +21,7 @@ namespace DtronixModeler.Generator.Output {
 			code.clear();
 
             code.WriteLine("syntax = \"proto3\";");
+            code.WriteLine("import \"google/protobuf/wrappers.proto\";"); 
             code.WriteLine($"package {database.ProtobufPackage};");
 
             // Loop through each of the tables.
