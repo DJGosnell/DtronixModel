@@ -21,7 +21,7 @@ namespace DtronixModeler.Generator.Output {
 			code.clear();
 
             code.WriteLine("syntax = \"proto3\";");
-            code.WriteLine($"package {database.ProtobufPackage}");
+            code.WriteLine($"package {database.ProtobufPackage};");
 
             // Loop through each of the tables.
             foreach (var table in database.Table) {
