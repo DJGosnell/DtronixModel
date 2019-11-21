@@ -42,11 +42,11 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
 Source: {#MainBinaryName}; DestDir: "{app}"; Flags: ignoreversion
-Source: "DtronixModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DtronixModeler.dll"; DestDir: "{app}"
-Source: "DtronixModeler.runtimeconfig.json"; DestDir: "{app}"
-Source: "System.Data.SQLite.dll"; DestDir: "{app}"
-Source: "runtimes\*"; DestDir: "{app}runtimes\"; Flags: ignoreversion recursesubdirs
+Source: "*.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "*.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "*.deps.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "runtimes\win-x86\*"; DestDir: "{app}\runtimes\win-x86\"; Flags: ignoreversion recursesubdirs
+Source: "runtimes\win-x64\*"; DestDir: "{app}\runtimes\win-x64\"; Flags: ignoreversion recursesubdirs
 
 [Icons]
 Name: "{group}\DtronixModeler"; Filename: "{app}\{#MainBinaryName}"
