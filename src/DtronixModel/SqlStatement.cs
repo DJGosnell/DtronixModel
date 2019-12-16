@@ -157,6 +157,9 @@ namespace DtronixModel
             if (_mode != Mode.Execute)
                 throw new InvalidOperationException("Need to be in Execute mode to use this method.");
 
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
+
             _command.Parameters.Clear();
             _command.CommandText = SqlBindParameters(sql, binding);
 
@@ -207,6 +210,9 @@ namespace DtronixModel
             if (_mode != Mode.Execute)
                 throw new InvalidOperationException("Need to be in Execute mode to use this method.");
 
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
+
             _command.Parameters.Clear();
             _command.CommandText = SqlBindParameters(sql, binding);
 
@@ -255,6 +261,9 @@ namespace DtronixModel
             if (_mode == Mode.Execute)
                 throw new InvalidOperationException("Can not use all functions in Execute mode.");
 
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
+
             _sqlRows = models;
             await ExecuteAsync(cancellationToken);
             _command.Dispose();
@@ -292,6 +301,9 @@ namespace DtronixModel
             if (_mode == Mode.Execute)
                 throw new InvalidOperationException("Can not use all functions in Execute mode.");
 
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
+
             WhereIn(new T().GetPKName(), primaryIds.Cast<object>().ToArray());
             await ExecuteAsync(cancellationToken);
         }
@@ -305,6 +317,9 @@ namespace DtronixModel
         {
             if (_mode == Mode.Execute)
                 throw new InvalidOperationException("Can not use all functions in Execute mode.");
+
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
 
             Where(models);
 
@@ -483,6 +498,9 @@ namespace DtronixModel
             if (_mode == Mode.Execute)
                 throw new InvalidOperationException("Can not use all functions in Execute mode.");
 
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
+
             if (_mode == Mode.Update)
             {
 
@@ -546,6 +564,9 @@ namespace DtronixModel
 
             if (_mode != Mode.Select)
                 throw new InvalidOperationException("Can not fetch from the server when not in SELECT mode.");
+
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
 
             BuildSql(null);
             T model;
@@ -636,6 +657,9 @@ namespace DtronixModel
 
             if (_mode != Mode.Select)
                 throw new InvalidOperationException("Can not fetch from the server when not in SELECT mode.");
+
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
 
             if (query == null)
                 BuildSql(null);
@@ -827,6 +851,9 @@ namespace DtronixModel
 
             if (_mode != Mode.Insert)
                 throw new InvalidOperationException("Can not insert when statement is not in INSERT mode.");
+
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
 
             var columns = models[0].GetColumns();
 

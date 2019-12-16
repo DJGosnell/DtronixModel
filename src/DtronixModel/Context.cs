@@ -76,13 +76,18 @@ namespace DtronixModel
         /// <summary>
         /// The connection that this context tables will use.
         /// </summary>
-        public DbConnection Connection;
+        public DbConnection Connection { get; private set; }
 
 
         /// <summary>
         /// Retrieves the current transaction if one exists for this context.  Null otherwise.
         /// </summary>
         public SqlTransaction Transaction { get; private set; }
+
+        /// <summary>
+        /// Set to the level of debugging to output.
+        /// </summary>
+        public DebugLevel Debug { get; set; } = DebugLevel.None;
 
         /// <summary>
         /// Select string to be appended and read from insert queries to retrieve the newly inserted row's id.
@@ -104,15 +109,9 @@ namespace DtronixModel
         {
             if (connectionCallback == null)
                 throw new Exception("No default connection has been specified for this type context.");
-
             LastInsertIdQuery = lastInsertIdQuery;
+
             Connection = connectionCallback();
-
-            if (Connection.State == ConnectionState.Closed)
-                Connection.Open();
-
-            if (Connection == null)
-                throw new InvalidOperationException("Default connection lambda does not return a valid connection.");
 
             OwnedConnection = true;
         }
@@ -130,9 +129,27 @@ namespace DtronixModel
         }
 
         /// <summary>
-        /// Set to the level of debugging to output.
+        /// Opens the context to the database for usage.
         /// </summary>
-        public DebugLevel Debug { get; set; } = DebugLevel.None;
+        public void Open()
+        {
+            var openTask = OpenAsync(CancellationToken.None);
+            openTask.Wait();
+        }
+
+        /// <summary>
+        /// Opens the context to the database for usage asynchronously.
+        /// </summary>
+        public async Task OpenAsync(CancellationToken cancellationToken = default)
+        {
+            if (Connection.State == ConnectionState.Open)
+                return;
+
+            await Connection.OpenAsync(cancellationToken);
+
+            if (Connection == null)
+                throw new InvalidOperationException("Default connection lambda does not return a valid connection.");
+        }
 
         /// <summary>
         /// Releases any connection resources.
