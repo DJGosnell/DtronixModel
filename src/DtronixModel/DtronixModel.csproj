@@ -2,11 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>1.5</Version>
+    <Version>1.6</Version>
     <Description>Small .NET tool aiding in sql data modeling and simple CRUD</Description>
     <Company>Dtronix</Company>
     <Product>Dtronix Database Modeler</Product>
-    <Copyright>Copyright © Dtronix 2019</Copyright>
+    <Copyright>Copyright © Dtronix 2020</Copyright>
     <Authors>DJGosnell</Authors>
     <PackageProjectUrl>https://github.com/Dtronix/DtronixModel</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Dtronix/DtronixModel</RepositoryUrl>
@@ -17,8 +17,20 @@
   <ItemGroup>
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\DtronixModeler\Xaml\Images\database_blue32.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
   <PropertyGroup>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageTags>model modeling dtronix sql</PackageTags>
+    <PackageIcon>database_blue32.png</PackageIcon>
+    <PackageIconUrl />
+    <AssemblyVersion>1.6.0.0</AssemblyVersion>
+    <FileVersion>1.6.0.0</FileVersion>
   </PropertyGroup>
 
 </Project>

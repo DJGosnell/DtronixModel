@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
 using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DtronixModel
 {
@@ -174,6 +176,39 @@ namespace DtronixModel
         public void QueryRead(string sql, object[] binding, Action<DbDataReader> onRead)
         {
             new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this).QueryRead(sql, binding, onRead);
+        }
+
+        /// <summary>
+        /// Executes a string on the specified database.
+        /// Will close the command after execution.
+        /// </summary>
+        /// <param name="sql">SQL to execute with parameters in string.format style.</param>
+        /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The number of rows affected.</returns>
+        public async Task<int> QueryAsync(string sql, object[] binding, CancellationToken cancellationToken = default)
+        {
+            return await new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this)
+                .QueryAsync(sql, binding, cancellationToken);
+        }
+
+        /// <summary>
+        /// Executes a string on the specified database and calls calls method with the reader.
+        /// Will close the command after execution.
+        /// </summary>
+        /// <param name="sql">SQL to execute with parameters in string.format style.</param>
+        /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
+        /// <param name="onRead">Called when the query has been executed and reader created.</param>
+        /// <param name="cancellationToken">>Cancellation token.</param>
+        /// <returns>The number of rows affected.</returns>
+        public async Task QueryReadAsync(
+            string sql, 
+            object[] binding,
+            Func<DbDataReader, CancellationToken, Task> onRead,
+            CancellationToken cancellationToken = default)
+        {
+            await new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this)
+                .QueryReadAsync(sql, binding, onRead, cancellationToken);
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.IO;
 using DtronixModel;
 using System.Reflection;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace DtronixModelTests.Sqlite
 {
@@ -33,7 +34,17 @@ namespace DtronixModelTests.Sqlite
             {
                 username = "user_name" + append,
                 password = "my_hashed_password" + append,
-                last_logged = Converters.ToUnixTimeSeconds(new DateTimeOffset(2014, 11, 25, 0, 0, 0, TimeSpan.Zero))
+                last_logged = new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero).ToUnixTimeSeconds()
+            });
+        }
+
+        private async Task<long> CreateUserAsync(TestDatabaseContext context, string append = null)
+        {
+            return await context.Users.InsertAsync(new Users
+            {
+                username = "user_name" + append,
+                password = "my_hashed_password" + append,
+                last_logged = new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero).ToUnixTimeSeconds()
             });
         }
 
@@ -45,6 +56,19 @@ namespace DtronixModelTests.Sqlite
                 CreateUser(context);
                 var user = context.Users.Select().ExecuteFetch();
                 Assert.NotNull(user);
+            }
+        }
+
+        [Test]
+        public async Task SelectedRowsAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                await CreateUserAsync(context);
+                await CreateUserAsync(context);
+                var users = await context.Users.Select().ExecuteFetchAllAsync();
+
+                Assert.AreEqual(2, users.Length);
             }
         }
 
@@ -71,7 +95,22 @@ namespace DtronixModelTests.Sqlite
 
                 Assert.AreEqual("user_name", user.username);
                 Assert.AreEqual(new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero),
-                    Converters.FromUnixTimeSeconds(user.last_logged));
+                    DateTimeOffset.FromUnixTimeSeconds(user.last_logged));
+                Assert.Null(user.password);
+            }
+        }
+
+        [Test]
+        public async Task SelectedSpecifiedRowsAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                await CreateUserAsync(context);
+                var user = await context.Users.Select("username, last_logged").ExecuteFetchAsync();
+
+                Assert.AreEqual("user_name", user.username);
+                Assert.AreEqual(new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero),
+                    DateTimeOffset.FromUnixTimeSeconds(user.last_logged));
                 Assert.Null(user.password);
             }
         }
@@ -92,6 +131,22 @@ namespace DtronixModelTests.Sqlite
             }
         }
 
+        [Test]
+        public async Task SelectedLimitCountAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                await CreateUserAsync(context, "1");
+                await CreateUserAsync(context, "2");
+                await CreateUserAsync(context, "3");
+                var users = await context.Users.Select().Limit(2).ExecuteFetchAllAsync();
+
+                Assert.AreEqual(2, users.Length);
+                Assert.AreEqual("user_name1", users[0].username);
+                Assert.AreEqual("user_name2", users[1].username);
+            }
+        }
+
 
         [Test]
         public void SelectedLimitCountStart()
@@ -103,6 +158,23 @@ namespace DtronixModelTests.Sqlite
                 CreateUser(context, "3");
                 CreateUser(context, "4");
                 var users = context.Users.Select().Limit(2, 1).ExecuteFetchAll();
+
+                Assert.AreEqual(2, users.Length);
+                Assert.AreEqual("user_name2", users[0].username);
+                Assert.AreEqual("user_name3", users[1].username);
+            }
+        }
+
+        [Test]
+        public async Task SelectedLimitCountStartAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                await CreateUserAsync(context, "1");
+                await CreateUserAsync(context, "2");
+                await CreateUserAsync(context, "3");
+                await CreateUserAsync(context, "4");
+                var users = await context.Users.Select().Limit(2, 1).ExecuteFetchAllAsync();
 
                 Assert.AreEqual(2, users.Length);
                 Assert.AreEqual("user_name2", users[0].username);
@@ -130,6 +202,27 @@ namespace DtronixModelTests.Sqlite
         }
 
         [Test]
+        public async Task SelectedOrderByDescendingAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                await CreateUserAsync(context, "1");
+                await CreateUserAsync(context, "2");
+                await CreateUserAsync(context, "3");
+                await CreateUserAsync(context, "4");
+                var users = await context.Users.Select()
+                    .OrderBy("username", SortDirection.Descending)
+                    .ExecuteFetchAllAsync();
+
+                Assert.AreEqual(4, users.Length);
+                Assert.AreEqual("user_name4", users[0].username);
+                Assert.AreEqual("user_name3", users[1].username);
+                Assert.AreEqual("user_name2", users[2].username);
+                Assert.AreEqual("user_name1", users[3].username);
+            }
+        }
+
+        [Test]
         public void SelectedWhereModel()
         {
             using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
@@ -140,6 +233,23 @@ namespace DtronixModelTests.Sqlite
                 var userWhere = context.Users.Select().ExecuteFetch();
 
                 var users = context.Users.Select().Where(userWhere).ExecuteFetchAll();
+
+                Assert.AreEqual(1, users.Length);
+                Assert.AreEqual("user_name1", users[0].username);
+            }
+        }
+
+        [Test]
+        public async Task SelectedWhereModelAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                await CreateUserAsync(context, "1");
+                await CreateUserAsync(context, "2");
+
+                var userWhere = await context.Users.Select().ExecuteFetchAsync();
+
+                var users = await context.Users.Select().Where(userWhere).ExecuteFetchAllAsync();
 
                 Assert.AreEqual(1, users.Length);
                 Assert.AreEqual("user_name1", users[0].username);
@@ -166,6 +276,25 @@ namespace DtronixModelTests.Sqlite
         }
 
         [Test]
+        public async Task SelectedWhereModelsAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                await CreateUserAsync(context, "1");
+                await CreateUserAsync(context, "2");
+                await CreateUserAsync(context, "3");
+
+                var usersWhere = await context.Users.Select().Limit(2).ExecuteFetchAllAsync();
+
+                var users = await context.Users.Select().Where(usersWhere).ExecuteFetchAllAsync();
+
+                Assert.AreEqual(2, users.Length);
+                Assert.AreEqual("user_name1", users[0].username);
+                Assert.AreEqual("user_name2", users[1].username);
+            }
+        }
+
+        [Test]
         public void SelectedWhereCustom()
         {
             using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
@@ -183,6 +312,23 @@ namespace DtronixModelTests.Sqlite
         }
 
         [Test]
+        public async Task SelectedWhereCustomAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context, "1");
+                CreateUser(context, "2");
+                CreateUser(context, "3");
+
+                var users = await context.Users.Select().Where("username = {0} AND password = {1}", "user_name1",
+                    "my_hashed_password1").ExecuteFetchAllAsync();
+
+                Assert.AreEqual(1, users.Length);
+                Assert.AreEqual("user_name1", users[0].username);
+            }
+        }
+
+        [Test]
         public void SelectedWhereIn()
         {
             using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
@@ -191,7 +337,28 @@ namespace DtronixModelTests.Sqlite
                 CreateUser(context, "2");
                 CreateUser(context, "3");
 
-                var users = context.Users.Select().WhereIn("username", new object[]{"user_name1", "user_name3"}).ExecuteFetchAll();
+                var users = context.Users.Select()
+                    .WhereIn("username", new object[]{"user_name1", "user_name3"})
+                    .ExecuteFetchAll();
+
+                Assert.AreEqual(2, users.Length);
+                Assert.AreEqual("user_name1", users[0].username);
+                Assert.AreEqual("user_name3", users[1].username);
+            }
+        }
+
+        [Test]
+        public async Task SelectedWhereInAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context, "1");
+                CreateUser(context, "2");
+                CreateUser(context, "3");
+
+                var users = await context.Users.Select()
+                    .WhereIn("username", new object[] { "user_name1", "user_name3" })
+                    .ExecuteFetchAllAsync();
 
                 Assert.AreEqual(2, users.Length);
                 Assert.AreEqual("user_name1", users[0].username);
@@ -212,6 +379,28 @@ namespace DtronixModelTests.Sqlite
                 {
                     int count = 0;
                     while (reader.Read())
+                    {
+                        Assert.AreEqual(1, ++count);
+                        Assert.AreEqual("user_name2", reader.GetString(reader.GetOrdinal("username")));
+                        Assert.AreEqual("my_hashed_password2", reader.GetString(reader.GetOrdinal("password")));
+                    }
+                });
+            }
+        }
+
+        [Test]
+        public async Task QueryTablesAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                await CreateUserAsync(context, "1");
+                await CreateUserAsync(context, "2");
+                await CreateUserAsync(context, "3");
+
+                await context.QueryReadAsync(@"SELECT * FROM Users WHERE username LIKE {0} LIMIT 1", new[] { "%name2" }, async (reader, ct) =>
+                {
+                    int count = 0;
+                    while (await reader.ReadAsync())
                     {
                         Assert.AreEqual(1, ++count);
                         Assert.AreEqual("user_name2", reader.GetString(reader.GetOrdinal("username")));
@@ -255,6 +444,19 @@ namespace DtronixModelTests.Sqlite
         }
 
         [Test]
+        public async Task SelectEmptyTableAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                var user = await context.Users.Select().ExecuteFetchAsync();
+                var users = await context.Users.Select().ExecuteFetchAllAsync();
+
+                Assert.Null(user);
+                Assert.AreEqual(0, users.Length);
+            }
+        }
+
+        [Test]
         public void RowIsCreated()
         {
             using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
@@ -265,7 +467,22 @@ namespace DtronixModelTests.Sqlite
                 Assert.AreNotEqual(0, user.rowid);
                 Assert.AreEqual("user_name", user.username);
                 Assert.AreEqual("my_hashed_password", user.password);
-                Assert.AreEqual(Converters.ToUnixTimeSeconds(new DateTime(2014, 11, 25)), user.last_logged);
+                Assert.AreEqual(new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero).ToUnixTimeSeconds(), user.last_logged);
+            }
+        }
+
+        [Test]
+        public async Task RowIsCreatedAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                await CreateUserAsync(context);
+                var user = await context.Users.Select().ExecuteFetchAsync();
+
+                Assert.AreNotEqual(0, user.rowid);
+                Assert.AreEqual("user_name", user.username);
+                Assert.AreEqual("my_hashed_password", user.password);
+                Assert.AreEqual(new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero).ToUnixTimeSeconds(), user.last_logged);
             }
         }
 
@@ -288,6 +505,24 @@ namespace DtronixModelTests.Sqlite
         }
 
         [Test]
+        public async Task RowIsDeletedByModelAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                await CreateUserAsync(context);
+                var user = await context.Users.Select().ExecuteFetchAsync();
+
+                Assert.NotNull(user);
+
+                await context.Users.DeleteAsync(user);
+
+                user = await context.Users.Select().ExecuteFetchAsync();
+
+                Assert.Null(user);
+            }
+        }
+
+        [Test]
         public void RowIsDeletedByModels()
         {
             using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
@@ -299,9 +534,30 @@ namespace DtronixModelTests.Sqlite
                 Assert.NotNull(users);
                 Assert.AreEqual(2, users.Length);
 
-                context.Users.Delete(users);
+                context.Users.DeleteAsync(users);
 
                 var user = context.Users.Select().ExecuteFetch();
+
+                Assert.Null(user);
+
+            }
+        }
+
+        [Test]
+        public async Task RowIsDeletedByModelsAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                await CreateUserAsync(context);
+                await CreateUserAsync(context);
+                var users = await context.Users.Select().ExecuteFetchAllAsync();
+
+                Assert.NotNull(users);
+                Assert.AreEqual(2, users.Length);
+
+                await context.Users.DeleteAsync(users);
+
+                var user = await context.Users.Select().ExecuteFetchAsync();
 
                 Assert.Null(user);
 
@@ -320,6 +576,24 @@ namespace DtronixModelTests.Sqlite
                 context.Users.Delete(id);
 
                 var user = context.Users.Select().ExecuteFetch();
+
+                Assert.Null(user);
+
+            }
+        }
+
+        [Test]
+        public async Task RowIsDeletedByRowIdAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                long id = await CreateUserAsync(context);
+
+                Assert.AreNotEqual(0, id);
+
+                await context.Users.DeleteAsync(id);
+
+                var user = await context.Users.Select().ExecuteFetchAsync();
 
                 Assert.Null(user);
 
@@ -347,6 +621,27 @@ namespace DtronixModelTests.Sqlite
             }
         }
 
+        [Test]
+        public async Task RowIsDeletedByRowIdsAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                long[] ids = new long[2];
+                ids[0] = await CreateUserAsync(context);
+                ids[1] = await CreateUserAsync(context);
+
+                Assert.AreNotEqual(0, ids[0]);
+                Assert.AreNotEqual(0, ids[1]);
+
+                await context.Users.DeleteAsync(ids);
+
+                var user = await context.Users.Select().ExecuteFetchAsync();
+
+                Assert.Null(user);
+
+            }
+        }
+
 
         [Test]
         public void RowIsUpdated()
@@ -359,6 +654,22 @@ namespace DtronixModelTests.Sqlite
                 context.Users.Update(user);
 
                 user = context.Users.Select().ExecuteFetch();
+
+                Assert.AreEqual("MyNewUsername", user.username);
+            }
+        }
+
+        [Test]
+        public async Task RowIsUpdatedAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+                var user = await context.Users.Select().ExecuteFetchAsync();
+                user.username = "MyNewUsername";
+                await context.Users.UpdateAsync(user);
+
+                user = await context.Users.Select().ExecuteFetchAsync();
 
                 Assert.AreEqual("MyNewUsername", user.username);
             }
@@ -383,6 +694,28 @@ namespace DtronixModelTests.Sqlite
                 Assert.AreEqual("MyNewUsernameSecond", users[1].username);
             }
         }
+
+
+        [Test]
+        public async Task RowsAreUpdatedAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                await CreateUserAsync(context);
+                await CreateUserAsync(context);
+
+                var users = await context.Users.Select().ExecuteFetchAllAsync();
+                users[0].username = "MyNewUsernameFirst";
+                users[1].username = "MyNewUsernameSecond";
+                await context.Users.UpdateAsync(users);
+
+                users = await context.Users.Select().ExecuteFetchAllAsync();
+
+                Assert.AreEqual("MyNewUsernameFirst", users[0].username);
+                Assert.AreEqual("MyNewUsernameSecond", users[1].username);
+            }
+        }
+
 
         [Test]
         public void RowForeignKeyAssociationAccess()
@@ -536,6 +869,23 @@ namespace DtronixModelTests.Sqlite
         }
 
         [Test]
+        public async Task TransactionRollbackAutoAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                using (var transaction = context.BeginTransaction())
+                {
+                    await CreateUserAsync(context);
+                }
+
+                var user = await context.Users.Select().ExecuteFetchAsync();
+
+                Assert.Null(user);
+
+            }
+        }
+
+        [Test]
         public void TransactionRollbackManual()
         {
             using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
@@ -552,6 +902,25 @@ namespace DtronixModelTests.Sqlite
 
             }
         }
+
+        [Test]
+        public async Task TransactionRollbackManualAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                using (var transaction = context.BeginTransaction())
+                {
+                    await CreateUserAsync(context);
+                    transaction.Rollback();
+                }
+
+                var user = await context.Users.Select().ExecuteFetchAsync();
+
+                Assert.Null(user);
+
+            }
+        }
+
 
         [Test]
         public void TransactionCommit()
@@ -574,22 +943,58 @@ namespace DtronixModelTests.Sqlite
         }
 
         [Test]
+        public async Task TransactionCommitAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                using (var transaction = context.BeginTransaction())
+                {
+                    await CreateUserAsync(context);
+                    transaction.Commit();
+                }
+
+                var user = await context.Users.Select().ExecuteFetchAsync();
+
+                Assert.NotNull(user);
+
+                context.Users.Delete(user);
+
+            }
+        }
+
+        [Test]
         public void TransactionCommitMultipleInserts()
         {
             using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
             {
                 using (var transaction = context.BeginTransaction())
                 {
-                    CreateUser(context);
-                    CreateUser(context);
-                    CreateUser(context);
-                    CreateUser(context);
-                    CreateUser(context);
+                    for (int i = 0; i < 5; i++)
+                        CreateUser(context);                
 
                     transaction.Commit();
                 }
 
                 var users = context.Users.Select().ExecuteFetchAll();
+
+                Assert.AreEqual(5, users.Length);
+            }
+        }
+
+        [Test]
+        public async Task TransactionCommitMultipleInsertsAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                using (var transaction = context.BeginTransaction())
+                {
+                    for (int i = 0; i < 5; i++)
+                        await CreateUserAsync(context);
+
+                    transaction.Commit();
+                }
+
+                var users = await context.Users.Select().ExecuteFetchAllAsync();
 
                 Assert.AreEqual(5, users.Length);
             }
@@ -653,6 +1058,18 @@ namespace DtronixModelTests.Sqlite
             {
                 long id = CreateUser(context);
                 var user = context.Users.Select().ExecuteFetch();
+
+                Assert.AreEqual(id, user.rowid);
+            }
+        }
+
+        [Test]
+        public async Task InsertReturnsNewRowIdAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                long id = await CreateUserAsync(context);
+                var user = await context.Users.Select().ExecuteFetchAsync();
 
                 Assert.AreEqual(id, user.rowid);
             }
@@ -733,6 +1150,20 @@ namespace DtronixModelTests.Sqlite
         }
 
         [Test]
+        public async Task ExecuteFetchAllSpecifiedQueryAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+
+                var users = await context.Users.Select().ExecuteFetchAllAsync("SELECT username FROM Users");
+
+                Assert.AreEqual("user_name", users[0].username);
+                Assert.AreEqual(null, users[0].password);
+            }
+        }
+
+        [Test]
         public void ExecuteFetchAllBindsSpecifiedQuery()
         {
             using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
@@ -741,6 +1172,21 @@ namespace DtronixModelTests.Sqlite
 
                 var users = context.Users.Select()
                     .ExecuteFetchAll("SELECT username FROM Users WHERE username = {0}", new object[] {"user_name"});
+
+                Assert.AreEqual("user_name", users[0].username);
+                Assert.AreEqual(null, users[0].password);
+            }
+        }
+
+        [Test]
+        public async Task ExecuteFetchAllBindsSpecifiedQueryAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+
+                var users = await context.Users.Select()
+                    .ExecuteFetchAllAsync("SELECT username FROM Users WHERE username = {0}", new object[] { "user_name" });
 
                 Assert.AreEqual("user_name", users[0].username);
                 Assert.AreEqual(null, users[0].password);
@@ -757,6 +1203,22 @@ namespace DtronixModelTests.Sqlite
                 var users = context.Users.Select()
                     .Where("user_name = {0}", "1234")
                     .ExecuteFetchAll("SELECT username FROM Users");
+
+                Assert.AreEqual("user_name", users[0].username);
+                Assert.AreEqual(null, users[0].password);
+            }
+        }
+
+        [Test]
+        public async Task ExecuteFetchAllOverridesPreviousMethodsAsync()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+
+                var users = await context.Users.Select()
+                    .Where("user_name = {0}", "1234")
+                    .ExecuteFetchAllAsync("SELECT username FROM Users");
 
                 Assert.AreEqual("user_name", users[0].username);
                 Assert.AreEqual(null, users[0].password);
