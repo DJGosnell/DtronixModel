@@ -514,7 +514,9 @@ namespace DtronixModeler.Xaml
 
         private void _DatabaseExplorer_DatabaseModified(object sender, ExplorerControl.DatabaseEventArgs e)
         {
-            UpdateTitle();
+            // TODO: Investigate new method of checking for changes in the document.
+            //Dispatcher.Invoke(UpdateTitle);
+
         }
 
         private void UpdateTitle()
