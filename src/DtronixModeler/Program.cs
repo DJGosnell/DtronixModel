@@ -160,6 +160,7 @@ namespace DtronixModeler.Generator
 
             input_database.ImplementINotifyPropertyChanged = options.NotifyPropertyChanged;
             input_database.ImplementProtobufNetDataContracts = options.ProtobufDataContracts;
+            input_database.ImplementMessagePackAttributes = options.MessagePackAttributes;
             input_database.ProtobufPackage = options.ProtobufPackage;
 
             // Output SQL file if required.
