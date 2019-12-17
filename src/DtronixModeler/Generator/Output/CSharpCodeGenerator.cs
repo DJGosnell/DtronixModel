@@ -296,10 +296,8 @@ namespace DtronixModeler.Generator.Output
                         sb.AppendLine("            {");
                         if (table.Column[i].DbLength != 0 && table.Column[i].NetType == "String")
                         {
-                            sb.AppendLine(
-                                $"                if(value != null && value.Length > {table.Column[i].DbLength}");
-                            sb.AppendLine(
-                                $"                    throw new ArgumentOutOfRangeException(\" {table.Column[i].Name}\", \"String {table.Column[i].Name} is too long. Max length allowed is {table.Column[i].DbLength} characters. Passed string is \" + value.Length.ToString() + \" characters.\");");
+                            sb.AppendLine($"                if(value != null && value.Length > {table.Column[i].DbLength})");
+                            sb.AppendLine($"                    throw new ArgumentOutOfRangeException(\" {table.Column[i].Name}\", \"String {table.Column[i].Name} is too long. Max length allowed is {table.Column[i].DbLength} characters. Passed string is \" + value.Length.ToString() + \" characters.\");");
                         }
 
                         sb.AppendLine($"                _{table.Column[i].Name} = value;");
