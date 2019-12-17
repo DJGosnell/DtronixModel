@@ -51,6 +51,8 @@ namespace DtronixModeler.Generator
 
         public bool ProtobufDataContracts { get; set; }
 
+        public bool MessagePackAttributes { get; set; }
+
         public CommandOptions() { }
 
         public CommandOptions(string[] args, TextWriter writer)
@@ -76,6 +78,8 @@ namespace DtronixModeler.Generator
                 v => NotifyPropertyChanged = bool.Parse(v));
             option_set.Add("protobufdatacontracts=", "Set to true if protobuf-net data contracts should be implemented.",
                 v => ProtobufDataContracts = bool.Parse(v));
+            option_set.Add("messagepackattributes=", "Set to true if MessagePack attributes should be added.",
+               v => MessagePackAttributes = bool.Parse(v));
 
             option_set.Add("protobuf-package=", "Protobuf package namespace.", v => ProtobufPackage = v ?? "");
 

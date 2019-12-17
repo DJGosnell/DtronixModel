@@ -54,6 +54,8 @@ namespace DtronixModeler.Ddl {
         
         private bool implementProtobufNetDataContractsField;
         
+        private bool implementMessagePackAttributesField;
+        
         private string protobufPackageField;
         
         private string versionField;
@@ -72,6 +74,7 @@ namespace DtronixModeler.Ddl {
             this.outputProtobufField = false;
             this.implementINotifyPropertyChangedField = false;
             this.implementProtobufNetDataContractsField = false;
+            this.implementMessagePackAttributesField = false;
             this.versionField = "0";
         }
         
@@ -343,6 +346,20 @@ namespace DtronixModeler.Ddl {
                 if ((implementProtobufNetDataContractsField.Equals(value) != true)) {
                     this.implementProtobufNetDataContractsField = value;
                     this.OnPropertyChanged("ImplementProtobufNetDataContracts");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool ImplementMessagePackAttributes {
+            get {
+                return this.implementMessagePackAttributesField;
+            }
+            set {
+                if ((implementMessagePackAttributesField.Equals(value) != true)) {
+                    this.implementMessagePackAttributesField = value;
+                    this.OnPropertyChanged("ImplementMessagePackAttributes");
                 }
             }
         }

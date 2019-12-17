@@ -506,6 +506,7 @@
                             <RowDefinition Height="30" />
                             <RowDefinition Height="30" />
                             <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
                             <RowDefinition Height="33*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -559,6 +560,10 @@
                         <CheckBox Grid.Column="3" Grid.Row="4"
                                   IsChecked="{Binding DataContext.ImplementProtobufNetDataContracts, RelativeSource={RelativeSource AncestorType=Window}}"
                                   VerticalAlignment="Center" Content="Implement Protobuf-net DataContracts" />
+
+                        <CheckBox Grid.Column="3" Grid.Row="5"
+                                  IsChecked="{Binding DataContext.ImplementMessagePackAttributes, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  VerticalAlignment="Center" Content="Implement Message Pack Attributes" />
 
                     </Grid>
                 </GroupBox>
