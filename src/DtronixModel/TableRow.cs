@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Runtime.Serialization;
 
 namespace DtronixModel
 {
@@ -24,6 +25,7 @@ namespace DtronixModel
         /// <summary>
         /// Values which are returned but not part of this table.
         /// </summary>
+        [IgnoreDataMember]
         public Dictionary<string, object> AdditionalValues { get; protected set; }
 
         /// <summary>

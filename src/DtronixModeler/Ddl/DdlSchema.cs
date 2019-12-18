@@ -56,6 +56,10 @@ namespace DtronixModeler.Ddl {
         
         private bool implementMessagePackAttributesField;
         
+        private bool implementDataContractMemberOrderField;
+        
+        private bool implementDataContractMemberNameField;
+        
         private string protobufPackageField;
         
         private string versionField;
@@ -75,6 +79,8 @@ namespace DtronixModeler.Ddl {
             this.implementINotifyPropertyChangedField = false;
             this.implementProtobufNetDataContractsField = false;
             this.implementMessagePackAttributesField = false;
+            this.implementDataContractMemberOrderField = false;
+            this.implementDataContractMemberNameField = false;
             this.versionField = "0";
         }
         
@@ -360,6 +366,34 @@ namespace DtronixModeler.Ddl {
                 if ((implementMessagePackAttributesField.Equals(value) != true)) {
                     this.implementMessagePackAttributesField = value;
                     this.OnPropertyChanged("ImplementMessagePackAttributes");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool ImplementDataContractMemberOrder {
+            get {
+                return this.implementDataContractMemberOrderField;
+            }
+            set {
+                if ((implementDataContractMemberOrderField.Equals(value) != true)) {
+                    this.implementDataContractMemberOrderField = value;
+                    this.OnPropertyChanged("ImplementDataContractMemberOrder");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool ImplementDataContractMemberName {
+            get {
+                return this.implementDataContractMemberNameField;
+            }
+            set {
+                if ((implementDataContractMemberNameField.Equals(value) != true)) {
+                    this.implementDataContractMemberNameField = value;
+                    this.OnPropertyChanged("ImplementDataContractMemberName");
                 }
             }
         }

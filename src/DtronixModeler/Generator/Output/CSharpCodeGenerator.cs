@@ -110,10 +110,14 @@ namespace DtronixModeler.Generator.Output
             sb.AppendLine($"using System.Collections.Generic;");
             sb.AppendLine($"using System.Collections;");
             sb.AppendLine($"using DtronixModel;");
+
             if (database.ImplementMessagePackAttributes)
-            {
-                sb.AppendLine("using MessagePack;").AppendLine();
-            }
+                sb.AppendLine("using MessagePack;");
+
+            if (database.ImplementDataContractMemberOrder
+                || database.ImplementDataContractMemberName)
+                sb.AppendLine("using System.Runtime.Serialization;");
+
             sb.AppendLine();
             sb.AppendLine($"namespace {database.Namespace} {{").AppendLine();
             sb.AppendLine();
@@ -227,6 +231,9 @@ namespace DtronixModeler.Generator.Output
                 if (this.database.ImplementMessagePackAttributes)
                     sb.AppendLine($"    [MessagePackObject]");
 
+                if (this.database.ImplementDataContractMemberOrder || database.ImplementDataContractMemberName)
+                    sb.AppendLine($"    [DataContract]");
+
                 sb.Append($"    public partial class {table.Name} : TableRow");
                 if (this.database.ImplementINotifyPropertyChanged)
                     sb.Append(", System.ComponentModel.INotifyPropertyChanged");
@@ -274,6 +281,12 @@ namespace DtronixModeler.Generator.Output
                     if (this.database.ImplementMessagePackAttributes)
                         sb.AppendLine($"        [Key({i})]");
 
+                    if (this.database.ImplementDataContractMemberOrder)
+                        sb.AppendLine($"        [DataMember(Order = {i})]");
+
+                    if (this.database.ImplementDataContractMemberName)
+                        sb.AppendLine($"        [DataMember(Name = \"{table.Column[i].Name}\"))]");
+
                     sb.Append($"        public {ColumnNetType(table.Column[i])} ");
                     if (reservedWords.Contains(table.Column[i].Name))
                         sb.Append("@");
@@ -283,11 +296,15 @@ namespace DtronixModeler.Generator.Output
 
                     if (table.Column[i].IsReadOnly == false
                         || this.database.ImplementProtobufNetDataContracts
-                        || database.ImplementMessagePackAttributes)
+                        || database.ImplementMessagePackAttributes
+                        || database.ImplementDataContractMemberOrder
+                        || database.ImplementDataContractMemberName)
                     {
                         sb.Append("            ");
-                        if ((this.database.ImplementProtobufNetDataContracts ||
-                             database.ImplementMessagePackAttributes) && table.Column[i].IsReadOnly)
+                        if ((database.ImplementProtobufNetDataContracts
+                             || database.ImplementMessagePackAttributes
+                             || database.ImplementDataContractMemberOrder
+                             || database.ImplementDataContractMemberName) && table.Column[i].IsReadOnly)
                         {
                             sb.Append("private ");
                         }
@@ -376,6 +393,9 @@ namespace DtronixModeler.Generator.Output
                     {
                         sb.AppendLine($"        [IgnoreMember]");
                     }
+                    if (database.ImplementDataContractMemberOrder
+                        || database.ImplementDataContractMemberName)
+                        sb.AppendLine($"        [IgnoreDataMember]");
 
                     sb.AppendLine($"        public {fieldType} {assoc.OtherAssociationName}");
                     sb.AppendLine($"        {{");

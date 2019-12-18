@@ -53,6 +53,10 @@ namespace DtronixModeler.Generator
 
         public bool MessagePackAttributes { get; set; }
 
+        public bool DataContractMemberName { get; set; }
+
+        public bool DataContractMemberOrder { get; set; }
+
         public CommandOptions() { }
 
         public CommandOptions(string[] args, TextWriter writer)
@@ -80,6 +84,10 @@ namespace DtronixModeler.Generator
                 v => ProtobufDataContracts = bool.Parse(v));
             option_set.Add("messagepackattributes=", "Set to true if MessagePack attributes should be added.",
                v => MessagePackAttributes = bool.Parse(v));
+            option_set.Add("datacontractmemberorder=", "Set to true if DataContract attributes should be added with numerical order.",
+                v => DataContractMemberOrder = bool.Parse(v));
+            option_set.Add("datacontractmembername=", "Set to true if DataContract attributes should be added with column names.",
+                v => DataContractMemberName = bool.Parse(v));
 
             option_set.Add("protobuf-package=", "Protobuf package namespace.", v => ProtobufPackage = v ?? "");
 
