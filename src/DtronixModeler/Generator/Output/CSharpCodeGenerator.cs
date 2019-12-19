@@ -256,8 +256,13 @@ namespace DtronixModeler.Generator.Output
                 {
                     sb.AppendLine($"        /// <summary>");
                     sb.AppendLine($"        /// Column name.");
-                    if (string.IsNullOrWhiteSpace(table.Column[i].Description) == false)
-                        sb.AppendLine($"        /// {table.Column[i].Description}");
+                    var description = table.Column[i].Description;
+                    var descriptionLines = description?.Split('\n');
+                    if (string.IsNullOrWhiteSpace(description) == false)
+                    {
+                        foreach (var descriptionLine in descriptionLines)
+                            sb.AppendLine($"        /// {descriptionLine}");
+                    }
 
                     sb.AppendLine("        /// </summary>");
                     sb.AppendLine(
@@ -268,11 +273,12 @@ namespace DtronixModeler.Generator.Output
                     sb.AppendLine($"        /// </summary>");
                     sb.AppendLine($"        private {ColumnNetType(table.Column[i])} _{table.Column[i].Name};");
                     sb.AppendLine($"");
-                    if (string.IsNullOrWhiteSpace(table.Column[i].Description) == false)
+                    if (string.IsNullOrWhiteSpace(description) == false)
                     {
-                        sb.AppendLine("        /// <summary>");
-                        sb.AppendLine($"        /// {table.Column[i].Description}");
-                        sb.AppendLine("        /// </summary>");
+                        sb.AppendLine($"        /// <summary>");
+                        foreach (var descriptionLine in descriptionLines)
+                            sb.AppendLine($"        /// {descriptionLine}");
+                        sb.AppendLine($"        /// </summary>");
                     }
 
                     if (this.database.ImplementProtobufNetDataContracts)
