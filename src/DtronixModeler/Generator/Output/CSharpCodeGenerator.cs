@@ -250,9 +250,48 @@ namespace DtronixModeler.Generator.Output
                     sb.AppendLine($"        /// </summary>");
                     sb.AppendLine($"        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;");
                 }
+                sb.AppendLine();
 
-                sb.AppendLine("");
-                for (int i = 0; i < table.Column.Count(); i++)
+                sb.AppendLine($"        /// <summary>");
+                sb.AppendLine($"        /// Bit array which contains the flags for each table column.");
+                sb.AppendLine($"        /// </summary>");
+
+                var totalColumns = table.Column.Count();
+                if (this.database.ImplementProtobufNetDataContracts)
+                    sb.AppendLine($"        [ProtoBuf.ProtoMember({totalColumns + 1})]");
+
+                if (this.database.ImplementMessagePackAttributes)
+                    sb.AppendLine($"        [Key({totalColumns})]");
+
+                if (this.database.ImplementDataContractMemberOrder)
+                    sb.AppendLine($"        [DataMember(Order = {totalColumns})]");
+
+                if (this.database.ImplementDataContractMemberName)
+                    sb.AppendLine($"        [DataMember(Name = \"ChangedFlags\")]");
+
+                sb.AppendLine($"        public BitArray ChangedFlags {{ get; set; }}");
+                sb.AppendLine();
+
+                sb.AppendLine($"        /// <summary>");
+                sb.AppendLine($"        /// Values which are returned but not part of this table.");
+                sb.AppendLine($"        /// </summary>");
+
+                if (this.database.ImplementProtobufNetDataContracts)
+                    sb.AppendLine($"        [ProtoBuf.ProtoMember({totalColumns + 2})]");
+
+                if (this.database.ImplementMessagePackAttributes)
+                    sb.AppendLine($"        [Key({totalColumns + 1})]");
+
+                if (this.database.ImplementDataContractMemberOrder)
+                    sb.AppendLine($"        [DataMember(Order = {totalColumns + 1})]");
+
+                if (this.database.ImplementDataContractMemberName)
+                    sb.AppendLine($"        [DataMember(Name = \"AdditionalValues\")]");
+
+                sb.AppendLine($"        public Dictionary<string, object> AdditionalValues {{ get; set; }}");
+                sb.AppendLine();
+
+                for (int i = 0; i < totalColumns; i++)
                 {
                     sb.AppendLine($"        /// <summary>");
                     sb.AppendLine($"        /// Column name.");
@@ -291,7 +330,7 @@ namespace DtronixModeler.Generator.Output
                         sb.AppendLine($"        [DataMember(Order = {i})]");
 
                     if (this.database.ImplementDataContractMemberName)
-                        sb.AppendLine($"        [DataMember(Name = \"{table.Column[i].Name}\"))]");
+                        sb.AppendLine($"        [DataMember(Name = \"{table.Column[i].Name}\")]");
 
                     sb.Append($"        public {ColumnNetType(table.Column[i])} ");
                     if (reservedWords.Contains(table.Column[i].Name))

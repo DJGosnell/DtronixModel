@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
-using System.Runtime.Serialization;
 
 namespace DtronixModel
 {
@@ -13,20 +12,9 @@ namespace DtronixModel
     public abstract class TableRow
     {
         /// <summary>
-        /// Bit array which contains the flags for each table column
-        /// </summary>
-        protected BitArray ChangedFlags;
-
-        /// <summary>
         /// Database Context for this class
         /// </summary>
         protected Context Context;
-
-        /// <summary>
-        /// Values which are returned but not part of this table.
-        /// </summary>
-        [IgnoreDataMember]
-        public Dictionary<string, object> AdditionalValues { get; protected set; }
 
         /// <summary>
         /// Reads from the DbReader the table row information.
@@ -79,13 +67,5 @@ namespace DtronixModel
         /// </summary>
         /// <returns>The value of the primary key.</returns>
         public abstract object GetPKValue();
-
-        /// <summary>
-        /// Resets the flags on the changed values to state that the current value has not been changed.
-        /// </summary>
-        public void ResetChangedFlags()
-        {
-            ChangedFlags.SetAll(false);
-        }
     }
 }

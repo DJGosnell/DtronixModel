@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
 using DtronixModel;
 using System.Reflection;
 using NUnit.Framework;
 using System.Threading.Tasks;
+using MessagePack;
 
 namespace DtronixModelTests.Sqlite
 {
@@ -46,6 +48,17 @@ namespace DtronixModelTests.Sqlite
                 password = "my_hashed_password" + append,
                 last_logged = new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero).ToUnixTimeSeconds()
             });
+        }
+
+        private void CompareUsers(Users expected, Users actual)
+        {
+
+            Assert.AreEqual(expected.ChangedFlags, actual.ChangedFlags);
+            Assert.AreEqual(expected.AdditionalValues, actual.AdditionalValues);
+            Assert.AreEqual(expected.last_logged, actual.last_logged);
+            Assert.AreEqual(expected.password, actual.password);
+            Assert.AreEqual(expected.rowid, actual.rowid);
+            Assert.AreEqual(expected.username, actual.username);
         }
 
         [Test]
@@ -1260,10 +1273,66 @@ namespace DtronixModelTests.Sqlite
                 var user = context.Users.Select().ExecuteFetch();
 
                 user.username = "newUsername";
-                user.ResetChangedFlags();
+                user.ChangedFlags.SetAll(false);
 
                 Assert.AreEqual(false, user.IsChanged());
                 Assert.AreEqual(0, user.GetChangedValues().Count);
+            }
+        }
+
+        [Test]
+        public void MessagePackSerializeAllValues()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+                var user = context.Users.Select().ExecuteFetch();
+
+                var data = MessagePackSerializer.Serialize(user);
+                var deserializedUser = MessagePackSerializer.Deserialize<Users>(data);
+
+                CompareUsers(user, deserializedUser);
+            }
+        }
+
+        [Test]
+        public void MessagePackSerializeTracksChanges()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+                var user = context.Users.Select().ExecuteFetch();
+
+                user.ChangedFlags.SetAll(false);
+
+                user.username = "Second User";
+
+                var data = MessagePackSerializer.Serialize(user);
+                var deserializedUser = MessagePackSerializer.Deserialize<Users>(data);
+
+
+                CompareUsers(user, deserializedUser);
+            }
+        }
+
+        [Test]
+        public void MessagePackSerializesAdditionalValues()
+        {
+            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            {
+                CreateUser(context);
+                var user = context.Users.Select().ExecuteFetch();
+
+                user.AdditionalValues = new Dictionary<string, object>
+                {
+                    {"value1", "this is the stored data"}
+                };
+
+                var data = MessagePackSerializer.Serialize(user);
+                var deserializedUser = MessagePackSerializer.Deserialize<Users>(data);
+
+
+                CompareUsers(user, deserializedUser);
             }
         }
     }
