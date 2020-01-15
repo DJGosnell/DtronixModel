@@ -153,7 +153,7 @@ namespace DtronixModel
         {
             using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Update, _context))
             {
-                await statement.UpdateAsync(models);
+                await statement.UpdateAsync(models, cancellationToken);
             }
         }
 
