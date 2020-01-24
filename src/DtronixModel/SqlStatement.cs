@@ -242,6 +242,20 @@ namespace DtronixModel
         }
 
         /// <summary>
+        /// Begins selection process and the specifies columns to return from the database.
+        /// </summary>
+        /// <param name="select">Array of columns to select.</param>
+        /// <returns>Current statement for chaining.</returns>
+        public SqlStatement<T> Select(string[] select)
+        {
+            if (_mode == Mode.Execute)
+                throw new InvalidOperationException("Can not use all functions in Execute mode.");
+
+            _sqlSelect = string.Join(", ", select);
+            return this;
+        }
+
+        /// <summary>
         /// Updates the specified rows in the database. The rows must have their primary keys set.
         /// </summary>
         /// <param name="models">Rows to update with their new values.</param>

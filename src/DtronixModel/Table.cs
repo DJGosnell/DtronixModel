@@ -32,6 +32,16 @@ namespace DtronixModel
         }
 
         /// <summary>
+        /// Begins a select query. Ensure to dispose of SqlStatement
+        /// </summary>
+        /// <param name="select"></param>
+        /// <returns>SqlStatement to chain up following query modifiers.</returns>
+        public SqlStatement<T> Select(params string[] select)
+        {
+            return new SqlStatement<T>(SqlStatement<T>.Mode.Select, _context).Select(select);
+        }
+
+        /// <summary>
         /// Inserts a single row into the database.
         /// </summary>
         /// <param name="model">Row to insert.</param>
