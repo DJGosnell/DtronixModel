@@ -107,7 +107,7 @@ namespace DtronixModel
         {
             using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Insert, _context))
             {
-                return await statement.InsertAsync(model);
+                return await statement.InsertAsync(model, cancellationToken);
             }
         }
 
