@@ -723,9 +723,9 @@ namespace DtronixModel
 
                     var changedFields = model.GetChangedValues();
 
-                    // If there are no fields to update, then do nothing.
+                    // If there are no fields to update, then why are we updating?.
                     if (changedFields.Count == 0)
-                        sql.Clear();
+                        throw new InvalidOperationException("Could not update rows as no values have changed.");
 
                     foreach (var field in changedFields)
                         sql.Append(field.Key).Append(" = ").Append(BindParameter(field.Value)).Append(", ");
