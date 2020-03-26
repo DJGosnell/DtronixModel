@@ -347,7 +347,7 @@ namespace DtronixModel
         /// <param name="column">Column to match against.</param>
         /// <param name="values">Values to check against the specified column.</param>
         /// <returns>Current statement for chaining.</returns>
-        public SqlStatement<T> WhereIn(string column, object[] values)
+        public SqlStatement<T> WhereIn<T2>(string column, T2[] values)
         {
             ValidateWhere();
 
@@ -365,7 +365,7 @@ namespace DtronixModel
 
             return this;
         }
-
+        
         /// <summary>
         /// Sets where to the provided rows's primary key.
         /// </summary>
