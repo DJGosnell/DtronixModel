@@ -222,7 +222,7 @@ namespace DtronixModel
         /// <param name="cancellationToken">Cancellation token.</param>
         public async Task DeleteAsync(T model, CancellationToken cancellationToken = default)
         {
-            await DeleteAsync(new[] { model });
+            await DeleteAsync(new[] { model }, cancellationToken);
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace DtronixModel
         {
             using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Delete, _context))
             {
-                await statement.DeleteAsync(models);
+                await statement.DeleteAsync(models, cancellationToken);
             }
         }
 
@@ -245,7 +245,7 @@ namespace DtronixModel
         /// <param name="cancellationToken">Cancellation token.</param>
         public async Task DeleteAsync(long id, CancellationToken cancellationToken = default)
         {
-            await DeleteAsync(new[] { id });
+            await DeleteAsync(new[] { id }, cancellationToken);
         }
 
         /// <summary>
@@ -257,7 +257,7 @@ namespace DtronixModel
         {
             using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Delete, _context))
             {
-                await statement.DeleteAsync(ids);
+                await statement.DeleteAsync(ids, cancellationToken);
             }
         }
     }
