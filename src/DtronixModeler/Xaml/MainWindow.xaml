@@ -509,6 +509,7 @@
                             <RowDefinition Height="30" />
                             <RowDefinition Height="30" />
                             <RowDefinition Height="30" />
+                            <RowDefinition Height="30" />
                             <RowDefinition Height="33*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -566,13 +567,18 @@
                         <CheckBox Grid.Column="3" Grid.Row="5"
                                   IsChecked="{Binding DataContext.ImplementMessagePackAttributes, RelativeSource={RelativeSource AncestorType=Window}}"
                                   VerticalAlignment="Center" Content="Implement Message Pack Attributes" />
-
+                        
                         <CheckBox Grid.Column="3" Grid.Row="6"
+                                  IsChecked="{Binding DataContext.ImplementSystemTextJsonAttributes, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  ToolTip="Implements the System.Text.Json.Serialization attributes."
+                                  VerticalAlignment="Center" Content="Implement System.Text.Json Attributes" />
+
+                        <CheckBox Grid.Column="3" Grid.Row="7"
                                   IsChecked="{Binding DataContext.ImplementDataContractMemberOrder, RelativeSource={RelativeSource AncestorType=Window}}"
                                   ToolTip="Creates DataContract attributes on each table as well as DataMembers on each column with an incrementing number as the order value."
                                   VerticalAlignment="Center" Content="Implement DataContract (Order)" />
 
-                        <CheckBox Grid.Column="3" Grid.Row="7"
+                        <CheckBox Grid.Column="3" Grid.Row="8"
                                   IsChecked="{Binding DataContext.ImplementDataContractMemberName, RelativeSource={RelativeSource AncestorType=Window}}"
                                   ToolTip="Creates DataContract attributes on each table as well as DataMembers on each column with the column names as the value."
                                   VerticalAlignment="Center" Content="Implement DataContract (Name)" />

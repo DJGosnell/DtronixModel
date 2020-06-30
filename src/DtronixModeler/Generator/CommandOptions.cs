@@ -53,6 +53,8 @@ namespace DtronixModeler.Generator
 
         public bool MessagePackAttributes { get; set; }
 
+        public bool SystemTextJsonAttributes { get; set; }
+
         public bool DataContractMemberName { get; set; }
 
         public bool DataContractMemberOrder { get; set; }
@@ -80,12 +82,19 @@ namespace DtronixModeler.Generator
 
             option_set.Add("notifypropertychanged=", "Set to true if the INotifyPropertyChanged class should be implemented.",
                 v => NotifyPropertyChanged = bool.Parse(v));
+
             option_set.Add("protobufdatacontracts=", "Set to true if protobuf-net data contracts should be implemented.",
                 v => ProtobufDataContracts = bool.Parse(v));
+
             option_set.Add("messagepackattributes=", "Set to true if MessagePack attributes should be added.",
                v => MessagePackAttributes = bool.Parse(v));
+
+            option_set.Add("systemtextjsonattributes=", "Set to true if System.Text.Json attributes should be added.",
+                v => SystemTextJsonAttributes = bool.Parse(v)); 
+
             option_set.Add("datacontractmemberorder=", "Set to true if DataContract attributes should be added with numerical order.",
                 v => DataContractMemberOrder = bool.Parse(v));
+
             option_set.Add("datacontractmembername=", "Set to true if DataContract attributes should be added with column names.",
                 v => DataContractMemberName = bool.Parse(v));
 

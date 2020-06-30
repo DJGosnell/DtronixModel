@@ -119,7 +119,10 @@ namespace DtronixModeler.Generator.Output
             sb.AppendLine($"using DtronixModel;");
 
             if (database.ImplementMessagePackAttributes)
-                sb.AppendLine("using MessagePack;");
+                sb.AppendLine("using MessagePack;"); 
+            
+            if (database.ImplementSystemTextJsonAttributes)
+                sb.AppendLine("using System.Text.Json.Serialization;");
 
             if (database.ImplementDataContractMemberOrder
                 || database.ImplementDataContractMemberName)
@@ -427,20 +430,14 @@ namespace DtronixModeler.Generator.Output
                         fieldType += "[]";
                     }
 
-                    string fetchType;
-
-                    if (assoc.OtherCardinality == Cardinality.Many)
-                    {
-                        fetchType = "ExecuteFetchAll();";
-                    }
-                    else
-                    {
-                        fetchType = "ExecuteFetch();";
-                    }
+                    var fetchType = assoc.OtherCardinality == Cardinality.Many ? "ExecuteFetchAll();" : "ExecuteFetch();";
 
                     sb.AppendLine($"        private {fieldType} _{assoc.OtherAssociationName};");
 
-                    if (this.database.ImplementMessagePackAttributes 
+                    if (database.ImplementSystemTextJsonAttributes)
+                        sb.AppendLine($"        [JsonIgnore]");
+
+                    if (database.ImplementMessagePackAttributes 
                         || database.ImplementProtobufNetDataContracts)
                     {
                         sb.AppendLine($"        [IgnoreMember]");

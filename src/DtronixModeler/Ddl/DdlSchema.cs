@@ -56,6 +56,8 @@ namespace DtronixModeler.Ddl {
         
         private bool implementMessagePackAttributesField;
         
+        private bool implementSystemTextJsonAttributesField;
+        
         private bool implementDataContractMemberOrderField;
         
         private bool implementDataContractMemberNameField;
@@ -79,6 +81,7 @@ namespace DtronixModeler.Ddl {
             this.implementINotifyPropertyChangedField = false;
             this.implementProtobufNetDataContractsField = false;
             this.implementMessagePackAttributesField = false;
+            this.implementSystemTextJsonAttributesField = false;
             this.implementDataContractMemberOrderField = false;
             this.implementDataContractMemberNameField = false;
             this.versionField = "0";
@@ -366,6 +369,20 @@ namespace DtronixModeler.Ddl {
                 if ((implementMessagePackAttributesField.Equals(value) != true)) {
                     this.implementMessagePackAttributesField = value;
                     this.OnPropertyChanged("ImplementMessagePackAttributes");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool ImplementSystemTextJsonAttributes {
+            get {
+                return this.implementSystemTextJsonAttributesField;
+            }
+            set {
+                if ((implementSystemTextJsonAttributesField.Equals(value) != true)) {
+                    this.implementSystemTextJsonAttributesField = value;
+                    this.OnPropertyChanged("ImplementSystemTextJsonAttributes");
                 }
             }
         }

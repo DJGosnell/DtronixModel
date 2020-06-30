@@ -162,6 +162,7 @@ namespace DtronixModeler.Xaml
                 InputType = CommandOptions.InType.Ddl,
                 ProtobufDataContracts = database.ImplementProtobufNetDataContracts,
                 MessagePackAttributes = database.ImplementMessagePackAttributes,
+                SystemTextJsonAttributes = database.ImplementSystemTextJsonAttributes,
                 DataContractMemberOrder = database.ImplementDataContractMemberOrder,
                 DataContractMemberName = database.ImplementDataContractMemberName,
                 NotifyPropertyChanged = database.ImplementINotifyPropertyChanged,
