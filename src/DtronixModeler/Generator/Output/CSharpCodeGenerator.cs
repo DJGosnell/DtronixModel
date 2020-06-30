@@ -114,6 +114,8 @@ namespace DtronixModeler.Generator.Output
             sb.AppendLine($"using System.Data.Common;");
             sb.AppendLine($"using System.Collections.Generic;");
             sb.AppendLine($"using System.Collections;");
+            sb.AppendLine($"using System.ComponentModel;");
+            sb.AppendLine($"using System.Runtime.CompilerServices;");
             sb.AppendLine($"using DtronixModel;");
 
             if (database.ImplementMessagePackAttributes)
@@ -245,7 +247,7 @@ namespace DtronixModeler.Generator.Output
 
                 sb.AppendLine();
 
-                sb.AppendLine($" {{");
+                sb.AppendLine($"    {{");
 
                 sb.AppendLine("");
                 if (this.database.ImplementINotifyPropertyChanged)
@@ -707,8 +709,32 @@ namespace DtronixModeler.Generator.Output
                 sb.Append($"            return ");
                 sb.AppendLine(pk_column == null ? "null; " : $"{pk_column.Name}; ");
                 sb.AppendLine($"        }}");
+
+                if (database.ImplementINotifyPropertyChanged)
+                {
+                    sb.AppendLine();
+                    sb.AppendLine("        /// <summary>");
+                    sb.AppendLine("        /// Raises the PropertyChanged event if set.");
+                    sb.AppendLine("        /// </summary>");
+                    sb.AppendLine("        /// <param name=\"name\">Name of the property being raised.  Will default to the current calling property</param>");
+                    sb.AppendLine("        protected void OnPropertyChanged([CallerMemberName] string name = null)");
+                    sb.AppendLine("        {");
+                    sb.AppendLine("            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));");
+                    sb.AppendLine("        }");
+                }
+
+
                 sb.AppendLine($"    }}");
             }
+/*
+ *
+ 
+
+
+
+
+ *
+ */
 
             sb.AppendLine($"}}");
 
