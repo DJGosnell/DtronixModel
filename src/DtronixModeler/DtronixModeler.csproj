@@ -21,7 +21,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.111" />
-    <PackageReference Include="Tools.InnoSetup" Version="6.0.2.1" GeneratePathProperty="true" />
+    <PackageReference Include="Tools.InnoSetup" Version="6.0.5" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>
@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <Target Name="PublishCreateSetup" AfterTargets="Publish">
-    <Exec Command="$(NuGetPackageRoot)Tools.InnoSetup\6.0.3\tools\iscc.exe /q $(PublishDir)setup.iss" />
+    <Exec Command="$(NuGetPackageRoot)Tools.InnoSetup\6.0.5\tools\iscc.exe /q $(PublishDir)setup.iss" />
   </Target>
 
 </Project>
