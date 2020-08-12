@@ -1,7 +1,0 @@
-language: minimal
-before_script:
-  - sudo apt install snapd
-  - sudo snap install dotnet-sdk --classic
-script:
-  - cd src
-  - dotnet-sdk.dotnet test DtronixModelTests
