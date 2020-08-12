@@ -46,11 +46,23 @@ namespace DtronixModeler.Ddl {
         
         private bool outputCsClassesField;
         
+        private bool outputProtobufField;
+        
         private bool implementINotifyPropertyChangedField;
         
         private DbProvider targetDbField;
         
         private bool implementProtobufNetDataContractsField;
+        
+        private bool implementMessagePackAttributesField;
+        
+        private bool implementSystemTextJsonAttributesField;
+        
+        private bool implementDataContractMemberOrderField;
+        
+        private bool implementDataContractMemberNameField;
+        
+        private string protobufPackageField;
         
         private string versionField;
         
@@ -65,8 +77,13 @@ namespace DtronixModeler.Ddl {
             this.tableField = new ObservableCollection<Table>();
             this.outputSqlTablesField = true;
             this.outputCsClassesField = true;
+            this.outputProtobufField = false;
             this.implementINotifyPropertyChangedField = false;
             this.implementProtobufNetDataContractsField = false;
+            this.implementMessagePackAttributesField = false;
+            this.implementSystemTextJsonAttributesField = false;
+            this.implementDataContractMemberOrderField = false;
+            this.implementDataContractMemberNameField = false;
             this.versionField = "0";
         }
         
@@ -289,6 +306,20 @@ namespace DtronixModeler.Ddl {
         
         [System.Xml.Serialization.XmlAttributeAttribute()]
         [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool OutputProtobuf {
+            get {
+                return this.outputProtobufField;
+            }
+            set {
+                if ((outputProtobufField.Equals(value) != true)) {
+                    this.outputProtobufField = value;
+                    this.OnPropertyChanged("OutputProtobuf");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         public bool ImplementINotifyPropertyChanged {
             get {
                 return this.implementINotifyPropertyChangedField;
@@ -324,6 +355,81 @@ namespace DtronixModeler.Ddl {
                 if ((implementProtobufNetDataContractsField.Equals(value) != true)) {
                     this.implementProtobufNetDataContractsField = value;
                     this.OnPropertyChanged("ImplementProtobufNetDataContracts");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool ImplementMessagePackAttributes {
+            get {
+                return this.implementMessagePackAttributesField;
+            }
+            set {
+                if ((implementMessagePackAttributesField.Equals(value) != true)) {
+                    this.implementMessagePackAttributesField = value;
+                    this.OnPropertyChanged("ImplementMessagePackAttributes");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool ImplementSystemTextJsonAttributes {
+            get {
+                return this.implementSystemTextJsonAttributesField;
+            }
+            set {
+                if ((implementSystemTextJsonAttributesField.Equals(value) != true)) {
+                    this.implementSystemTextJsonAttributesField = value;
+                    this.OnPropertyChanged("ImplementSystemTextJsonAttributes");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool ImplementDataContractMemberOrder {
+            get {
+                return this.implementDataContractMemberOrderField;
+            }
+            set {
+                if ((implementDataContractMemberOrderField.Equals(value) != true)) {
+                    this.implementDataContractMemberOrderField = value;
+                    this.OnPropertyChanged("ImplementDataContractMemberOrder");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool ImplementDataContractMemberName {
+            get {
+                return this.implementDataContractMemberNameField;
+            }
+            set {
+                if ((implementDataContractMemberNameField.Equals(value) != true)) {
+                    this.implementDataContractMemberNameField = value;
+                    this.OnPropertyChanged("ImplementDataContractMemberName");
+                }
+            }
+        }
+        
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string ProtobufPackage {
+            get {
+                return this.protobufPackageField;
+            }
+            set {
+                if ((this.protobufPackageField != null)) {
+                    if ((protobufPackageField.Equals(value) != true)) {
+                        this.protobufPackageField = value;
+                        this.OnPropertyChanged("ProtobufPackage");
+                    }
+                }
+                else {
+                    this.protobufPackageField = value;
+                    this.OnPropertyChanged("ProtobufPackage");
                 }
             }
         }

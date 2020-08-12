@@ -2,25 +2,29 @@
 using System.Data.SQLite;
 using System.IO;
 using DtronixModel;
-using System.Reflection;
-using Xunit;
+using NUnit.Framework;
+using System.Threading.Tasks;
+using MessagePack;
+using MessagePack.Resolvers;
 
 namespace DtronixModelTests.Sqlite
 {
     public class ContextSqliteTests
     {
+        private static string _sbSql;
+
         static ContextSqliteTests()
         {
-            TestDatabaseContext.DatabaseType = DtronixModel.Context.TargetDb.Sqlite;
+            TestDatabaseContext.DatabaseType = Context.TargetDb.Sqlite;
+            _sbSql = File.ReadAllText("Sqlite/TestDatabase.sql");
         }
 
-        private TestDatabaseContext CreateContext(string method_name)
+        private TestDatabaseContext CreateContext()
         {
             var connection = new SQLiteConnection("Data Source=:memory:;Version=3;");
             connection.Open();
-
             var context = new TestDatabaseContext(connection);
-            context.Query(Utilities.GetFileContents("Sqlite.TestDatabase.sql"), null);
+            context.Query(_sbSql, null);
 
             return context;
         }
@@ -31,776 +35,1142 @@ namespace DtronixModelTests.Sqlite
             {
                 username = "user_name" + append,
                 password = "my_hashed_password" + append,
-                last_logged = Converters.ToUnixTimeSeconds(new DateTimeOffset(2014, 11, 25, 0, 0, 0, TimeSpan.Zero))
+                last_logged = new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero).ToUnixTimeSeconds()
             });
         }
 
-        [Fact]
+        private async Task<long> CreateUserAsync(TestDatabaseContext context, string append = null)
+        {
+            return await context.Users.InsertAsync(new Users
+            {
+                username = "user_name" + append,
+                password = "my_hashed_password" + append,
+                last_logged = new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero).ToUnixTimeSeconds()
+            });
+        }
+
+        private void CompareUsers(Users expected, Users actual)
+        {
+
+            Assert.AreEqual(expected.ChangedFlags, actual.ChangedFlags);
+            Assert.AreEqual(expected.AdditionalValues, actual.AdditionalValues);
+            Assert.AreEqual(expected.last_logged, actual.last_logged);
+            Assert.AreEqual(expected.password, actual.password);
+            Assert.AreEqual(expected.rowid, actual.rowid);
+            Assert.AreEqual(expected.username, actual.username);
+        }
+
+        [Test]
         public void SelectedRow()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                var user = context.Users.Select().ExecuteFetch();
-                Assert.NotNull(user);
-            }
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
+            Assert.NotNull(user);
         }
 
-        [Fact]
+        [Test]
+        public async Task SelectedRowsAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context);
+            await CreateUserAsync(context);
+            var users = await context.Users.Select().ExecuteFetchAllAsync();
+
+            Assert.AreEqual(2, users.Length);
+        }
+
+        [Test]
         public void SelectedRows()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                CreateUser(context);
-                var users = context.Users.Select().ExecuteFetchAll();
+            using var context = CreateContext();
+            CreateUser(context);
+            CreateUser(context);
+            var users = context.Users.Select().ExecuteFetchAll();
 
-                Assert.Equal(2, users.Length);
-            }
+            Assert.AreEqual(2, users.Length);
         }
 
-        [Fact]
+        [Test]
         public void SelectedSpecifiedRows()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                var user = context.Users.Select("username, last_logged").ExecuteFetch();
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select("username, last_logged").ExecuteFetch();
 
-                Assert.Equal("user_name", user.username);
-                Assert.Equal(new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero),
-                    Converters.FromUnixTimeSeconds(user.last_logged));
-                Assert.Null(user.password);
-            }
+            Assert.AreEqual("user_name", user.username);
+            Assert.AreEqual(new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero),
+                DateTimeOffset.FromUnixTimeSeconds(user.last_logged));
+            Assert.Null(user.password);
         }
 
-        [Fact]
+        [Test]
+        public async Task SelectedSpecifiedRowsAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context);
+            var user = await context.Users.Select("username, last_logged").ExecuteFetchAsync();
+
+            Assert.AreEqual("user_name", user.username);
+            Assert.AreEqual(new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero),
+                DateTimeOffset.FromUnixTimeSeconds(user.last_logged));
+            Assert.Null(user.password);
+        }
+
+        [Test]
         public void SelectedLimitCount()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context, "1");
-                CreateUser(context, "2");
-                CreateUser(context, "3");
-                var users = context.Users.Select().Limit(2).ExecuteFetchAll();
+            using var context = CreateContext();
+            CreateUser(context, "1");
+            CreateUser(context, "2");
+            CreateUser(context, "3");
+            var users = context.Users.Select().Limit(2).ExecuteFetchAll();
 
-                Assert.Equal(2, users.Length);
-                Assert.Equal("user_name1", users[0].username);
-                Assert.Equal("user_name2", users[1].username);
-            }
+            Assert.AreEqual(2, users.Length);
+            Assert.AreEqual("user_name1", users[0].username);
+            Assert.AreEqual("user_name2", users[1].username);
+        }
+
+        [Test]
+        public async Task SelectedLimitCountAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context, "1");
+            await CreateUserAsync(context, "2");
+            await CreateUserAsync(context, "3");
+            var users = await context.Users.Select().Limit(2).ExecuteFetchAllAsync();
+
+            Assert.AreEqual(2, users.Length);
+            Assert.AreEqual("user_name1", users[0].username);
+            Assert.AreEqual("user_name2", users[1].username);
         }
 
 
-        [Fact]
+        [Test]
         public void SelectedLimitCountStart()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context, "1");
-                CreateUser(context, "2");
-                CreateUser(context, "3");
-                CreateUser(context, "4");
-                var users = context.Users.Select().Limit(2, 1).ExecuteFetchAll();
+            using var context = CreateContext();
+            CreateUser(context, "1");
+            CreateUser(context, "2");
+            CreateUser(context, "3");
+            CreateUser(context, "4");
+            var users = context.Users.Select().Limit(2, 1).ExecuteFetchAll();
 
-                Assert.Equal(2, users.Length);
-                Assert.Equal("user_name2", users[0].username);
-                Assert.Equal("user_name3", users[1].username);
-            }
+            Assert.AreEqual(2, users.Length);
+            Assert.AreEqual("user_name2", users[0].username);
+            Assert.AreEqual("user_name3", users[1].username);
         }
 
-        [Fact]
+        [Test]
+        public async Task SelectedLimitCountStartAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context, "1");
+            await CreateUserAsync(context, "2");
+            await CreateUserAsync(context, "3");
+            await CreateUserAsync(context, "4");
+            var users = await context.Users.Select().Limit(2, 1).ExecuteFetchAllAsync();
+
+            Assert.AreEqual(2, users.Length);
+            Assert.AreEqual("user_name2", users[0].username);
+            Assert.AreEqual("user_name3", users[1].username);
+        }
+
+        [Test]
         public void SelectedOrderByDescending()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context, "1");
-                CreateUser(context, "2");
-                CreateUser(context, "3");
-                CreateUser(context, "4");
-                var users = context.Users.Select().OrderBy("username", SortDirection.Descending).ExecuteFetchAll();
+            using var context = CreateContext();
+            CreateUser(context, "1");
+            CreateUser(context, "2");
+            CreateUser(context, "3");
+            CreateUser(context, "4");
+            var users = context.Users.Select().OrderBy("username", SortDirection.Descending).ExecuteFetchAll();
 
-                Assert.Equal(4, users.Length);
-                Assert.Equal("user_name4", users[0].username);
-                Assert.Equal("user_name3", users[1].username);
-                Assert.Equal("user_name2", users[2].username);
-                Assert.Equal("user_name1", users[3].username);
-            }
+            Assert.AreEqual(4, users.Length);
+            Assert.AreEqual("user_name4", users[0].username);
+            Assert.AreEqual("user_name3", users[1].username);
+            Assert.AreEqual("user_name2", users[2].username);
+            Assert.AreEqual("user_name1", users[3].username);
         }
 
-        [Fact]
+        [Test]
+        public async Task SelectedOrderByDescendingAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context, "1");
+            await CreateUserAsync(context, "2");
+            await CreateUserAsync(context, "3");
+            await CreateUserAsync(context, "4");
+            var users = await context.Users.Select()
+                .OrderBy("username", SortDirection.Descending)
+                .ExecuteFetchAllAsync();
+
+            Assert.AreEqual(4, users.Length);
+            Assert.AreEqual("user_name4", users[0].username);
+            Assert.AreEqual("user_name3", users[1].username);
+            Assert.AreEqual("user_name2", users[2].username);
+            Assert.AreEqual("user_name1", users[3].username);
+        }
+
+        [Test]
         public void SelectedWhereModel()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context, "1");
-                CreateUser(context, "2");
+            using var context = CreateContext();
+            CreateUser(context, "1");
+            CreateUser(context, "2");
 
-                var user_where = context.Users.Select().ExecuteFetch();
+            var userWhere = context.Users.Select().ExecuteFetch();
 
-                var users = context.Users.Select().Where(user_where).ExecuteFetchAll();
+            var users = context.Users.Select().Where(userWhere).ExecuteFetchAll();
 
-                Assert.Equal(1, users.Length);
-                Assert.Equal("user_name1", users[0].username);
-            }
+            Assert.AreEqual(1, users.Length);
+            Assert.AreEqual("user_name1", users[0].username);
         }
 
-        [Fact]
+        [Test]
+        public async Task SelectedWhereModelAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context, "1");
+            await CreateUserAsync(context, "2");
+
+            var userWhere = await context.Users.Select().ExecuteFetchAsync();
+
+            var users = await context.Users.Select().Where(userWhere).ExecuteFetchAllAsync();
+
+            Assert.AreEqual(1, users.Length);
+            Assert.AreEqual("user_name1", users[0].username);
+        }
+
+        [Test]
         public void SelectedWhereModels()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context, "1");
-                CreateUser(context, "2");
-                CreateUser(context, "3");
+            using var context = CreateContext();
+            CreateUser(context, "1");
+            CreateUser(context, "2");
+            CreateUser(context, "3");
 
-                var users_where = context.Users.Select().Limit(2).ExecuteFetchAll();
+            var usersWhere = context.Users.Select().Limit(2).ExecuteFetchAll();
 
-                var users = context.Users.Select().Where(users_where).ExecuteFetchAll();
+            var users = context.Users.Select().Where(usersWhere).ExecuteFetchAll();
 
-                Assert.Equal(2, users.Length);
-                Assert.Equal("user_name1", users[0].username);
-                Assert.Equal("user_name2", users[1].username);
-            }
+            Assert.AreEqual(2, users.Length);
+            Assert.AreEqual("user_name1", users[0].username);
+            Assert.AreEqual("user_name2", users[1].username);
         }
 
-        [Fact]
+        [Test]
+        public async Task SelectedWhereModelsAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context, "1");
+            await CreateUserAsync(context, "2");
+            await CreateUserAsync(context, "3");
+
+            var usersWhere = await context.Users.Select().Limit(2).ExecuteFetchAllAsync();
+
+            var users = await context.Users.Select().Where(usersWhere).ExecuteFetchAllAsync();
+
+            Assert.AreEqual(2, users.Length);
+            Assert.AreEqual("user_name1", users[0].username);
+            Assert.AreEqual("user_name2", users[1].username);
+        }
+
+        [Test]
         public void SelectedWhereCustom()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context, "1");
-                CreateUser(context, "2");
-                CreateUser(context, "3");
+            using var context = CreateContext();
+            CreateUser(context, "1");
+            CreateUser(context, "2");
+            CreateUser(context, "3");
 
-                var users = context.Users.Select().Where("username = {0} AND password = {1}", "user_name1",
-                    "my_hashed_password1").ExecuteFetchAll();
+            var users = context.Users.Select().Where("username = {0} AND password = {1}", "user_name1",
+                "my_hashed_password1").ExecuteFetchAll();
 
-                Assert.Equal(1, users.Length);
-                Assert.Equal("user_name1", users[0].username);
-            }
+            Assert.AreEqual(1, users.Length);
+            Assert.AreEqual("user_name1", users[0].username);
         }
 
-        [Fact]
+        [Test]
+        public async Task SelectedWhereCustomAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context, "1");
+            await CreateUserAsync(context, "2");
+            await CreateUserAsync(context, "3");
+
+            var users = await context.Users.Select().Where("username = {0} AND password = {1}", "user_name1",
+                "my_hashed_password1").ExecuteFetchAllAsync();
+
+            Assert.AreEqual(1, users.Length);
+            Assert.AreEqual("user_name1", users[0].username);
+        }
+
+        [Test]
         public void SelectedWhereIn()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context, "1");
-                CreateUser(context, "2");
-                CreateUser(context, "3");
+            using var context = CreateContext();
+            CreateUser(context, "1");
+            CreateUser(context, "2");
+            CreateUser(context, "3");
 
-                var users = context.Users.Select().WhereIn("username", new object[]{"user_name1", "user_name3"}).ExecuteFetchAll();
+            var users = context.Users.Select()
+                .WhereIn("username", new object[]{"user_name1", "user_name3"})
+                .ExecuteFetchAll();
 
-                Assert.Equal(2, users.Length);
-                Assert.Equal("user_name1", users[0].username);
-                Assert.Equal("user_name3", users[1].username);
-            }
+            Assert.AreEqual(2, users.Length);
+            Assert.AreEqual("user_name1", users[0].username);
+            Assert.AreEqual("user_name3", users[1].username);
         }
 
-        [Fact]
+        [Test]
+        public async Task SelectedWhereInAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context, "1");
+            await CreateUserAsync(context, "2");
+            await CreateUserAsync(context, "3");
+
+            var users = await context.Users.Select()
+                .WhereIn("username", new object[] { "user_name1", "user_name3" })
+                .ExecuteFetchAllAsync();
+
+            Assert.AreEqual(2, users.Length);
+            Assert.AreEqual("user_name1", users[0].username);
+            Assert.AreEqual("user_name3", users[1].username);
+        }
+
+        [Test]
         public void QueryTables()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context, "1");
-                CreateUser(context, "2");
-                CreateUser(context, "3");
+            using var context = CreateContext();
+            CreateUser(context, "1");
+            CreateUser(context, "2");
+            CreateUser(context, "3");
 
-                context.QueryRead(@"SELECT * FROM Users WHERE username LIKE {0} LIMIT 1", new[] {"%name2"}, reader =>
+            context.QueryRead(@"SELECT * FROM Users WHERE username LIKE {0} LIMIT 1", new object[] {"%name2"}, reader =>
+            {
+                int count = 0;
+                while (reader.Read())
                 {
-                    int count = 0;
-                    while (reader.Read())
-                    {
-                        Assert.Equal(1, ++count);
-                        Assert.Equal("user_name2", reader.GetString(reader.GetOrdinal("username")));
-                        Assert.Equal("my_hashed_password2", reader.GetString(reader.GetOrdinal("password")));
-                    }
-                });
-            }
+                    Assert.AreEqual(1, ++count);
+                    Assert.AreEqual("user_name2", reader.GetString(reader.GetOrdinal("username")));
+                    Assert.AreEqual("my_hashed_password2", reader.GetString(reader.GetOrdinal("password")));
+                }
+            });
+        }
+
+        [Test]
+        public async Task QueryTablesAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context, "1");
+            await CreateUserAsync(context, "2");
+            await CreateUserAsync(context, "3");
+
+            await context.QueryReadAsync(@"SELECT * FROM Users WHERE username LIKE {0} LIMIT 1", new object[] { "%name2" }, async (reader, ct) =>
+            {
+                int count = 0;
+                while (await reader.ReadAsync(ct))
+                {
+                    Assert.AreEqual(1, ++count);
+                    Assert.AreEqual("user_name2", reader.GetString(reader.GetOrdinal("username")));
+                    Assert.AreEqual("my_hashed_password2", reader.GetString(reader.GetOrdinal("password")));
+                }
+            });
         }
 
 
-        [Fact]
+        [Test]
         public void SelectedOrderByAscending()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context, "1");
-                CreateUser(context, "2");
-                CreateUser(context, "3");
-                CreateUser(context, "4");
-                var users = context.Users.Select().OrderBy("username", SortDirection.Ascending).ExecuteFetchAll();
+            using var context = CreateContext();
+            CreateUser(context, "1");
+            CreateUser(context, "2");
+            CreateUser(context, "3");
+            CreateUser(context, "4");
+            var users = context.Users.Select().OrderBy("username", SortDirection.Ascending).ExecuteFetchAll();
 
-                Assert.Equal(4, users.Length);
-                Assert.Equal("user_name1", users[0].username);
-                Assert.Equal("user_name2", users[1].username);
-                Assert.Equal("user_name3", users[2].username);
-                Assert.Equal("user_name4", users[3].username);
-            }
+            Assert.AreEqual(4, users.Length);
+            Assert.AreEqual("user_name1", users[0].username);
+            Assert.AreEqual("user_name2", users[1].username);
+            Assert.AreEqual("user_name3", users[2].username);
+            Assert.AreEqual("user_name4", users[3].username);
         }
 
-        [Fact]
+        [Test]
         public void SelectEmptyTable()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                var user = context.Users.Select().ExecuteFetch();
-                var users = context.Users.Select().ExecuteFetchAll();
+            using var context = CreateContext();
+            var user = context.Users.Select().ExecuteFetch();
+            var users = context.Users.Select().ExecuteFetchAll();
 
-                Assert.Null(user);
-                Assert.Equal(0, users.Length);
-            }
+            Assert.Null(user);
+            Assert.AreEqual(0, users.Length);
         }
 
-        [Fact]
+        [Test]
+        public async Task SelectEmptyTableAsync()
+        {
+            using var context = CreateContext();
+            var user = await context.Users.Select().ExecuteFetchAsync();
+            var users = await context.Users.Select().ExecuteFetchAllAsync();
+
+            Assert.Null(user);
+            Assert.AreEqual(0, users.Length);
+        }
+
+        [Test]
         public void RowIsCreated()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                var user = context.Users.Select().ExecuteFetch();
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
 
-                Assert.NotEqual(0, user.rowid);
-                Assert.Equal("user_name", user.username);
-                Assert.Equal("my_hashed_password", user.password);
-                Assert.Equal(Converters.ToUnixTimeSeconds(new DateTime(2014, 11, 25)), user.last_logged);
-            }
+            Assert.AreNotEqual(0, user.rowid);
+            Assert.AreEqual("user_name", user.username);
+            Assert.AreEqual("my_hashed_password", user.password);
+            Assert.AreEqual(new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero).ToUnixTimeSeconds(), user.last_logged);
         }
 
-        [Fact]
+        [Test]
+        public async Task RowIsCreatedAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context);
+            var user = await context.Users.Select().ExecuteFetchAsync();
+
+            Assert.AreNotEqual(0, user.rowid);
+            Assert.AreEqual("user_name", user.username);
+            Assert.AreEqual("my_hashed_password", user.password);
+            Assert.AreEqual(new DateTimeOffset(new DateTime(2014, 11, 25), TimeSpan.Zero).ToUnixTimeSeconds(), user.last_logged);
+        }
+
+        [Test]
         public void RowIsDeletedByModel()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                var user = context.Users.Select().ExecuteFetch();
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
 
-                Assert.NotNull(user);
+            Assert.NotNull(user);
 
-                context.Users.Delete(user);
+            context.Users.Delete(user);
 
-                user = context.Users.Select().ExecuteFetch();
+            user = context.Users.Select().ExecuteFetch();
 
-                Assert.Null(user);
-            }
+            Assert.Null(user);
         }
 
-        [Fact]
+        [Test]
+        public async Task RowIsDeletedByModelAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context);
+            var user = await context.Users.Select().ExecuteFetchAsync();
+
+            Assert.NotNull(user);
+
+            await context.Users.DeleteAsync(user);
+
+            user = await context.Users.Select().ExecuteFetchAsync();
+
+            Assert.Null(user);
+        }
+
+        [Test]
         public void RowIsDeletedByModels()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                CreateUser(context);
-                var users = context.Users.Select().ExecuteFetchAll();
+            using var context = CreateContext();
+            CreateUser(context);
+            CreateUser(context);
+            var users = context.Users.Select().ExecuteFetchAll();
 
-                Assert.NotNull(users);
-                Assert.Equal(2, users.Length);
+            Assert.NotNull(users);
+            Assert.AreEqual(2, users.Length);
 
-                context.Users.Delete(users);
+            context.Users.DeleteAsync(users);
 
-                var user = context.Users.Select().ExecuteFetch();
+            var user = context.Users.Select().ExecuteFetch();
 
-                Assert.Null(user);
-
-            }
+            Assert.Null(user);
         }
 
-        [Fact]
+        [Test]
+        public async Task RowIsDeletedByModelsAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context);
+            await CreateUserAsync(context);
+            var users = await context.Users.Select().ExecuteFetchAllAsync();
+
+            Assert.NotNull(users);
+            Assert.AreEqual(2, users.Length);
+
+            await context.Users.DeleteAsync(users);
+
+            var user = await context.Users.Select().ExecuteFetchAsync();
+
+            Assert.Null(user);
+        }
+
+        [Test]
         public void RowIsDeletedByRowId()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                long id = CreateUser(context);
+            using var context = CreateContext();
+            long id = CreateUser(context);
 
-                Assert.NotEqual(0, id);
+            Assert.AreNotEqual(0, id);
 
-                context.Users.Delete(id);
+            context.Users.Delete(id);
 
-                var user = context.Users.Select().ExecuteFetch();
+            var user = context.Users.Select().ExecuteFetch();
 
-                Assert.Null(user);
-
-            }
+            Assert.Null(user);
         }
 
-        [Fact]
+        [Test]
+        public async Task RowIsDeletedByRowIdAsync()
+        {
+            using var context = CreateContext();
+            long id = await CreateUserAsync(context);
+
+            Assert.AreNotEqual(0, id);
+
+            await context.Users.DeleteAsync(id);
+
+            var user = await context.Users.Select().ExecuteFetchAsync();
+
+            Assert.Null(user);
+        }
+
+        [Test]
         public void RowIsDeletedByRowIds()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                long[] ids = new long[2];
-                ids[0] = CreateUser(context);
-                ids[1] = CreateUser(context);
+            using var context = CreateContext();
+            long[] ids = new long[2];
+            ids[0] = CreateUser(context);
+            ids[1] = CreateUser(context);
 
-                Assert.NotEqual(0, ids[0]);
-                Assert.NotEqual(0, ids[1]);
+            Assert.AreNotEqual(0, ids[0]);
+            Assert.AreNotEqual(0, ids[1]);
 
-                context.Users.Delete(ids);
+            context.Users.Delete(ids);
 
-                var user = context.Users.Select().ExecuteFetch();
+            var user = context.Users.Select().ExecuteFetch();
 
-                Assert.Null(user);
+            Assert.Null(user);
+        }
 
-            }
+        [Test]
+        public async Task RowIsDeletedByRowIdsAsync()
+        {
+            using var context = CreateContext();
+            long[] ids = new long[2];
+            ids[0] = await CreateUserAsync(context);
+            ids[1] = await CreateUserAsync(context);
+
+            Assert.AreNotEqual(0, ids[0]);
+            Assert.AreNotEqual(0, ids[1]);
+
+            await context.Users.DeleteAsync(ids);
+
+            var user = await context.Users.Select().ExecuteFetchAsync();
+
+            Assert.Null(user);
         }
 
 
-        [Fact]
+        [Test]
         public void RowIsUpdated()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                var user = context.Users.Select().ExecuteFetch();
-                user.username = "MyNewUsername";
-                context.Users.Update(user);
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
+            user.username = "MyNewUsername";
+            context.Users.Update(user);
 
-                user = context.Users.Select().ExecuteFetch();
+            user = context.Users.Select().ExecuteFetch();
 
-                Assert.Equal<string>("MyNewUsername", user.username);
-            }
+            Assert.AreEqual("MyNewUsername", user.username);
         }
 
-        [Fact]
+        [Test]
+        public async Task RowIsUpdatedAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context);
+            var user = await context.Users.Select().ExecuteFetchAsync();
+            user.username = "MyNewUsername";
+            await context.Users.UpdateAsync(user);
+
+            user = await context.Users.Select().ExecuteFetchAsync();
+
+            Assert.AreEqual("MyNewUsername", user.username);
+        }
+
+        [Test]
         public void RowsAreUpdated()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                CreateUser(context);
+            using var context = CreateContext();
+            CreateUser(context);
+            CreateUser(context);
 
-                var users = context.Users.Select().ExecuteFetchAll();
-                users[0].username = "MyNewUsernameFirst";
-                users[1].username = "MyNewUsernameSecond";
-                context.Users.Update(users);
+            var users = context.Users.Select().ExecuteFetchAll();
+            users[0].username = "MyNewUsernameFirst";
+            users[1].username = "MyNewUsernameSecond";
+            context.Users.Update(users);
 
-                users = context.Users.Select().ExecuteFetchAll();
+            users = context.Users.Select().ExecuteFetchAll();
 
-                Assert.Equal<string>("MyNewUsernameFirst", users[0].username);
-                Assert.Equal<string>("MyNewUsernameSecond", users[1].username);
-            }
+            Assert.AreEqual("MyNewUsernameFirst", users[0].username);
+            Assert.AreEqual("MyNewUsernameSecond", users[1].username);
         }
 
-        [Fact]
+
+        [Test]
+        public async Task RowsAreUpdatedAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context);
+            await CreateUserAsync(context);
+
+            var users = await context.Users.Select().ExecuteFetchAllAsync();
+            users[0].username = "MyNewUsernameFirst";
+            users[1].username = "MyNewUsernameSecond";
+            await context.Users.UpdateAsync(users);
+
+            users = await context.Users.Select().ExecuteFetchAllAsync();
+
+            Assert.AreEqual("MyNewUsernameFirst", users[0].username);
+            Assert.AreEqual("MyNewUsernameSecond", users[1].username);
+        }
+
+
+        [Test]
         public void RowForeignKeyAssociationAccess()
         {
-            long log_rowid = 0;
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            using var context = CreateContext();
+            CreateUser(context);
+
+            var user = context.Users.Select().ExecuteFetch();
+
+            context.Logs.Insert(new Logs
             {
-                CreateUser(context);
+                text = "This is log item 1",
+                Users_rowid = user.rowid
+            });
 
-                var user = context.Users.Select().ExecuteFetch();
+            var log = context.Logs.Select().ExecuteFetch();
 
-                log_rowid = context.Logs.Insert(new Logs
-                {
-                    text = "This is log item 1",
-                    Users_rowid = user.rowid
-                });
+            var userFk = log.User;
 
-                var log = context.Logs.Select().ExecuteFetch();
-
-                var user_fk = log.User;
-
-                Assert.NotNull(user_fk);
-                Assert.Equal(user.rowid, user_fk.rowid);
-                Assert.Equal(user.password, user_fk.password);
-                Assert.Equal(user.username, user_fk.username);
-                Assert.Equal(user.last_logged, user_fk.last_logged);
-            }
-
+            Assert.NotNull(userFk);
+            Assert.AreEqual(user.rowid, userFk.rowid);
+            Assert.AreEqual(user.password, userFk.password);
+            Assert.AreEqual(user.username, userFk.username);
+            Assert.AreEqual(user.last_logged, userFk.last_logged);
         }
 
-        [Fact]
+        [Test]
         public void RowAssociationAccess()
         {
             var logger = new Performancer();
 
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            using var context = CreateContext();
+            logger.Log("Connected to database.");
+
+            CreateUser(context);
+            logger.Log("Created user.");
+
+            var user = context.Users.Select().ExecuteFetch();
+
+            logger.Log("Fetched user.");
+            Logs[] logs = new Logs[200];
+            for (int i = 0; i < logs.Length; i++)
             {
-                logger.Log("Connected to database.");
-
-                CreateUser(context);
-                logger.Log("Created user.");
-
-                var user = context.Users.Select().ExecuteFetch();
-
-                logger.Log("Fetched user.");
-                Logs[] logs = new Logs[200];
-                for (int i = 0; i < logs.Length; i++)
+                logs[i] = new Logs
                 {
-                    logs[i] = new Logs
-                    {
-                        text = "This is log item " + i.ToString(),
-                        Users_rowid = user.rowid
-                    };
-                }
-                context.Logs.Insert(logs);
-                logger.Log("Inserted logs.");
-
-                var logs_assoc = user.Logs;
-                logger.Log("Accessed user/log association.");
-
-                Assert.NotNull(logs_assoc);
-                Assert.Equal("This is log item 0", logs_assoc[0].text);
-                Assert.Equal("This is log item 1", logs_assoc[1].text);
-                logger.OutputTraceLog();
+                    text = "This is log item " + i,
+                    Users_rowid = user.rowid
+                };
             }
+            context.Logs.Insert(logs);
+            logger.Log("Inserted logs.");
 
+            var logsAssoc = user.Logs;
+            logger.Log("Accessed user/log association.");
+
+            Assert.NotNull(logsAssoc);
+            Assert.AreEqual("This is log item 0", logsAssoc[0].text);
+            Assert.AreEqual("This is log item 1", logsAssoc[1].text);
+            logger.OutputTraceLog();
         }
 
-        [Fact]
+        [Test]
         public void RowBaseTypesStoreAndRetrieve()
         {
             var logger = new Performancer();
 
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            using var context = CreateContext();
+            logger.Log("Connected to database.");
+
+            byte[] initialByteArray = 
+                {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255, 254, 243, 252, 251, 250, 249, 248, 247, 246, 245};
+            var dateTime = DateTimeOffset.Now;
+            //int ch = (int) 'D';
+            context.AllTypes.Insert(new AllTypes
             {
-                logger.Log("Connected to database.");
+                db_bool = true,
+                db_byte = 157,
+                db_sbyte = -24,
+                db_byte_array = initialByteArray,
+                db_date_time = dateTime,
+                db_decimal = 3456789.986543M,
+                db_double = 12345.54321D,
+                db_float = 123.321F,
+                db_int16 = 32767,
+                db_uint16 = 65535,
+                db_int32 = 2147483647,
+                db_uint32 = 4294967295,
+                db_int64 = 9223372036854775807,
+                db_uint64 = 18446744073709551615,
+                db_string = "Database String With \nNewline\nSpecial Chars: ♥♦♣♠",
+                db_enum = TestEnum.SecondEnumValue
+            });
+            logger.Log("Inserted new row into db.");
 
-                byte[] initial_byte_array = new byte[]
-                    {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 255, 254, 243, 252, 251, 250, 249, 248, 247, 246, 245};
-                var date_time = DateTimeOffset.Now;
-                int ch = (int) 'D';
-                string t = date_time.ToString();
-                context.AllTypes.Insert(new AllTypes
-                {
-                    db_bool = true,
-                    db_byte = 157,
-                    db_sbyte = -24,
-                    db_byte_array = initial_byte_array,
-                    db_date_time = date_time,
-                    db_decimal = 3456789.986543M,
-                    db_double = 12345.54321D,
-                    db_float = 123.321F,
-                    db_int16 = 32767,
-                    db_uint16 = 65535,
-                    db_int32 = 2147483647,
-                    db_uint32 = 4294967295,
-                    db_int64 = 9223372036854775807,
-                    db_uint64 = 18446744073709551615,
-                    db_string = "Database String With \nNewline\nSpecial Chars: ♥♦♣♠",
-                    db_enum = TestEnum.SecondEnumValue
-                });
-                logger.Log("Inserted new row into db.");
+            var allTypes = context.AllTypes.Select().ExecuteFetch();
+            logger.Log("Retrieved new row from db.");
 
-                var all_types = context.AllTypes.Select().ExecuteFetch();
-                logger.Log("Retrieved new row from db.");
+            Assert.AreEqual(true, allTypes.db_bool);
+            Assert.AreEqual(157, allTypes.db_byte!.Value);
+            Assert.AreEqual(-24, allTypes.db_sbyte);
 
-                Assert.Equal(true, all_types.db_bool);
-                Assert.Equal(157, all_types.db_byte.Value);
-                Assert.Equal(-24, all_types.db_sbyte);
-
-                // Test the contents of the byte array.
-                Assert.Equal(initial_byte_array.Length, all_types.db_byte_array.Length);
-                for (int i = 0; i < initial_byte_array.Length; i++)
-                {
-                    Assert.Equal(initial_byte_array[i], all_types.db_byte_array[i]);
-                }
-
-                Assert.Equal(date_time, all_types.db_date_time);
-                Assert.Equal(3456789.986543M, all_types.db_decimal.Value);
-                Assert.Equal(12345.54321D, all_types.db_double.Value);
-                Assert.Equal(123.321F, all_types.db_float.Value);
-                Assert.Equal(32767, all_types.db_int16.Value);
-                Assert.Equal(65535, all_types.db_uint16.Value);
-                Assert.Equal(2147483647, all_types.db_int32.Value);
-                Assert.Equal(4294967295, all_types.db_uint32.Value);
-                Assert.Equal(9223372036854775807, all_types.db_int64.Value);
-                Assert.Equal(18446744073709551615, all_types.db_uint64.Value);
-                Assert.Equal(TestEnum.SecondEnumValue, all_types.db_enum);
-                Assert.Equal("Database String With \nNewline\nSpecial Chars: ♥♦♣♠", all_types.db_string);
-                logger.Log("Completed tests.");
-
-                logger.OutputTraceLog();
+            // Test the contents of the byte array.
+            Assert.AreEqual(initialByteArray.Length, allTypes.db_byte_array.Length);
+            for (int i = 0; i < initialByteArray.Length; i++)
+            {
+                Assert.AreEqual(initialByteArray[i], allTypes.db_byte_array[i]);
             }
+
+            Assert.AreEqual(dateTime, allTypes.db_date_time);
+            Assert.AreEqual(3456789.986543M, allTypes.db_decimal!.Value);
+            Assert.AreEqual(12345.54321D, allTypes.db_double!.Value);
+            Assert.AreEqual(123.321F, allTypes.db_float!.Value);
+            Assert.AreEqual(32767, allTypes.db_int16!.Value);
+            Assert.AreEqual(65535, allTypes.db_uint16!.Value);
+            Assert.AreEqual(2147483647, allTypes.db_int32!.Value);
+            Assert.AreEqual(4294967295, allTypes.db_uint32!.Value);
+            Assert.AreEqual(9223372036854775807, allTypes.db_int64!.Value);
+            Assert.AreEqual(18446744073709551615, allTypes.db_uint64!.Value);
+            Assert.AreEqual(TestEnum.SecondEnumValue, allTypes.db_enum);
+            Assert.AreEqual("Database String With \nNewline\nSpecial Chars: ♥♦♣♠", allTypes.db_string);
+            logger.Log("Completed tests.");
+
+            logger.OutputTraceLog();
         }
 
-        [Fact]
+        [Test]
         public void TransactionRollbackAuto()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            using var context = CreateContext();
+            using (context.BeginTransaction())
             {
-                using (var transaction = context.BeginTransaction())
-                {
-                    CreateUser(context);
-                }
-
-                var user = context.Users.Select().ExecuteFetch();
-
-                Assert.Null(user);
-
+                CreateUser(context);
             }
+
+            var user = context.Users.Select().ExecuteFetch();
+
+            Assert.Null(user);
         }
 
-        [Fact]
+        [Test]
+        public async Task TransactionRollbackAutoAsync()
+        {
+            using var context = CreateContext();
+            using (context.BeginTransaction())
+            {
+                await CreateUserAsync(context);
+            }
+
+            var user = await context.Users.Select().ExecuteFetchAsync();
+
+            Assert.Null(user);
+        }
+
+        [Test]
         public void TransactionRollbackManual()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            using var context = CreateContext();
+            using (var transaction = context.BeginTransaction())
             {
-                using (var transaction = context.BeginTransaction())
-                {
-                    CreateUser(context);
-                    transaction.Rollback();
-                }
-
-                var user = context.Users.Select().ExecuteFetch();
-
-                Assert.Null(user);
-
+                CreateUser(context);
+                transaction.Rollback();
             }
+
+            var user = context.Users.Select().ExecuteFetch();
+
+            Assert.Null(user);
         }
 
-        [Fact]
+        [Test]
+        public async Task TransactionRollbackManualAsync()
+        {
+            using var context = CreateContext();
+            using (var transaction = context.BeginTransaction())
+            {
+                await CreateUserAsync(context);
+                transaction.Rollback();
+            }
+
+            var user = await context.Users.Select().ExecuteFetchAsync();
+
+            Assert.Null(user);
+        }
+
+
+        [Test]
         public void TransactionCommit()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            using var context = CreateContext();
+            using (var transaction = context.BeginTransaction())
             {
-                using (var transaction = context.BeginTransaction())
-                {
-                    CreateUser(context);
-                    transaction.Commit();
-                }
-
-                var user = context.Users.Select().ExecuteFetch();
-
-                Assert.NotNull(user);
-
-                context.Users.Delete(user);
-
+                CreateUser(context);
+                transaction.Commit();
             }
+
+            var user = context.Users.Select().ExecuteFetch();
+
+            Assert.NotNull(user);
+
+            context.Users.Delete(user);
         }
 
-        [Fact]
+        [Test]
+        public async Task TransactionCommitAsync()
+        {
+            using var context = CreateContext();
+            using (var transaction = context.BeginTransaction())
+            {
+                await CreateUserAsync(context);
+                transaction.Commit();
+            }
+
+            var user = await context.Users.Select().ExecuteFetchAsync();
+
+            Assert.NotNull(user);
+
+            context.Users.Delete(user);
+        }
+
+        [Test]
         public void TransactionCommitMultipleInserts()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            using var context = CreateContext();
+            using (var transaction = context.BeginTransaction())
             {
-                using (var transaction = context.BeginTransaction())
-                {
-                    CreateUser(context);
-                    CreateUser(context);
-                    CreateUser(context);
-                    CreateUser(context);
-                    CreateUser(context);
+                for (int i = 0; i < 5; i++)
+                    CreateUser(context);                
 
-                    transaction.Commit();
-                }
-
-                var users = context.Users.Select().ExecuteFetchAll();
-
-                Assert.Equal(5, users.Length);
+                transaction.Commit();
             }
+
+            var users = context.Users.Select().ExecuteFetchAll();
+
+            Assert.AreEqual(5, users.Length);
         }
 
-        [Fact]
+        [Test]
+        public async Task TransactionCommitMultipleInsertsAsync()
+        {
+            using var context = CreateContext();
+            using (var transaction = context.BeginTransaction())
+            {
+                for (int i = 0; i < 5; i++)
+                    await CreateUserAsync(context);
+
+                transaction.Commit();
+            }
+
+            var users = await context.Users.Select().ExecuteFetchAllAsync();
+
+            Assert.AreEqual(5, users.Length);
+        }
+
+        [Test]
         public void GetsOnlyModifiedChanges()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                var user = context.Users.Select().ExecuteFetch();
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
 
-                Assert.Equal(0, user.GetChangedValues().Count);
+            Assert.AreEqual(0, user.GetChangedValues().Count);
 
-                user.username = "New Username";
+            user.username = "New Username";
 
-                Assert.Equal(1, user.GetChangedValues().Count);
-                Assert.Equal("New Username", user.GetChangedValues()["username"]);
-            }
+            Assert.AreEqual(1, user.GetChangedValues().Count);
+            Assert.AreEqual("New Username", user.GetChangedValues()["username"]);
         }
 
-        [Fact]
+        [Test]
         public void ClonesAllValues()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                var user = context.Users.Select().ExecuteFetch();
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
 
-                var cloned = new Users(user, false);
+            var cloned = new Users(user);
 
-                Assert.Equal(user.username, cloned.username);
-                Assert.Equal(user.password, cloned.password);
-                Assert.Equal(user.last_logged, cloned.last_logged);
-            }
+            Assert.AreEqual(user.username, cloned.username);
+            Assert.AreEqual(user.password, cloned.password);
+            Assert.AreEqual(user.last_logged, cloned.last_logged);
         }
 
-        [Fact]
+        [Test]
         public void ClonesOnlyChangedValues()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                var user = context.Users.Select().ExecuteFetch();
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
 
-                user.username = "New Username";
+            user.username = "New Username";
 
-                var cloned = new Users(user, true);
+            var cloned = new Users(user, true);
 
-                Assert.Equal(user.username, cloned.username);
-                Assert.Equal(null, cloned.password);
-                Assert.Equal(default(long), cloned.last_logged);
-            }
+            Assert.AreEqual(user.username, cloned.username);
+            Assert.AreEqual(null, cloned.password);
+            Assert.AreEqual(default(long), cloned.last_logged);
         }
 
-        [Fact]
+        [Test]
         public void InsertReturnsNewRowId()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                long id = CreateUser(context);
-                var user = context.Users.Select().ExecuteFetch();
+            using var context = CreateContext();
+            long id = CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
 
-                Assert.Equal(id, user.rowid);
-            }
+            Assert.AreEqual(id, user.rowid);
         }
 
-        [Fact]
+        [Test]
+        public async Task InsertReturnsNewRowIdAsync()
+        {
+            using var context = CreateContext();
+            long id = await CreateUserAsync(context);
+            var user = await context.Users.Select().ExecuteFetchAsync();
+
+            Assert.AreEqual(id, user.rowid);
+        }
+
+        [Test]
         public void InsertStoresDateTimeOffsetCorrectly()
         {
+            using var context = CreateContext();
+            DateTimeOffset nowDto = DateTimeOffset.Now;
 
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            context.AllTypes.Insert(new AllTypes
             {
-                DateTimeOffset now_dto = DateTimeOffset.Now;
-
-                context.AllTypes.Insert(new AllTypes
-                {
-                    db_date_time = now_dto,
-                });
-                var all_types = context.AllTypes.Select().ExecuteFetch();
-                Assert.Equal(now_dto, all_types.db_date_time);
-            }
+                db_date_time = nowDto,
+            });
+            var allTypes = context.AllTypes.Select().ExecuteFetch();
+            Assert.AreEqual(nowDto, allTypes.db_date_time);
         }
 
-        [Fact]
+        [Test]
         public void InsertStoresDateTimeCorrectly()
         {
+            using var context = CreateContext();
+            DateTimeOffset nowDto = DateTime.Now;
 
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            context.AllTypes.Insert(new AllTypes
             {
-                DateTime now_dto = DateTime.Now;
+                db_date_time = nowDto,
+            });
 
-                context.AllTypes.Insert(new AllTypes
-                {
-                    db_date_time = now_dto,
-                });
-
-                var all_types = context.AllTypes.Select().ExecuteFetch();
-                Assert.Equal(now_dto, all_types.db_date_time);
-            }
+            var allTypes = context.AllTypes.Select().ExecuteFetch();
+            Assert.AreEqual(nowDto, allTypes.db_date_time);
         }
 
-        [Fact]
+        [Test]
         public void PropertyChangeNotificationNotifiesEvent()
         {
+            using var context = CreateContext();
+            bool fired = false;
+            var row = new AllTypes();
 
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
+            row.PropertyChanged += (sender, e) =>
             {
-                bool fired = false;
-                var row = new AllTypes();
-
-                row.PropertyChanged += (sender, e) =>
+                if (e.PropertyName == "db_date_time")
                 {
-                    if (e.PropertyName == "db_date_time")
-                    {
-                        fired = true;
-                    }
-                };
+                    fired = true;
+                }
+            };
 
-                Assert.False(fired);
+            Assert.False(fired);
 
-                row.db_date_time = DateTime.Now;
+            row.db_date_time = DateTime.Now;
 
-                Assert.True(fired);
-            }
+            Assert.True(fired);
         }
 
-        [Fact]
+        [Test]
         public void ExecuteFetchAllSpecifiedQuery()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
+            using var context = CreateContext();
+            CreateUser(context);
 
-                var users = context.Users.Select().ExecuteFetchAll("SELECT username FROM Users");
+            var users = context.Users.Select().ExecuteFetchAll("SELECT username FROM Users");
 
-                Assert.Equal("user_name", users[0].username);
-                Assert.Equal(null, users[0].password);
-            }
+            Assert.AreEqual("user_name", users[0].username);
+            Assert.AreEqual(null, users[0].password);
         }
 
-        [Fact]
+        [Test]
+        public async Task ExecuteFetchAllSpecifiedQueryAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context);
+
+            var users = await context.Users.Select().ExecuteFetchAllAsync("SELECT username FROM Users");
+
+            Assert.AreEqual("user_name", users[0].username);
+            Assert.AreEqual(null, users[0].password);
+        }
+
+        [Test]
         public void ExecuteFetchAllBindsSpecifiedQuery()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
+            using var context = CreateContext();
+            CreateUser(context);
 
-                var users = context.Users.Select()
-                    .ExecuteFetchAll("SELECT username FROM Users WHERE username = {0}", new object[] {"user_name"});
+            var users = context.Users.Select()
+                .ExecuteFetchAll("SELECT username FROM Users WHERE username = {0}", new object[] {"user_name"});
 
-                Assert.Equal("user_name", users[0].username);
-                Assert.Equal(null, users[0].password);
-            }
+            Assert.AreEqual("user_name", users[0].username);
+            Assert.AreEqual(null, users[0].password);
         }
 
-        [Fact]
+        [Test]
+        public async Task ExecuteFetchAllBindsSpecifiedQueryAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context);
+
+            var users = await context.Users.Select()
+                .ExecuteFetchAllAsync("SELECT username FROM Users WHERE username = {0}", new object[] { "user_name" });
+
+            Assert.AreEqual("user_name", users[0].username);
+            Assert.AreEqual(null, users[0].password);
+        }
+
+        [Test]
         public void ExecuteFetchAllOverridesPreviousMethods()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
+            using var context = CreateContext();
+            CreateUser(context);
 
-                var users = context.Users.Select()
-                    .Where("user_name = {0}", "1234")
-                    .ExecuteFetchAll("SELECT username FROM Users");
+            var users = context.Users.Select()
+                .Where("user_name = {0}", "1234")
+                .ExecuteFetchAll("SELECT username FROM Users");
 
-                Assert.Equal("user_name", users[0].username);
-                Assert.Equal(null, users[0].password);
-            }
+            Assert.AreEqual("user_name", users[0].username);
+            Assert.AreEqual(null, users[0].password);
         }
 
-        [Fact]
+        [Test]
+        public async Task ExecuteFetchAllOverridesPreviousMethodsAsync()
+        {
+            using var context = CreateContext();
+            await CreateUserAsync(context);
+
+            var users = await context.Users.Select()
+                .Where("user_name = {0}", "1234")
+                .ExecuteFetchAllAsync("SELECT username FROM Users");
+
+            Assert.AreEqual("user_name", users[0].username);
+            Assert.AreEqual(null, users[0].password);
+        }
+
+        [Test]
         public void TableRowIsChangeHasNoChanges()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                var user = context.Users.Select().ExecuteFetch();
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
 
-                Assert.Equal(false, user.IsChanged());
-            }
+            Assert.AreEqual(false, user.IsChanged());
         }
 
-        [Fact]
+        [Test]
         public void TableRowIsChangeHasChanges()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                var user = context.Users.Select().ExecuteFetch();
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
 
-                user.username = "newUsername";
+            user.username = "newUsername";
 
-                Assert.Equal(true, user.IsChanged());
-            }
+            Assert.AreEqual(true, user.IsChanged());
         }
 
-        [Fact]
+        [Test]
         public void TableRowResetsChangedFlags()
         {
-            using (var context = CreateContext(MethodBase.GetCurrentMethod().Name))
-            {
-                CreateUser(context);
-                var user = context.Users.Select().ExecuteFetch();
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
 
-                user.username = "newUsername";
-                user.ResetChangedFlags();
+            user.username = "newUsername";
+            user.ChangedFlags.SetAll(false);
 
-                Assert.Equal(false, user.IsChanged());
-                Assert.Equal(0, user.GetChangedValues().Count);
-            }
+            Assert.AreEqual(false, user.IsChanged());
+            Assert.AreEqual(0, user.GetChangedValues().Count);
+        }
+
+        [Test]
+        public void MessagePackSerializeAllValues()
+        {
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
+
+            var data = MessagePackSerializer.Serialize(user);
+            var deserializedUser = MessagePackSerializer.Deserialize<Users>(data);
+
+            CompareUsers(user, deserializedUser);
+        }
+
+        [Test]
+        public void MessagePackSerializeTracksChanges()
+        {
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select().ExecuteFetch();
+
+            user.ChangedFlags.SetAll(false);
+
+            user.username = "Second User";
+
+            var data = MessagePackSerializer.Serialize(user);
+            var deserializedUser = MessagePackSerializer.Deserialize<Users>(data);
+
+
+            CompareUsers(user, deserializedUser);
+        }
+
+        [Test]
+        public void MessagePackSerializesAdditionalValues()
+        {
+            using var context = CreateContext();
+            CreateUser(context);
+            var user = context.Users.Select("COUNT(*)").ExecuteFetch();
+
+            var data = MessagePackSerializer.Serialize(user);
+            var deserializedUser = MessagePackSerializer.Deserialize<Users>(data);
+
+
+            CompareUsers(user, deserializedUser);
         }
     }
 }

@@ -33,7 +33,6 @@ namespace DtronixModeler.Generator
         [STAThread]
         static void Main(string[] args)
         {
-
             // Get and hide the console and show the UI if there are no arguments passed.
             if (args.Length == 0 ||
                 (args.Length == 1 && Path.GetExtension(args[0]) == ".ddl"))
@@ -161,6 +160,11 @@ namespace DtronixModeler.Generator
 
             input_database.ImplementINotifyPropertyChanged = options.NotifyPropertyChanged;
             input_database.ImplementProtobufNetDataContracts = options.ProtobufDataContracts;
+            input_database.ImplementMessagePackAttributes = options.MessagePackAttributes;
+            input_database.ImplementSystemTextJsonAttributes = options.SystemTextJsonAttributes;
+            input_database.ImplementDataContractMemberOrder = options.DataContractMemberOrder;
+            input_database.ImplementDataContractMemberName = options.DataContractMemberName;
+            input_database.ProtobufPackage = options.ProtobufPackage;
 
             // Output SQL file if required.
             if (options.SqlOutput != null)
@@ -230,6 +234,27 @@ namespace DtronixModeler.Generator
                     var serializer = new XmlSerializer(typeof(Database));
                     serializer.Serialize(fs, input_database);
                 }
+            }
+
+            // Output Ddl if required.
+            if (options.ProtobufOutput != null)
+            {
+                if (options.ProtobufOutput == "")
+                {
+                    options.ProtobufOutput = Path.GetFileNameWithoutExtension(input_database.Name);
+                }
+
+                if (Path.HasExtension(options.ProtobufOutput) == false)
+                {
+                    options.ProtobufOutput = Path.ChangeExtension(options.ProtobufOutput, ".proto");
+                }
+                
+                // Output code file if required.
+                using var fs = new FileStream(options.ProtobufOutput, FileMode.Create);
+                using var sw = new StreamWriter(fs);
+
+                sw.Write(new ProtobufGenerator(input_database).Generate());
+                sw.Flush();
             }
         }
 

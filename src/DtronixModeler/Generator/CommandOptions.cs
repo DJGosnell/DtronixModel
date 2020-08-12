@@ -39,13 +39,25 @@ namespace DtronixModeler.Generator
 
         public string DdlOutput { get; set; }
 
+        public string ProtobufOutput { get; set; }
+
         public string Namespace { get; set; }
 
         public string ContextClass { get; set; }
 
+        public string ProtobufPackage { get; set; }
+
         public bool NotifyPropertyChanged { get; set; }
 
         public bool ProtobufDataContracts { get; set; }
+
+        public bool MessagePackAttributes { get; set; }
+
+        public bool SystemTextJsonAttributes { get; set; }
+
+        public bool DataContractMemberName { get; set; }
+
+        public bool DataContractMemberOrder { get; set; }
 
         public CommandOptions() { }
 
@@ -60,17 +72,33 @@ namespace DtronixModeler.Generator
             option_set.Add<InType?>("t=|input-type=", "(Required) The type of datatabase we are dealing with. " + EnumValues<InType>(), v => InputType = v);
             option_set.Add<DbProvider?>("db-provider=", "The type of datatabase we are dealing with. " + EnumValues<DbProvider>(), v => DbProvider = v);
 
-            option_set.Add("code-output:", "The C# file to output the generated code to.", v => CodeOutput = (v == null) ? "" : v);
-            option_set.Add("sql-output:", "The sql file to output the generated SQL table code to.", v => SqlOutput = (v == null) ? "" : v);
-            option_set.Add("ddl-output:", "The ddl file to output the generated DDL to.", v => DdlOutput = (v == null) ? "" : v);
+            option_set.Add("code-output:", "The C# file to output the generated code to.", v => CodeOutput = v ?? "");
+            option_set.Add("sql-output:", "The sql file to output the generated SQL table code to.", v => SqlOutput = v ?? "");
+            option_set.Add("ddl-output:", "The ddl file to output the generated DDL to.", v => DdlOutput = v ?? "");
+            option_set.Add("protobuf-output:", "The proto file to output the generated Protobuf definitions to.", v => ProtobufOutput = v ?? "");
 
-            option_set.Add("namespace=", "Namespace used to contain all of the code objects & classes.", v => Namespace = (v == null) ? "" : v);
-            option_set.Add("context-class=", "Class name for the main context.", v => ContextClass = (v == null) ? "" : v);
+            option_set.Add("namespace=", "Namespace used to contain all of the code objects & classes.", v => Namespace = v ?? "");
+            option_set.Add("context-class=", "Class name for the main context.", v => ContextClass = v ?? "");
 
             option_set.Add("notifypropertychanged=", "Set to true if the INotifyPropertyChanged class should be implemented.",
                 v => NotifyPropertyChanged = bool.Parse(v));
+
             option_set.Add("protobufdatacontracts=", "Set to true if protobuf-net data contracts should be implemented.",
                 v => ProtobufDataContracts = bool.Parse(v));
+
+            option_set.Add("messagepackattributes=", "Set to true if MessagePack attributes should be added.",
+               v => MessagePackAttributes = bool.Parse(v));
+
+            option_set.Add("systemtextjsonattributes=", "Set to true if System.Text.Json attributes should be added.",
+                v => SystemTextJsonAttributes = bool.Parse(v)); 
+
+            option_set.Add("datacontractmemberorder=", "Set to true if DataContract attributes should be added with numerical order.",
+                v => DataContractMemberOrder = bool.Parse(v));
+
+            option_set.Add("datacontractmembername=", "Set to true if DataContract attributes should be added with column names.",
+                v => DataContractMemberName = bool.Parse(v));
+
+            option_set.Add("protobuf-package=", "Protobuf package namespace.", v => ProtobufPackage = v ?? "");
 
             option_set.Add("h|?|help", "Displays this help menu.", v => {
                 help = true;

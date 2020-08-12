@@ -42,12 +42,11 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Files]
 Source: {#MainBinaryName}; DestDir: "{app}"; Flags: ignoreversion
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: "DtronixModel.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "DtronixModel.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: "System.Data.SQLite.dll"; DestDir: "{app}"
-Source: "x86\SQLite.Interop.dll"; DestDir: "{app}\x86"
-Source: "x64\SQLite.Interop.dll"; DestDir: "{app}\x64"
+Source: "*.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "*.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "*.deps.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "runtimes\win-x86\*"; DestDir: "{app}\runtimes\win-x86\"; Flags: ignoreversion recursesubdirs
+Source: "runtimes\win-x64\*"; DestDir: "{app}\runtimes\win-x64\"; Flags: ignoreversion recursesubdirs
 
 [Icons]
 Name: "{group}\DtronixModeler"; Filename: "{app}\{#MainBinaryName}"

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DtronixModel
 {
@@ -137,8 +139,26 @@ namespace DtronixModel
         /// <returns>The number of rows affected.</returns>
         public int Query(string sql, params object[] binding)
         {
+            var queryTask = QueryAsync(sql, binding, CancellationToken.None);
+
+            return queryTask.Result;
+        }
+
+        /// <summary>
+        /// Executes a string on the specified database.
+        /// Will close the command after execution.
+        /// </summary>
+        /// <param name="sql">SQL to execute with parameters in string.format style.</param>
+        /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>The number of rows affected.</returns>
+        public async Task<int> QueryAsync(string sql, object[] binding, CancellationToken cancellationToken = default)
+        {
             if (_mode != Mode.Execute)
                 throw new InvalidOperationException("Need to be in Execute mode to use this method.");
+
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
 
             _command.Parameters.Clear();
             _command.CommandText = SqlBindParameters(sql, binding);
@@ -147,7 +167,7 @@ namespace DtronixModel
             if (_context.Debug.HasFlag(Context.DebugLevel.Queries))
                 Console.Out.WriteLine("Query: \r\n" + _command.CommandText);
 
-            var result = _command.ExecuteNonQuery();
+            var result = await _command.ExecuteNonQueryAsync(cancellationToken);
 
             _command.Dispose();
 
@@ -164,8 +184,34 @@ namespace DtronixModel
         /// <returns>The number of rows affected.</returns>
         public void QueryRead(string sql, object[] binding, Action<DbDataReader> onRead)
         {
+            var queryReadTask = QueryReadAsync(sql, binding, (reader, ct) =>
+            {
+                onRead(reader);
+                return Task.CompletedTask;
+            }, CancellationToken.None);
+
+            queryReadTask.Wait();
+        }
+
+        /// <summary>
+        /// Executes a string on the specified database and calls calls method with the reader.
+        /// Will close the command after execution.
+        /// </summary>
+        /// <param name="sql">SQL to execute with parameters in string.format style.</param>
+        /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
+        /// <param name="onRead">Called when the query has been executed and reader created.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        public async Task QueryReadAsync(
+            string sql, 
+            object[] binding, 
+            Func<DbDataReader, CancellationToken, Task> onRead, 
+            CancellationToken cancellationToken = default)
+        {
             if (_mode != Mode.Execute)
                 throw new InvalidOperationException("Need to be in Execute mode to use this method.");
+
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
 
             _command.Parameters.Clear();
             _command.CommandText = SqlBindParameters(sql, binding);
@@ -174,8 +220,8 @@ namespace DtronixModel
             if (_context.Debug.HasFlag(Context.DebugLevel.Queries))
                 Console.Out.WriteLine("Query: \r\n" + _command.CommandText);
 
-            using (var reader = _command.ExecuteReader())
-                onRead(reader);
+            using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
+                await onRead(reader, cancellationToken);
 
             _command.Dispose();
         }
@@ -196,16 +242,44 @@ namespace DtronixModel
         }
 
         /// <summary>
+        /// Begins selection process and the specifies columns to return from the database.
+        /// </summary>
+        /// <param name="select">Array of columns to select.</param>
+        /// <returns>Current statement for chaining.</returns>
+        public SqlStatement<T> Select(string[] select)
+        {
+            if (_mode == Mode.Execute)
+                throw new InvalidOperationException("Can not use all functions in Execute mode.");
+
+            _sqlSelect = string.Join(", ", select);
+            return this;
+        }
+
+        /// <summary>
         /// Updates the specified rows in the database. The rows must have their primary keys set.
         /// </summary>
         /// <param name="models">Rows to update with their new values.</param>
         public void Update(T[] models)
         {
+            var updateTask = UpdateAsync(models, CancellationToken.None);
+            updateTask.Wait();
+        }
+
+        /// <summary>
+        /// Updates the specified rows in the database. The rows must have their primary keys set.
+        /// </summary>
+        /// <param name="models">Rows to update with their new values.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        public async Task UpdateAsync(T[] models, CancellationToken cancellationToken = default)
+        {
             if (_mode == Mode.Execute)
                 throw new InvalidOperationException("Can not use all functions in Execute mode.");
 
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
+
             _sqlRows = models;
-            Execute();
+            await ExecuteAsync(cancellationToken);
             _command.Dispose();
         }
 
@@ -216,13 +290,8 @@ namespace DtronixModel
         /// <param name="models">Rows to delete.</param>
         public void Delete(T[] models)
         {
-            if (_mode == Mode.Execute)
-                throw new InvalidOperationException("Can not use all functions in Execute mode.");
-
-            Where(models);
-
-            _sqlRows = models;
-            Execute();
+            var deleteTask = DeleteAsync(models, CancellationToken.None);
+            deleteTask.Wait();
         }
 
         /// <summary>
@@ -231,11 +300,45 @@ namespace DtronixModel
         /// <param name="primaryIds">Ids to delete.</param>
         public void Delete(long[] primaryIds)
         {
+            var deleteTask = DeleteAsync(primaryIds, CancellationToken.None);
+
+            deleteTask.Wait();
+        }
+
+        /// <summary>
+        /// Deletes the specified primary keys from the table.
+        /// </summary>
+        /// <param name="primaryIds">Ids to delete.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        public async Task DeleteAsync(long[] primaryIds, CancellationToken cancellationToken = default)
+        {
             if (_mode == Mode.Execute)
                 throw new InvalidOperationException("Can not use all functions in Execute mode.");
 
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
+
             WhereIn(new T().GetPKName(), primaryIds.Cast<object>().ToArray());
-            Execute();
+            await ExecuteAsync(cancellationToken);
+        }
+
+        /// <summary>
+        /// Deletes the specified rows from the database. The rows must have their primary keys set.
+        /// </summary>
+        /// <param name="models">Rows to delete.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        public async Task DeleteAsync(T[] models, CancellationToken cancellationToken = default)
+        {
+            if (_mode == Mode.Execute)
+                throw new InvalidOperationException("Can not use all functions in Execute mode.");
+
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
+
+            Where(models);
+
+            _sqlRows = models;
+            await ExecuteAsync(cancellationToken);
         }
 
         /// <summary>
@@ -244,7 +347,7 @@ namespace DtronixModel
         /// <param name="column">Column to match against.</param>
         /// <param name="values">Values to check against the specified column.</param>
         /// <returns>Current statement for chaining.</returns>
-        public SqlStatement<T> WhereIn(string column, object[] values)
+        public SqlStatement<T> WhereIn<T2>(string column, T2[] values)
         {
             ValidateWhere();
 
@@ -262,7 +365,7 @@ namespace DtronixModel
 
             return this;
         }
-
+        
         /// <summary>
         /// Sets where to the provided rows's primary key.
         /// </summary>
@@ -398,8 +501,19 @@ namespace DtronixModel
         /// </summary>
         public void Execute()
         {
+            ExecuteAsync(CancellationToken.None).Wait();
+        }
+
+        /// <summary>
+        /// Executes the query built.
+        /// </summary>
+        public async Task ExecuteAsync(CancellationToken cancellationToken = default)
+        {
             if (_mode == Mode.Execute)
                 throw new InvalidOperationException("Can not use all functions in Execute mode.");
+
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
 
             if (_mode == Mode.Update)
             {
@@ -418,7 +532,7 @@ namespace DtronixModel
                         BuildSql(model);
 
                         // Execute the update command.
-                        _command.ExecuteNonQuery();
+                        await _command.ExecuteNonQueryAsync(cancellationToken);
 
                         if (_context.Debug.HasFlag(Context.DebugLevel.Updates))
                             Console.Out.WriteLine("Update: \r\n" + _command.CommandText);
@@ -434,7 +548,7 @@ namespace DtronixModel
             else
             {
                 BuildSql(null);
-                _command.ExecuteNonQuery();
+                await _command.ExecuteNonQueryAsync(cancellationToken);
             }
 
             if (AutoCloseCommand)
@@ -447,19 +561,34 @@ namespace DtronixModel
         /// <returns>On success, returns rows with the result of the query; Otherwise returns null.</returns>
         public T ExecuteFetch()
         {
+            var fetchTask = ExecuteFetchAsync(CancellationToken.None);
+
+            return fetchTask.Result;
+        }
+
+        /// <summary>
+        /// Executes the query built and returns the associated rows with the query. Synchronous.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>On success, returns rows with the result of the query; Otherwise returns null.</returns>
+        public async Task<T> ExecuteFetchAsync(CancellationToken cancellationToken = default)
+        {
             if (_mode == Mode.Execute)
                 throw new InvalidOperationException("Can not use all functions in Execute mode.");
 
             if (_mode != Mode.Select)
                 throw new InvalidOperationException("Can not fetch from the server when not in SELECT mode.");
 
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
+
             BuildSql(null);
             T model;
 
-            using (var reader = _command.ExecuteReader())
+            using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
             {
-                if (reader.Read() == false)
-                    return default(T);
+                if (await reader.ReadAsync(cancellationToken) == false)
+                    return default;
 
                 model = new T();
                 model.Read(reader, _context);
@@ -500,11 +629,51 @@ namespace DtronixModel
         /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
         public T[] ExecuteFetchAll(string query, object[] parameters)
         {
+            var fetchTask = ExecuteFetchAllAsync(query, parameters, CancellationToken.None);
+
+            fetchTask.Wait();
+
+            return fetchTask.Result;
+        }
+
+        /// <summary>
+        ///  Executes the query built and returns the associated rows with the query. Synchronous.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
+        public async Task<T[]> ExecuteFetchAllAsync(CancellationToken cancellationToken = default)
+        {
+            return await ExecuteFetchAllAsync(null, null, cancellationToken);
+        }
+
+        /// <summary>
+        ///  Executes the specified query and returns the associated rows with the query. Synchronous.
+        /// </summary>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <param name="query">Query override which will ignore all previous query builder commands.</param>
+        /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
+        public async Task<T[]> ExecuteFetchAllAsync(string query, CancellationToken cancellationToken = default)
+        {
+            return await ExecuteFetchAllAsync(query, null, cancellationToken);
+        }
+
+        /// <summary>
+        ///  Executes the specified query, binds the passed parameters and returns the associated rows with the query. Synchronous.
+        /// </summary>
+        /// <param name="query">Query override which will ignore all previous query builder commands.</param>
+        /// <param name="parameters">Parameters to bind to the query.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
+        public async Task<T[]> ExecuteFetchAllAsync(string query, object[] parameters, CancellationToken cancellationToken = default)
+        {
             if (_mode == Mode.Execute)
                 throw new InvalidOperationException("Can not use all functions in Execute mode.");
 
             if (_mode != Mode.Select)
                 throw new InvalidOperationException("Can not fetch from the server when not in SELECT mode.");
+
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
 
             if (query == null)
                 BuildSql(null);
@@ -516,9 +685,9 @@ namespace DtronixModel
             }
 
             var results = new List<T>();
-            using (var reader = _command.ExecuteReader())
+            using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
             {
-                while (reader.Read())
+                while (await reader.ReadAsync(cancellationToken))
                 {
                     var model = new T();
                     model.Read(reader, _context);
@@ -554,9 +723,9 @@ namespace DtronixModel
 
                     var changedFields = model.GetChangedValues();
 
-                    // If there are no fields to update, then do nothing.
+                    // If there are no fields to update, then why are we updating?.
                     if (changedFields.Count == 0)
-                        sql.Clear();
+                        throw new InvalidOperationException("Could not update rows as no values have changed.");
 
                     foreach (var field in changedFields)
                         sql.Append(field.Key).Append(" = ").Append(BindParameter(field.Value)).Append(", ");
@@ -671,6 +840,23 @@ namespace DtronixModel
         /// <returns>Inserted IDs of the rows.</returns>
         public long[] Insert(T[] models)
         {
+            var inserTask = InsertAsync(models, CancellationToken.None);
+
+            return inserTask.Result;
+        }
+
+        /// <summary>
+        /// Inserts multiple rows into the database.
+        /// </summary>
+        /// <remarks>
+        /// This method by default wraps all inserts into a transaction.
+        /// If one of the inserts fails, then all of the inserts are rolled back.
+        /// </remarks>
+        /// <param name="models">Rows to insert.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        /// <returns>Inserted IDs of the rows.</returns>
+        public async Task<long[]> InsertAsync(T[] models, CancellationToken cancellationToken = default)
+        {
             if (_mode == Mode.Execute)
                 throw new InvalidOperationException("Can not use all functions in Execute mode.");
 
@@ -679,6 +865,9 @@ namespace DtronixModel
 
             if (_mode != Mode.Insert)
                 throw new InvalidOperationException("Can not insert when statement is not in INSERT mode.");
+
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
 
             var columns = models[0].GetColumns();
 
@@ -737,7 +926,7 @@ namespace DtronixModel
 
                     if (_context.LastInsertIdQuery != null)
                     {
-                        var newRow = _command.ExecuteScalar();
+                        var newRow = await _command.ExecuteScalarAsync(cancellationToken);
                         if (newRow == null)
                             throw new Exception("Unable to insert row");
 
@@ -746,7 +935,7 @@ namespace DtronixModel
                     }
                     else
                     {
-                        if (_command.ExecuteNonQuery() != 1)
+                        if (await _command.ExecuteNonQueryAsync(cancellationToken) != 1)
                             throw new Exception("Unable to insert row");
                     }
 
@@ -760,7 +949,6 @@ namespace DtronixModel
             catch (Exception)
             {
                 // If we encountered an error, rollback the transaction.
-
                 transaction?.Rollback();
 
                 throw;
