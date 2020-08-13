@@ -5,14 +5,13 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <Description>Modeler for defining database systems.</Description>
-    <Version>1.6.0</Version>
+    <Version>2.0.0</Version>
     <Copyright>Copyright © Dtronix 2019</Copyright>
     <Product>Dtronix Database Modeler</Product>
     <Authors>DJGosnell</Authors>
     <Configurations>Debug;Release</Configurations>
     <ApplicationIcon>icon.ico</ApplicationIcon>
     <StartupObject />
-    <AssemblyVersion>1.6.0</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>

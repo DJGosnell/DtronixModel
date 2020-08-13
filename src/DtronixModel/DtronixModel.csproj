@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>1.6</Version>
+    <Version>2.0.0</Version>
     <Description>Small .NET tool aiding in sql data modeling and simple CRUD</Description>
     <Company>Dtronix</Company>
     <Product>Dtronix Database Modeler</Product>
@@ -13,11 +13,9 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageTags>model modeling dtronix sql</PackageTags>
+    <PackageTags>model modeling dtronix sql net core</PackageTags>
     <PackageIcon>database_blue32.png</PackageIcon>
     <PackageIconUrl />
-    <AssemblyVersion>1.6.0.0</AssemblyVersion>
-    <FileVersion>1.6.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
