@@ -116,7 +116,9 @@ namespace DtronixModeler.Generator.MySqlMwb
                         column.IsAutoIncrement = (auto_increment == "0" || auto_increment == null) ? false : true;
 
                         var length = xml_column.SelectSingleNode(@"value[@key='length']").InnerText;
-                        column.DbLength = (length == "-1" || length == null) ? 0 : Convert.ToInt32(length);
+                        column.DbLength = (length == "-1") ? 0 : Convert.ToInt32(length);
+                        if (column.DbLength != 0)
+                            column.DbLengthSpecified = true;
 
                         var nullable = xml_column.SelectSingleNode(@"value[@key='isNotNull']").InnerText;
                         column.Nullable = (nullable == "0" || nullable == null) ? true : false;
