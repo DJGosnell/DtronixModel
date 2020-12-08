@@ -560,7 +560,7 @@ namespace DtronixModeler.Generator.Output
                     else if (column.NetType.StartsWith("UInt"))
                     {
                         sb.AppendLine($"                    case \"{column.Name}\":");
-                        sb.AppendLine($"                        _{column.Name} = reader.IsDBNull(i) ? default : ({type.Replace("?", "")})(long)reader.GetValue(i);");
+                        sb.AppendLine($"                        _{column.Name} = reader.IsDBNull(i) ? default : ({type.Replace("?", "")})reader.GetValue(i);");
                         sb.AppendLine($"                        break;");
                     }
                     else if (column.NetType.StartsWith("SByte"))
