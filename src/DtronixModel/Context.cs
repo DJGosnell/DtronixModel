@@ -14,7 +14,7 @@ namespace DtronixModel
     /// var result = context.Table.Select().Where("id = {0}", 1).ExecuteFetch();
     /// }
     /// </example>
-    public abstract class Context : IDisposable
+    public abstract class Context : IDisposable, IAsyncDisposable
     {
         /// <summary>
         /// Enumeration to toggle each option to debug and output to the console.
@@ -156,10 +156,19 @@ namespace DtronixModel
         /// </summary>
         public void Dispose()
         {
+            DisposeAsync().GetAwaiter().GetResult();
+        }
+
+
+        /// <summary>
+        /// Asynchronously Releases any connection resources.
+        /// </summary>
+        public async ValueTask DisposeAsync()
+        {
             if (OwnedConnection)
             {
-                Connection.Close();
-                Connection.Dispose();
+                await Connection.CloseAsync();
+                await Connection.DisposeAsync();
             }
         }
 

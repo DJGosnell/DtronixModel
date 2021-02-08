@@ -5,8 +5,8 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <Description>Modeler for defining database systems.</Description>
-    <Version>2.0.3</Version>
-    <Copyright>Copyright © Dtronix 2019</Copyright>
+    <Version>2.1.0</Version>
+    <Copyright>Copyright © Dtronix 2021</Copyright>
     <Product>Dtronix Database Modeler</Product>
     <Authors>DJGosnell</Authors>
     <Configurations>Debug;Release</Configurations>
