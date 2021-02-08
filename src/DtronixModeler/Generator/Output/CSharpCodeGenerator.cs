@@ -593,7 +593,7 @@ namespace DtronixModeler.Generator.Output
                 sb.AppendLine($"                        if(AdditionalValues == null)");
                 sb.AppendLine($"                            AdditionalValues = new Dictionary<string, object>();");
                 sb.AppendLine();
-                sb.AppendLine($"                        AdditionalValues.Add(reader.GetName(i), reader.GetValue(i)); ");
+                sb.AppendLine($"                        AdditionalValues.Add(reader.GetName(i), reader.IsDBNull(i) ? null : reader.GetValue(i)); ");
                 sb.AppendLine($"                        break;");
                 sb.AppendLine($"                }}");
                 sb.AppendLine($"            }}");
