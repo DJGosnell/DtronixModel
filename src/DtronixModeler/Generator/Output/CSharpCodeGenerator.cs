@@ -252,6 +252,45 @@ namespace DtronixModeler.Generator.Output
 
                 sb.AppendLine($"    {{");
 
+                sb.AppendLine($"        /// <summary>");
+                sb.AppendLine($"        /// Contains all the column names in this row, excluding the primary key.");
+                sb.AppendLine($"        /// </summary>");
+                sb.AppendLine($"        public static readonly string[] Columns = new [] {{");
+                foreach (var column in table.Column)
+                {
+                    // We skip the primary key since it is never inserted.
+                    if (column.IsPrimaryKey)
+                        continue;
+
+                    sb.AppendLine($"            \"{column.Name}\",");
+                }
+                // Remove the trailing comma.
+                sb.Remove(sb.Length - 2, 1);
+
+                sb.AppendLine($"        }}");
+                sb.AppendLine();
+                sb.AppendLine($"        /// <summary>");
+                sb.AppendLine($"        /// Contains all the columns types, excluding the primary key.");
+                sb.AppendLine($"        /// </summary>");
+                sb.AppendLine($"        public static readonly Type[] ColumnTypes = new [] {{");
+                foreach (var column in table.Column)
+                {
+                    // We skip the primary key since it is never inserted.
+                    if (column.IsPrimaryKey)
+                        continue;
+
+                    sb.AppendLine($"            typeof({ColumnNetType(column)}),");
+                }
+                // Remove the trailing comma.
+                sb.Remove(sb.Length - 2, 1);
+
+                sb.AppendLine($"        }}");
+                sb.AppendLine();
+                sb.AppendLine($"        /// <summary>");
+                sb.AppendLine($"        /// Gets the name of the row primary key if one is set.");
+                sb.AppendLine($"        /// </summary>");
+                sb.Append($"        public static readonly string PrimaryKeyName = ").AppendLine(pk_column == null ? "null; " : $"\"{pk_column.Name}\"; ");
+
                 sb.AppendLine("");
                 if (this.database.ImplementINotifyPropertyChanged)
                 {
@@ -651,52 +690,6 @@ namespace DtronixModeler.Generator.Output
                 sb.AppendLine($"            }};");
                 sb.AppendLine($"        }}");
                 sb.AppendLine();
-                sb.AppendLine($"        /// <summary>");
-                sb.AppendLine($"        /// Returns all the columns in this row.");
-                sb.AppendLine($"        /// </summary>");
-                sb.AppendLine($"        /// <returns>A string array with all the columns in this row.</returns>");
-                sb.AppendLine($"        public override string[] GetColumns()");
-                sb.AppendLine($"        {{");
-                sb.AppendLine($"            return new [] {{");
-                foreach (var column in table.Column)
-                {
-                    if (column.IsPrimaryKey)
-                        continue;
-
-                    sb.AppendLine($"                \"{column.Name}\",");
-                }
-
-                sb.AppendLine($"            }};");
-                sb.AppendLine($"        }}");
-                sb.AppendLine();
-                sb.AppendLine($"        /// <summary>");
-                sb.AppendLine($"        /// Returns all the columns types.");
-                sb.AppendLine($"        /// </summary>");
-                sb.AppendLine($"        /// <returns>A type array with all the columns in this row.</returns>");
-                sb.AppendLine($"        public override Type[] GetColumnTypes()");
-                sb.AppendLine($"        {{");
-                sb.AppendLine($"            return new [] {{");
-                foreach (var column in table.Column)
-                {
-                    if (column.IsPrimaryKey)
-                        continue;
-
-                    sb.AppendLine($"                typeof({ColumnNetType(column)}),");
-                }
-
-                sb.AppendLine($"            }};");
-                sb.AppendLine($"        }}");
-                sb.AppendLine();
-                sb.AppendLine($"        /// <summary>");
-                sb.AppendLine($"        /// Gets the name of the row primary key.");
-                sb.AppendLine($"        /// </summary>");
-                sb.AppendLine($"        /// <returns>The name of the primary key</returns>");
-                sb.AppendLine($"        public override string GetPKName()");
-                sb.AppendLine($"        {{");
-                sb.Append($"            return ");
-                sb.AppendLine(pk_column == null ? "null; " : $"\"{pk_column.Name}\"; ");
-                sb.AppendLine($"        }}");
-                sb.AppendLine($"");
                 sb.AppendLine($"        /// <summary>");
                 sb.AppendLine($"        /// Gets the value of the primary key.");
                 sb.AppendLine($"        /// </summary>");

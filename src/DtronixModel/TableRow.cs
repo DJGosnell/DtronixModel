@@ -45,24 +45,6 @@ namespace DtronixModel
         public abstract object[] GetAllValues();
 
         /// <summary>
-        /// Returns all the columns in this model.
-        /// </summary>
-        /// <returns>A string array with all the columns in this model.</returns>
-        public abstract string[] GetColumns();
-
-        /// <summary>
-        /// Returns all the columns in this model.
-        /// </summary>
-        /// <returns>A string array with all the columns in this model.</returns>
-        public abstract Type[] GetColumnTypes();
-
-        /// <summary>
-        /// Gets the name of the model primary key.
-        /// </summary>
-        /// <returns>The name of the primary key</returns>
-        public abstract string GetPKName();
-
-        /// <summary>
         /// Gets the value of the primary key.
         /// </summary>
         /// <returns>The value of the primary key.</returns>

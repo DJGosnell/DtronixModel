@@ -1,10 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <DtronixModel Include="*.ddl"/>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Compile Remove="Sqlite\ContextSqliteTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Sqlite\ContextSqliteTests.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MessagePack" Version="2.1.152" />
@@ -15,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DtronixModel\DtronixModel.csproj" />
+    <ProjectReference Include="..\DtronixModel.Tools\DtronixModel.Tools.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,5 +36,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
 
 </Project>
