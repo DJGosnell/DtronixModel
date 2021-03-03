@@ -117,6 +117,7 @@ namespace DtronixModeler.Generator.Output
             sb.AppendLine($"using System.ComponentModel;");
             sb.AppendLine($"using System.Runtime.CompilerServices;");
             sb.AppendLine($"using DtronixModel;");
+            sb.AppendLine($"using DtronixModel.Attributes;");
 
             if (database.ImplementMessagePackAttributes)
                 sb.AppendLine("using MessagePack;"); 

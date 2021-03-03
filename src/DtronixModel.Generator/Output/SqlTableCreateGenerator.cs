@@ -1,6 +1,5 @@
 ﻿using DtronixModeler.Ddl;
 using DtronixModeler.Generator.MySql;
-using DtronixModeler.Generator.Sqlite;
 using System;
 using System.Collections.Generic;
 using System.Linq;

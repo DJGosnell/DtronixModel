@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DtronixModel
+namespace DtronixModel.Attributes
 {
     /// <summary>
     /// Attribute to descript a column in a database.

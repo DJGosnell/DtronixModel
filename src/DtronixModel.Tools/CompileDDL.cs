@@ -36,12 +36,6 @@ namespace DtronixModel.Tools
             foreach (var ddlPath in DdlPaths)
                 output.Add(CreateDdlOutput(ddlPath));
 
-            /*foreach (var path in DdlPaths)
-            {
-                Log.LogWarning($"Path of DDL: {path}");
-            }*/
-
-
             ExpectedOutputs = output.ToArray();
 
             return true;

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DtronixModel
+namespace DtronixModel.Attributes
 {
     /// <summary>
     /// Designates a property to represent a database association, such as a foreign key relationship.

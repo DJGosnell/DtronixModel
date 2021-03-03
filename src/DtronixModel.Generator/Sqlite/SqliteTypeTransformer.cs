@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DtronixModeler.Ddl;
+﻿using DtronixModeler.Generator;
 
-namespace DtronixModeler.Generator.Sqlite
+namespace DtronixModel.Generator.Sqlite
 {
     class SqliteTypeTransformer : TypeTransformer
     {

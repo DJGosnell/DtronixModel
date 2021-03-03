@@ -1,11 +1,7 @@
-﻿using DtronixModeler.Ddl;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using DtronixModeler.Ddl;
 
-namespace DtronixModeler.Generator.Sqlite
+namespace DtronixModel.Generator.Sqlite
 {
     public class SqlitePragmaConfigurations
     {

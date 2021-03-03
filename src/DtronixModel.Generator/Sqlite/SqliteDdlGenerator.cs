@@ -1,15 +1,15 @@
-﻿using DtronixModeler.Ddl;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using DtronixModeler.Ddl;
+using DtronixModeler.Generator;
 using Index = DtronixModeler.Ddl.Index;
 
-namespace DtronixModeler.Generator.Sqlite
+namespace DtronixModel.Generator.Sqlite
 {
     public class SqliteDdlGenerator : DdlGenerator
     {

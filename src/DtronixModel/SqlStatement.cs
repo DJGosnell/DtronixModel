@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DtronixModel.Attributes;
 
 namespace DtronixModel
 {
@@ -318,7 +319,8 @@ namespace DtronixModel
             // Open the connection.
             await _context.OpenAsync(cancellationToken);
 
-            WhereIn(new T().GetPKName(), primaryIds.Cast<object>().ToArray());
+            var pkName = AttributeCache<T, TableAttribute>.GetAttribute().PrimaryKey;
+            WhereIn(pkName, primaryIds.Cast<object>().ToArray());
             await ExecuteAsync(cancellationToken);
         }
 
@@ -390,7 +392,7 @@ namespace DtronixModel
                 throw new ArgumentException("Models parameter can not be null or empty.");
 
             // Get the primary key for the first parameter 
-            var pkName = models[0].GetPKName();
+            var pkName = AttributeCache<T, TableAttribute>.GetAttribute().PrimaryKey;
 
             var sql = new StringBuilder();
             sql.Append(pkName).Append(" IN(");
@@ -869,7 +871,7 @@ namespace DtronixModel
             // Open the connection.
             await _context.OpenAsync(cancellationToken);
 
-            var columns = models[0].GetColumns();
+            var columns = AttributeCache<T, TableAttribute>.GetAttribute().ColumnNames;
 
             var sbSql = new StringBuilder();
             sbSql.Append("INSERT INTO ").Append(_tableName).Append(" (");

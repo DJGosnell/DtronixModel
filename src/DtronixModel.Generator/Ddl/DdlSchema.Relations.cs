@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Xml.Serialization;
 
 namespace DtronixModeler.Ddl
@@ -53,7 +52,7 @@ namespace DtronixModeler.Ddl
 
         [XmlIgnore] public string _FileLocation;
 
-        [XmlIgnore] public TreeViewItem _TreeRoot;
+        //[XmlIgnore] public TreeViewItem _TreeRoot;
 
         private bool initialized = false;
 
@@ -311,7 +310,7 @@ namespace DtronixModeler.Ddl
         /// <remarks/>
         [XmlIgnore] public Table Table;
     }
-
+    /*
     public partial class Configuration
     {
         [XmlIgnore] private Visibility visibilityField;
@@ -329,6 +328,6 @@ namespace DtronixModeler.Ddl
                 }
             }
         }
-    }
+    }*/
 }
 
