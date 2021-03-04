@@ -1,0 +1,15 @@
+<!-- 
+  This file is automatically imported by NuGet into a user's project
+  when it targets a single framework, or in classic (pre 2017) csproj projects.
+-->
+<Project TreatAsLocalProperty="TaskAssembly">
+  <PropertyGroup>
+    <TaskAssembly>$(MSBuildThisFileDirectory)..\tasks\netstandard2.1\DtronixModel.Tools.dll</TaskAssembly>
+  </PropertyGroup>
+
+  <UsingTask TaskName="DtronixModel.Tools.CompileDDL" AssemblyFile="$(TaskAssembly)" />
+
+  <ItemGroup>
+    <DtronixModelDdl Include="**/*.ddl" />
+  </ItemGroup>
+</Project>

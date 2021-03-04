@@ -2,15 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-
-    <IsPackable>false</IsPackable>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Sqlite\ContextSqliteTests.cs" />
-  </ItemGroup>
 
   <ItemGroup>
-    <None Include="Sqlite\ContextSqliteTests.cs" />
+    <ProjectReference Include="..\DtronixModel\DtronixModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,15 +16,4 @@
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.7" />
     <PackageReference Include="DtronixModel.Tools" Version="2.2.0-*" PrivateAssets="All" />
   </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\DtronixModel\DtronixModel.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Sqlite\TestDatabase.sql">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-
 </Project>

@@ -270,7 +270,7 @@ namespace DtronixModel.Generator.Output
                 // Remove the trailing comma.
                 sb.Remove(sb.Length - 2, 1);
 
-                sb.AppendLine($"        }}");
+                sb.AppendLine($"        }};");
                 sb.AppendLine();
                 sb.AppendLine($"        /// <summary>");
                 sb.AppendLine($"        /// Contains all the columns types, excluding the primary key.");
@@ -287,7 +287,7 @@ namespace DtronixModel.Generator.Output
                 // Remove the trailing comma.
                 sb.Remove(sb.Length - 2, 1);
 
-                sb.AppendLine($"        }}");
+                sb.AppendLine($"        }};");
                 sb.AppendLine();
                 sb.AppendLine($"        /// <summary>");
                 sb.AppendLine($"        /// Gets the name of the row primary key if one is set.");
