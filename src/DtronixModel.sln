@@ -9,16 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtronixModeler", "DtronixMo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtronixModelTests", "DtronixModelTests\DtronixModelTests.csproj", "{0C40AA34-BBF8-438B-A131-DE0196C932E3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{60F30C08-E455-44B9-A8E7-EA34F4972E75}"
-	ProjectSection(SolutionItems) = preProject
-		CommonAssemblyInfo.cs = CommonAssemblyInfo.cs
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtronixModel.Tools", "DtronixModel.Tools\DtronixModel.Tools.csproj", "{85D6E2ED-6E2B-4876-A59F-B8F9A710C08A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtronixModel.Tools.Tests", "DtronixModel.Tools.Tests\DtronixModel.Tools.Tests.csproj", "{F44DE2F9-9B42-4FF0-82EB-0CFC0EE58769}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DtronixModel.Generator", "DtronixModel.Generator\DtronixModel.Generator.csproj", "{48F0CF19-181B-4645-826B-6BF63B885A05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DtronixModel.Generator", "DtronixModel.Generator\DtronixModel.Generator.csproj", "{48F0CF19-181B-4645-826B-6BF63B885A05}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
