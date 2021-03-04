@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net5.0-Windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <Description>Modeler for defining database systems.</Description>
     <Version>2.2.0</Version>
@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DtronixModel.Generator\DtronixModel.Generator.csproj" />
     <ProjectReference Include="..\DtronixModel\DtronixModel.csproj" />
   </ItemGroup>
 

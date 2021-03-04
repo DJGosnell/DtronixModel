@@ -1,12 +1,14 @@
-﻿using DtronixModeler.Ddl;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
+using DtronixModel.Generator.Ddl;
+using Association = DtronixModel.Generator.Ddl.Association;
+using Column = DtronixModel.Generator.Ddl.Column;
+using Database = DtronixModel.Generator.Ddl.Database;
+using Table = DtronixModel.Generator.Ddl.Table;
 
-namespace DtronixModeler.Generator.Output
+namespace DtronixModel.Generator.Output
 {
     public class CSharpCodeGenerator
     {
@@ -306,7 +308,7 @@ namespace DtronixModeler.Generator.Output
                 sb.AppendLine($"        /// Bit array which contains the flags for each table column.");
                 sb.AppendLine($"        /// </summary>");
 
-                var totalColumns = table.Column.Count();
+                var totalColumns = Enumerable.Count<Column>(table.Column);
                 if (this.database.ImplementProtobufNetDataContracts)
                     sb.AppendLine($"        [ProtoBuf.ProtoMember({totalColumns + 1})]");
 
@@ -441,7 +443,7 @@ namespace DtronixModeler.Generator.Output
 
                         assoc.OtherAssociationName = db_assoc.Table2Name;
                         assoc.OtherColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R2);
-                        assoc.OtherTable = database.Table.Single(t => t.Name == db_assoc.Table2);
+                        assoc.OtherTable = Enumerable.Single<Table>(database.Table, t => t.Name == db_assoc.Table2);
                         assoc.OtherCardinality = db_assoc.Table2Cardinality;
 
 
@@ -455,7 +457,7 @@ namespace DtronixModeler.Generator.Output
 
                         assoc.OtherAssociationName = db_assoc.Table1Name;
                         assoc.OtherColumn = db_assoc.GetReferenceColumn(database, Association.Reference.R1);
-                        assoc.OtherTable = database.Table.Single(t => t.Name == db_assoc.Table1);
+                        assoc.OtherTable = Enumerable.Single<Table>(database.Table, t => t.Name == db_assoc.Table1);
                         assoc.OtherCardinality = db_assoc.Table1Cardinality;
 
                     }
@@ -515,7 +517,7 @@ namespace DtronixModeler.Generator.Output
                 sb.AppendLine($"        /// <param name=\"onlyChanged\">True to only clone the changes from the source. False to clone all the values regardless of changed or unchanged.</param>");
                 sb.AppendLine($"        public {table.Name}({table.Name} source, bool onlyChanged = false)");
                 sb.AppendLine($"        {{ ");
-                for (int i = 0; i < table.Column.Count(); i++)
+                for (int i = 0; i < Enumerable.Count<Column>(table.Column); i++)
                 {
                     if (table.Column[i].IsPrimaryKey)
                         sb.AppendLine($"            _{table.Column[i].Name} = source._{table.Column[i].Name};");
@@ -540,11 +542,11 @@ namespace DtronixModeler.Generator.Output
                 sb.AppendLine($"        /// <param name=\"context\">The current context of the database.</param>");
                 sb.AppendLine($"        public {table.Name}(DbDataReader reader, Context context)");
                 sb.AppendLine($"        {{");
-                sb.AppendLine($"            ChangedFlags = new BitArray({table.Column.Count()});");
+                sb.AppendLine($"            ChangedFlags = new BitArray({Enumerable.Count<Column>(table.Column)});");
                 sb.AppendLine($"            Read(reader, context);");
                 sb.AppendLine($"        }}");
                 sb.AppendLine($"");
-                var primary_key = table.Column.FirstOrDefault(c => c.IsPrimaryKey);
+                var primary_key = Enumerable.FirstOrDefault<Column>(table.Column, c => c.IsPrimaryKey);
                 if (primary_key != null)
                 {
                     sb.AppendLine($"        /// <summary>");
@@ -554,7 +556,7 @@ namespace DtronixModeler.Generator.Output
                     sb.AppendLine($"        /// <param name=\"id\">Id to set the row to.</param>");
                     sb.AppendLine($"        public {table.Name}({ColumnNetType(primary_key)} id)");
                     sb.AppendLine($"        {{");
-                    sb.AppendLine($"            ChangedFlags = new BitArray({table.Column.Count()});");
+                    sb.AppendLine($"            ChangedFlags = new BitArray({Enumerable.Count<Column>(table.Column)});");
                     sb.AppendLine($"            _{primary_key.Name} = id;");
                     sb.AppendLine($"        }}");
                 }
@@ -585,7 +587,7 @@ namespace DtronixModeler.Generator.Output
                     if (reader_get == "DateTimeOffset")
                         reader_get = "DateTime";
 
-                    if (this.database.Enumeration.Any(en => en.Name == column.NetType))
+                    if (Enumerable.Any<Enumeration>(this.database.Enumeration, en => en.Name == column.NetType))
                     {
                         sb.AppendLine($"                    case \"{column.Name}\":");
                         sb.AppendLine($"                        _{column.Name} = ({column.NetType})reader.GetInt32(i);");

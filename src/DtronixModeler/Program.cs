@@ -1,7 +1,4 @@
-﻿using DtronixModeler.Generator.Output;
-using DtronixModeler.Ddl;
-using DtronixModeler.Generator.Sqlite;
-using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,10 +8,13 @@ using System.Xml.Serialization;
 using DtronixModeler.Xaml;
 using System.Windows;
 using System.Runtime.InteropServices;
-using NDesk.Options;
-using DtronixModeler.Generator.MySqlMwb;
+ using DtronixModel.Generator;
+ using DtronixModel.Generator.Ddl;
+ using DtronixModel.Generator.MySqlMwb;
+ using DtronixModel.Generator.Output;
+ using DtronixModel.Generator.Sqlite;
 
-namespace DtronixModeler.Generator
+ namespace DtronixModeler.Generator
 {
     class Program
     {

@@ -1,5 +1,4 @@
-﻿using DtronixModeler.Ddl;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,6 +19,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Xml.Serialization;
+using DtronixModel.Generator;
+using DtronixModel.Generator.Ddl;
+using Database = DtronixModel.Generator.Ddl.Database;
+using Table = DtronixModel.Generator.Ddl.Table;
 
 namespace DtronixModeler.Xaml
 {

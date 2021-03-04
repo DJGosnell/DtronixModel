@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using DtronixModel.Generator.Ddl;
+using DtronixModel.Generator.Output;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
@@ -38,12 +40,19 @@ namespace DtronixModel.Tools
 
             ExpectedOutputs = output.ToArray();
 
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+
             return true;
+        }
+
+        private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            System.Diagnostics.Debugger.Launch();
         }
 
         public string CreateDdlOutput(string ddlPath)
         {
-            
+            var ddlFullPath = Path.Combine(ProjectDirectory, ddlPath);
             var ddlName = Path.GetFileNameWithoutExtension(ddlPath);
             var outDir = Path.Combine(_baseOutputPath, ddlName);
             if (Directory.Exists(outDir))
@@ -55,19 +64,13 @@ namespace DtronixModel.Tools
 
             Log.LogWarning($"Creating ddl {csFile}");
 
+            var database = Database.LoadFromFile(ddlFullPath);
+
+            var generator = new CSharpCodeGenerator(database);
+
             using (var writer = File.CreateText(csFile))
             {
-                writer.Write(@"
-using System;
-
-namespace DtronixModel.Tools.Tests
-{
-    public class "+ ddlName + @"
-    {
-        public static string Name = null;
-    }
-}
-");
+                writer.Write(generator.TransformText());
             }
 
             return csFile;

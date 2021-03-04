@@ -5,9 +5,11 @@ using System.Data.SQLite;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using DtronixModeler.Ddl;
-using DtronixModeler.Generator;
-using Index = DtronixModeler.Ddl.Index;
+using DtronixModel.Generator.Ddl;
+using Column = DtronixModel.Generator.Ddl.Column;
+using Database = DtronixModel.Generator.Ddl.Database;
+using Index = DtronixModel.Generator.Ddl.Index;
+using Table = DtronixModel.Generator.Ddl.Table;
 
 namespace DtronixModel.Generator.Sqlite
 {

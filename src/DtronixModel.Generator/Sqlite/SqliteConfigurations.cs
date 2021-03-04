@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DtronixModeler.Ddl;
+using DtronixModel.Generator.Ddl;
 
 namespace DtronixModel.Generator.Sqlite
 {

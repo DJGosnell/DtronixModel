@@ -1,9 +1,5 @@
-﻿using DtronixModeler.Ddl;
-using DtronixModeler.Generator;
-using DtronixModeler.Generator.Sqlite;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.IO;
@@ -12,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using DtronixModel.Generator;
+using DtronixModel.Generator.Ddl;
+using DtronixModel.Generator.Sqlite;
+using Column = DtronixModel.Generator.Ddl.Column;
+using Database = DtronixModel.Generator.Ddl.Database;
 
 namespace DtronixModeler.Xaml
 {

@@ -6,16 +6,20 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
-using DtronixModeler.Ddl;
 using System.Collections.ObjectModel;
-using DtronixModeler.Generator.Sqlite;
 using DtronixModeler.Generator;
 using System.IO;
 using System.ComponentModel;
 using System.Windows.Documents;
 using System.Diagnostics;
-using DtronixModeler.Generator.MySqlMwb;
-using DtronixModeler.Generator.MySql;
+using DtronixModel.Generator;
+using DtronixModel.Generator.Ddl;
+using DtronixModel.Generator.MySql;
+using DtronixModel.Generator.MySqlMwb;
+using DtronixModel.Generator.Sqlite;
+using Association = DtronixModel.Generator.Ddl.Association;
+using Column = DtronixModel.Generator.Ddl.Column;
+using Table = DtronixModel.Generator.Ddl.Table;
 
 namespace DtronixModeler.Xaml
 {
@@ -698,7 +702,7 @@ namespace DtronixModeler.Xaml
                 int index = column.Name.IndexOf('_');
                 string sel_table = column.Name.Substring(0, index);
                 string sel_column = column.Name.Substring(index + 1);
-                Ddl.Table found_table = null;
+                Table found_table = null;
 
                 if ((found_table = database.Table.FirstOrDefault(t => t.Name == sel_table)) != null)
                 {

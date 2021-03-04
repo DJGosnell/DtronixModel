@@ -1,10 +1,7 @@
-﻿using DtronixModeler.Ddl;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
-namespace DtronixModeler.Generator
+namespace DtronixModel.Generator
 {
     public class TypeTransformer
     {

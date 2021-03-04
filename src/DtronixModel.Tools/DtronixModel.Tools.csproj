@@ -39,7 +39,4 @@
     </ItemGroup>
     <Delete Files="@(FileToDelete)" />
   </Target>
-
-
-
 </Project>

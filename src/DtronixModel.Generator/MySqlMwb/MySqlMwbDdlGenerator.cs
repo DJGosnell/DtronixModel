@@ -1,13 +1,13 @@
-﻿using DtronixModeler.Ddl;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using DtronixModeler.Generator.MySql;
 using System.IO.Compression;
-using System.Xml;
 using System.Threading.Tasks;
+using System.Xml;
+using DtronixModel.Generator.Ddl;
+using DtronixModel.Generator.MySql;
 
-namespace DtronixModeler.Generator.MySqlMwb
+namespace DtronixModel.Generator.MySqlMwb
 {
     public class MySqlMwbDdlGenerator : DdlGenerator
     {

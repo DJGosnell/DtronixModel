@@ -1,8 +1,6 @@
-﻿using DtronixModeler.Generator;
-
-namespace DtronixModel.Generator.Sqlite
+﻿namespace DtronixModel.Generator.Sqlite
 {
-    class SqliteTypeTransformer : TypeTransformer
+    public class SqliteTypeTransformer : TypeTransformer
     {
         public SqliteTypeTransformer()
         {

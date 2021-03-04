@@ -3,7 +3,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Xaml="clr-namespace:DtronixModeler.Xaml" x:Class="DtronixModeler.Xaml.MainWindow"
     xmlns:dxaml="clr-namespace:DtronixModeler.Xaml"
-    xmlns:ddl="clr-namespace:DtronixModeler.Ddl"
     xmlns:converters="clr-namespace:DtronixModeler.Xaml.Converters"
     Title="Dtronix Modeler" Height="700" Width="950" MinHeight="450" MinWidth="700" Icon="Images/database_blue.png"
     Closing="Window_Closing" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp">

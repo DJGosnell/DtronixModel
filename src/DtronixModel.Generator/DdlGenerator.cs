@@ -1,12 +1,8 @@
-﻿using DtronixModeler.Ddl;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
+﻿using System.Data.Common;
 using System.Threading.Tasks;
+using DtronixModel.Generator.Ddl;
 
-namespace DtronixModeler.Generator
+namespace DtronixModel.Generator
 {
     public abstract class DdlGenerator
     {
