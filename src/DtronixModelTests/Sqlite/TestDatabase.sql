@@ -18,9 +18,9 @@ CREATE TABLE AllTypes (
 	db_int16 INTEGER ,
 	db_int32 INTEGER ,
 	db_int64 INTEGER ,
-	db_uint16 INTEGER ,
+	/*db_uint16 INTEGER ,
 	db_uint32 INTEGER ,
-	db_uint64 INTEGER ,
+	db_uint64 INTEGER ,*/
 	db_byte_array BLOB ,
 	db_byte BLOB ,
 	db_sbyte INTEGER NOT NULL ,
