@@ -232,8 +232,42 @@ namespace DtronixModeler.Generator.Output
                         pk_column = column;
                     }
                 }
+                /*
+                 *
+    [Table(Name = "AllTypes", 
+        ColumnNames = new [] {"asfasf"},
+        ColumnTypes = new Type[] { typeof(Int16?) },
+        PrimaryKey = "")]
+                 */
 
-                sb.AppendLine($"    [Table(Name = \"{table.Name}\")]");
+
+                sb.AppendLine($"    [Table(Name = \"{table.Name}\",");
+                sb.Append($"        ColumnNames = new string[] {{ ");
+                foreach (var column in table.Column)
+                {
+                    // We skip the primary key since it is never inserted.
+                    if (column.IsPrimaryKey)
+                        continue;
+
+                    sb.Append($"\"{column.Name}\", ");
+                }
+                // Remove the trailing comma.
+                sb.Remove(sb.Length - 2, 2).AppendLine(" },");
+
+                sb.Append($"        ColumnTypes = new Type[] {{");
+                foreach (var column in table.Column)
+                {
+                    // We skip the primary key since it is never inserted.
+                    if (column.IsPrimaryKey)
+                        continue;
+
+                    sb.Append($"typeof({ColumnNetType(column)}), ");
+                }
+                // Remove the trailing comma.
+                sb.Remove(sb.Length - 2, 2).AppendLine(" },");
+
+                sb.Append($"        PrimaryKey = ").AppendLine(pk_column == null ? "null; " : $"\"{pk_column.Name}\")]");
+
                 if (this.database.ImplementProtobufNetDataContracts)
                     sb.AppendLine($"    [ProtoBuf.ProtoContract]");
 
@@ -251,46 +285,7 @@ namespace DtronixModeler.Generator.Output
 
                 sb.AppendLine($"    {{");
 
-                sb.AppendLine($"        /// <summary>");
-                sb.AppendLine($"        /// Contains all the column names in this row, excluding the primary key.");
-                sb.AppendLine($"        /// </summary>");
-                sb.AppendLine($"        public static readonly string[] Columns = new [] {{");
-                foreach (var column in table.Column)
-                {
-                    // We skip the primary key since it is never inserted.
-                    if (column.IsPrimaryKey)
-                        continue;
-
-                    sb.AppendLine($"            \"{column.Name}\",");
-                }
-                // Remove the trailing comma.
-                sb.Remove(sb.Length - 2, 1);
-
-                sb.AppendLine($"        }};");
                 sb.AppendLine();
-                sb.AppendLine($"        /// <summary>");
-                sb.AppendLine($"        /// Contains all the columns types, excluding the primary key.");
-                sb.AppendLine($"        /// </summary>");
-                sb.AppendLine($"        public static readonly Type[] ColumnTypes = new [] {{");
-                foreach (var column in table.Column)
-                {
-                    // We skip the primary key since it is never inserted.
-                    if (column.IsPrimaryKey)
-                        continue;
-
-                    sb.AppendLine($"            typeof({ColumnNetType(column)}),");
-                }
-                // Remove the trailing comma.
-                sb.Remove(sb.Length - 2, 1);
-
-                sb.AppendLine($"        }};");
-                sb.AppendLine();
-                sb.AppendLine($"        /// <summary>");
-                sb.AppendLine($"        /// Gets the name of the row primary key if one is set.");
-                sb.AppendLine($"        /// </summary>");
-                sb.Append($"        public static readonly string PrimaryKeyName = ").AppendLine(pk_column == null ? "null; " : $"\"{pk_column.Name}\"; ");
-
-                sb.AppendLine("");
                 if (this.database.ImplementINotifyPropertyChanged)
                 {
                     sb.AppendLine($"        /// <summary>");
