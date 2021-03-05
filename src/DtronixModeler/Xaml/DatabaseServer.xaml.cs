@@ -10,9 +10,10 @@ using System.Windows;
 using System.Windows.Controls;
 using DtronixModel.Generator;
 using DtronixModel.Generator.Ddl;
-using DtronixModel.Generator.Sqlite;
-using Column = DtronixModel.Generator.Ddl.Column;
-using Database = DtronixModel.Generator.Ddl.Database;
+using DtronixModeler.Generator;
+using DtronixModeler.Sqlite;
+using Column = DtronixModeler.Generator.Ddl.Column;
+using Database = DtronixModeler.Generator.Ddl.Database;
 
 namespace DtronixModeler.Xaml
 {

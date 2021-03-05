@@ -1,4 +1,4 @@
-﻿namespace DtronixModel.Generator
+﻿namespace DtronixModeler.Generator
 {
     public class TypeTransformerType
     {

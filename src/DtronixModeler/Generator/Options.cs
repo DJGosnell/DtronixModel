@@ -142,7 +142,7 @@ using System.Linq;
 using NDesk.Options;
 #endif
 
-namespace DtronixModel.Generator {
+namespace DtronixModeler.Generator {
 
 	public class OptionValueCollection : IList, IList<string> {
 
@@ -480,7 +480,6 @@ namespace DtronixModel.Generator {
 			get {return this.option;}
 		}
 
-		[SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
 		public override void GetObjectData (SerializationInfo info, StreamingContext context)
 		{
 			base.GetObjectData (info, context);

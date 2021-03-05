@@ -19,11 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.7" />
     <PackageReference Include="Tools.InnoSetup" Version="6.0.5" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DtronixModel.Generator\DtronixModel.Generator.csproj" />
     <ProjectReference Include="..\DtronixModel\DtronixModel.csproj" />
   </ItemGroup>
 

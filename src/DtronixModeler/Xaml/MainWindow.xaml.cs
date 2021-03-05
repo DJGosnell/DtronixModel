@@ -7,19 +7,19 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
-using DtronixModeler.Generator;
 using System.IO;
 using System.ComponentModel;
 using System.Windows.Documents;
 using System.Diagnostics;
 using DtronixModel.Generator;
 using DtronixModel.Generator.Ddl;
-using DtronixModel.Generator.MySql;
-using DtronixModel.Generator.MySqlMwb;
-using DtronixModel.Generator.Sqlite;
-using Association = DtronixModel.Generator.Ddl.Association;
-using Column = DtronixModel.Generator.Ddl.Column;
-using Table = DtronixModel.Generator.Ddl.Table;
+using DtronixModeler.Generator;
+using DtronixModeler.MySql;
+using DtronixModeler.MySqlMwb;
+using DtronixModeler.Sqlite;
+using Association = DtronixModeler.Generator.Ddl.Association;
+using Column = DtronixModeler.Generator.Ddl.Column;
+using Table = DtronixModeler.Generator.Ddl.Table;
 
 namespace DtronixModeler.Xaml
 {

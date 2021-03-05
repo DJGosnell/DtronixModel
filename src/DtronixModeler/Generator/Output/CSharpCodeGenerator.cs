@@ -2,13 +2,9 @@
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using DtronixModel.Generator.Ddl;
-using Association = DtronixModel.Generator.Ddl.Association;
-using Column = DtronixModel.Generator.Ddl.Column;
-using Database = DtronixModel.Generator.Ddl.Database;
-using Table = DtronixModel.Generator.Ddl.Table;
+using DtronixModeler.Generator.Ddl;
 
-namespace DtronixModel.Generator.Output
+namespace DtronixModeler.Generator.Output
 {
     public class CSharpCodeGenerator
     {

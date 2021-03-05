@@ -1,14 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
     <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\artifacts\</PackageOutputPath>
     <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <!-- Change the default location where NuGet will put the build output -->
     <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
     <VersionPrefix>2.2.0</VersionPrefix>
-    <VersionSuffix>build$([System.DateTime]::Now.ToString('yyyyMMdd-HHmmss'))</VersionSuffix>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <VersionSuffix>build$([System.DateTime]::Now.ToString('yyyyMMdd-HHmm'))</VersionSuffix>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,21 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="build\DtronixModel.Tools.targets" />
+    <Compile Include="..\DtronixModeler\Generator\**\*.cs" LinkBase="Generator" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Build.Framework" Version="16.9.0"  PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.9.0"  PrivateAssets="All" />
-    <ProjectReference Include="..\DtronixModel.Generator\DtronixModel.Generator.csproj">
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <IncludeAssets>DtronixModel.Generator.dll</IncludeAssets>
-    </ProjectReference>
-
-    <_PackageFiles Include="$(OutputPath)\DtronixModel.Generator.dll">
-      <BuildAction>None</BuildAction>
-      <PackagePath>tasks\netstandard2.1</PackagePath>
-    </_PackageFiles>
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.9.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.9.0" PrivateAssets="All" />
   </ItemGroup>
 
   <Target Name="BeforePack" BeforeTargets="BeforeBuild">

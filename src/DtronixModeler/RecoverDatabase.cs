@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using Database = DtronixModel.Generator.Ddl.Database;
+using Database = DtronixModeler.Generator.Ddl.Database;
 
 namespace DtronixModeler
 {

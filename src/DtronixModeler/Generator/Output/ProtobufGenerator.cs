@@ -1,7 +1,7 @@
 ﻿using System;
-using DtronixModel.Generator.Ddl;
+using DtronixModeler.Generator.Ddl;
 
-namespace DtronixModel.Generator.Output {
+namespace DtronixModeler.Generator.Output {
 	public class ProtobufGenerator
     {
 		private Database database;

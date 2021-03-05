@@ -6,7 +6,7 @@ using System.Data.Common;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace DtronixModel.Generator
+namespace DtronixModeler.Generator
 {
     public static class Utilities
     {

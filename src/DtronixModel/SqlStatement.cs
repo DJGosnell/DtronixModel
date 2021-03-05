@@ -97,6 +97,10 @@ namespace DtronixModel
         /// </summary>
         private string _sqlWhere;
 
+        /// <summary>
+        /// Class logger.
+        /// </summary>
+        private readonly ILogger _logger;
 
         /// <summary>
         /// Starts a Statement in the specified mode of operation. Always dispose of the statement to ensure underlying
@@ -105,10 +109,24 @@ namespace DtronixModel
         /// <param name="mode">Mode that this query will operate in. Prevents invalid operations.</param>
         /// <param name="context">Context that this query will operate inside of.</param>
         public SqlStatement(Mode mode, Context context)
+            : this(mode, context, null)
+        {
+
+        }
+
+        /// <summary>
+        /// Starts a Statement in the specified mode of operation. Always dispose of the statement to ensure underlying
+        /// DbCommand is disposed and prevent memory leaks.
+        /// </summary>
+        /// <param name="mode">Mode that this query will operate in. Prevents invalid operations.</param>
+        /// <param name="context">Context that this query will operate inside of.</param>
+        /// <param name="logger">Logger for the current statement execution.</param>
+        public SqlStatement(Mode mode, Context context, ILogger logger)
         {
             _context = context;
             _mode = mode;
             _command = context.Connection.CreateCommand();
+            _logger = logger;
 
             try
             {
@@ -164,9 +182,7 @@ namespace DtronixModel
             _command.Parameters.Clear();
             _command.CommandText = SqlBindParameters(sql, binding);
 
-            // Logging to output queries to stdout.
-            if (_context.Debug.HasFlag(Context.DebugLevel.Queries))
-                Console.Out.WriteLine("Query: \r\n" + _command.CommandText);
+            _logger?.Debug("Query: \r\n" + _command.CommandText);
 
             var result = await _command.ExecuteNonQueryAsync(cancellationToken);
 
@@ -217,12 +233,15 @@ namespace DtronixModel
             _command.Parameters.Clear();
             _command.CommandText = SqlBindParameters(sql, binding);
 
-            // Logging to output queries to stdout.
-            if (_context.Debug.HasFlag(Context.DebugLevel.Queries))
-                Console.Out.WriteLine("Query: \r\n" + _command.CommandText);
-
+            _logger?.Debug("Query: \r\n" + _command.CommandText);
+#if NETSTANDARD2_1
+            await using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
+#else
             using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
+#endif
+            {
                 await onRead(reader, cancellationToken);
+            }
 
             _command.Dispose();
         }
@@ -369,7 +388,7 @@ namespace DtronixModel
         }
         
         /// <summary>
-        /// Sets where to the provided rows's primary key.
+        /// Sets where to the provided row's primary key.
         /// </summary>
         /// <param name="model">Row to provide the primary key for.</param>
         /// <returns>Current statement for chaining.</returns>
@@ -536,8 +555,7 @@ namespace DtronixModel
                         // Execute the update command.
                         await _command.ExecuteNonQueryAsync(cancellationToken);
 
-                        if (_context.Debug.HasFlag(Context.DebugLevel.Updates))
-                            Console.Out.WriteLine("Update: \r\n" + _command.CommandText);
+                        _logger?.Debug("Update: \r\n" + _command.CommandText);
                     }
 
                     transaction?.Commit();
@@ -587,7 +605,11 @@ namespace DtronixModel
             BuildSql(null);
             T model;
 
+#if NETSTANDARD2_1
+            await using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
+#else
             using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
+#endif
             {
                 if (await reader.ReadAsync(cancellationToken) == false)
                     return default;
@@ -687,7 +709,12 @@ namespace DtronixModel
             }
 
             var results = new List<T>();
+
+#if NETSTANDARD2_1
+            await using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
+#else
             using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
+#endif
             {
                 while (await reader.ReadAsync(cancellationToken))
                 {
@@ -790,8 +817,7 @@ namespace DtronixModel
             }
 
             _command.CommandText = sql.ToString();
-            if (_context.Debug.HasFlag(Context.DebugLevel.Queries))
-                Console.Out.WriteLine("Query: \r\n" + _command.CommandText);
+            _logger?.Debug("Query: \r\n" + _command.CommandText);
         }
 
 
@@ -799,7 +825,7 @@ namespace DtronixModel
         /// Binds a parameter in the current command.
         /// </summary>
         /// <param name="value">Value to bind.</param>
-        /// <param name="parameterList">List of paramaters to bind.</param>
+        /// <param name="parameterList">List of parameters to bind.</param>
         /// <returns>Parameter name for the binding reference.</returns>
         private string BindParameter(object value, List<DbParameter> parameterList = null)
         {
@@ -809,8 +835,7 @@ namespace DtronixModel
             param.Value = PrepareParameterValue(value);
 
             // Logging to output bound parameters to stdout.
-            if (_context.Debug.HasFlag(Context.DebugLevel.BoundParameters))
-                Console.Out.WriteLine("Parameter: " + key + " = " + value);
+            _logger?.Debug("Parameter: " + key + " = " + value);
 
             parameterList?.Add(param);
 
@@ -842,9 +867,9 @@ namespace DtronixModel
         /// <returns>Inserted IDs of the rows.</returns>
         public long[] Insert(T[] models)
         {
-            var inserTask = InsertAsync(models, CancellationToken.None);
+            var insertTask = InsertAsync(models, CancellationToken.None);
 
-            return inserTask.Result;
+            return insertTask.Result;
         }
 
         /// <summary>
@@ -941,8 +966,7 @@ namespace DtronixModel
                             throw new Exception("Unable to insert row");
                     }
 
-                    if (_context.Debug.HasFlag(Context.DebugLevel.Inserts))
-                        Console.Out.WriteLine("Insert: \r\n" + _command.CommandText);
+                    _logger?.Debug("Insert: \r\n" + _command.CommandText);
                 }
 
                 // Commit all inserts.
@@ -960,8 +984,8 @@ namespace DtronixModel
                 transaction?.Dispose();
             }
 
-            if (_context.Debug.HasFlag(Context.DebugLevel.Inserts))
-                Console.Out.WriteLine("Insert new Row IDs: \r\n" + string.Join(", ", newRowIds));
+            if(newRowIds != null)
+                _logger?.Debug("Insert new Row IDs: \r\n" + string.Join(", ", newRowIds));
 
             return newRowIds;
         }

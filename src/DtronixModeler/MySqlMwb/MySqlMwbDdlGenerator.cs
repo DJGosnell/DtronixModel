@@ -5,9 +5,13 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using System.Xml;
 using DtronixModel.Generator.Ddl;
-using DtronixModel.Generator.MySql;
+using DtronixModeler.Generator;
+using DtronixModeler.MySql;
+using Column = DtronixModeler.Generator.Ddl.Column;
+using Database = DtronixModeler.Generator.Ddl.Database;
+using Table = DtronixModeler.Generator.Ddl.Table;
 
-namespace DtronixModel.Generator.MySqlMwb
+namespace DtronixModeler.MySqlMwb
 {
     public class MySqlMwbDdlGenerator : DdlGenerator
     {

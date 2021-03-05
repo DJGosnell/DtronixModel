@@ -1,4 +1,6 @@
-﻿namespace DtronixModel.Generator.Sqlite
+﻿using DtronixModeler.Generator;
+
+namespace DtronixModeler.Sqlite
 {
     public class SqliteTypeTransformer : TypeTransformer
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using DtronixModel.Generator.Ddl;
+using DtronixModeler.Generator.Ddl;
 
-namespace DtronixModel.Generator
+namespace DtronixModeler.Generator
 {
     public class CommandOptions
     {

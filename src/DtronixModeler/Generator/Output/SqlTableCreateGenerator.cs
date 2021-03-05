@@ -1,6 +1,6 @@
-﻿using DtronixModel.Generator.Ddl;
+﻿using DtronixModeler.Generator.Ddl;
 
-namespace DtronixModel.Generator.Output {
+namespace DtronixModeler.Generator.Output {
 	public class SqlTableCreateGenerator {
 		private Database database;
 		private TypeTransformer type_transformer;

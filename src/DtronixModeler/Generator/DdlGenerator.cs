@@ -1,8 +1,8 @@
 ﻿using System.Data.Common;
 using System.Threading.Tasks;
-using DtronixModel.Generator.Ddl;
+using DtronixModeler.Generator.Ddl;
 
-namespace DtronixModel.Generator
+namespace DtronixModeler.Generator
 {
     public abstract class DdlGenerator
     {

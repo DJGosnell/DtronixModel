@@ -21,8 +21,9 @@ using System.Windows.Navigation;
 using System.Xml.Serialization;
 using DtronixModel.Generator;
 using DtronixModel.Generator.Ddl;
-using Database = DtronixModel.Generator.Ddl.Database;
-using Table = DtronixModel.Generator.Ddl.Table;
+using DtronixModeler.Generator;
+using Database = DtronixModeler.Generator.Ddl.Database;
+using Table = DtronixModeler.Generator.Ddl.Table;
 
 namespace DtronixModeler.Xaml
 {

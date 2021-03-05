@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DtronixModel.Generator
+namespace DtronixModeler.Generator
 {
 
     /// <summary>

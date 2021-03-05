@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
-using DtronixModel.Generator.Ddl;
-using DtronixModel.Generator.Output;
+using DtronixModeler.Generator.Ddl;
+using DtronixModeler.Generator.Output;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 

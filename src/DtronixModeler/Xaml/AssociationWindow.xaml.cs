@@ -12,10 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using DtronixModel.Generator.Ddl;
-using Association = DtronixModel.Generator.Ddl.Association;
-using Column = DtronixModel.Generator.Ddl.Column;
-using Database = DtronixModel.Generator.Ddl.Database;
-using Table = DtronixModel.Generator.Ddl.Table;
+using Association = DtronixModeler.Generator.Ddl.Association;
+using Column = DtronixModeler.Generator.Ddl.Column;
+using Database = DtronixModeler.Generator.Ddl.Database;
+using Table = DtronixModeler.Generator.Ddl.Table;
 
 namespace DtronixModeler.Xaml
 {

@@ -13,6 +13,8 @@ namespace DtronixModel
         /// </summary>
         private readonly Action _onDispose;
 
+        private readonly ILogger _logger;
+
         /// <summary>
         /// Wrapped transaction for the database.
         /// </summary>
@@ -25,10 +27,12 @@ namespace DtronixModel
         /// </summary>
         /// <param name="transaction">Transaction to wrap.</param>
         /// <param name="onDispose">Method to call on transaction disposal.</param>
-        public SqlTransaction(DbTransaction transaction, Action onDispose)
+        /// <param name="logger">Logger to use for this transaction event.</param>
+        public SqlTransaction(DbTransaction transaction, Action onDispose, ILogger logger)
         {
             Transaction = transaction;
             _onDispose = onDispose;
+            _logger = logger;
         }
 
         /// <summary>

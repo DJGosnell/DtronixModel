@@ -6,12 +6,13 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DtronixModel.Generator.Ddl;
-using Column = DtronixModel.Generator.Ddl.Column;
-using Database = DtronixModel.Generator.Ddl.Database;
-using Index = DtronixModel.Generator.Ddl.Index;
-using Table = DtronixModel.Generator.Ddl.Table;
+using DtronixModeler.Generator;
+using Column = DtronixModeler.Generator.Ddl.Column;
+using Database = DtronixModeler.Generator.Ddl.Database;
+using Index = DtronixModeler.Generator.Ddl.Index;
+using Table = DtronixModeler.Generator.Ddl.Table;
 
-namespace DtronixModel.Generator.Sqlite
+namespace DtronixModeler.Sqlite
 {
     public class SqliteDdlGenerator : DdlGenerator
     {
@@ -135,7 +136,7 @@ namespace DtronixModel.Generator.Sqlite
                                 var index = new Index()
                                 {
                                     Name = reader.GetString(0),
-                                    Table = database.Table.First(t => t.Name == table.Name)
+                                    Table = Enumerable.First<Table>(database.Table, t => t.Name == table.Name)
                                 };
 
                                 table.Index.Add(index);

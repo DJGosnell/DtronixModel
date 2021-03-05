@@ -2,9 +2,11 @@
   This file is automatically imported by NuGet into a user's project
   when it targets a single framework, or in classic (pre 2017) csproj projects.
 -->
-<Project TreatAsLocalProperty="TaskAssembly">
+<Project TreatAsLocalProperty="TaskFolder;TaskAssembl">
   <PropertyGroup>
-    <TaskAssembly>$(MSBuildThisFileDirectory)..\tasks\netstandard2.1\DtronixModel.Tools.dll</TaskAssembly>
+    <TaskFolder Condition=" '$(MSBuildRuntimeType)' == 'Core' ">netstandard2.0</TaskFolder>
+    <TaskFolder Condition=" '$(MSBuildRuntimeType)' != 'Core' ">net472</TaskFolder>
+    <TaskAssembly>$(MSBuildThisFileDirectory)..\tasks\$(TaskFolder)\DtronixModel.Tools.dll</TaskAssembly>
   </PropertyGroup>
 
   <UsingTask TaskName="DtronixModel.Tools.CompileDDL" AssemblyFile="$(TaskAssembly)" />

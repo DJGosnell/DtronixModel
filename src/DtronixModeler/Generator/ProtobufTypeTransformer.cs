@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace DtronixModel.Generator
+namespace DtronixModeler.Generator
 {
     public static class ProtobufTypeTransformer
     {

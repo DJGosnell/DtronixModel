@@ -14,44 +14,11 @@ namespace DtronixModel
     /// var result = context.Table.Select().Where("id = {0}", 1).ExecuteFetch();
     /// }
     /// </example>
-    public abstract class Context : IDisposable, IAsyncDisposable
+    public abstract class Context : IDisposable
+#if  NETSTANDARD2_1
+            , IAsyncDisposable
+#endif
     {
-        /// <summary>
-        /// Enumeration to toggle each option to debug and output to the console.
-        /// </summary>
-        public enum DebugLevel
-        {
-            /// <summary>
-            /// (Default) No output is generated.
-            /// </summary>
-            None = 0,
-
-            /// <summary>
-            /// Logs the executed queries to the stdout
-            /// </summary>
-            Queries = 1 << 1,
-
-            /// <summary>
-            /// Logs the parameters as they are being bound to stdout.
-            /// </summary>
-            BoundParameters = 1 << 2,
-
-            /// <summary>
-            /// Logs the rows as they are inserted to stdout.
-            /// </summary>
-            Inserts = 1 << 3,
-
-            /// <summary>
-            /// Logs the rows as they are updated to stdout.
-            /// </summary>
-            Updates = 1 << 4,
-
-            /// <summary>
-            /// Logs every option above to stdout.
-            /// </summary>
-            All = Queries | BoundParameters | Inserts | Updates
-        }
-
         /// <summary>
         /// The default list of database targets for this context.
         /// </summary>
@@ -78,16 +45,15 @@ namespace DtronixModel
         /// </summary>
         public DbConnection Connection { get; private set; }
 
-
         /// <summary>
         /// Retrieves the current transaction if one exists for this context.  Null otherwise.
         /// </summary>
         public SqlTransaction Transaction { get; private set; }
 
         /// <summary>
-        /// Set to the level of debugging to output.
+        /// Logger for current context.
         /// </summary>
-        public DebugLevel Debug { get; set; } = DebugLevel.None;
+        public ILogger Logger { get; set; }
 
         /// <summary>
         /// Select string to be appended and read from insert queries to retrieve the newly inserted row's id.
@@ -156,21 +122,27 @@ namespace DtronixModel
         /// </summary>
         public void Dispose()
         {
-            DisposeAsync().GetAwaiter().GetResult();
+            if (!OwnedConnection) 
+                return;
+
+            Connection.Close();
+            Connection.Dispose();
         }
 
-
+#if NETSTANDARD2_1
         /// <summary>
         /// Asynchronously Releases any connection resources.
         /// </summary>
         public async ValueTask DisposeAsync()
         {
-            if (OwnedConnection)
-            {
-                await Connection.CloseAsync();
-                await Connection.DisposeAsync();
-            }
+            if (!OwnedConnection)
+                return;
+
+            await Connection.CloseAsync();
+            await Connection.DisposeAsync();
+
         }
+#endif
 
         /// <summary>
         /// Sets the default connection creation method.
@@ -188,7 +160,8 @@ namespace DtronixModel
         /// <returns>The number of rows affected.</returns>
         public int Query(string sql, params object[] binding)
         {
-            return new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this).Query(sql, binding);
+            return new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this, Logger)
+                .Query(sql, binding);
         }
 
         /// <summary>
@@ -201,7 +174,8 @@ namespace DtronixModel
         /// <returns>The number of rows affected.</returns>
         public void QueryRead(string sql, object[] binding, Action<DbDataReader> onRead)
         {
-            new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this).QueryRead(sql, binding, onRead);
+            new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this, Logger)
+                .QueryRead(sql, binding, onRead);
         }
 
         /// <summary>
@@ -214,7 +188,7 @@ namespace DtronixModel
         /// <returns>The number of rows affected.</returns>
         public async Task<int> QueryAsync(string sql, object[] binding, CancellationToken cancellationToken = default)
         {
-            return await new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this)
+            return await new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this, Logger)
                 .QueryAsync(sql, binding, cancellationToken);
         }
 
@@ -233,7 +207,7 @@ namespace DtronixModel
             Func<DbDataReader, CancellationToken, Task> onRead,
             CancellationToken cancellationToken = default)
         {
-            await new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this)
+            await new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this, Logger)
                 .QueryReadAsync(sql, binding, onRead, cancellationToken);
         }
 
@@ -252,7 +226,10 @@ namespace DtronixModel
                 throw new InvalidOperationException(
                     "Transaction has already been created.  Can not create nested transactions.");
 
-            return Transaction = new SqlTransaction(Connection.BeginTransaction(), () => { Transaction = null; });
+            return Transaction = new SqlTransaction(
+                Connection.BeginTransaction(), 
+                () => { Transaction = null; },
+                Logger);
         }
     }
 }

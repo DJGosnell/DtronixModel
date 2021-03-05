@@ -1,4 +1,6 @@
-﻿namespace DtronixModel.Generator.MySql
+﻿using DtronixModeler.Generator;
+
+namespace DtronixModeler.MySql
 {
     public class MySqlTypeTransformer : TypeTransformer
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace DtronixModel.Generator
+namespace DtronixModeler.Generator
 {
     class CodeWriter
     {
