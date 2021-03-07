@@ -1,27 +1,20 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Xml.Serialization;
-using DtronixModel.Generator;
-using DtronixModel.Generator.Ddl;
 using DtronixModeler.Generator;
+using DtronixModeler.Generator.Ddl;
 using Database = DtronixModeler.Generator.Ddl.Database;
 using Table = DtronixModeler.Generator.Ddl.Table;
 
@@ -135,7 +128,7 @@ namespace DtronixModeler.Xaml
                 db_root.Items.Add(functions_root);
 
                 _TreDatabaseLayout.Items.Add(db_root);
-                database._TreeRoot = db_root;
+                //database._TreeRoot = db_root;
             }
         }
 

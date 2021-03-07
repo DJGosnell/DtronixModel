@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
+    <VersionPrefix>2.2.0</VersionPrefix>
     <PackageOutputPath>$(ProjectDir)..\..\artifacts\</PackageOutputPath>
     <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <!-- Change the default location where NuGet will put the build output -->
     <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
-    <VersionPrefix>2.2.0</VersionPrefix>
+    
     <DevelopmentDependency>true</DevelopmentDependency>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>

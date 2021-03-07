@@ -11,9 +11,8 @@ using System.IO;
 using System.ComponentModel;
 using System.Windows.Documents;
 using System.Diagnostics;
-using DtronixModel.Generator;
-using DtronixModel.Generator.Ddl;
 using DtronixModeler.Generator;
+using DtronixModeler.Generator.Ddl;
 using DtronixModeler.MySql;
 using DtronixModeler.MySqlMwb;
 using DtronixModeler.Sqlite;
@@ -868,6 +867,8 @@ namespace DtronixModeler.Xaml
 
         private void _TxtConfigSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
+            // TODO: Review implications of removal.
+            /*
             var database = _DatabaseExplorer.SelectedDatabase;
 
             if (database == null || database.Configuration == null || _TxtConfigSearch.Text == " Search Configurations")
@@ -878,6 +879,7 @@ namespace DtronixModeler.Xaml
             var text = _TxtConfigSearch.Text;
             var text_empty = string.IsNullOrWhiteSpace(_TxtConfigSearch.Text);
 
+            
             foreach (var config in database.Configuration)
             {
                 if (config.Name.Contains(text) == false && text_empty == false)
@@ -888,7 +890,7 @@ namespace DtronixModeler.Xaml
                 {
                     config.Visibility = Visibility.Visible;
                 }
-            }
+            }*/
         }
 
         private void _TxtConfigSearch_GotFocus(object sender, RoutedEventArgs e)

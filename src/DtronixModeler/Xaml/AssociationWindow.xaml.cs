@@ -1,21 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using DtronixModel.Generator.Ddl;
-using Association = DtronixModeler.Generator.Ddl.Association;
-using Column = DtronixModeler.Generator.Ddl.Column;
-using Database = DtronixModeler.Generator.Ddl.Database;
-using Table = DtronixModeler.Generator.Ddl.Table;
+using DtronixModeler.Generator.Ddl;
 
 namespace DtronixModeler.Xaml
 {
