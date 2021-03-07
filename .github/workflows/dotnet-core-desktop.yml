@@ -40,3 +40,8 @@ jobs:
 
     - name: Build DtronixModeler
       run: dotnet build src/DtronixModeler
+      
+    - name: Export nuget package artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        path: artifacts/*.nupkg
