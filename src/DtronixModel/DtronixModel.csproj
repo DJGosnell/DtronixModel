@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-    <Version>2.2.0</Version>
+    <Version>2.2.1</Version>
     <PackageOutputPath>$(ProjectDir)..\..\artifacts\</PackageOutputPath>
     <Description>Small .NET tool aiding in sql data modeling and simple CRUD</Description>
     <Company>Dtronix</Company>
