@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="CompileDDLTarget" Condition="'@(DtronixModelDdl)' != ''" BeforeTargets="BeforeCompile">
+    <CompileDDL
+      DdlPaths="@(DtronixModelDdl)"
+      ProjectDirectory="$(MSBuildProjectDirectory)"
+      IntermediateOutputPath="$(MSBuildProjectDirectory)\$(IntermediateOutputPath)">
+        <Output TaskParameter="ExpectedOutputs" ItemName="DtronixModel_ExpectedOutputs" />
+    </CompileDDL>
+    <ItemGroup>
+      <Compile Include ="@(DtronixModel_ExpectedOutputs)"/>
+    </ItemGroup>
+  </Target>
+</Project>

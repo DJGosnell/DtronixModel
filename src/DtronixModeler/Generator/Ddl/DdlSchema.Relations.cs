@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
 using System.Xml.Serialization;
 
-namespace DtronixModeler.Ddl
+namespace DtronixModeler.Generator.Ddl
 {
     public partial class Table
     {
@@ -53,7 +47,7 @@ namespace DtronixModeler.Ddl
 
         [XmlIgnore] public string _FileLocation;
 
-        [XmlIgnore] public TreeViewItem _TreeRoot;
+        //[XmlIgnore] public TreeViewItem _TreeRoot;
 
         private bool initialized = false;
 
@@ -118,7 +112,7 @@ namespace DtronixModeler.Ddl
         public void SetConfiguration(string property, object value, bool override_value, string description)
         {
             Initialize();
-            Configuration existing_config = configurationField.FirstOrDefault(config => config.Name == property);
+            Configuration existing_config = Enumerable.FirstOrDefault<Configuration>(configurationField, config => config.Name == property);
 
             if (existing_config == null)
             {
@@ -159,7 +153,7 @@ namespace DtronixModeler.Ddl
 
         public Association[] GetAssociations(string table)
         {
-            return GetAssociations(tableField.FirstOrDefault(t => t.Name == table));
+            return GetAssociations(Enumerable.FirstOrDefault<Table>(tableField, t => t.Name == table));
         }
 
         public Association[] GetAssociations(Table table)
@@ -169,8 +163,8 @@ namespace DtronixModeler.Ddl
                 return null;
             }
             var table_associations =
-                associationField.Where(association => association.Table1 == table.Name ||
-                                                      association.Table2 == table.Name);
+                Enumerable.Where<Association>(associationField, association => association.Table1 == table.Name ||
+                                                                     association.Table2 == table.Name);
 
             if (table_associations == null || table_associations.Count() == 0)
             {
@@ -209,13 +203,13 @@ namespace DtronixModeler.Ddl
             string table_name = (reference == Reference.R1) ? table1Field : table2Field;
             string column_name = (reference == Reference.R1) ? table1ColumnField : table2ColumnField;
 
-            var table = database.Table.FirstOrDefault(t => t.Name == table_name);
+            var table = Enumerable.FirstOrDefault<Table>(database.Table, t => t.Name == table_name);
             if (table == null)
             {
                 return null;
             }
 
-            return table.Column.FirstOrDefault(c => c.Name == column_name);
+            return Enumerable.FirstOrDefault<Column>(table.Column, c => c.Name == column_name);
         }
 
         public Reference ReferencesTable(Table table)
@@ -269,7 +263,7 @@ namespace DtronixModeler.Ddl
         public void Rename(Database database, string new_name)
         {
 
-            Table table = database.Table.FirstOrDefault(t => t.Column.Contains(this));
+            Table table = Enumerable.FirstOrDefault<Table>(database.Table, t => t.Column.Contains(this));
             if (table == null)
             {
                 return;
@@ -311,7 +305,7 @@ namespace DtronixModeler.Ddl
         /// <remarks/>
         [XmlIgnore] public Table Table;
     }
-
+    /*
     public partial class Configuration
     {
         [XmlIgnore] private Visibility visibilityField;
@@ -329,6 +323,6 @@ namespace DtronixModeler.Ddl
                 }
             }
         }
-    }
+    }*/
 }
 

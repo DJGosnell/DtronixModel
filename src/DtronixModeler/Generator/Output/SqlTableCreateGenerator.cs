@@ -1,13 +1,7 @@
-﻿using DtronixModeler.Ddl;
-using DtronixModeler.Generator.MySql;
-using DtronixModeler.Generator.Sqlite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using DtronixModeler.Generator.Ddl;
 
 namespace DtronixModeler.Generator.Output {
-	class SqlTableCreateGenerator {
+	public class SqlTableCreateGenerator {
 		private Database database;
 		private TypeTransformer type_transformer;
 		private CodeWriter code = new CodeWriter();
@@ -33,13 +27,13 @@ namespace DtronixModeler.Generator.Output {
 					code.WriteLine(table.CustomSql).WriteLine().WriteLine();
 
 				} else {
-					code.BeginBlock("CREATE TABLE ").Write(table.Name).WriteLine(" (");
+					code.BeginBlock("CREATE TABLE ").Write((string) table.Name).WriteLine(" (");
 
 					// Columns
 					foreach (var column in table.Column) {
 						string net_type = type_transformer.NetToDbType(column.NetType);
 
-						code.Write(column.Name).Write(" ").Write(net_type).Write(" ");
+						code.Write((string) column.Name).Write(" ").Write(net_type).Write(" ");
 
 						if (column.Nullable == false) {
 							code.Write("NOT NULL ");
@@ -65,8 +59,8 @@ namespace DtronixModeler.Generator.Output {
 				
 				foreach (var column in table.Column) {
 					if (column.DbType != null && column.DbType.Contains("IDX")) {
-						code.Write("CREATE INDEX IF NOT EXISTS IDX_").Write(table.Name).Write("_").Write(column.Name)
-							.Write(" ON ").Write(table.Name).Write(" (").Write(column.Name).WriteLine(");");
+						code.Write("CREATE INDEX IF NOT EXISTS IDX_").Write((string) table.Name).Write("_").Write((string) column.Name)
+                            .Write(" ON ").Write((string) table.Name).Write(" (").Write((string) column.Name).WriteLine(");");
 					}
 
 				}
@@ -74,7 +68,7 @@ namespace DtronixModeler.Generator.Output {
 				code.WriteLine().WriteLine();
 			}
 
-		    code.Write(database.CreationSql).WriteLine();
+		    code.Write((string) database.CreationSql).WriteLine();
 
 			return code.ToString();
 		}

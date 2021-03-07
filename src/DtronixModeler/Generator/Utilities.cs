@@ -1,16 +1,12 @@
-﻿using DtronixModeler.Ddl;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Data.Common;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 
-namespace DtronixModeler
+namespace DtronixModeler.Generator
 {
     public static class Utilities
     {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using DtronixModeler.Ddl;
+﻿using DtronixModeler.Generator;
 
-namespace DtronixModeler.Generator.MySql
+namespace DtronixModeler.MySql
 {
-    class MySqlTypeTransformer : TypeTransformer
+    public class MySqlTypeTransformer : TypeTransformer
     {
         public MySqlTypeTransformer()
         {

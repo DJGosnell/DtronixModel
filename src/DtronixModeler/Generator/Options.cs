@@ -128,7 +128,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
@@ -143,7 +142,7 @@ using System.Linq;
 using NDesk.Options;
 #endif
 
-namespace NDesk.Options {
+namespace DtronixModeler.Generator {
 
 	public class OptionValueCollection : IList, IList<string> {
 
@@ -481,7 +480,6 @@ namespace NDesk.Options {
 			get {return this.option;}
 		}
 
-		[SecurityPermission (SecurityAction.LinkDemand, SerializationFormatter = true)]
 		public override void GetObjectData (SerializationInfo info, StreamingContext context)
 		{
 			base.GetObjectData (info, context);

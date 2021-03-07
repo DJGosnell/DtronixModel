@@ -1,13 +1,8 @@
-﻿using DtronixModeler.Ddl;
-using DtronixModeler.Generator.MySql;
-using DtronixModeler.Generator.Sqlite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
+using DtronixModeler.Generator.Ddl;
 
 namespace DtronixModeler.Generator.Output {
-	class ProtobufGenerator
+	public class ProtobufGenerator
     {
 		private Database database;
 		private CodeWriter code = new CodeWriter();
@@ -27,7 +22,7 @@ namespace DtronixModeler.Generator.Output {
             // Loop through each of the tables.
             foreach (var table in database.Table) {
                 code.WriteLine();
-                code.BeginBlock("message ").Write(table.Name).WriteLine(" {");
+                code.BeginBlock("message ").Write((string) table.Name).WriteLine(" {");
 
                 // Columns
                 for (int i = 0; i < table.Column.Count; i++)
@@ -35,7 +30,7 @@ namespace DtronixModeler.Generator.Output {
                     string protobufType = ProtobufTypeTransformer.GetProtobufType(table.Column[i].NetType);
 
                     if(string.IsNullOrWhiteSpace(protobufType))
-                        Console.WriteLine(table.Column[i].NetType);
+                        Console.WriteLine((string) table.Column[i].NetType);
 
                     code.WriteLine($"{protobufType} {table.Column[i].Name} = {i + 1};");
                 }

@@ -6,16 +6,19 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
-using DtronixModeler.Ddl;
 using System.Collections.ObjectModel;
-using DtronixModeler.Generator.Sqlite;
-using DtronixModeler.Generator;
 using System.IO;
 using System.ComponentModel;
 using System.Windows.Documents;
 using System.Diagnostics;
-using DtronixModeler.Generator.MySqlMwb;
-using DtronixModeler.Generator.MySql;
+using DtronixModeler.Generator;
+using DtronixModeler.Generator.Ddl;
+using DtronixModeler.MySql;
+using DtronixModeler.MySqlMwb;
+using DtronixModeler.Sqlite;
+using Association = DtronixModeler.Generator.Ddl.Association;
+using Column = DtronixModeler.Generator.Ddl.Column;
+using Table = DtronixModeler.Generator.Ddl.Table;
 
 namespace DtronixModeler.Xaml
 {
@@ -698,7 +701,7 @@ namespace DtronixModeler.Xaml
                 int index = column.Name.IndexOf('_');
                 string sel_table = column.Name.Substring(0, index);
                 string sel_column = column.Name.Substring(index + 1);
-                Ddl.Table found_table = null;
+                Table found_table = null;
 
                 if ((found_table = database.Table.FirstOrDefault(t => t.Name == sel_table)) != null)
                 {
@@ -864,6 +867,8 @@ namespace DtronixModeler.Xaml
 
         private void _TxtConfigSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
+            // TODO: Review implications of removal.
+            /*
             var database = _DatabaseExplorer.SelectedDatabase;
 
             if (database == null || database.Configuration == null || _TxtConfigSearch.Text == " Search Configurations")
@@ -874,6 +879,7 @@ namespace DtronixModeler.Xaml
             var text = _TxtConfigSearch.Text;
             var text_empty = string.IsNullOrWhiteSpace(_TxtConfigSearch.Text);
 
+            
             foreach (var config in database.Configuration)
             {
                 if (config.Name.Contains(text) == false && text_empty == false)
@@ -884,7 +890,7 @@ namespace DtronixModeler.Xaml
                 {
                     config.Visibility = Visibility.Visible;
                 }
-            }
+            }*/
         }
 
         private void _TxtConfigSearch_GotFocus(object sender, RoutedEventArgs e)

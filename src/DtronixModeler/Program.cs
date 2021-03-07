@@ -1,20 +1,17 @@
-﻿using DtronixModeler.Generator.Output;
-using DtronixModeler.Ddl;
-using DtronixModeler.Generator.Sqlite;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Serialization;
-using DtronixModeler.Xaml;
-using System.Windows;
 using System.Runtime.InteropServices;
-using NDesk.Options;
-using DtronixModeler.Generator.MySqlMwb;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Xml.Serialization;
+using DtronixModeler.Generator;
+using DtronixModeler.Generator.Ddl;
+using DtronixModeler.Generator.Output;
+using DtronixModeler.MySqlMwb;
+using DtronixModeler.Sqlite;
+using DtronixModeler.Xaml;
 
-namespace DtronixModeler.Generator
+namespace DtronixModeler
 {
     class Program
     {
@@ -173,7 +170,7 @@ namespace DtronixModeler.Generator
 
                 if (options.SqlOutput == "")
                 {
-                    options.SqlOutput = Path.GetFileNameWithoutExtension(input_database.Name);
+                    options.SqlOutput = Path.GetFileNameWithoutExtension((string?) input_database.Name);
                 }
 
                 if (Path.HasExtension(options.SqlOutput) == false)
@@ -195,7 +192,7 @@ namespace DtronixModeler.Generator
             {
                 if (options.CodeOutput == "")
                 {
-                    options.CodeOutput = Path.ChangeExtension(Path.GetFileNameWithoutExtension(input_database.Name), ".cs");
+                    options.CodeOutput = Path.ChangeExtension(Path.GetFileNameWithoutExtension((string?) input_database.Name), ".cs");
                 }
 
                 if (Path.HasExtension(options.CodeOutput) == false)
@@ -220,7 +217,7 @@ namespace DtronixModeler.Generator
             {
                 if (options.DdlOutput == "")
                 {
-                    options.DdlOutput = Path.GetFileNameWithoutExtension(input_database.Name);
+                    options.DdlOutput = Path.GetFileNameWithoutExtension((string?) input_database.Name);
                 }
 
                 if (Path.HasExtension(options.DdlOutput) == false)
@@ -241,7 +238,7 @@ namespace DtronixModeler.Generator
             {
                 if (options.ProtobufOutput == "")
                 {
-                    options.ProtobufOutput = Path.GetFileNameWithoutExtension(input_database.Name);
+                    options.ProtobufOutput = Path.GetFileNameWithoutExtension((string?) input_database.Name);
                 }
 
                 if (Path.HasExtension(options.ProtobufOutput) == false)

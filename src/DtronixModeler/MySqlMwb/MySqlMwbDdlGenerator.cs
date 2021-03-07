@@ -1,18 +1,17 @@
-﻿using DtronixModeler.Ddl;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Data.SQLite;
 using System.IO;
-using System.Linq;
-using System.Text;
-using DtronixModeler.Generator.MySql;
 using System.IO.Compression;
-using System.Xml.XPath;
-using System.Xml;
 using System.Threading.Tasks;
+using System.Xml;
+using DtronixModeler.Generator;
+using DtronixModeler.Generator.Ddl;
+using DtronixModeler.MySql;
+using Column = DtronixModeler.Generator.Ddl.Column;
+using Database = DtronixModeler.Generator.Ddl.Database;
+using Table = DtronixModeler.Generator.Ddl.Table;
 
-namespace DtronixModeler.Generator.MySqlMwb
+namespace DtronixModeler.MySqlMwb
 {
     public class MySqlMwbDdlGenerator : DdlGenerator
     {

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
+using DtronixModel.Attributes;
 
 namespace DtronixModel
 {
@@ -43,24 +44,6 @@ namespace DtronixModel
         /// </summary>
         /// <returns>An object array with all the values of this model.</returns>
         public abstract object[] GetAllValues();
-
-        /// <summary>
-        /// Returns all the columns in this model.
-        /// </summary>
-        /// <returns>A string array with all the columns in this model.</returns>
-        public abstract string[] GetColumns();
-
-        /// <summary>
-        /// Returns all the columns in this model.
-        /// </summary>
-        /// <returns>A string array with all the columns in this model.</returns>
-        public abstract Type[] GetColumnTypes();
-
-        /// <summary>
-        /// Gets the name of the model primary key.
-        /// </summary>
-        /// <returns>The name of the primary key</returns>
-        public abstract string GetPKName();
 
         /// <summary>
         /// Gets the value of the primary key.

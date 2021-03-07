@@ -1,15 +1,18 @@
-﻿using DtronixModeler.Ddl;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SQLite;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Index = DtronixModeler.Ddl.Index;
+using DtronixModeler.Generator;
+using DtronixModeler.Generator.Ddl;
+using Column = DtronixModeler.Generator.Ddl.Column;
+using Database = DtronixModeler.Generator.Ddl.Database;
+using Index = DtronixModeler.Generator.Ddl.Index;
+using Table = DtronixModeler.Generator.Ddl.Table;
 
-namespace DtronixModeler.Generator.Sqlite
+namespace DtronixModeler.Sqlite
 {
     public class SqliteDdlGenerator : DdlGenerator
     {
@@ -133,7 +136,7 @@ namespace DtronixModeler.Generator.Sqlite
                                 var index = new Index()
                                 {
                                     Name = reader.GetString(0),
-                                    Table = database.Table.First(t => t.Name == table.Name)
+                                    Table = Enumerable.First<Table>(database.Table, t => t.Name == table.Name)
                                 };
 
                                 table.Index.Add(index);

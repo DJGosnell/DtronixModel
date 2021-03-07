@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Reflection;
-using DtronixModeler.Ddl;
-using NDesk.Options;
-using System.Windows;
+using DtronixModeler.Generator.Ddl;
+
 namespace DtronixModeler.Generator
 {
-    class CommandOptions
+    public class CommandOptions
     {
 
         public enum InType

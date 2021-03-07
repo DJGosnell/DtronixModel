@@ -729,12 +729,12 @@ namespace DtronixModelTests.Sqlite
                 db_decimal = 3456789.986543M,
                 db_double = 12345.54321D,
                 db_float = 123.321F,
-                db_int16 = 32767,
-                db_uint16 = 65535,
+                //db_int16 = 32767,
+                //db_uint16 = 65535,
                 db_int32 = 2147483647,
-                db_uint32 = 4294967295,
+                //db_uint32 = 4294967295,
                 db_int64 = 9223372036854775807,
-                db_uint64 = 18446744073709551615,
+                //db_uint64 = 18446744073709551615,
                 db_string = "Database String With \nNewline\nSpecial Chars: ♥♦♣♠",
                 db_enum = TestEnum.SecondEnumValue
             });
@@ -758,12 +758,12 @@ namespace DtronixModelTests.Sqlite
             Assert.AreEqual(3456789.986543M, allTypes.db_decimal!.Value);
             Assert.AreEqual(12345.54321D, allTypes.db_double!.Value);
             Assert.AreEqual(123.321F, allTypes.db_float!.Value);
-            Assert.AreEqual(32767, allTypes.db_int16!.Value);
-            Assert.AreEqual(65535, allTypes.db_uint16!.Value);
+            //Assert.AreEqual(32767, allTypes.db_int16!.Value);
+            //Assert.AreEqual(65535, allTypes.db_uint16!.Value);
             Assert.AreEqual(2147483647, allTypes.db_int32!.Value);
-            Assert.AreEqual(4294967295, allTypes.db_uint32!.Value);
+            //Assert.AreEqual(4294967295, allTypes.db_uint32!.Value);
             Assert.AreEqual(9223372036854775807, allTypes.db_int64!.Value);
-            Assert.AreEqual(18446744073709551615, allTypes.db_uint64!.Value);
+            //Assert.AreEqual(18446744073709551615, allTypes.db_uint64!.Value);
             Assert.AreEqual(TestEnum.SecondEnumValue, allTypes.db_enum);
             Assert.AreEqual("Database String With \nNewline\nSpecial Chars: ♥♦♣♠", allTypes.db_string);
             logger.Log("Completed tests.");

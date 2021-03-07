@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="TestDatabase" Namespace="DtronixModelTests.Sqlite" ContextClass="TestDatabaseContext" ImplementINotifyPropertyChanged="true" TargetDb="Sqlite" ImplementDataContractMemberOrder="true" Version="1.6.0.0">
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="TestDatabase" Namespace="DtronixModelTests.Sqlite" ContextClass="TestDatabaseContext" ImplementINotifyPropertyChanged="true" TargetDb="Sqlite" ImplementDataContractMemberOrder="true" Version="2.1.0.0">
   <Table Name="Users">
     <Column Name="rowid" NetType="Int64" DbType="INTEGER" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="username" NetType="String" DbType="TEXT" />
@@ -13,12 +13,8 @@
   </Table>
   <Table Name="AllTypes">
     <Column Name="id" NetType="Int64" DbType="INTEGER" IsPrimaryKey="true" IsAutoIncrement="true" />
-    <Column Name="db_int16" NetType="Int16" DbType="INTEGER" Nullable="true" />
     <Column Name="db_int32" NetType="Int32" DbType="INTEGER" Nullable="true" />
     <Column Name="db_int64" NetType="Int64" DbType="INTEGER" Nullable="true" />
-    <Column Name="db_uint16" NetType="UInt16" DbType="INTEGER" IsUnsigned="true" Nullable="true" />
-    <Column Name="db_uint32" NetType="UInt32" DbType="INTEGER" IsUnsigned="true" Nullable="true" />
-    <Column Name="db_uint64" NetType="UInt64" DbType="INTEGER" IsUnsigned="true" Nullable="true" />
     <Column Name="db_byte_array" NetType="ByteArray" DbType="BLOB" Nullable="true" />
     <Column Name="db_byte" NetType="Byte" DbType="BLOB" Nullable="true" />
     <Column Name="db_sbyte" NetType="SByte" DbType="INTEGER" IsUnsigned="true" />
