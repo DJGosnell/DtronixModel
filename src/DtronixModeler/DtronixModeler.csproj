@@ -3,9 +3,9 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0-Windows</TargetFramework>
+	<Version>2.2.1</Version>
     <UseWPF>true</UseWPF>
     <Description>Modeler for defining database systems.</Description>
-    <Version>2.2.0</Version>
     <Copyright>Copyright © Dtronix 2021</Copyright>
     <Product>Dtronix Database Modeler</Product>
     <Authors>DJGosnell</Authors>

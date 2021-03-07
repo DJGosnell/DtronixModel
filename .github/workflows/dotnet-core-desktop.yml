@@ -52,6 +52,6 @@ jobs:
         
     - name: Push nuget packages.
       if: github.event_name == 'release'
-      run: dotnet nuget push artifacts/*.nupkg
+      run: dotnet nuget push artifacts/*.nupkg -s https://api.nuget.org/v3/index.json
       
     
