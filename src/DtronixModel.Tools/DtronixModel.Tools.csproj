@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
-    <PackageOutputPath>$(MSBuildThisFileDirectory)..\artifacts\</PackageOutputPath>
+    <PackageOutputPath>$(ProjectDir)..\..\artifacts\</PackageOutputPath>
     <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <!-- Change the default location where NuGet will put the build output -->
@@ -11,7 +11,6 @@
     <DevelopmentDependency>true</DevelopmentDependency>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
-    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,13 +25,4 @@
     <PackageReference Include="Microsoft.Build.Framework" Version="16.9.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.9.0" PrivateAssets="All" />
   </ItemGroup>
-
-  <Target Name="BeforePack" BeforeTargets="BeforeBuild">
-    <MakeDir
-      Directories="$(MSBuildThisFileDirectory)..\artifacts\"/>
-    <ItemGroup>
-      <FileToDelete Include="$(MSBuildThisFileDirectory)..\artifacts\*.nupkg" />
-    </ItemGroup>
-    <Delete Files="@(FileToDelete)" />
-  </Target>
 </Project>
