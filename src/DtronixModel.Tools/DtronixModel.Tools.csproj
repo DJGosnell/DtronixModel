@@ -9,7 +9,6 @@
     <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
     <VersionPrefix>2.2.0</VersionPrefix>
     <DevelopmentDependency>true</DevelopmentDependency>
-    <VersionSuffix>build$([System.DateTime]::Now.ToString('yyyyMMdd-HHmm'))</VersionSuffix>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
     <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
@@ -29,6 +28,8 @@
   </ItemGroup>
 
   <Target Name="BeforePack" BeforeTargets="BeforeBuild">
+    <MakeDir
+      Directories="$(MSBuildThisFileDirectory)..\..\artifacts\"/>
     <ItemGroup>
       <FileToDelete Include="$(MSBuildThisFileDirectory)..\..\artifacts\*.nupkg" />
     </ItemGroup>
