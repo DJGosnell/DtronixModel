@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
-    <PackageOutputPath>$(MSBuildThisFileDirectory)..\..\artifacts\</PackageOutputPath>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)..\artifacts\</PackageOutputPath>
     <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <!-- Change the default location where NuGet will put the build output -->
@@ -29,9 +29,9 @@
 
   <Target Name="BeforePack" BeforeTargets="BeforeBuild">
     <MakeDir
-      Directories="$(MSBuildThisFileDirectory)..\..\artifacts\"/>
+      Directories="$(MSBuildThisFileDirectory)..\artifacts\"/>
     <ItemGroup>
-      <FileToDelete Include="$(MSBuildThisFileDirectory)..\..\artifacts\*.nupkg" />
+      <FileToDelete Include="$(MSBuildThisFileDirectory)..\artifacts\*.nupkg" />
     </ItemGroup>
     <Delete Files="@(FileToDelete)" />
   </Target>
