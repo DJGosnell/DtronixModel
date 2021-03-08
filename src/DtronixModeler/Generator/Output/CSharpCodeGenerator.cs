@@ -232,14 +232,6 @@ namespace DtronixModeler.Generator.Output
                         pk_column = column;
                     }
                 }
-                /*
-                 *
-    [Table(Name = "AllTypes", 
-        ColumnNames = new [] {"asfasf"},
-        ColumnTypes = new Type[] { typeof(Int16?) },
-        PrimaryKey = "")]
-                 */
-
 
                 sb.AppendLine($"    [Table(Name = \"{table.Name}\",");
                 sb.Append($"        ColumnNames = new string[] {{ ");
@@ -266,7 +258,7 @@ namespace DtronixModeler.Generator.Output
                 // Remove the trailing comma.
                 sb.Remove(sb.Length - 2, 2).AppendLine(" },");
 
-                sb.Append($"        PrimaryKey = ").AppendLine(pk_column == null ? "null; " : $"\"{pk_column.Name}\")]");
+                sb.Append($"        PrimaryKey = ").Append(pk_column == null ? "null" : $"\"{pk_column.Name}\"").AppendLine(")]");
 
                 if (this.database.ImplementProtobufNetDataContracts)
                     sb.AppendLine($"    [ProtoBuf.ProtoContract]");

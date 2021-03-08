@@ -26,6 +26,10 @@
     <Column Name="db_string" NetType="String" DbType="TEXT" Nullable="true" />
     <Column Name="db_enum" NetType="TestEnum" DbType="INTEGER" />
   </Table>
+  <Table Name="NoPrimaryKeyTable">
+    <Column Name="id" NetType="Int64" DbType="INTEGER" />
+    <Column Name="data" NetType="Int32" DbType="INTEGER" />
+  </Table>
   <Association Table1Name="Logs" Table1="Logs" Table1Column="Users_rowid" Table1Cardinality="Many" Table2Name="User" Table2="Users" Table2Column="rowid" Table2Cardinality="One" />
   <Enumeration Name="TestEnum">
     <EnumValue Name="Unset" />
