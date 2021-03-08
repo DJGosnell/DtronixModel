@@ -55,4 +55,4 @@ jobs:
       
     - name: Push nuget packages.
       if: github.event_name == 'release'
-      run: dotnet nuget push artifacts/**/*.nupkg --api-key ${{secrets.NUGET_AUTH_TOKEN}}
+      run: dotnet nuget push artifacts/**/*.nupkg --api-key ${{secrets.NUGET_AUTH_TOKEN}} --skip-duplicate

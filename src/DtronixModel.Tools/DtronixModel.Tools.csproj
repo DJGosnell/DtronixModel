@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472;netstandard2.0</TargetFrameworks>
-    <VersionPrefix>2.2.1</VersionPrefix>
+    <VersionPrefix>2.2.2</VersionPrefix>
     <PackageOutputPath>$(ProjectDir)..\..\artifacts\</PackageOutputPath>
     <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll.-->
     <NoPackageAnalysis>true</NoPackageAnalysis>
