@@ -30,8 +30,6 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.102
-      env:
-        NUGET_AUTH_TOKEN: ${{secrets.NUGET_TOKEN}}
         
     - name: Pack DtronixModel.Tools
       run: dotnet pack src/DtronixModel.Tools
@@ -52,6 +50,4 @@ jobs:
         
     - name: Push nuget packages.
       if: github.event_name == 'release'
-      run: dotnet nuget push artifacts/**/*.nupkg -s https://api.nuget.org/v3/index.json
-      
-    
+      run: dotnet nuget push artifacts/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
