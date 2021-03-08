@@ -30,6 +30,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.102
+        source-url: https://api.nuget.org/v3/index.json
+      env:
+        NUGET_AUTH_TOKEN: ${{secrets.NUGET_AUTH_TOKEN}}
         
     - name: Pack DtronixModel.Tools
       run: dotnet pack src/DtronixModel.Tools
@@ -39,15 +42,17 @@ jobs:
 
     - name: Execute unit tests
       run: dotnet test src/DtronixModelTests
-
-    - name: Build DtronixModeler
-      run: dotnet build src/DtronixModeler
       
-    - name: Export nuget package artifacts
+    - name: Create DtronixModeler installer
+      run: |
+        dotnet publish src/DtronixModeler -c Release
+        move src/DtronixModeler/bin/Release/net5.0-windows/publish/DtronixModeler-*.exe artifacts/
+      
+    - name: Export artifacts
       uses: actions/upload-artifact@v2
       with:
-        path: artifacts/*.nupkg
-        
+        path: artifacts/*
+      
     - name: Push nuget packages.
       if: github.event_name == 'release'
-      run: dotnet nuget push artifacts/**/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} -s https://api.nuget.org/v3/index.json
+      run: dotnet nuget push artifacts/**/*.nupkg --api-key ${{secrets.NUGET_AUTH_TOKEN}}
