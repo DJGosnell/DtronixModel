@@ -1,31 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
+  <Import Project="..\DtronixModel.props" />
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
-    <Version>2.2.1</Version>
-    <PackageOutputPath>$(ProjectDir)..\..\artifacts\</PackageOutputPath>
-    <Description>Small .NET tool aiding in sql data modeling and simple CRUD</Description>
-    <Company>Dtronix</Company>
-    <Product>Dtronix Database Modeler</Product>
-    <Copyright>Copyright © Dtronix 2021</Copyright>
-    <Authors>DJGosnell</Authors>
-    <PackageProjectUrl>https://github.com/Dtronix/DtronixModel</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/Dtronix/DtronixModel</RepositoryUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <PackageTags>model modeling dtronix sql net core</PackageTags>
-    <PackageIcon>database_blue32.png</PackageIcon>
-    <PackageIconUrl />
+    <Description>Small .NET tool aiding in sql data modeling and simplified CRUD.</Description>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="..\DtronixModeler\Xaml\Images\database_blue32.png">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
   </ItemGroup>
 </Project>

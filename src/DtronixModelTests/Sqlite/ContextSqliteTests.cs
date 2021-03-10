@@ -1172,5 +1172,36 @@ namespace DtronixModelTests.Sqlite
 
             CompareUsers(user, deserializedUser);
         }
+
+        [Test]
+        public async Task Table_FetchesByPk_Succeeds()
+        {
+            await using var context = CreateContext();
+            await CreateUserAsync(context);
+            var user = await context.Users.FetchByPk(1);
+
+            Assert.IsNotNull(user);
+        }
+
+        [Test]
+        public async Task Table_FetchByColumnValue_Succeeds()
+        {
+            await using var context = CreateContext();
+            await CreateUserAsync(context);
+            var user = await context.Users.FetchByColumnValue(Users.passwordColumn, "my_hashed_password");
+
+            Assert.IsNotNull(user);
+        }
+
+        [Test]
+        public async Task Table_FetchAllByColumnValue_Succeeds()
+        {
+            await using var context = CreateContext();
+            await CreateUserAsync(context);
+            await CreateUserAsync(context);
+            var user = await context.Users.FetchAllByColumnValue(Users.usernameColumn, "user_name");
+
+            Assert.AreEqual(2, user.Length);
+        }
     }
 }

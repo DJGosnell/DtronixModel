@@ -1,5 +1,7 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using DtronixModel.Attributes;
 
 namespace DtronixModel
 {
@@ -39,6 +41,72 @@ namespace DtronixModel
         public SqlStatement<T> Select(params string[] select)
         {
             return new SqlStatement<T>(SqlStatement<T>.Mode.Select, _context).Select(select);
+        }
+
+        /// <summary>
+        /// Fetches a the first row matching the specified column's value asynchronously.
+        /// </summary>
+        /// <param name="column">Column to lookup the specified value on.</param>
+        /// <param name="value">Value to lookup on the specified column.</param>
+        /// <returns>Row matching the specified parameters.</returns>
+        public Task<T> FetchByColumnValue(string column, object value)
+        {
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Select, _context)
+                .Select("*")
+                .Where($"{column} = {{0}}", value)
+                .Limit(1);
+
+            return statement.ExecuteFetchAsync();
+        }
+
+        /// <summary>
+        /// Fetches a the first row matching the specified column's value asynchronously.
+        /// </summary>
+        /// <param name="column">Column to lookup the specified value on.</param>
+        /// <param name="value">Value to lookup on the specified column.</param>
+        /// <param name="count">Number of rows to return. -1 for unlimited rows.</param>
+        /// <param name="offset">Number of rows offset the counter into the return set.</param>
+        /// <returns>Row matching the specified parameters if found.  Empty array otherwise.</returns>
+        public Task<T[]> FetchAllByColumnValue(string column, object value, int count = -1, int offset = 0)
+        {
+            if (column == null)
+                throw new ArgumentNullException(nameof(column));
+
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+
+            if (count < -1 || count == 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Select, _context)
+                .Select("*")
+                .Where($"{column} = {{0}}", value);
+
+            if (count > 0)
+                statement.Limit(count, offset);
+
+            return statement.ExecuteFetchAllAsync();
+        }
+
+        /// <summary>
+        /// Asynchronously fetches row by the specified primary key's value.
+        /// </summary>
+        /// <param name="value">Primary key value to lookup.</param>
+        /// <returns>Row matching with the specified primary key.</returns>
+        public Task<T> FetchByPk(object value)
+        {
+            var pkName = AttributeCache<T, TableAttribute>.GetAttribute().PrimaryKey;
+
+            if (pkName == null)
+                throw new Exception("Table does not have a set primary key");
+
+            return FetchByColumnValue(pkName, value);
         }
 
         /// <summary>

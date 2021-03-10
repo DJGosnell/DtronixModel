@@ -19,7 +19,7 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.0.0-alpha.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.1" />
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.7" />
-    <PackageReference Include="DtronixModel.Tools" Version="*"  />
+    <PackageReference Include="DtronixModel.Tools" Version="2.2.4"  />
   </ItemGroup>
 
   <ItemGroup>

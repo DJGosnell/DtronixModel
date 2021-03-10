@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <VersionPrefix>2.2.4</VersionPrefix>
+    <PackageOutputPath>$(ProjectDir)..\..\artifacts\</PackageOutputPath>
+    <Company>Dtronix</Company>
+    <Product>Dtronix Database Modeler</Product>
+    <Copyright>Copyright © Dtronix 2021</Copyright>
+    <Authors>DJGosnell</Authors>
+    <PackageProjectUrl>https://github.com/Dtronix/DtronixModel</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Dtronix/DtronixModel</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageTags>model modeling dtronix sql net core</PackageTags>
+    <PackageIcon>database_blue32.png</PackageIcon>
+    <PackageIconUrl />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\DtronixModeler\Xaml\Images\database_blue32.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+</Project>

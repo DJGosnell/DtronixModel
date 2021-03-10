@@ -410,9 +410,17 @@ namespace DtronixModel
             if (models == null || models.Length == 0)
                 throw new ArgumentException("Models parameter can not be null or empty.");
 
-            // Get the primary key for the first parameter 
+            // Get the primary key for the table parameter 
             var pkName = AttributeCache<T, TableAttribute>.GetAttribute().PrimaryKey;
 
+            // If this is a single model, use a simple "WHERE =" statement.
+            if (models.Length == 1)
+            {
+                _sqlWhere = $"{pkName} = {BindParameter(models[0].GetPKValue())}";
+                return this;
+            }
+
+            // If we have multiple models, use the WHERE IN statement.
             var sql = new StringBuilder();
             sql.Append(pkName).Append(" IN(");
 
@@ -543,7 +551,7 @@ namespace DtronixModel
                 try
                 {
                     // Start a transaction if one does not already exist.
-                    if (_context.Transaction == null)
+                    if (_context.Transaction == null && _sqlRows.Length > 1)
                         transaction = _context.BeginTransaction();
 
                     foreach (var model in _sqlRows)
