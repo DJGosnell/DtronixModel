@@ -57,10 +57,9 @@ namespace DtronixModel.Tools
 
             var ddlName = Path.GetFileNameWithoutExtension(ddlPath);
             var outDir = Path.Combine(_baseOutputPath, database.Namespace);
-            if (Directory.Exists(outDir))
-                Directory.Delete(outDir, true);
 
-            Directory.CreateDirectory(outDir);
+            if (!Directory.Exists(outDir))
+                Directory.CreateDirectory(outDir);
 
             var csFile = Path.Combine(outDir, ddlName + ".cs");
 
