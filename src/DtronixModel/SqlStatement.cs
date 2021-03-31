@@ -103,6 +103,11 @@ namespace DtronixModel
         private readonly ILogger _logger;
 
         /// <summary>
+        /// True to close the command at the end of the query.
+        /// </summary>
+        public bool AutoCloseCommand { get; set; } = true;
+
+        /// <summary>
         /// Starts a Statement in the specified mode of operation. Always dispose of the statement to ensure underlying
         /// DbCommand is disposed and prevent memory leaks.
         /// </summary>
@@ -138,11 +143,6 @@ namespace DtronixModel
                 throw new Exception("Class passed does not have a TableAttribute");
             }
         }
-
-        /// <summary>
-        /// True to close the command at the end of the query.
-        /// </summary>
-        public bool AutoCloseCommand { get; set; } = true;
 
         void IDisposable.Dispose()
         {
@@ -232,6 +232,39 @@ namespace DtronixModel
 
             _command.Parameters.Clear();
             _command.CommandText = SqlBindParameters(sql, binding);
+
+            _logger?.Debug("Query: \r\n" + _command.CommandText);
+#if NETSTANDARD2_1
+            await using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
+#else
+            using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
+#endif
+            {
+                await onRead(reader, cancellationToken);
+            }
+
+            _command.Dispose();
+        }
+
+        /// <summary>
+        /// Executes a string on the specified database and calls calls method with the reader.
+        /// Will close the command after execution.
+        /// </summary>
+        /// <param name="sql">SQL to execute with parameters in string.format style.</param>
+        /// <param name="onRead">Called when the query has been executed and reader created.</param>
+        /// <param name="cancellationToken">Cancellation token.</param>
+        public async Task QueryReadAsync(
+            string sql,
+            Func<DbDataReader, CancellationToken, Task> onRead,
+            CancellationToken cancellationToken = default)
+        {
+            if (_mode != Mode.Execute)
+                throw new InvalidOperationException("Need to be in Execute mode to use this method.");
+
+            // Open the connection.
+            await _context.OpenAsync(cancellationToken);
+
+            _command.CommandText = sql;
 
             _logger?.Debug("Query: \r\n" + _command.CommandText);
 #if NETSTANDARD2_1
@@ -379,7 +412,7 @@ namespace DtronixModel
             sql.Append(column).Append(" IN(");
 
             foreach (var value in values)
-                sql.Append(BindParameter(value)).Append(",");
+                sql.Append(CoreBindParameter(value)).Append(",");
             sql.Remove(sql.Length - 1, 1).Append(")");
 
             _sqlWhere = sql.ToString();
@@ -416,7 +449,7 @@ namespace DtronixModel
             // If this is a single model, use a simple "WHERE =" statement.
             if (models.Length == 1)
             {
-                _sqlWhere = $"{pkName} = {BindParameter(models[0].GetPKValue())}";
+                _sqlWhere = $"{pkName} = {CoreBindParameter(models[0].GetPKValue())}";
                 return this;
             }
 
@@ -425,7 +458,7 @@ namespace DtronixModel
             sql.Append(pkName).Append(" IN(");
 
             foreach (var model in models)
-                sql.Append(BindParameter(model.GetPKValue())).Append(",");
+                sql.Append(CoreBindParameter(model.GetPKValue())).Append(",");
             sql.Remove(sql.Length - 1, 1).Append(")");
 
             _sqlWhere = sql.ToString();
@@ -765,7 +798,7 @@ namespace DtronixModel
                         throw new InvalidOperationException("Could not update rows as no values have changed.");
 
                     foreach (var field in changedFields)
-                        sql.Append(field.Key).Append(" = ").Append(BindParameter(field.Value)).Append(", ");
+                        sql.Append(field.Key).Append(" = ").Append(CoreBindParameter(field.Value)).Append(", ");
 
                     sql.Remove(sql.Length - 2, 2).AppendLine();
                     break;
@@ -833,9 +866,8 @@ namespace DtronixModel
         /// Binds a parameter in the current command.
         /// </summary>
         /// <param name="value">Value to bind.</param>
-        /// <param name="parameterList">List of parameters to bind.</param>
         /// <returns>Parameter name for the binding reference.</returns>
-        private string BindParameter(object value, List<DbParameter> parameterList = null)
+        private string CoreBindParameter(object value)
         {
             var key = "@p" + _command.Parameters.Count;
             var param = _command.CreateParameter();
@@ -845,10 +877,21 @@ namespace DtronixModel
             // Logging to output bound parameters to stdout.
             _logger?.Debug("Parameter: " + key + " = " + value);
 
-            parameterList?.Add(param);
-
             _command.Parameters.Add(param);
             return key;
+        }
+
+        /// <summary>
+        /// Binds a parameter in the current command.
+        /// </summary>
+        /// <param name="value">Value to bind.</param>
+        /// <returns>Parameter name for the binding reference.</returns>
+        public string BindParameter(object value)
+        {
+            if (_mode != Mode.Execute)
+                throw new InvalidOperationException("Need to be in Execute mode to use this method.");
+
+            return CoreBindParameter(value);
         }
 
         /// <summary>
@@ -1012,7 +1055,7 @@ namespace DtronixModel
 
             var sqlParamHolder = new object[binding.Length];
             for (var i = 0; i < binding.Length; i++)
-                sqlParamHolder[i] = BindParameter(binding[i]);
+                sqlParamHolder[i] = CoreBindParameter(binding[i]);
 
             try
             {
