@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>2.3.0</VersionPrefix>
+    <VersionPrefix>2.3.1</VersionPrefix>
     <PackageOutputPath>$(ProjectDir)..\..\artifacts\</PackageOutputPath>
     <Company>Dtronix</Company>
     <Product>Dtronix Database Modeler</Product>

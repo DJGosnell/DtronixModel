@@ -71,55 +71,72 @@ namespace DtronixModeler.Sqlite
 
                         command.CommandText = "PRAGMA " + name;
 
-                        using (var reader = command.ExecuteReader())
+                        using var reader = command.ExecuteReader();
+                        reader.Read();
+                        try
                         {
-                            reader.Read();
-                            try
+                            database.Configuration.Add(new Configuration()
                             {
-                                database.Configuration.Add(new Configuration()
-                                {
-                                    Name = config.Name,
-                                    Value = reader[name].ToString(),
-                                    Description = config.Description
-                                });
-                            }
-                            catch { }
-
+                                Name = config.Name,
+                                Value = reader[name].ToString(),
+                                Description = config.Description
+                            });
+                        }
+                        catch
+                        {
+                            // ignored
                         }
                     }
                 }
 
-                foreach (var table in database.Table)
+                var tables = database.Table.ToArray();
+                foreach (var table in tables)
                 {
                     // Get the columns
                     using (var command = connection.CreateCommand())
                     {
-                        command.CommandText = "PRAGMA table_info(" + table.Name + ")";
-                        using (var reader = command.ExecuteReader())
+                        try
                         {
-
-
+                            command.CommandText = "PRAGMA table_info(" + table.Name + ")";
+                            using var reader = command.ExecuteReader();
                             while (reader.Read())
                             {
-                                var typ = reader["type"].ToString();
-
-                                var column = new Column()
+                                try
                                 {
-                                    Name = reader["name"].ToString(),
-                                    IsPrimaryKey = Convert.ToBoolean(reader["pk"]),
-                                    Nullable = !Convert.ToBoolean(reader["notnull"]),
-                                    DbType = reader["type"].ToString(),
-                                    NetType = TypeTransformer.DbToNetType(reader["type"].ToString(), false),
-                                };
+                                    var typ = reader["type"].ToString();
 
-                                if (column.IsPrimaryKey && column.DbType.ToLower() == "integer")
+                                    // If the type can't be read, then treat it as a text columns.
+                                    if (typ == "")
+                                        typ = "TEXT";
+
+                                    var column = new Column();
+                                    column.Name = reader["name"].ToString();
+                                    column.IsPrimaryKey = Convert.ToBoolean(reader["pk"]);
+                                    column.Nullable = !Convert.ToBoolean(reader["notnull"]);
+                                    column.DbType = typ;
+                                    column.NetType = TypeTransformer.DbToNetType(typ, false);
+
+                                    if (column.IsPrimaryKey && column.DbType.ToLower() == "integer")
+                                    {
+                                        column.IsPrimaryKey = true;
+                                    }
+
+                                    table.Column.Add(column);
+                                }
+                                catch
                                 {
-                                    column.IsPrimaryKey = true;
+                                    // Do nothing as the column can't be read.  Should probably log...
                                 }
 
-                                table.Column.Add(column);
                             }
                         }
+                        catch
+                        {
+                            database.Table.Remove(table);
+                            // If an exception is thrown while trying to read the table_info, just remove the 
+                            // table completely.  Log...
+                        }
+                
                     }
 
                     // Get the indexes.

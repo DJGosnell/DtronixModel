@@ -4,6 +4,7 @@
     xmlns:Xaml="clr-namespace:DtronixModeler.Xaml" x:Class="DtronixModeler.Xaml.MainWindow"
     xmlns:dxaml="clr-namespace:DtronixModeler.Xaml"
     xmlns:converters="clr-namespace:DtronixModeler.Xaml.Converters"
+    xmlns:ddl="clr-namespace:DtronixModeler.Generator.Ddl"
     Title="Dtronix Modeler" Height="700" Width="950" MinHeight="450" MinWidth="700" Icon="Images/database_blue.png"
     Closing="Window_Closing" WindowStartupLocation="CenterScreen" KeyUp="Window_KeyUp">
     <Window.Resources>
