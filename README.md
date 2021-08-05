@@ -1,4 +1,4 @@
-DtronixModel [![Build Status](https://github.com/Dtronix/DtronixModel/actions/workflows/dotnet-core-desktop.yml/badge.svg)](https://github.com/Dtronix/DtronixModel/actions/workflows/dotnet-core-desktop.yml)
+DtronixModel [![Build Status](https://github.com/Dtronix/DtronixModel/actions/workflows/dotnet.yml/badge.svg)](https://github.com/Dtronix/DtronixModel/actions/workflows/dotnet.yml)
 ============
 DtronixModel is a compact .net tool to aid in database modeling.
 
