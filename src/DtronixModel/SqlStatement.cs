@@ -13,7 +13,7 @@ namespace DtronixModel
     /// Class to help in quick and simple CRUD operations on a database table.
     /// </summary>
     /// <typeparam name="T">Model this class will be working with.</typeparam>
-    public class SqlStatement<T> : IDisposable
+    public sealed partial class SqlStatement<T> : IDisposable, IAsyncDisposable
         where T : TableRow, new()
     {
         /// <summary>
@@ -47,7 +47,7 @@ namespace DtronixModel
             Delete
         }
 
-        private readonly DbCommand _command;
+        internal readonly DbCommand Command;
 
 
         private readonly Context _context;
@@ -130,7 +130,7 @@ namespace DtronixModel
         {
             _context = context;
             _mode = mode;
-            _command = context.Connection.CreateCommand();
+            Command = context.Connection.CreateCommand();
             _logger = logger;
 
             try
@@ -143,142 +143,6 @@ namespace DtronixModel
                 throw new Exception("Class passed does not have a TableAttribute");
             }
         }
-
-        void IDisposable.Dispose()
-        {
-            _command.Dispose();
-        }
-
-        /// <summary>
-        /// Executes a string on the specified database.
-        /// Will close the command after execution.
-        /// </summary>
-        /// <param name="sql">SQL to execute with parameters in string.format style.</param>
-        /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
-        /// <returns>The number of rows affected.</returns>
-        public int Query(string sql, params object[] binding)
-        {
-            var queryTask = QueryAsync(sql, binding, CancellationToken.None);
-
-            return queryTask.Result;
-        }
-
-        /// <summary>
-        /// Executes a string on the specified database.
-        /// Will close the command after execution.
-        /// </summary>
-        /// <param name="sql">SQL to execute with parameters in string.format style.</param>
-        /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>The number of rows affected.</returns>
-        public async Task<int> QueryAsync(string sql, object[] binding, CancellationToken cancellationToken = default)
-        {
-            if (_mode != Mode.Execute)
-                throw new InvalidOperationException("Need to be in Execute mode to use this method.");
-
-            // Open the connection.
-            await _context.OpenAsync(cancellationToken);
-
-            _command.Parameters.Clear();
-            _command.CommandText = SqlBindParameters(sql, binding);
-
-            _logger?.Debug("Query: \r\n" + _command.CommandText);
-
-            var result = await _command.ExecuteNonQueryAsync(cancellationToken);
-
-            _command.Dispose();
-
-            return result;
-        }
-
-        /// <summary>
-        /// Executes a string on the specified database and calls calls method with the reader.
-        /// Will close the command after execution.
-        /// </summary>
-        /// <param name="sql">SQL to execute with parameters in string.format style.</param>
-        /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
-        /// <param name="onRead">Called when the query has been executed and reader created.</param>
-        /// <returns>The number of rows affected.</returns>
-        public void QueryRead(string sql, object[] binding, Action<DbDataReader> onRead)
-        {
-            var queryReadTask = QueryReadAsync(sql, binding, (reader, ct) =>
-            {
-                onRead(reader);
-                return Task.CompletedTask;
-            }, CancellationToken.None);
-
-            queryReadTask.Wait();
-        }
-
-        /// <summary>
-        /// Executes a string on the specified database and calls calls method with the reader.
-        /// Will close the command after execution.
-        /// </summary>
-        /// <param name="sql">SQL to execute with parameters in string.format style.</param>
-        /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
-        /// <param name="onRead">Called when the query has been executed and reader created.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        public async Task QueryReadAsync(
-            string sql, 
-            object[] binding, 
-            Func<DbDataReader, CancellationToken, Task> onRead, 
-            CancellationToken cancellationToken = default)
-        {
-            if (_mode != Mode.Execute)
-                throw new InvalidOperationException("Need to be in Execute mode to use this method.");
-
-            // Open the connection.
-            await _context.OpenAsync(cancellationToken);
-
-            _command.Parameters.Clear();
-            _command.CommandText = SqlBindParameters(sql, binding);
-
-            _logger?.Debug("Query: \r\n" + _command.CommandText);
-#if NETSTANDARD2_1
-            await using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
-#else
-            using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
-#endif
-            {
-                await onRead(reader, cancellationToken);
-            }
-
-            _command.Dispose();
-        }
-
-        /// <summary>
-        /// Executes a string on the specified database and calls calls method with the reader.
-        /// Will close the command after execution.
-        /// </summary>
-        /// <param name="sql">SQL to execute with parameters in string.format style.</param>
-        /// <param name="onRead">Called when the query has been executed and reader created.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        public async Task QueryReadAsync(
-            string sql,
-            Func<DbDataReader, CancellationToken, Task> onRead,
-            CancellationToken cancellationToken = default)
-        {
-            if (_mode != Mode.Execute)
-                throw new InvalidOperationException("Need to be in Execute mode to use this method.");
-
-            // Open the connection.
-            await _context.OpenAsync(cancellationToken);
-
-            _command.CommandText = sql;
-
-            _logger?.Debug("Query: \r\n" + _command.CommandText);
-#if NETSTANDARD2_1
-            await using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
-#else
-            using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
-#endif
-            {
-                await onRead(reader, cancellationToken);
-            }
-
-            _command.Dispose();
-        }
-
 
         /// <summary>
         /// Begins selection process and the specifies columns to return from the database.
@@ -333,7 +197,7 @@ namespace DtronixModel
 
             _sqlRows = models;
             await ExecuteAsync(cancellationToken);
-            _command.Dispose();
+            Command.Dispose();
         }
 
 
@@ -412,8 +276,8 @@ namespace DtronixModel
             sql.Append(column).Append(" IN(");
 
             foreach (var value in values)
-                sql.Append(CoreBindParameter(value)).Append(",");
-            sql.Remove(sql.Length - 1, 1).Append(")");
+                sql.Append(CoreBindParameter(value)).Append(',');
+            sql.Remove(sql.Length - 1, 1).Append(')');
 
             _sqlWhere = sql.ToString();
 
@@ -458,8 +322,8 @@ namespace DtronixModel
             sql.Append(pkName).Append(" IN(");
 
             foreach (var model in models)
-                sql.Append(CoreBindParameter(model.GetPKValue())).Append(",");
-            sql.Remove(sql.Length - 1, 1).Append(")");
+                sql.Append(CoreBindParameter(model.GetPKValue())).Append(',');
+            sql.Remove(sql.Length - 1, 1).Append(')');
 
             _sqlWhere = sql.ToString();
 
@@ -557,220 +421,7 @@ namespace DtronixModel
 
             return this;
         }
-
-        /// <summary>
-        /// Executes the query built.
-        /// </summary>
-        public void Execute()
-        {
-            ExecuteAsync(CancellationToken.None).Wait();
-        }
-
-        /// <summary>
-        /// Executes the query built.
-        /// </summary>
-        public async Task ExecuteAsync(CancellationToken cancellationToken = default)
-        {
-            if (_mode == Mode.Execute)
-                throw new InvalidOperationException("Can not use all functions in Execute mode.");
-
-            // Open the connection.
-            await _context.OpenAsync(cancellationToken);
-
-            if (_mode == Mode.Update)
-            {
-
-                SqlTransaction transaction = null;
-                try
-                {
-                    // Start a transaction if one does not already exist.
-                    if (_context.Transaction == null && _sqlRows.Length > 1)
-                        transaction = _context.BeginTransaction();
-
-                    foreach (var model in _sqlRows)
-                    {
-                        _sqlWhere = null;
-                        Where(model);
-                        BuildSql(model);
-
-                        // Execute the update command.
-                        await _command.ExecuteNonQueryAsync(cancellationToken);
-
-                        _logger?.Debug("Update: \r\n" + _command.CommandText);
-                    }
-
-                    transaction?.Commit();
-                }
-                finally
-                {
-                    transaction?.Dispose();
-                }
-            }
-            else
-            {
-                BuildSql(null);
-                await _command.ExecuteNonQueryAsync(cancellationToken);
-            }
-
-            if (AutoCloseCommand)
-                _command.Dispose();
-        }
-
-        /// <summary>
-        /// Executes the query built and returns the associated rows with the query. Synchronous.
-        /// </summary>
-        /// <returns>On success, returns rows with the result of the query; Otherwise returns null.</returns>
-        public T ExecuteFetch()
-        {
-            var fetchTask = ExecuteFetchAsync(CancellationToken.None);
-
-            return fetchTask.Result;
-        }
-
-        /// <summary>
-        /// Executes the query built and returns the associated rows with the query. Synchronous.
-        /// </summary>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>On success, returns rows with the result of the query; Otherwise returns null.</returns>
-        public async Task<T> ExecuteFetchAsync(CancellationToken cancellationToken = default)
-        {
-            if (_mode == Mode.Execute)
-                throw new InvalidOperationException("Can not use all functions in Execute mode.");
-
-            if (_mode != Mode.Select)
-                throw new InvalidOperationException("Can not fetch from the server when not in SELECT mode.");
-
-            // Open the connection.
-            await _context.OpenAsync(cancellationToken);
-
-            BuildSql(null);
-            T model;
-
-#if NETSTANDARD2_1
-            await using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
-#else
-            using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
-#endif
-            {
-                if (await reader.ReadAsync(cancellationToken) == false)
-                    return default;
-
-                model = new T();
-                model.Read(reader, _context);
-            }
-
-            if (AutoCloseCommand)
-                _command.Dispose();
-
-            return model;
-        }
-
-        /// <summary>
-        ///  Executes the query built and returns the associated rows with the query. Synchronous.
-        /// </summary>
-        /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
-        public T[] ExecuteFetchAll()
-        {
-            return ExecuteFetchAll(null, null);
-        }
-
-
-        /// <summary>
-        ///  Executes the specified query and returns the associated rows with the query. Synchronous.
-        /// </summary>
-        /// <param name="query">Query override which will ignore all previous query builder commands.</param>
-        /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
-        public T[] ExecuteFetchAll(string query)
-        {
-            return ExecuteFetchAll(query, null);
-        }
-
-
-        /// <summary>
-        ///  Executes the specified query, binds the passed parameters and returns the associated rows with the query. Synchronous.
-        /// </summary>
-        /// <param name="query">Query override which will ignore all previous query builder commands.</param>
-        /// <param name="parameters">Parameters to bind to the query.</param>
-        /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
-        public T[] ExecuteFetchAll(string query, object[] parameters)
-        {
-            var fetchTask = ExecuteFetchAllAsync(query, parameters, CancellationToken.None);
-
-            fetchTask.Wait();
-
-            return fetchTask.Result;
-        }
-
-        /// <summary>
-        ///  Executes the query built and returns the associated rows with the query. Synchronous.
-        /// </summary>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
-        public async Task<T[]> ExecuteFetchAllAsync(CancellationToken cancellationToken = default)
-        {
-            return await ExecuteFetchAllAsync(null, null, cancellationToken);
-        }
-
-        /// <summary>
-        ///  Executes the specified query and returns the associated rows with the query. Synchronous.
-        /// </summary>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <param name="query">Query override which will ignore all previous query builder commands.</param>
-        /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
-        public async Task<T[]> ExecuteFetchAllAsync(string query, CancellationToken cancellationToken = default)
-        {
-            return await ExecuteFetchAllAsync(query, null, cancellationToken);
-        }
-
-        /// <summary>
-        ///  Executes the specified query, binds the passed parameters and returns the associated rows with the query. Synchronous.
-        /// </summary>
-        /// <param name="query">Query override which will ignore all previous query builder commands.</param>
-        /// <param name="parameters">Parameters to bind to the query.</param>
-        /// <param name="cancellationToken">Cancellation token.</param>
-        /// <returns>On success, returns rows with the result of the query; Otherwise returns an empty array.</returns>
-        public async Task<T[]> ExecuteFetchAllAsync(string query, object[] parameters, CancellationToken cancellationToken = default)
-        {
-            if (_mode == Mode.Execute)
-                throw new InvalidOperationException("Can not use all functions in Execute mode.");
-
-            if (_mode != Mode.Select)
-                throw new InvalidOperationException("Can not fetch from the server when not in SELECT mode.");
-
-            // Open the connection.
-            await _context.OpenAsync(cancellationToken);
-
-            if (query == null)
-                BuildSql(null);
-            else
-            {
-                // Clear all previous bound parameters.
-                _command.Parameters.Clear();
-                _command.CommandText = SqlBindParameters(query, parameters);
-            }
-
-            var results = new List<T>();
-
-#if NETSTANDARD2_1
-            await using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
-#else
-            using (var reader = await _command.ExecuteReaderAsync(cancellationToken))
-#endif
-            {
-                while (await reader.ReadAsync(cancellationToken))
-                {
-                    var model = new T();
-                    model.Read(reader, _context);
-                    results.Add(model);
-                }
-            }
-
-            if (AutoCloseCommand)
-                _command.Dispose();
-
-            return results.ToArray();
-        }
-
+        
         /// <summary>
         /// Builds the SQL statement that this class currently represents.
         /// </summary>
@@ -857,8 +508,8 @@ namespace DtronixModel
                 sql.Append(_sqlLimitCount);
             }
 
-            _command.CommandText = sql.ToString();
-            _logger?.Debug("Query: \r\n" + _command.CommandText);
+            Command.CommandText = sql.ToString();
+            _logger?.Debug("Query: \r\n" + Command.CommandText);
         }
 
 
@@ -869,15 +520,15 @@ namespace DtronixModel
         /// <returns>Parameter name for the binding reference.</returns>
         private string CoreBindParameter(object value)
         {
-            var key = "@p" + _command.Parameters.Count;
-            var param = _command.CreateParameter();
+            var key = "@p" + Command.Parameters.Count;
+            var param = Command.CreateParameter();
             param.ParameterName = key;
             param.Value = PrepareParameterValue(value);
 
             // Logging to output bound parameters to stdout.
             _logger?.Debug("Parameter: " + key + " = " + value);
 
-            _command.Parameters.Add(param);
+            Command.Parameters.Add(param);
             return key;
         }
 
@@ -899,10 +550,10 @@ namespace DtronixModel
         /// </summary>
         /// <param name="value">Parameter to prepare.</param>
         /// <returns>Prepared parameter.</returns>
-        private object PrepareParameterValue(object value)
+        private static object PrepareParameterValue(object value)
         {
-            if (value is DateTimeOffset)
-                value = ((DateTimeOffset)value).ToString("o");
+            if (value is DateTimeOffset offset)
+                value = offset.ToString("o");
 
             return value;
         }
@@ -983,15 +634,15 @@ namespace DtronixModel
                 if (_context.Transaction == null)
                     transaction = _context.BeginTransaction();
 
-                _command.CommandText = sbSql.ToString();
-                _command.Transaction = _context.Transaction.Transaction;
+                Command.CommandText = sbSql.ToString();
+                Command.Transaction = _context.Transaction.Transaction;
 
                 // Create the parameters for bulk inserts.
                 for (var i = 0; i < columns.Length; i++)
                 {
-                    var parameter = _command.CreateParameter();
+                    var parameter = Command.CreateParameter();
                     parameter.ParameterName = "@v" + i;
-                    _command.Parameters.Add(parameter);
+                    Command.Parameters.Add(parameter);
                 }
 
                 // Loop through watch of the provided models.
@@ -1000,11 +651,11 @@ namespace DtronixModel
                     var values = models[i].GetAllValues();
 
                     for (var x = 0; x < values.Length; x++)
-                        _command.Parameters[x].Value = PrepareParameterValue(values[x]);
+                        Command.Parameters[x].Value = PrepareParameterValue(values[x]);
 
                     if (_context.LastInsertIdQuery != null)
                     {
-                        var newRow = await _command.ExecuteScalarAsync(cancellationToken);
+                        var newRow = await Command.ExecuteScalarAsync(cancellationToken);
                         if (newRow == null)
                             throw new Exception("Unable to insert row");
 
@@ -1013,11 +664,11 @@ namespace DtronixModel
                     }
                     else
                     {
-                        if (await _command.ExecuteNonQueryAsync(cancellationToken) != 1)
+                        if (await Command.ExecuteNonQueryAsync(cancellationToken) != 1)
                             throw new Exception("Unable to insert row");
                     }
 
-                    _logger?.Debug("Insert: \r\n" + _command.CommandText);
+                    _logger?.Debug("Insert: \r\n" + Command.CommandText);
                 }
 
                 // Commit all inserts.
@@ -1082,6 +733,23 @@ namespace DtronixModel
 
             if (_sqlWhere != null)
                 throw new InvalidOperationException("The WHERE statement has already been defined.");
+        }
+
+        /// <summary>
+        /// Disposes all the resources held by this statement.
+        /// </summary>
+        public void Dispose()
+        {
+            Command.Dispose();
+        }
+
+        /// <summary>
+        /// Disposes all the resources held by this statement.
+        /// </summary>
+        /// <returns>Task for the completion of the disposal call.</returns>
+        public ValueTask DisposeAsync()
+        {
+            return Command.DisposeAsync();
         }
     }
 }

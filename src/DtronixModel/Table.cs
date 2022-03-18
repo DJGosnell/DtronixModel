@@ -137,10 +137,8 @@ namespace DtronixModel
         /// </returns>
         public long[] Insert(T[] model)
         {
-            using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Insert, _context))
-            {
-                return statement.Insert(model);
-            }
+            using var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Insert, _context);
+            return statement.Insert(model);
         }
 
         /// <summary>
@@ -173,10 +171,8 @@ namespace DtronixModel
         /// </returns>
         public async Task<long[]> InsertAsync(T[] model, CancellationToken cancellationToken = default)
         {
-            using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Insert, _context))
-            {
-                return await statement.InsertAsync(model, cancellationToken);
-            }
+            await using var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Insert, _context);
+            return await statement.InsertAsync(model, cancellationToken);
         }
 
         /// <summary>
@@ -200,10 +196,8 @@ namespace DtronixModel
         /// <param name="model">Rows to update.</param>
         public void Update(T[] model)
         {
-            using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Update, _context))
-            {
-                statement.Update(model);
-            }
+            using var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Update, _context);
+            statement.Update(model);
         }
 
         /// <summary>
@@ -229,10 +223,8 @@ namespace DtronixModel
         /// <param name="cancellationToken">Cancellation token.</param>
         public async Task UpdateAsync(T[] models, CancellationToken cancellationToken = default)
         {
-            using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Update, _context))
-            {
-                await statement.UpdateAsync(models, cancellationToken);
-            }
+            await using var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Update, _context);
+            await statement.UpdateAsync(models, cancellationToken);
         }
 
         /// <summary>
@@ -253,10 +245,8 @@ namespace DtronixModel
         /// <param name="models">Rows to delete.</param>
         public void Delete(T[] models)
         {
-            using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Delete, _context))
-            {
-                statement.Delete(models);
-            }
+            using var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Delete, _context);
+            statement.Delete(models);
         }
 
         /// <summary>
@@ -274,10 +264,8 @@ namespace DtronixModel
         /// <param name="ids">Row ids to delete.</param>
         public void Delete(long[] ids)
         {
-            using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Delete, _context))
-            {
-                statement.Delete(ids);
-            }
+            using var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Delete, _context);
+            statement.Delete(ids);
         }
 
         /// <summary>
@@ -300,10 +288,8 @@ namespace DtronixModel
         /// <param name="cancellationToken">Cancellation token.</param>
         public async Task DeleteAsync(T[] models, CancellationToken cancellationToken = default)
         {
-            using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Delete, _context))
-            {
-                await statement.DeleteAsync(models, cancellationToken);
-            }
+            await using var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Delete, _context);
+            await statement.DeleteAsync(models, cancellationToken);
         }
 
         /// <summary>
@@ -323,10 +309,8 @@ namespace DtronixModel
         /// <param name="cancellationToken">Cancellation token.</param>
         public async Task DeleteAsync(long[] ids, CancellationToken cancellationToken = default)
         {
-            using (var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Delete, _context))
-            {
-                await statement.DeleteAsync(ids, cancellationToken);
-            }
+            await using var statement = new SqlStatement<T>(SqlStatement<T>.Mode.Delete, _context);
+            await statement.DeleteAsync(ids, cancellationToken);
         }
     }
 }

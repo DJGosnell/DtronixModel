@@ -2,7 +2,7 @@
   <Import Project="..\DtronixModel.props" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0-Windows</TargetFramework>
+    <TargetFramework>net6.0-Windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <Description>Modeler for defining database systems.</Description>
     <ApplicationIcon>icon.ico</ApplicationIcon>
@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113.7" />
-    <PackageReference Include="Tools.InnoSetup" Version="6.0.5" GeneratePathProperty="true" />
+    <PackageReference Include="Tools.InnoSetup" Version="6.1.2" GeneratePathProperty="true" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <Target Name="PublishCreateSetup" AfterTargets="Publish">
-    <Exec Command="$(NuGetPackageRoot)Tools.InnoSetup\6.0.5\tools\iscc.exe /q $(PublishDir)setup.iss" />
+	  <Exec Command="$(NuGetPackageRoot)Tools.InnoSetup\6.1.2\tools\iscc.exe /q /O$(SolutionDir)../artifacts/ $(PublishDir)setup.iss" />
   </Target>
 
 </Project>

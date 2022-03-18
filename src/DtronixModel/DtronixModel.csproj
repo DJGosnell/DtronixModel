@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\DtronixModel.props" />
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net5.0;net6.0;</TargetFrameworks>
     <Description>Small .NET tool aiding in sql data modeling and simplified CRUD.</Description>
   </PropertyGroup>
 

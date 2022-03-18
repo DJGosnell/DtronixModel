@@ -1,10 +1,10 @@
 <Project>
   <PropertyGroup>
-    <VersionPrefix>2.3.1</VersionPrefix>
+    <VersionPrefix>3.0.0</VersionPrefix>
     <PackageOutputPath>$(ProjectDir)..\..\artifacts\</PackageOutputPath>
     <Company>Dtronix</Company>
     <Product>Dtronix Database Modeler</Product>
-    <Copyright>Copyright © Dtronix 2021</Copyright>
+    <Copyright>Copyright © Dtronix 2022</Copyright>
     <Authors>DJGosnell</Authors>
     <PackageProjectUrl>https://github.com/Dtronix/DtronixModel</PackageProjectUrl>
     <RepositoryUrl>https://github.com/Dtronix/DtronixModel</RepositoryUrl>
@@ -14,11 +14,14 @@
     <PackageIcon>database_blue32.png</PackageIcon>
     <PackageIconUrl />
   </PropertyGroup>
-
+  <PropertyGroup Label="BasePath">
+	<SolutionDir Condition="'$(SolutionDir)'==''">$(MSBuildThisFileDirectory)</SolutionDir>
+  </PropertyGroup>
   <ItemGroup>
     <None Include="..\DtronixModeler\Xaml\Images\database_blue32.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
+	
 </Project>

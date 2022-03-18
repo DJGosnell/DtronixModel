@@ -14,10 +14,7 @@ namespace DtronixModel
     /// var result = context.Table.Select().Where("id = {0}", 1).ExecuteFetch();
     /// }
     /// </example>
-    public abstract class Context : IDisposable
-#if  NETSTANDARD2_1
-            , IAsyncDisposable
-#endif
+    public abstract class Context : IDisposable, IAsyncDisposable
     {
         /// <summary>
         /// The default list of database targets for this context.
@@ -127,9 +124,9 @@ namespace DtronixModel
 
             Connection.Close();
             Connection.Dispose();
+            GC.SuppressFinalize(this);
         }
 
-#if NETSTANDARD2_1
         /// <summary>
         /// Asynchronously Releases any connection resources.
         /// </summary>
@@ -140,9 +137,9 @@ namespace DtronixModel
 
             await Connection.CloseAsync();
             await Connection.DisposeAsync();
+            GC.SuppressFinalize(this);
 
         }
-#endif
 
         /// <summary>
         /// Sets the default connection creation method.
@@ -172,10 +169,24 @@ namespace DtronixModel
         /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
         /// <param name="onRead">Called when the query has been executed and reader created.</param>
         /// <returns>The number of rows affected.</returns>
+        [Obsolete("Use QueryRead(string sql, object[] binding) instead.")]
         public void QueryRead(string sql, object[] binding, Action<DbDataReader> onRead)
         {
             new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this, Logger)
                 .QueryRead(sql, binding, onRead);
+        }
+
+        /// <summary>
+        /// Executes a string on the specified database and calls calls method with the reader.
+        /// Will close the command after execution.
+        /// </summary>
+        /// <param name="sql">SQL to execute with parameters in string.format style.</param>
+        /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
+        /// <returns>Statement reader for the query</returns>
+        public SqlStatementReader<GenericTableRow> QueryRead(string sql, object[] binding)
+        {
+            return new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this, Logger)
+                .QueryRead(sql, binding);
         }
 
         /// <summary>
@@ -186,9 +197,9 @@ namespace DtronixModel
         /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The number of rows affected.</returns>
-        public async Task<int> QueryAsync(string sql, object[] binding, CancellationToken cancellationToken = default)
+        public Task<int> QueryAsync(string sql, object[] binding, CancellationToken cancellationToken = default)
         {
-            return await new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this, Logger)
+            return new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this, Logger)
                 .QueryAsync(sql, binding, cancellationToken);
         }
 
@@ -200,15 +211,33 @@ namespace DtronixModel
         /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
         /// <param name="onRead">Called when the query has been executed and reader created.</param>
         /// <param name="cancellationToken">>Cancellation token.</param>
-        /// <returns>The number of rows affected.</returns>
-        public async Task QueryReadAsync(
+        /// <returns>The task for the reader</returns>
+        [Obsolete("Use QueryRead(string sql, object[] binding, CancellationToken cancellationToken) instead.")]
+        public Task QueryReadAsync(
             string sql, 
             object[] binding,
             Func<DbDataReader, CancellationToken, Task> onRead,
             CancellationToken cancellationToken = default)
         {
-            await new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this, Logger)
+            return new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this, Logger)
                 .QueryReadAsync(sql, binding, onRead, cancellationToken);
+        }
+
+        /// <summary>
+        /// Executes a string on the specified database and calls calls method with the reader.
+        /// Will close the command after execution.
+        /// </summary>
+        /// <param name="sql">SQL to execute with parameters in string.format style.</param>
+        /// <param name="binding">Parameters to replace the string.format placeholders with.</param>
+        /// <param name="cancellationToken">>Cancellation token.</param>
+        /// <returns>The number of rows affected.</returns>
+        public Task<SqlStatementReader<GenericTableRow>> QueryReadAsync(
+            string sql,
+            object[] binding,
+            CancellationToken cancellationToken = default)
+        {
+            return new SqlStatement<GenericTableRow>(SqlStatement<GenericTableRow>.Mode.Execute, this, Logger)
+                .QueryReadAsync(sql, binding, cancellationToken);
         }
 
         /// <summary>
@@ -228,8 +257,27 @@ namespace DtronixModel
 
             return Transaction = new SqlTransaction(
                 Connection.BeginTransaction(), 
-                () => { Transaction = null; },
-                Logger);
+                () =>  Transaction = null);
+        }
+
+        /// <summary>
+        /// Begins a transaction on this context. Use within a "using" statement
+        /// </summary>
+        /// <example>
+        /// using (var transaction = context.BeginTransaction()) {
+        /// Normal query/updates/inserts.
+        /// }
+        /// </example>
+        /// <returns>Wrapped transaction.</returns>
+        public async Task<SqlTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+        {
+            if (Transaction != null)
+                throw new InvalidOperationException(
+                    "Transaction has already been created.  Can not create nested transactions.");
+
+            return Transaction = new SqlTransaction(
+                await Connection.BeginTransactionAsync(cancellationToken),
+                () => Transaction = null);
         }
     }
 }

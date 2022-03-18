@@ -5,7 +5,7 @@ using DtronixModel;
 using NUnit.Framework;
 using System.Threading.Tasks;
 using MessagePack;
-using MessagePack.Resolvers;
+#pragma warning disable CS1591
 
 namespace DtronixModelTests.Sqlite
 {
@@ -72,7 +72,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task SelectedRowsAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context);
             await CreateUserAsync(context);
             var users = await context.Users.Select().ExecuteFetchAllAsync();
@@ -107,7 +107,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task SelectedSpecifiedRowsAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context);
             var user = await context.Users.Select("username, last_logged").ExecuteFetchAsync();
 
@@ -134,7 +134,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task SelectedLimitCountAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context, "1");
             await CreateUserAsync(context, "2");
             await CreateUserAsync(context, "3");
@@ -164,7 +164,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task SelectedLimitCountStartAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context, "1");
             await CreateUserAsync(context, "2");
             await CreateUserAsync(context, "3");
@@ -196,7 +196,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task SelectedOrderByDescendingAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context, "1");
             await CreateUserAsync(context, "2");
             await CreateUserAsync(context, "3");
@@ -230,7 +230,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task SelectedWhereModelAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context, "1");
             await CreateUserAsync(context, "2");
 
@@ -262,7 +262,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task SelectedWhereModelsAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context, "1");
             await CreateUserAsync(context, "2");
             await CreateUserAsync(context, "3");
@@ -294,7 +294,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task SelectedWhereCustomAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context, "1");
             await CreateUserAsync(context, "2");
             await CreateUserAsync(context, "3");
@@ -326,7 +326,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task SelectedWhereInAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context, "1");
             await CreateUserAsync(context, "2");
             await CreateUserAsync(context, "3");
@@ -341,13 +341,14 @@ namespace DtronixModelTests.Sqlite
         }
 
         [Test]
-        public void QueryTables()
+        public void QueryTables_Obsolete()
         {
             using var context = CreateContext();
             CreateUser(context, "1");
             CreateUser(context, "2");
             CreateUser(context, "3");
 
+#pragma warning disable CS0618
             context.QueryRead(@"SELECT * FROM Users WHERE username LIKE {0} LIMIT 1", new object[] {"%name2"}, reader =>
             {
                 int count = 0;
@@ -358,16 +359,36 @@ namespace DtronixModelTests.Sqlite
                     Assert.AreEqual("my_hashed_password2", reader.GetString(reader.GetOrdinal("password")));
                 }
             });
+#pragma warning restore CS0618
         }
 
         [Test]
-        public async Task QueryTablesAsync()
+        public void QueryTables()
         {
             using var context = CreateContext();
+            CreateUser(context, "1");
+            CreateUser(context, "2");
+            CreateUser(context, "3");
+
+            using var reader = context.QueryRead(@"SELECT * FROM Users WHERE username LIKE {0} LIMIT 1", new object[] { "%name2" });
+            int count = 0;
+            while (reader.Reader.Read())
+            {
+                Assert.AreEqual(1, ++count);
+                Assert.AreEqual("user_name2", reader.Reader.GetString(reader.Reader.GetOrdinal("username")));
+                Assert.AreEqual("my_hashed_password2", reader.Reader.GetString(reader.Reader.GetOrdinal("password")));
+            }
+        }
+
+        [Test]
+        public async Task QueryTablesAsync_Obsolete()
+        {
+            await using var context = CreateContext();
             await CreateUserAsync(context, "1");
             await CreateUserAsync(context, "2");
             await CreateUserAsync(context, "3");
 
+#pragma warning disable CS0618
             await context.QueryReadAsync(@"SELECT * FROM Users WHERE username LIKE {0} LIMIT 1", new object[] { "%name2" }, async (reader, ct) =>
             {
                 int count = 0;
@@ -378,6 +399,27 @@ namespace DtronixModelTests.Sqlite
                     Assert.AreEqual("my_hashed_password2", reader.GetString(reader.GetOrdinal("password")));
                 }
             });
+#pragma warning restore CS0618
+        }
+
+        [Test]
+        public async Task QueryTablesAsync()
+        {
+            await using var context = CreateContext();
+            await CreateUserAsync(context, "1");
+            await CreateUserAsync(context, "2");
+            await CreateUserAsync(context, "3");
+
+            await using var reader = await context.QueryReadAsync(@"SELECT * FROM Users WHERE username LIKE {0} LIMIT 1",
+                new object[] { "%name2" });
+
+            int count = 0;
+            while (await reader.Reader.ReadAsync())
+            {
+                Assert.AreEqual(1, ++count);
+                Assert.AreEqual("user_name2", reader.Reader.GetString(reader.Reader.GetOrdinal("username")));
+                Assert.AreEqual("my_hashed_password2", reader.Reader.GetString(reader.Reader.GetOrdinal("password")));
+            }
         }
 
 
@@ -412,7 +454,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task SelectEmptyTableAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             var user = await context.Users.Select().ExecuteFetchAsync();
             var users = await context.Users.Select().ExecuteFetchAllAsync();
 
@@ -436,7 +478,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task RowIsCreatedAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context);
             var user = await context.Users.Select().ExecuteFetchAsync();
 
@@ -465,7 +507,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task RowIsDeletedByModelAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context);
             var user = await context.Users.Select().ExecuteFetchAsync();
 
@@ -499,7 +541,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task RowIsDeletedByModelsAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context);
             await CreateUserAsync(context);
             var users = await context.Users.Select().ExecuteFetchAllAsync();
@@ -532,7 +574,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task RowIsDeletedByRowIdAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             long id = await CreateUserAsync(context);
 
             Assert.AreNotEqual(0, id);
@@ -565,7 +607,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task RowIsDeletedByRowIdsAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             long[] ids = new long[2];
             ids[0] = await CreateUserAsync(context);
             ids[1] = await CreateUserAsync(context);
@@ -598,7 +640,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task RowIsUpdatedAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context);
             var user = await context.Users.Select().ExecuteFetchAsync();
             user.username = "MyNewUsername";
@@ -631,7 +673,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task RowsAreUpdatedAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context);
             await CreateUserAsync(context);
 
@@ -788,8 +830,8 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task TransactionRollbackAutoAsync()
         {
-            using var context = CreateContext();
-            using (context.BeginTransaction())
+            await using var context = CreateContext();
+            await using (context.BeginTransaction())
             {
                 await CreateUserAsync(context);
             }
@@ -817,8 +859,8 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task TransactionRollbackManualAsync()
         {
-            using var context = CreateContext();
-            using (var transaction = context.BeginTransaction())
+            await using var context = CreateContext();
+            await using (var transaction = context.BeginTransaction())
             {
                 await CreateUserAsync(context);
                 transaction.Rollback();
@@ -850,8 +892,8 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task TransactionCommitAsync()
         {
-            using var context = CreateContext();
-            using (var transaction = context.BeginTransaction())
+            await using var context = CreateContext();
+            await using (var transaction = context.BeginTransaction())
             {
                 await CreateUserAsync(context);
                 transaction.Commit();
@@ -861,7 +903,7 @@ namespace DtronixModelTests.Sqlite
 
             Assert.NotNull(user);
 
-            context.Users.Delete(user);
+            await context.Users.DeleteAsync(user);
         }
 
         [Test]
@@ -884,8 +926,8 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task TransactionCommitMultipleInsertsAsync()
         {
-            using var context = CreateContext();
-            using (var transaction = context.BeginTransaction())
+            await using var context = CreateContext();
+            await using (var transaction = context.BeginTransaction())
             {
                 for (int i = 0; i < 5; i++)
                     await CreateUserAsync(context);
@@ -956,7 +998,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task InsertReturnsNewRowIdAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             long id = await CreateUserAsync(context);
             var user = await context.Users.Select().ExecuteFetchAsync();
 
@@ -999,7 +1041,7 @@ namespace DtronixModelTests.Sqlite
             bool fired = false;
             var row = new AllTypes();
 
-            row.PropertyChanged += (sender, e) =>
+            row.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == "db_date_time")
                 {
@@ -1029,7 +1071,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task ExecuteFetchAllSpecifiedQueryAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context);
 
             var users = await context.Users.Select().ExecuteFetchAllAsync("SELECT username FROM Users");
@@ -1054,7 +1096,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task ExecuteFetchAllBindsSpecifiedQueryAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context);
 
             var users = await context.Users.Select()
@@ -1081,7 +1123,7 @@ namespace DtronixModelTests.Sqlite
         [Test]
         public async Task ExecuteFetchAllOverridesPreviousMethodsAsync()
         {
-            using var context = CreateContext();
+            await using var context = CreateContext();
             await CreateUserAsync(context);
 
             var users = await context.Users.Select()

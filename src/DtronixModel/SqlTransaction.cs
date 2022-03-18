@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Data.Common;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DtronixModel
 {
     /// <summary>
     /// Transaction wrapper to handle internal transactions and object states.
     /// </summary>
-    public class SqlTransaction : IDisposable
+    public sealed class SqlTransaction : IDisposable, IAsyncDisposable
     {
         /// <summary>
         /// Method to call on transaction disposal.
         /// </summary>
         private readonly Action _onDispose;
-
-        private readonly ILogger _logger;
 
         /// <summary>
         /// Wrapped transaction for the database.
@@ -27,21 +27,10 @@ namespace DtronixModel
         /// </summary>
         /// <param name="transaction">Transaction to wrap.</param>
         /// <param name="onDispose">Method to call on transaction disposal.</param>
-        /// <param name="logger">Logger to use for this transaction event.</param>
-        public SqlTransaction(DbTransaction transaction, Action onDispose, ILogger logger)
+        public SqlTransaction(DbTransaction transaction, Action onDispose)
         {
             Transaction = transaction;
             _onDispose = onDispose;
-            _logger = logger;
-        }
-
-        /// <summary>
-        /// Releases the unmanaged resources used by the System.Data.Common.DbTransaction.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -53,6 +42,14 @@ namespace DtronixModel
         }
 
         /// <summary>
+        /// Commits the database transaction.
+        /// </summary>
+        public Task CommitAsync(CancellationToken cancellationToken)
+        {
+            return Transaction.CommitAsync(cancellationToken);
+        }
+
+        /// <summary>
         /// Rolls back a transaction from a pending state.
         /// </summary>
         public void Rollback()
@@ -60,23 +57,38 @@ namespace DtronixModel
             Transaction.Rollback();
         }
 
+        /// <summary>
+        /// Rolls back a transaction from a pending state.
+        /// </summary>
+        public Task RollbackAsync(CancellationToken cancellationToken)
+        {
+            return Transaction.RollbackAsync(cancellationToken);
+        }
 
         /// <summary>
-        /// Protected implementation of Dispose pattern.
+        /// Releases the unmanaged resources used by the System.Data.Common.DbTransaction.
         /// </summary>
-        /// <param name="disposing">True if the object is in the process of being disposed.</param>
-        protected virtual void Dispose(bool disposing)
+        public void Dispose()
         {
             if (_disposed)
                 return;
-
-            if (disposing)
-            {
-                Transaction.Dispose();
-                _onDispose();
-            }
-
             _disposed = true;
+
+            Transaction.Dispose();
+            _onDispose();
+        }
+
+        /// <summary>
+        /// Releases the unmanaged resources used by the System.Data.Common.DbTransaction.
+        /// </summary>
+        public async ValueTask DisposeAsync()
+        {
+            if (_disposed)
+                return;
+            _disposed = true;
+
+            await Transaction.DisposeAsync().ConfigureAwait(false);
+            _onDispose();
         }
     }
 }
