@@ -269,7 +269,7 @@ namespace DtronixModel
         /// }
         /// </example>
         /// <returns>Wrapped transaction.</returns>
-        public async Task<SqlTransaction> BeginTransactionAsync(CancellationToken cancellationToken)
+        public async Task<SqlTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
         {
             if (Transaction != null)
                 throw new InvalidOperationException(
