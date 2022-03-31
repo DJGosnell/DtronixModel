@@ -52,7 +52,9 @@ jobs:
       
     - name: Create changelog
       if: startsWith(github.ref, 'refs/tags/')
-      run: git log --pretty=format:"- %h %B" "$(git describe --abbrev=0 --tags $(git rev-list --tags --max-count=2) | Select -Last 1)..$(git describe --abbrev=0 --tags $(git rev-list --tags --max-count=2) | Select -First 1)" >> ${{ github.workspace }}/CHANGELOG.TXT
+      run: |
+        "### Changelog" > ${{ github.workspace }}/CHANGELOG.TXT
+        git log --pretty=format:"- %h %B" "$(git describe --tags --abbrev=0 "@^")..$(git describe --tags --abbrev=0 "@")" >> ${{ github.workspace }}/CHANGELOG.TXT
       
     - name: Create release
       uses: softprops/action-gh-release@v1
