@@ -387,7 +387,7 @@ namespace DtronixModeler.Xaml
                 {
                     var serializer = new XmlSerializer(typeof(Database));
 
-                    using var stream = File.OpenWrite(file_name);
+                    using var stream = File.Create(file_name);
                     using var writer = new StreamWriter(stream);
                     using var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings
                     {
