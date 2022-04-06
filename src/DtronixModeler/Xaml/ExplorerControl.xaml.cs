@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,6 +15,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Xml;
+using System.Xml.Serialization;
 using DtronixModeler.Generator;
 using DtronixModeler.Generator.Ddl;
 using Database = DtronixModeler.Generator.Ddl.Database;
@@ -379,12 +383,25 @@ namespace DtronixModeler.Xaml
             database.Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
             Task.Run(() => {
-                Exception exception = null;
-                if (database.SaveToFile(file_name, out exception) == false)
+                try
+                {
+                    var serializer = new XmlSerializer(typeof(Database));
+
+                    using var stream = File.OpenWrite(file_name);
+                    using var writer = new StreamWriter(stream);
+                    using var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings
+                    {
+                        Indent = true
+                    });
+                    {
+                        serializer.Serialize(xmlWriter, database);
+                    }
+                }
+                catch (Exception e)
                 {
                     Dispatcher.BeginInvoke(new Action(() => {
                         database._Modified = true;
-                        MessageBox.Show("Unable to save current DDL into selected file. \r\n" + exception.ToString());
+                        MessageBox.Show("Unable to save current DDL into selected file. \r\n" + e);
                     }), null);
                 }
             });

@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
-<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="TestDatabase" Namespace="DtronixModelTests.Sqlite" ContextClass="TestDatabaseContext" ImplementINotifyPropertyChanged="true" TargetDb="Sqlite" ImplementDataContractMemberOrder="true" Version="2.1.0.0">
+<?xml version="1.0" encoding="utf-8"?>
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="TestDatabase" Namespace="DtronixModelTests.Sqlite" ContextClass="TestDatabaseContext" ImplementINotifyPropertyChanged="true" TargetDb="Sqlite" ImplementDataContractMemberOrder="true" Version="3.0.1.0">
   <Table Name="Users">
     <Column Name="rowid" NetType="Int64" DbType="INTEGER" IsPrimaryKey="true" IsAutoIncrement="true" />
     <Column Name="username" NetType="String" DbType="TEXT" />
