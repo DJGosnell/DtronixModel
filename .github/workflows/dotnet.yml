@@ -63,6 +63,7 @@ jobs:
         name: "DtronixModel ${{ steps.tagName.outputs.tag }} Released"
         files: |
           artifacts/DtronixModel*.nupkg
+          artifacts/DtronixModel*.snupkg
           artifacts/DtronixModeler-*.exe
         body_path: ${{github.workspace}}/CHANGELOG.TXT
         
